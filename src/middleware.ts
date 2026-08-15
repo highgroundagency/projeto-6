@@ -1,29 +1,20 @@
 import { NextResponse, type NextRequest } from 'next/server'
 import { NOME_COOKIE_SESSAO, obterSegredo, sessaoValida } from '@/lib/admin/sessao'
 import { redirecionarNoMiddleware } from '@/lib/http'
-import { atualizarSessao } from '@/lib/supabase/middleware'
 
 /**
- * Duas responsabilidades, em rotas diferentes:
+ * Primeira camada de proteção do painel (§7.1).
  *
- * - `/admin/*` — primeira camada de proteção do painel (§7.1). DEFESA EM
- *   PROFUNDIDADE: o middleware é uma barreira, não A barreira. Toda page e
- *   route handler de `/admin` revalida a sessão por conta própria
- *   (`exigirAdmin`), porque middleware sozinho já foi contornável em versões do
- *   Next. Ver docs/seguranca.md.
- *
- * - `/sistema/*` — renovação da sessão do Supabase Auth. Sem Supabase
- *   configurado, não custa nada: a função devolve na hora.
+ * DEFESA EM PROFUNDIDADE: o middleware é uma barreira, não A barreira. Toda
+ * page e route handler de `/admin` revalida a sessão por conta própria
+ * (`exigirAdmin`), porque middleware sozinho já foi contornável em versões do
+ * Next. Ver docs/seguranca.md.
  */
 
 const ROTAS_LIVRES = ['/admin/entrar', '/api/admin/entrar', '/api/admin/sair']
 
 export async function middleware(requisicao: NextRequest) {
   const { pathname } = requisicao.nextUrl
-
-  if (pathname.startsWith('/sistema') || pathname.startsWith('/api/sistema')) {
-    return atualizarSessao(requisicao)
-  }
 
   if (ROTAS_LIVRES.some((rota) => pathname === rota)) {
     return NextResponse.next()
@@ -50,5 +41,5 @@ export async function middleware(requisicao: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/admin/:path*', '/api/admin/:path*', '/sistema/:path*', '/api/sistema/:path*'],
+  matcher: ['/admin/:path*', '/api/admin/:path*'],
 }

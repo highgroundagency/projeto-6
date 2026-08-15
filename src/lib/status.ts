@@ -5,7 +5,6 @@ import { hojeEmRecife } from '@/lib/datas'
 import { FEATURES } from '@/lib/features'
 import { repositorio } from '@/lib/dados'
 import { calcularReleaseAtual } from '@/lib/releases'
-import { exigeAutenticacao } from '@/lib/sistema/identidade'
 
 export interface Status {
   produto: string
@@ -14,7 +13,6 @@ export interface Status {
   commit: string
   modoDeDados: string
   dadosPersistentes: boolean
-  autenticacao: string
   driverConfiguracao: string
   configuracaoGravavel: boolean
   hojeRecife: string
@@ -49,7 +47,6 @@ export async function coletarStatus(): Promise<Status> {
     commit: process.env.VERCEL_GIT_COMMIT_SHA?.slice(0, 7) ?? 'local',
     modoDeDados: dados.nome,
     dadosPersistentes: dados.persistente,
-    autenticacao: exigeAutenticacao() ? 'Supabase Auth com RLS' : 'perfil simulado (sem autenticação)',
     driverConfiguracao: store.nome,
     configuracaoGravavel: store.gravavel,
     hojeRecife: hoje,

@@ -1,24 +1,22 @@
 import 'server-only'
-import { supabaseConfigurado } from '@/lib/supabase/cliente'
 import { driverArquivo } from './driver-arquivo'
-import { driverSupabaseConfig } from './driver-supabase'
 import { driverMemoria } from './driver-memoria'
 import { configPadrao, type ConfigSite, type ConfigStore } from './tipos'
 
 const CAMINHO_PADRAO = process.env.CONFIG_SITE_ARQUIVO ?? '.dados/config-site.json'
 
 /**
- * Driver de produção antes da F3: lê os padrões do ambiente e recusa escrita.
+ * Driver de produção: lê os padrões do ambiente e recusa escrita.
  *
  * O filesystem da Vercel é read-only, então gravar JSON em disco falharia em
- * runtime. Até o Supabase entrar, a configuração global de produção vem de env
- * var (mudança = redeploy) e o painel avisa isso na cara do operador. As
- * mudanças que o admin faz no painel viram um overlay assinado na sessão dele
- * — valem para a própria visão, não para o público. Ver docs/releases.md.
+ * runtime. Sem banco, a configuração global de produção vem de env var
+ * (mudança = redeploy) e o painel avisa isso na cara do operador. As mudanças
+ * que o admin faz no painel viram um overlay assinado na sessão dele — valem
+ * para a própria visão, não para o público. Ver docs/releases.md.
  */
 function driverSomenteLeitura(base: ConfigSite): ConfigStore {
   return {
-    nome: 'env (somente leitura até a F3)',
+    nome: 'env (somente leitura)',
     gravavel: false,
     async ler() {
       return { ...base, travas: { ...base.travas } }
@@ -37,21 +35,12 @@ function driverSomenteLeitura(base: ConfigSite): ConfigStore {
 let cache: ConfigStore | null = null
 
 /**
- * Escolha do driver, em ordem de preferência:
- *
- * 1. Supabase, quando configurado e com service role — grava de verdade, em
- *    produção, com log de liberações persistente.
- * 2. Arquivo JSON, em desenvolvimento local.
- * 3. Somente leitura, quando nada disso vale (produção sem Supabase): a
- *    configuração vem das env vars e o painel avisa o operador.
+ * Escolha do driver: arquivo JSON em desenvolvimento, somente leitura em
+ * produção. Ver o ADR-004 em docs/decisoes.md — sem banco, mudar o que o
+ * público vê em produção exige env var e redeploy, e o painel avisa isso.
  */
 export function obterStore(): ConfigStore {
   if (cache) return cache
-
-  if (supabaseConfigurado() && process.env.SUPABASE_SERVICE_ROLE?.trim()) {
-    cache = driverSupabaseConfig()
-    return cache
-  }
 
   cache =
     process.env.VERCEL || process.env.CONFIG_SITE_SOMENTE_LEITURA === '1'

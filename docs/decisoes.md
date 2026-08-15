@@ -110,47 +110,54 @@ mantendo a forma dos dados.
 
 ---
 
-## ADR-011 · Autorização é política de RLS, não `if` na aplicação
+## ADR-011 · O schema de banco existe, mas o app não depende dele
 
-**Contexto.** O RBAC do §8.1 precisa valer para qualquer caminho de acesso, inclusive a API
-do Supabase consumida direto.
-**Decisão.** Cada perfil vira política de RLS no banco; a aplicação não repete a checagem.
-**Consequência.** Um gestor que chame a API direto recebe só as próprias linhas. O custo é
-que política errada falha em silêncio — por isso existem 21 testes de RLS rodando contra um
-PostgreSQL real.
-
----
-
-## ADR-012 · Invariantes críticos são gatilho, não política
-
-**Contexto.** A service role ignora RLS. Trilha append-only e máquina de estados não podem
-depender de quem está conectado.
-**Decisão.** Trilha imutável, transição de ciclo um passo por vez, janela de lançamento e
-regra imutável são gatilhos em `plpgsql`.
-**Consequência.** Nem um script de manutenção com a chave mais privilegiada consegue
-reescrever a trilha ou reabrir um ciclo homologado. Em troca, semear a base exige respeitar
-a mesma ordem de estados que a interface — e isso é uma feature, não um obstáculo.
+**Contexto.** A F3 integrou o Supabase ao runtime. Revisando, o custo não se pagava: quatro
+contas de demonstração para mostrar o que o seletor de perfil já mostrava sem login, e o
+middleware do Edge saltando de 34 kB para 94 kB em toda requisição de `/sistema`.
+**Decisão.** Tirar o Supabase do app; manter `supabase/migrations/` e os testes de RLS como
+artefato versionado.
+**Consequência.** O projeto volta a rodar sem nenhuma credencial e perdeu ~1.300 linhas de
+runtime e duas dependências. O schema continua aplicável a qualquer PostgreSQL por
+`npm run semear`, e ligar um driver de banco depois é acrescentar um arquivo — a camada
+`src/lib/dados/` ficou no lugar justamente para isso.
 
 ---
 
-## ADR-013 · Driver de dados escolhido pelo ambiente, com seed como padrão
+## ADR-012 · Critério da decisão: requisito do professor × escolha de stack
 
-**Contexto.** A equipe tem seis pessoas; exigir credencial de Supabase para rodar o projeto
-travaria quem só quer mexer no registro.
-**Decisão.** `RepositorioDados` com dois drivers. Sem `SUPABASE_URL`, o seed em memória
-assume; com ela, o Supabase.
-**Consequência.** `git clone && npm run dev` funciona sem nenhum segredo, e a migração para
-o banco virou troca de driver em vez de reescrita de tela. O preço é manter os dois drivers
-coerentes — garantido por eles compartilharem os mesmos tipos de domínio.
+**Contexto.** A dúvida não era técnica, era de escopo: o Supabase é exigência da disciplina
+ou preferência nossa?
+**Decisão.** Separar o que o briefing atribui ao professor (registro §5, matriz de evidências
+§4, pitch, pacotes de SR1/SR2, ML e Direito) do que ele lista como stack (§3, onde o Supabase
+aparece ao lado de framer-motion e shadcn). Nada exige um banco específico; o MVP já cumpria
+tudo com o seed.
+**Consequência.** O critério fica registrado para as próximas decisões de tecnologia: o que
+não for rastreável a um requisito é candidato a corte. Se o professor pedir persistência, o
+schema já está escrito e testado.
 
 ---
 
-## ADR-014 · Configuração do site grava pela service role, não pela sessão
+## ADR-013 · As políticas de RLS foram testadas contra um PostgreSQL real
 
-**Contexto.** O painel administrativo se autentica por senha própria (§7.1), não por
-Supabase Auth: não existe sessão de banco para carregar nas políticas.
-**Decisão.** `configuracao_site` tem leitura pública (o release do visitante depende dela) e
-**nenhuma** política de escrita. Gravar só pelo servidor, com a service role.
-**Consequência.** Não existe caminho de escrita a partir de um navegador, e o ADR-004 se
-encerra: produção finalmente persiste a configuração de release. O log de liberações é
-append-only pelo mesmo gatilho da trilha.
+**Contexto.** Política de RLS escrita não é política funcionando: uma cláusula `using` errada
+falha em silêncio e só aparece quando alguém lê o que não devia.
+**Decisão.** `src/lib/supabase/rls.test.ts` aplica as migrações num banco limpo e exercita
+cada perfil como o PostgREST faria, setando `request.jwt.claims` e assumindo o papel
+`authenticated`.
+**Consequência.** São 21 verificações que continuam rodando no CI mesmo com o app fora do
+banco. Sem `DATABASE_URL_TESTE`, a suíte é pulada e o resto dos testes segue — nada trava
+para quem não tem Postgres à mão.
+
+---
+
+## ADR-014 · Invariantes de negócio são gatilho, não política
+
+**Contexto.** RLS filtra por usuário, mas a service role a ignora. Trilha append-only e
+máquina de estados não podem depender de quem está conectado.
+**Decisão.** No schema, trilha imutável, transição de ciclo um passo por vez, janela de
+lançamento e regra imutável são gatilhos em `plpgsql`.
+**Consequência.** Nem um script com a chave mais privilegiada reescreve a trilha ou reabre um
+ciclo homologado — o script de semeadura teve que obedecer à mesma ordem de estados que a
+interface. No app, sem banco, essas garantias dependem de `src/lib/sistema/estado.ts` ser o
+único caminho de escrita, o que é mais fraco e está declarado em docs/seguranca.md.

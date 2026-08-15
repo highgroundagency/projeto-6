@@ -10,8 +10,9 @@ import { exigirFeature, identidadeAtual } from '@/lib/sistema'
  *
  * Toda entrada passa por zod antes de tocar em qualquer coisa (§9): número
  * finito e não negativo, evidência com conteúdo, indicador e ciclo existentes.
- * A janela de prazo e a autorização por área são garantidas pela camada de
- * dados — no Supabase, por gatilho e RLS.
+ * A janela de prazo é garantida pela camada de dados — e, no schema de
+ * `supabase/migrations/`, por gatilho, que vale para qualquer caminho de
+ * escrita.
  */
 const corpoSchema = z.object({
   indicadorId: z.string().min(1).max(80),

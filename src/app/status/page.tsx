@@ -22,7 +22,6 @@ export default async function PaginaStatus() {
     ['Commit', status.commit],
     ['Driver de dados', status.modoDeDados],
     ['Escrita persistente', status.dadosPersistentes ? 'sim' : 'não (memória do processo)'],
-    ['Autenticação do sistema', status.autenticacao],
     ['Driver de configuração', status.driverConfiguracao],
     ['Configuração gravável', status.configuracaoGravavel ? 'sim' : 'não'],
     ['Hoje (America/Recife)', status.hojeRecife],

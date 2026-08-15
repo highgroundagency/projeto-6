@@ -39,9 +39,9 @@ C4Container
   }
 
   Container_Boundary(dados, "Dados") {
-    ContainerDb(seed, "Seed em memória", "TypeScript", "Base sintética com semente fixa (fases 1–2)")
+    ContainerDb(seed, "Seed em memória", "TypeScript", "Base sintética com semente fixa — a fonte ativa")
     ContainerDb(arquivo, "config-site.json", "JSON local", "Configuração de release em desenvolvimento")
-    ContainerDb(supabase, "Supabase (F3)", "Postgres + Auth + RLS", "Entidades, auditoria, configuracao_site e log_releases")
+    ContainerDb(schema, "Schema PostgreSQL", "SQL versionado", "Escrito e testado, NÃO ligado ao app — ver docs/banco.md")
   }
 
   Container_Boundary(offline, "Offline") {
@@ -55,7 +55,7 @@ C4Container
   Rel(browser, rotas, "Formulários HTML (POST)")
   Rel(app, seed, "Lê")
   Rel(app, arquivo, "Lê e grava em dev")
-  Rel(app, supabase, "Lê e grava a partir da F3")
+  Rel(seed, schema, "Semeável por npm run semear")
   Rel(notebooks, artefatos, "Exportam")
   Rel(app, artefatos, "Lê na tela de analytics")
 ```
@@ -93,9 +93,13 @@ futuro nunca chega ao navegador**, porque o módulo sequer é avaliado.
 `<form method="post">` para route handlers. Sem estado de cliente, sem hidratação, sem
 dependência de JavaScript habilitado. Também simplifica a CSP.
 
-**Postgres gerenciado (Supabase, a partir da F3).** RLS no banco permite espelhar o RBAC do
-§8.1 como política de dados, não como `if` na aplicação. Auth, storage e Postgres no mesmo
-provedor evitam integração extra num semestre curto.
+**Persistência: decisão adiada, com o trabalho preparatório feito.** O MVP roda com dados
+sintéticos em memória, o que basta para demonstrar o processo inteiro e dispensa credencial
+para qualquer pessoa da equipe rodar o projeto. O schema PostgreSQL — com o RBAC do §8.1
+espelhado em políticas de RLS e quatro invariantes em gatilho — está escrito, versionado e
+testado contra um banco real, mas não ligado à aplicação. O porquê está em `decisoes.md`
+(ADR-011 e ADR-012); o como usar, em `banco.md`. Se a persistência virar requisito, a troca
+é acrescentar um driver: as telas falam com `src/lib/dados/`, não com a fonte.
 
 **Pipeline de ML offline.** Treinar modelo em requisição não faz sentido aqui: os dados
 mudam por ciclo, não por segundo. Os notebooks rodam offline, exportam JSON versionado e a

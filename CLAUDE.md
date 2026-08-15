@@ -56,25 +56,26 @@ src/
     ├── admin/           sessão, senha, rate limit, guard
     ├── calculo/         motor da gratificação (puro) e tipos
     ├── config/          config store com drivers
-    ├── dados/           repositório com drivers de seed e Supabase
+    ├── dados/           repositório (driver único: seed) e mapeadores
     ├── seed/            base sintética com semente fixa
-    ├── supabase/        clientes, tipos de linha e testes de RLS
-    └── sistema/         identidade e camada de escrita do protótipo
+    ├── supabase/        testes das políticas de RLS do schema guardado
+    └── sistema/         identidade simulada e camada de escrita do protótipo
 
 supabase/
-├── migrations/          schema, gatilhos e políticas de RLS (versionado)
+├── migrations/          schema, gatilhos e políticas de RLS — versionado, NÃO ligado ao app
 └── testes/              stubs para rodar as migrações num Postgres comum
 ```
 
 ## Onde os dados vivem
 
-Sem `SUPABASE_URL`, o app usa o seed em memória — `git clone && npm run dev` funciona sem
-nenhuma credencial. Com ela, o Supabase assume e a autorização passa a ser política de RLS
-no banco. `NEXT_PUBLIC_DATA_MODE=seed` força o seed mesmo com o Supabase configurado.
+**Em memória.** O app não usa banco: `git clone && npm run dev` funciona sem nenhuma
+credencial. As telas falam com `src/lib/dados/`, nunca com o seed direto — é o que mantém a
+porta aberta para uma fonte persistente sem reescrever tela.
 
-Regra que vale para os dois modos: **a aplicação não repete a autorização do banco**. Se
-uma política de RLS estiver errada, o lugar de corrigir é `supabase/migrations/`, não a
-tela.
+`supabase/migrations/` guarda um schema PostgreSQL completo, com RLS e gatilhos, testado
+contra um banco real mas desligado da aplicação. O porquê está em `docs/decisoes.md`
+(ADR-011 e ADR-012); o como usar, em `docs/banco.md`. Não presuma que ele está no caminho de
+execução.
 
 ## Comandos
 
@@ -85,8 +86,8 @@ tela.
 | `npm run typecheck` | `tsc --noEmit` — quebra se um ciclo publicado estiver incompleto |
 | `npm run verificar-vazamento` | Prova que conteúdo futuro não vaza (exige `npm run build` antes) |
 | `npm run e2e` | Playwright |
-| `npm run testar-rls` | Políticas de RLS contra um Postgres real (exige `DATABASE_URL_TESTE`) |
-| `npm run semear` | Semeia a base sintética num projeto Supabase (exige service role) |
+| `npm run testar-rls` | Políticas do schema guardado contra um Postgres real (exige `DATABASE_URL_TESTE`) |
+| `npm run semear` | Semeia a base sintética num Postgres com o schema aplicado (exige `DATABASE_URL`) |
 | `npm run verificar` | typecheck + testes + build + verificação de vazamento |
 
 ## Antes de abrir PR

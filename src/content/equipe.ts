@@ -35,7 +35,7 @@ export const EQUIPE = [
     nome: 'João Henrique Micucci',
     iniciais: 'JH',
     papel: 'Arquitetura e backend',
-    frente: 'Modelo de dados, motor de cálculo, Supabase e RLS.',
+    frente: 'Modelo de dados, motor de cálculo e o schema com RLS.',
   },
   {
     id: 'joao-pedro',

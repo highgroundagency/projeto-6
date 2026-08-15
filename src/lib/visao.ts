@@ -25,8 +25,8 @@ const cicloIdSchema = z.enum(IDS_CICLOS as unknown as [CicloId, ...CicloId[]])
  * Overlay de visão — preferências que valem SÓ para a sessão do admin.
  *
  * É o que permite "ver como visitante em 03/10" sem alterar nada para o
- * público, e é também o único jeito de o painel ter efeito em produção antes
- * do Supabase entrar (o filesystem da Vercel é read-only). Ver docs/releases.md.
+ * público, e é também o único jeito de o painel ter efeito em produção, já que
+ * o filesystem da Vercel é read-only. Ver docs/releases.md.
  */
 export const overlaySchema = z.object({
   adiantamentoDias: z.number().int().min(0).max(120).optional(),
@@ -56,7 +56,7 @@ export interface Visao {
   visiveis: CicloId[]
   configGlobal: ConfigSite
   overlay: Overlay | null
-  /** false quando o ambiente não persiste configuração global (produção pré-F3). */
+  /** false quando o ambiente não persiste configuração global (produção). */
   configGravavel: boolean
 }
 

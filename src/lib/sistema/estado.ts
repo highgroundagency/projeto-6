@@ -15,11 +15,11 @@ import {
  * A base é somente leitura e vive em memória; as alterações feitas pela
  * interface ficam neste overlay, também em memória. Consequência honesta e
  * declarada: elas se perdem quando o processo reinicia, e em ambiente
- * serverless podem nem valer entre duas requisições. Na F3 isto vira tabela no
- * Supabase com RLS — a forma dos dados já é a mesma.
+ * serverless podem nem valer entre duas requisições.
  *
- * O que NÃO muda na F3: a auditoria é append-only e toda transição registra o
- * antes e o depois.
+ * As mesmas regras estão escritas como gatilho em `supabase/migrations/` — lá
+ * a auditoria é append-only e a transição de estado é validada pelo banco. Aqui
+ * elas dependem de esta camada ser o único caminho de escrita.
  */
 
 const estadosAlterados = new Map<string, EstadoCiclo>()

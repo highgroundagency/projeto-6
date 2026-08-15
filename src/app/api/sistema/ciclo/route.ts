@@ -12,9 +12,9 @@ const corpoSchema = z.object({
 /**
  * Avanço de estado do ciclo.
  *
- * A checagem de perfil aqui é conveniência de interface — quem realmente
- * decide é a política de RLS (modo Supabase) ou a camada de escrita (modo
- * seed). A transição em si é validada por gatilho no banco.
+ * A checagem de perfil aqui é conveniência de interface, não segurança: o
+ * seletor de perfil é simulado. A validação da transição vive na camada de
+ * escrita — e, no schema de `supabase/migrations/`, num gatilho do banco.
  */
 export async function POST(requisicao: NextRequest) {
   await exigirFeature('painel-cam')

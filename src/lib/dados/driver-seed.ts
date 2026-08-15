@@ -18,11 +18,10 @@ import type {
 } from './tipos'
 
 /**
- * Driver do seed em memória (fases 1–2).
+ * Driver do seed em memória — a única fonte de dados do app.
  *
- * Continua sendo o padrão quando não há Supabase configurado: é o que permite
- * `git clone && npm run dev` funcionar sem nenhuma credencial, o que importa
- * num trabalho em equipe.
+ * É o que permite `git clone && npm run dev` funcionar sem nenhuma credencial,
+ * o que importa num trabalho em equipe. Ver ADR-011 em docs/decisoes.md.
  */
 export function driverSeed(): RepositorioDados {
   return {

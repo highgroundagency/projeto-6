@@ -1,26 +1,23 @@
 import 'server-only'
-import { supabaseConfigurado } from '@/lib/supabase/cliente'
 import { driverSeed } from './driver-seed'
-import { driverSupabase } from './driver-supabase'
 import type { RepositorioDados } from './tipos'
 
 export type { Panorama, RepositorioDados, Resultado } from './tipos'
 
 /**
- * Escolha do driver de dados.
+ * Camada de dados do sistema.
  *
- * Padrão: seed em memória, para que `git clone && npm run dev` funcione sem
- * nenhuma credencial. Com `SUPABASE_URL` e `SUPABASE_ANON_KEY` definidas, o
- * Supabase assume. `NEXT_PUBLIC_DATA_MODE=seed` força o seed mesmo com o
- * Supabase configurado — útil para demonstrar sem tocar na base real.
+ * Hoje há um driver só: o seed em memória, com semente fixa. A abstração
+ * permanece porque é ela que mantém as oito telas sem acesso a dados espalhado
+ * — e porque o schema de `supabase/migrations/` está escrito e testado, então
+ * ligar um driver de banco depois é acrescentar um arquivo, não reescrever
+ * telas. Ver docs/decisoes.md (ADR-015).
  */
 let cache: RepositorioDados | null = null
 
 export function repositorio(): RepositorioDados {
   if (cache) return cache
-
-  const forcarSeed = process.env.NEXT_PUBLIC_DATA_MODE === 'seed'
-  cache = !forcarSeed && supabaseConfigurado() ? driverSupabase() : driverSeed()
+  cache = driverSeed()
   return cache
 }
 

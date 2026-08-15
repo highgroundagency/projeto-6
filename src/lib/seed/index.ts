@@ -4,8 +4,9 @@ import type { Avaliacao, CicloAvaliacao, Gestor, Indicador } from '@/lib/calculo
 /**
  * Base sintética do MVP, calculada uma vez por processo.
  *
- * Nas fases 1–2 os dados vivem em memória (§3). Na F3 este módulo é trocado
- * por consultas ao Supabase, mantendo a mesma forma de dados.
+ * Os dados vivem em memória, com semente fixa (§3). O acesso das telas passa
+ * por `src/lib/dados/`, então trocar esta fonte por um banco é acrescentar um
+ * driver — o schema já está escrito em `supabase/migrations/`.
  */
 export const BASE: BaseSintetica = gerarBase(SEMENTE_PADRAO)
 

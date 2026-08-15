@@ -13,10 +13,10 @@ import type {
 /**
  * Camada de dados do sistema.
  *
- * Existe para que as telas não saibam de onde os dados vêm. Nas fases 1–2 o
- * driver é o seed em memória; na F3, o Supabase com RLS. A forma dos dados é a
- * mesma nos dois — foi assim que a migração virou troca de driver, e não
- * reescrita de tela.
+ * Existe para que as telas não saibam de onde os dados vêm. Hoje o driver é o
+ * seed em memória. O schema de banco está escrito e testado em
+ * `supabase/migrations/`, então ligar uma fonte persistente depois é
+ * acrescentar um driver, não reescrever tela.
  */
 
 export interface Panorama {

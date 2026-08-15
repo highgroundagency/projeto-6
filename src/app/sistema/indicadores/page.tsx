@@ -84,7 +84,7 @@ export default async function TelaIndicadores() {
         <Aviso>
           Indicadores e regras são <strong>dados</strong>, não código: quando a portaria
           mudar, o cadastro muda pela interface e o software fica igual. No protótipo o
-          catálogo é sintético e a edição chega com o backend (F3).
+          catálogo é sintético e a edição ainda não está construída.
         </Aviso>
       </div>
 

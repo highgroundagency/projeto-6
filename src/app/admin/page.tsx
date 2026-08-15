@@ -91,9 +91,9 @@ export default async function PainelAdmin({
       {!store.gravavel ? (
         <p className="mt-5 border border-vinho-alerta/40 bg-vinho-alerta/10 px-4 py-3 text-sm">
           <strong>Configuração global somente leitura neste ambiente.</strong> O
-          filesystem da Vercel não aceita escrita, e o Supabase entra na F3. Até lá, o
-          que você mudar aqui vale para a <strong>sua sessão</strong>; para mudar o que o
-          público vê, altere as variáveis <Num>RELEASE_ADIANTAMENTO_DIAS</Num>,{' '}
+          filesystem da Vercel não aceita escrita e o projeto não usa banco. O que você
+          mudar aqui vale para a <strong>sua sessão</strong>; para mudar o que o público
+          vê, altere as variáveis <Num>RELEASE_ADIANTAMENTO_DIAS</Num>,{' '}
           <Num>RELEASE_OVERRIDE</Num> e <Num>RELEASE_TRAVAS</Num> e faça o redeploy. Ver{' '}
           <Num>docs/releases.md</Num>.
         </p>

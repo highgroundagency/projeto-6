@@ -27,7 +27,8 @@ Regras que a equipe adotou:
 | 15/08/2026 | s2 | Claude (Anthropic) | Primeira versão dos documentos de arquitetura, segurança, privacidade, decisões, releases e validação | `docs/` | pendente |
 | 15/08/2026 | s2 | Claude (Anthropic) | Schema SQL, gatilhos de invariante e políticas de RLS do Supabase | `supabase/migrations/` | pendente |
 | 15/08/2026 | s2 | Claude (Anthropic) | Suíte que exercita as políticas de RLS contra um PostgreSQL real | `src/lib/supabase/rls.test.ts` | pendente |
-| 15/08/2026 | s2 | Claude (Anthropic) | Camada de dados com drivers de seed e Supabase, e script de semeadura | `src/lib/dados/`, `scripts/semear-supabase.ts` | pendente |
+| 15/08/2026 | s2 | Claude (Anthropic) | Camada de dados que isola as telas da fonte, e script de semeadura | `src/lib/dados/`, `scripts/semear.ts` | pendente |
+| 15/08/2026 | s2 | Claude (Anthropic) | Remoção do Supabase do runtime, preservando o schema como evidência (ADR-011 e ADR-012) | `src/`, `docs/banco.md` | pendente |
 
 ## O que a IA **não** fez
 

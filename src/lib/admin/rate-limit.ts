@@ -3,8 +3,8 @@
  *
  * LIMITAÇÃO DECLARADA: em serverless a memória do processo é volátil e há
  * várias instâncias — um atacante distribuído pode ganhar tentativas extras a
- * cada instância fria. Isto é *best-effort* nas fases 1–2 e migra para tabela
- * no Supabase na F3. Está registrado em docs/seguranca.md, não escondido.
+ * cada instância fria. Isto é *best-effort* e continua assim: sem banco, não há
+ * onde guardar o contador. Está registrado em docs/seguranca.md, não escondido.
  */
 
 export const MAX_TENTATIVAS = 5

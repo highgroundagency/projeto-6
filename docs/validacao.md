@@ -13,9 +13,9 @@
 | Motor de cálculo | Vitest: faixas-limite, arredondamento, `menor_melhor`, sem lançamento, troca de regra | `src/lib/calculo/motor.test.ts` |
 | Base sintética | Vitest: reprodutibilidade, integridade referencial, ausência de dado pessoal | `src/lib/seed/seed.test.ts` |
 | Não-vazamento de release futuro | Script sobre o build de produção | `scripts/verificar-vazamento.ts` |
-| Políticas de RLS | Vitest sobre PostgreSQL real: quem lê e escreve o quê, por perfil | `src/lib/supabase/rls.test.ts` |
-| Invariantes do banco | Trilha append-only, máquina de estados, janela de lançamento, regra imutável | `src/lib/supabase/rls.test.ts` |
-| Migração do seed | Plano de semeadura executado inteiro contra o schema real | `src/lib/dados/semeadura.test.ts` |
+| Políticas de RLS do schema guardado | Vitest sobre PostgreSQL real: quem lê e escreve o quê, por perfil | `src/lib/supabase/rls.test.ts` |
+| Invariantes do schema guardado | Trilha append-only, máquina de estados, janela de lançamento, regra imutável | `src/lib/supabase/rls.test.ts` |
+| Semeadura da base sintética | Plano executado inteiro contra o schema real | `src/lib/dados/semeadura.test.ts` |
 | Jornadas críticas | Playwright | `e2e/` |
 | Tipagem do conteúdo | `tsc --noEmit` quebra se um ciclo publicado estiver incompleto | CI |
 

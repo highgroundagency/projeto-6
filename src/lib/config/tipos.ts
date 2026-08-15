@@ -38,7 +38,7 @@ export interface LogRelease {
 export interface ConfigStore {
   /** Nome do driver, exibido em /status e no painel. */
   readonly nome: string
-  /** false quando o ambiente não aceita escrita (Vercel sem Supabase). */
+  /** false quando o ambiente não aceita escrita (filesystem read-only da Vercel). */
   readonly gravavel: boolean
   ler(): Promise<ConfigSite>
   gravar(patch: PatchConfig, autor: string): Promise<ConfigSite>
@@ -70,8 +70,8 @@ function lerTravasDaEnv(bruto: string | undefined): Travas {
 
 /**
  * Configuração base do ambiente. É o que o visitante vê quando não há nada
- * gravado — e, em produção antes da F3, é a única forma de mudar o release
- * público (via env var + redeploy). Ver docs/releases.md.
+ * gravado — e, em produção, é a única forma de mudar o release público (via env
+ * var + redeploy). Ver docs/releases.md.
  */
 export function configPadrao(env: Ambiente = process.env): ConfigSite {
   const adiantamentoBruto = Number(env.RELEASE_ADIANTAMENTO_DIAS)

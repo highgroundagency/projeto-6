@@ -9,11 +9,15 @@ import {
 } from './mapeadores'
 
 /**
- * Plano de semeadura da base sintética no banco.
+ * Plano de semeadura da base sintética num PostgreSQL com o schema de
+ * `supabase/migrations/` aplicado.
+ *
+ * O app não usa banco (ver ADR-015); isto existe para que o schema guardado
+ * continue utilizável — e para provar, em `semeadura.test.ts`, que a base
+ * sintética cabe nele.
  *
  * Separado da execução de propósito: o plano é uma função pura, então dá para
- * conferi-lo contra um PostgreSQL real (ver `semeadura.test.ts`) sem precisar
- * de um projeto Supabase no ar. O que sobra de não testado é só o transporte.
+ * conferi-lo contra um PostgreSQL real sem subir infraestrutura.
  *
  * A ORDEM importa e não é arbitrária:
  *

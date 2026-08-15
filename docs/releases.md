@@ -65,13 +65,13 @@ Isto **muda conforme o ambiente** e é a pegadinha mais importante deste documen
 | Ambiente | Driver | O que acontece ao salvar no painel |
 | --- | --- | --- |
 | Desenvolvimento local | `arquivo` | Grava em `.dados/config-site.json`. Vale para todo mundo que acessar aquele servidor |
-| Produção na Vercel (até a F3) | `env (somente leitura)` | **Não grava configuração global.** A mudança vira overlay assinado na sua sessão e vale só para você |
-| Produção com Supabase (F3+) | `supabase` | Grava na tabela `configuracao_site` e no `log_releases` |
+| Produção na Vercel | `env (somente leitura)` | **Não grava configuração global.** A mudança vira overlay assinado na sua sessão e vale só para você |
 
-O filesystem da Vercel é read-only — por isso o driver de arquivo não serve lá. O painel
-avisa isso em vermelho quando o store não é gravável.
+O filesystem da Vercel é read-only — por isso o driver de arquivo não serve lá, e o projeto
+não usa banco (ver `banco.md`). O painel avisa isso em vermelho quando o store não é
+gravável.
 
-### Mudar o que o público vê em produção, antes da F3
+### Mudar o que o público vê em produção
 
 Altere as variáveis de ambiente na Vercel e faça o redeploy:
 

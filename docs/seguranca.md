@@ -9,11 +9,11 @@ usada para o resto — esconder isso seria pior do que ter o risco.
 | Ameaça | Onde se aplica | Mitigação atual | Estado |
 | --- | --- | --- | --- |
 | **S**poofing — fingir ser a CAM | Painel `/admin` | Senha única conferida só no servidor, em tempo constante; cookie httpOnly assinado com HMAC-SHA256; 30 dias de validade | Implementado |
-| **S**poofing — fingir ser outro perfil no sistema | Seletor de perfil / Supabase Auth | Com Supabase configurado, o perfil vem da tabela `usuarios` vinculada ao Auth e as políticas de RLS filtram no banco. Sem Supabase, o seletor é simulado e não protege nada — declarado na própria tela | Implementado (F3) |
+| **S**poofing — fingir ser outro perfil no sistema | Seletor de perfil | **Não mitigado, por design**: o seletor é login simulado e não protege nada, o que a tela declara. As políticas de RLS que resolveriam isso estão escritas e testadas em `supabase/migrations/`, mas não ligadas ao app | Risco aceito e declarado |
 | **T**ampering — adulterar o cookie de sessão | `/admin/*` | Payload assinado; qualquer alteração invalida a assinatura; comparação em tempo constante | Implementado |
 | **T**ampering — adulterar o overlay de visão | Cookie `prumo_visao` | Mesmo esquema de assinatura; conteúdo revalidado com zod após verificar a assinatura | Implementado |
 | **T**ampering — alterar resultado já homologado | Motor de cálculo | Regra versionada: alterar cria nova versão e não toca na vigente; recálculo do ciclo antigo reproduz o mesmo número | Implementado |
-| **R**epudiation — negar que informou um valor | Lançamentos | Trilha append-only com autor, timestamp, antes e depois; correção entra como novo evento. Na F3, gatilho no banco impede alteração até pela service role | Implementado |
+| **R**epudiation — negar que informou um valor | Lançamentos | Trilha append-only com autor, timestamp, antes e depois; correção entra como novo evento. Em memória, depende de a camada de escrita ser o único caminho; no schema guardado, um gatilho garante o mesmo até para a service role | Parcial |
 | **I**nformation disclosure — vazar conteúdo de release futuro | Registro e telas | Gate no servidor; carregadores preguiçosos; `import 'server-only'`; rota não liberada devolve 404; verificação automatizada em CI | Implementado e testado |
 | **I**nformation disclosure — vazar dado pessoal | Toda a base | Nenhum dado real entra no repositório; seed sintético com semente fixa; teste que recusa CPF, e-mail, telefone e matrícula na base | Implementado |
 | **D**enial of service — força bruta no login | `/api/admin/entrar` | 5 tentativas por 10 minutos por IP, com erro genérico | Parcial — ver limitação abaixo |
@@ -25,13 +25,13 @@ usada para o resto — esconder isso seria pior do que ter o risco.
 
 | Risco | Estado | Observação |
 | --- | --- | --- |
-| A01 Quebra de controle de acesso | **Coberto (F3)** | Painel em duas camadas; sistema com RLS por perfil no banco, verificada por 21 testes contra um PostgreSQL real |
+| A01 Quebra de controle de acesso | **Parcial** | Painel protegido em duas camadas. No sistema, o RBAC roda sobre seletor simulado; as políticas de RLS existem e estão testadas, mas não estão ligadas ao app |
 | A02 Falhas criptográficas | **Coberto** | HMAC-SHA256 via Web Crypto; segredo só em env; nenhuma senha persistida |
-| A03 Injeção | **Coberto** | Sem SQL na F2; toda entrada validada por zod; JSX escapa saída por padrão |
+| A03 Injeção | **Coberto** | O app não emite SQL; toda entrada validada por zod; JSX escapa saída por padrão. O script de semeadura usa consultas parametrizadas |
 | A04 Design inseguro | **Coberto** | Regra versionada e auditoria append-only são decisões de design contra adulteração |
 | A05 Configuração incorreta | **Parcial** | CSP, X-Frame-Options, nosniff, Referrer-Policy e HSTS aplicados. CSP ainda usa `unsafe-inline` |
 | A06 Componentes vulneráveis | **Parcial** | `npm audit` acusa 3 avisos altos transitivos do Next (postcss, sharp), corrigíveis só com Next 16 — fora do escopo fixado no briefing. São dependências de build, não de runtime da aplicação |
-| A07 Falhas de identificação | **Parcial** | Sistema usa Supabase Auth (e-mail e senha, sem MFA). Painel administrativo mantém senha única sem MFA e rate limit best-effort |
+| A07 Falhas de identificação | **Parcial** | O sistema não autentica (perfil simulado). O painel usa senha única, sem MFA, com rate limit best-effort |
 | A08 Integridade de software e dados | **Coberto** | Conteúdo versionado no Git; painel não edita conteúdo por formulário |
 | A09 Falhas de log e monitoração | **Parcial** | Auditoria da aplicação é completa; log de acesso fica com a plataforma |
 | A10 SSRF | **N/A** | A aplicação não faz requisição a URL informada por usuário |
@@ -68,36 +68,32 @@ saber dele.
 menor que 16 caracteres faz o painel falhar fechado. Preferimos indisponibilidade a
 assinar cookie com valor previsível.
 
-## O que a F3 fechou
+## O RBAC: o que está escrito e o que está ligado
 
-**Autorização no banco.** O RBAC do §8.1 virou política de RLS. Um gestor que consultasse a
-API do Supabase diretamente receberia apenas as próprias avaliações — o filtro não está na
-tela, está no `using` da política. São 21 testes exercitando cada perfil como o PostgREST
-faria, aplicando as migrações reais num PostgreSQL descartável.
+Vale distinguir duas coisas que costumam ser confundidas.
 
-**Invariantes acima da autorização.** Três regras são gatilho, não política, e por isso
-valem inclusive para a service role:
+**Escrito e testado.** `supabase/migrations/` traz o RBAC do §8.1 como políticas de RLS: a
+CAM gere, a área técnica só alcança a própria área, o gestor só a própria avaliação, a
+auditoria lê e não escreve. Mais quatro invariantes em gatilho, que valem inclusive para a
+service role: trilha append-only, transição de ciclo um passo por vez, janela de lançamento
+e regra imutável. São 21 verificações contra um PostgreSQL real (`npm run testar-rls`).
 
-1. `trilha_append_only` — evento de auditoria não se altera nem se apaga.
-2. `ciclo_transicao_valida` — o ciclo avança um estado por vez e nunca volta.
-3. `lancamento_dentro_da_janela` — lançamento fora do prazo é recusado no banco.
+**Ligado ao app.** Nada disso. O app não usa banco (ADR-011): o perfil vem de um seletor
+simulado, sem autenticação, e quem separa as visões é a própria aplicação. Isso é adequado
+para um protótipo com dados sintéticos e inadequado para qualquer coisa além disso — e é por
+isso que a tela diz "Perfil simulado" em vez de fingir um login.
 
-Somam-se a `regra_imutavel`, que impede editar as faixas de uma regra vigente: muda-se de
-versão, não de conteúdo.
-
-**Persistência da configuração.** `configuracao_site` tem leitura liberada até para `anon`
-(é ela que decide o release do visitante) e nenhuma política de escrita — gravar só pelo
-servidor, com a service role. Isso encerra a limitação do ADR-004.
+A consequência prática: **num deploy público, qualquer visitante pode trocar de perfil.** Como
+não há dado real e as funcionalidades ainda estão travadas por release, o risco é de
+demonstração, não de vazamento. Mas é um risco, e está aqui.
 
 ## Limitações conhecidas
 
-1. As contas de demonstração compartilham senha. Servem para a banca, não para produção.
-2. Sem Supabase configurado, o seletor de perfil não é autenticação e está rotulado como tal
-   no código e na tela.
-3. O painel administrativo (§7) usa mecanismo próprio, separado do Supabase Auth. São dois
-   públicos distintos — a equipe e os perfis do processo — mas é uma superfície a mais.
-4. A CSP usa `'unsafe-inline'` em `script-src` e `style-src`. O próximo passo é nonce por
+1. O seletor de perfil não é autenticação. Está rotulado como tal no código e na tela, mas
+   num deploy público qualquer pessoa alterna entre os quatro perfis.
+2. A camada de escrita do sistema vive em memória: alterações se perdem no reinício e podem
+   não valer entre requisições em serverless.
+3. A CSP usa `'unsafe-inline'` em `script-src` e `style-src`. O próximo passo é nonce por
    requisição.
-5. Não há proteção CSRF explícita além de `sameSite=lax` — suficiente para formulários
+4. Não há proteção CSRF explícita além de `sameSite=lax` — suficiente para formulários
    `POST` de mesma origem, insuficiente se algum dia houver API pública.
-6. Não há MFA nem recuperação de senha no Supabase Auth.
