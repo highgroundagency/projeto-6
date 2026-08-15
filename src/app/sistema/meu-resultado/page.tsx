@@ -3,7 +3,7 @@ import { Botao, BotaoLink } from '@/components/base/botao'
 import { Num } from '@/components/base/num'
 import { Aviso, CabecalhoTela, Painel } from '@/components/sistema/base'
 import { CartaoScore, MemoriaDeCalculo } from '@/components/sistema/memoria'
-import { avaliacoesDoGestor, BASE, cicloPorId } from '@/lib/seed'
+import { avaliacoesDoGestor, carregarDados } from '@/lib/dados/consultas'
 import { exigirFeature } from '@/lib/sistema'
 
 export const metadata: Metadata = { title: 'Meu resultado' }
@@ -14,12 +14,15 @@ export default async function TelaMeuResultado({
 }: {
   searchParams: Promise<{ gestor?: string; ciclo?: string }>
 }) {
-  const { visao } = await exigirFeature('meu-resultado')
+  const { visao, identidade } = await exigirFeature('meu-resultado')
   const { gestor: gestorParam, ciclo: cicloParam } = await searchParams
 
+  const dados = await carregarDados()
   const gestor =
-    BASE.gestores.find((g) => g.id === gestorParam) ?? BASE.gestores[0]
-  const historico = avaliacoesDoGestor(gestor.id)
+    dados.gestores.find((g) => g.id === gestorParam) ??
+    (identidade.gestorId ? dados.gestorPorId(identidade.gestorId) : undefined) ??
+    dados.gestores[0]
+  const historico = await avaliacoesDoGestor(gestor.id)
   const avaliacao =
     historico.find((a) => a.cicloId === cicloParam) ?? historico[historico.length - 1]
 
@@ -45,9 +48,9 @@ export default async function TelaMeuResultado({
               defaultValue={gestor.id}
               className="mt-1 block border border-linha px-2 py-1.5 text-sm"
             >
-              {BASE.gestores.map((g) => (
+              {dados.gestores.map((g) => (
                 <option key={g.id} value={g.id}>
-                  {g.nome} — {BASE.areas.find((a) => a.id === g.areaId)?.sigla}
+                  {g.nome} — {dados.areaPorId(g.areaId)?.sigla}
                 </option>
               ))}
             </select>
@@ -65,7 +68,7 @@ export default async function TelaMeuResultado({
             >
               {historico.map((a) => (
                 <option key={a.cicloId} value={a.cicloId}>
-                  {cicloPorId(a.cicloId)?.competencia}
+                  {dados.cicloPorId(a.cicloId)?.competencia}
                 </option>
               ))}
             </select>
@@ -103,7 +106,7 @@ export default async function TelaMeuResultado({
                 return (
                   <li key={item.cicloId} className="grid gap-2 sm:grid-cols-[6rem_1fr_4rem] sm:items-center">
                     <Num className={`text-sm ${atual ? 'font-semibold' : 'text-cinza-forte'}`}>
-                      {cicloPorId(item.cicloId)?.competencia}
+                      {dados.cicloPorId(item.cicloId)?.competencia}
                     </Num>
                     <div className="h-3 border border-linha bg-papel-2">
                       <div

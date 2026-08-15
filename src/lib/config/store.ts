@@ -1,5 +1,7 @@
 import 'server-only'
+import { supabaseConfigurado } from '@/lib/supabase/cliente'
 import { driverArquivo } from './driver-arquivo'
+import { driverSupabaseConfig } from './driver-supabase'
 import { driverMemoria } from './driver-memoria'
 import { configPadrao, type ConfigSite, type ConfigStore } from './tipos'
 
@@ -34,8 +36,23 @@ function driverSomenteLeitura(base: ConfigSite): ConfigStore {
 
 let cache: ConfigStore | null = null
 
+/**
+ * Escolha do driver, em ordem de preferência:
+ *
+ * 1. Supabase, quando configurado e com service role — grava de verdade, em
+ *    produção, com log de liberações persistente.
+ * 2. Arquivo JSON, em desenvolvimento local.
+ * 3. Somente leitura, quando nada disso vale (produção sem Supabase): a
+ *    configuração vem das env vars e o painel avisa o operador.
+ */
 export function obterStore(): ConfigStore {
   if (cache) return cache
+
+  if (supabaseConfigurado() && process.env.SUPABASE_SERVICE_ROLE?.trim()) {
+    cache = driverSupabaseConfig()
+    return cache
+  }
+
   cache =
     process.env.VERCEL || process.env.CONFIG_SITE_SOMENTE_LEITURA === '1'
       ? driverSomenteLeitura(configPadrao())

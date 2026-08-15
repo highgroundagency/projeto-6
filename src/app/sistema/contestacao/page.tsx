@@ -4,9 +4,9 @@ import { Num } from '@/components/base/num'
 import { Etiqueta } from '@/components/base/selo'
 import { Aviso, CabecalhoTela, Painel } from '@/components/sistema/base'
 import type { StatusContestacao } from '@/lib/calculo/tipos'
-import { BASE, cicloPorId } from '@/lib/seed'
+import { repositorio } from '@/lib/dados'
+import { carregarDados } from '@/lib/dados/consultas'
 import { exigirFeature } from '@/lib/sistema'
-import { contestacoes } from '@/lib/sistema/contestacoes'
 
 export const metadata: Metadata = { title: 'Contestação' }
 export const dynamic = 'force-dynamic'
@@ -35,11 +35,12 @@ export default async function TelaContestacao({
   const { perfil } = await exigirFeature('contestacao')
   const { gestor: gestorParam, ciclo: cicloParam, ok, erro } = await searchParams
 
-  const gestor = BASE.gestores.find((g) => g.id === gestorParam) ?? BASE.gestores[0]
-  const fechados = BASE.ciclos.filter((c) => c.estado === 'publicado' || c.estado === 'homologado')
-  const indicadoresDoGestor = BASE.indicadores.filter((i) => i.areaId === gestor.areaId)
+  const dados = await carregarDados()
+  const gestor = dados.gestores.find((g) => g.id === gestorParam) ?? dados.gestores[0]
+  const fechados = dados.ciclosFechados()
+  const indicadoresDoGestor = dados.indicadoresDaArea(gestor.areaId)
 
-  const todas = contestacoes()
+  const todas = await repositorio().contestacoes()
   const minhas = todas.filter((c) => c.gestorId === gestor.id)
   const podeAbrir = perfil === 'gestor' || perfil === 'cam'
 
@@ -69,7 +70,7 @@ export default async function TelaContestacao({
                 defaultValue={gestor.id}
                 className="mt-1 w-full border border-linha px-2 py-1.5 text-sm"
               >
-                {BASE.gestores.map((g) => (
+                {dados.gestores.map((g) => (
                   <option key={g.id} value={g.id}>
                     {g.nome}
                   </option>
@@ -157,14 +158,14 @@ export default async function TelaContestacao({
                 <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
                   <Num className="text-xs text-cinza-forte">{contestacao.abertaEm.slice(0, 10)}</Num>
                   <Num className="text-xs">
-                    ciclo {cicloPorId(contestacao.cicloId)?.competencia}
+                    ciclo {dados.cicloPorId(contestacao.cicloId)?.competencia}
                   </Num>
                   <Etiqueta tom={TOM[contestacao.status]}>{ROTULO[contestacao.status]}</Etiqueta>
                 </div>
                 <p className="mt-1 text-sm">{contestacao.motivo}</p>
                 {contestacao.indicadorId ? (
                   <p className="mt-1 text-xs text-cinza-forte">
-                    Indicador: {BASE.indicadores.find((i) => i.id === contestacao.indicadorId)?.nome}
+                    Indicador: {dados.indicadorPorId(contestacao.indicadorId)?.nome}
                   </p>
                 ) : null}
                 {contestacao.resposta ? (

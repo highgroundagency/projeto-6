@@ -75,7 +75,9 @@ async function main() {
   console.log('Subindo o servidor de produção…')
   const servidor = spawn('npx', ['next', 'start', '-p', String(PORTA)], {
     env: { ...process.env, ADMIN_COOKIE_SECRET: SEGREDO, NODE_ENV: 'production' },
-    stdio: ['ignore', 'pipe', 'pipe'],
+    // 'ignore' e não 'pipe': ninguém lê essa saída, e um pipe cheio trava o
+    // servidor no meio da verificação.
+    stdio: 'ignore',
   })
 
   try {
@@ -162,6 +164,10 @@ async function main() {
     process.exit(1)
   }
   console.log('Nenhum vazamento de conteúdo futuro detectado.\n')
+
+  // O processo filho pode demorar a morrer e seguraria o encerramento; as
+  // verificações já terminaram, então saímos explicitamente.
+  process.exit(0)
 }
 
 main().catch((erro) => {

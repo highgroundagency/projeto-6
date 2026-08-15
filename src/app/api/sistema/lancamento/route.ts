@@ -1,15 +1,17 @@
 import { type NextRequest } from 'next/server'
 import { z } from 'zod'
+import { repositorio } from '@/lib/dados'
+import { carregarDados } from '@/lib/dados/consultas'
 import { comParametros, redirecionar } from '@/lib/http'
-import { BASE } from '@/lib/seed'
-import { exigirFeature, perfilAtual } from '@/lib/sistema'
-import { registrarLancamento } from '@/lib/sistema/estado'
+import { exigirFeature, identidadeAtual } from '@/lib/sistema'
 
 /**
  * Registro de lançamento (§8.4, tela 3).
  *
  * Toda entrada passa por zod antes de tocar em qualquer coisa (§9): número
  * finito e não negativo, evidência com conteúdo, indicador e ciclo existentes.
+ * A janela de prazo e a autorização por área são garantidas pela camada de
+ * dados — no Supabase, por gatilho e RLS.
  */
 const corpoSchema = z.object({
   indicadorId: z.string().min(1).max(80),
@@ -23,7 +25,6 @@ export async function POST(requisicao: NextRequest) {
   await exigirFeature('lancamento')
 
   const formulario = await requisicao.formData()
-
   const analisado = corpoSchema.safeParse({
     indicadorId: formulario.get('indicadorId'),
     cicloId: formulario.get('cicloId'),
@@ -43,9 +44,9 @@ export async function POST(requisicao: NextRequest) {
   }
 
   const dados = analisado.data
+  const identidade = await identidadeAtual()
 
-  const perfil = await perfilAtual()
-  if (perfil !== 'area_tecnica' && perfil !== 'cam') {
+  if (identidade.perfil !== 'area_tecnica' && identidade.perfil !== 'cam') {
     return redirecionar(
       comParametros('/sistema/lancamento', {
         area: dados.area,
@@ -54,24 +55,24 @@ export async function POST(requisicao: NextRequest) {
     )
   }
 
-  const indicador = BASE.indicadores.find((i) => i.id === dados.indicadorId)
+  const panorama = await carregarDados()
+  const indicador = panorama.indicadorPorId(dados.indicadorId)
   if (!indicador) {
     return redirecionar(
       comParametros('/sistema/lancamento', { area: dados.area, erro: 'Indicador desconhecido.' }),
     )
   }
 
-  const resultado = registrarLancamento(
+  const agora = new Date().toISOString()
+  const resultado = await repositorio().registrarLancamento(
     {
       indicadorId: dados.indicadorId,
       cicloId: dados.cicloId,
       valor: dados.valor,
       evidencia: dados.evidencia,
-      autor: `gestor-${indicador.areaId}`,
-      registradoEm: new Date().toISOString(),
-      status: 'enviado',
+      autor: identidade.nome !== 'Perfil simulado' ? identidade.nome : `gestor-${indicador.areaId}`,
     },
-    new Date().toISOString(),
+    agora,
   )
 
   return redirecionar(

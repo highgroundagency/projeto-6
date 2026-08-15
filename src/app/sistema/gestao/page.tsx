@@ -4,7 +4,7 @@ import { Num } from '@/components/base/num'
 import { Etiqueta } from '@/components/base/selo'
 import { Aviso, CabecalhoTela, Painel } from '@/components/sistema/base'
 import { arredondar } from '@/lib/calculo/motor'
-import { avaliacoesDoCiclo, BASE, cicloMaisRecenteFechado } from '@/lib/seed'
+import { avaliacoesDoCiclo, carregarDados } from '@/lib/dados/consultas'
 import { exigirFeature } from '@/lib/sistema'
 
 export const metadata: Metadata = { title: 'Painel da gestão' }
@@ -18,13 +18,27 @@ export default async function TelaGestao({
   await exigirFeature('painel-gestao')
   const { ciclo: cicloParam, anonimo } = await searchParams
 
-  const fechados = BASE.ciclos.filter(
-    (c) => c.estado === 'publicado' || c.estado === 'homologado',
-  )
-  const ciclo = fechados.find((c) => c.id === cicloParam) ?? cicloMaisRecenteFechado() ?? fechados[0]
+  const dados = await carregarDados()
+  const fechados = dados.ciclosFechados()
+  const ciclo =
+    fechados.find((c) => c.id === cicloParam) ?? dados.cicloMaisRecenteFechado() ?? fechados[0]
   const anonimizado = anonimo === '1'
 
-  const avaliacoes = avaliacoesDoCiclo(ciclo.id)
+  if (!ciclo) {
+    return (
+      <>
+        <CabecalhoTela
+          titulo="Painel da gestão"
+          descricao="Resultados agregados por área, com ranking anonimizável e exportação."
+        />
+        <div className="mt-6">
+          <Aviso>Nenhum ciclo homologado ainda: não há resultado para agregar.</Aviso>
+        </div>
+      </>
+    )
+  }
+
+  const avaliacoes = await avaliacoesDoCiclo(ciclo.id)
   const ranking = [...avaliacoes].sort((a, b) => b.score - a.score)
 
   const media =
@@ -121,8 +135,8 @@ export default async function TelaGestao({
             </thead>
             <tbody>
               {ranking.map((avaliacao, i) => {
-                const gestor = BASE.gestores.find((g) => g.id === avaliacao.gestorId)
-                const area = BASE.areas.find((a) => a.id === gestor?.areaId)
+                const gestor = dados.gestorPorId(avaliacao.gestorId)
+                const area = gestor ? dados.areaPorId(gestor.areaId) : undefined
                 return (
                   <tr key={avaliacao.gestorId} className="border-b border-linha last:border-0">
                     <td className="numero px-3 py-1.5">{i + 1}</td>

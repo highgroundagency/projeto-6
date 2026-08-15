@@ -3,8 +3,9 @@ import { obterStore } from '@/lib/config/store'
 import { CRONOGRAMA } from '@/lib/cronograma'
 import { hojeEmRecife } from '@/lib/datas'
 import { FEATURES } from '@/lib/features'
-import { BASE } from '@/lib/seed'
+import { repositorio } from '@/lib/dados'
 import { calcularReleaseAtual } from '@/lib/releases'
+import { exigeAutenticacao } from '@/lib/sistema/identidade'
 
 export interface Status {
   produto: string
@@ -12,6 +13,8 @@ export interface Status {
   ambiente: string
   commit: string
   modoDeDados: string
+  dadosPersistentes: boolean
+  autenticacao: string
   driverConfiguracao: string
   configuracaoGravavel: boolean
   hojeRecife: string
@@ -28,7 +31,10 @@ export async function coletarStatus(): Promise<Status> {
   const inicio = performance.now()
 
   const store = obterStore()
+  const dados = repositorio()
   const config = await store.ler()
+  const panorama = await dados.panorama()
+  const lancamentos = await dados.lancamentos()
   const hoje = hojeEmRecife()
   const release = calcularReleaseAtual({
     hoje,
@@ -41,7 +47,9 @@ export async function coletarStatus(): Promise<Status> {
     versao: process.env.npm_package_version ?? '0.1.0',
     ambiente: process.env.NODE_ENV ?? 'desconhecido',
     commit: process.env.VERCEL_GIT_COMMIT_SHA?.slice(0, 7) ?? 'local',
-    modoDeDados: process.env.NEXT_PUBLIC_DATA_MODE ?? 'seed em memória',
+    modoDeDados: dados.nome,
+    dadosPersistentes: dados.persistente,
+    autenticacao: exigeAutenticacao() ? 'Supabase Auth com RLS' : 'perfil simulado (sem autenticação)',
     driverConfiguracao: store.nome,
     configuracaoGravavel: store.gravavel,
     hojeRecife: hoje,
@@ -49,10 +57,10 @@ export async function coletarStatus(): Promise<Status> {
     ciclosNoCronograma: CRONOGRAMA.length,
     funcionalidades: FEATURES.length,
     registros: {
-      areas: BASE.areas.length,
-      indicadores: BASE.indicadores.length,
-      ciclos: BASE.ciclos.length,
-      lancamentos: BASE.lancamentos.length,
+      areas: panorama.areas.length,
+      indicadores: panorama.indicadores.length,
+      ciclos: panorama.ciclos.length,
+      lancamentos: lancamentos.length,
     },
     latenciaMs: Math.round((performance.now() - inicio) * 100) / 100,
     ok: true,

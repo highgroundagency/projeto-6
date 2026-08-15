@@ -1,17 +1,22 @@
 import { type NextRequest } from 'next/server'
 import { z } from 'zod'
+import { repositorio } from '@/lib/dados'
 import { comParametros, redirecionar } from '@/lib/http'
 import { exigirFeature, perfilAtual } from '@/lib/sistema'
-import { avancarCiclo } from '@/lib/sistema/estado'
 
 const corpoSchema = z.object({
   cicloId: z.string().min(1).max(60),
   confirmo: z.literal('on'),
 })
 
-/** Avanço de estado do ciclo. Só a CAM pode; toda transição vira evento de auditoria. */
+/**
+ * Avanço de estado do ciclo.
+ *
+ * A checagem de perfil aqui é conveniência de interface — quem realmente
+ * decide é a política de RLS (modo Supabase) ou a camada de escrita (modo
+ * seed). A transição em si é validada por gatilho no banco.
+ */
 export async function POST(requisicao: NextRequest) {
-  // Mesmo gate das telas: funcionalidade não liberada não tem API.
   await exigirFeature('painel-cam')
 
   if ((await perfilAtual()) !== 'cam') {
@@ -32,10 +37,13 @@ export async function POST(requisicao: NextRequest) {
     )
   }
 
-  const resultado = avancarCiclo(analisado.data.cicloId, 'comissao', new Date().toISOString())
+  const resultado = await repositorio().avancarCiclo(
+    analisado.data.cicloId,
+    'comissao',
+    new Date().toISOString(),
+  )
+
   return redirecionar(
-    comParametros('/sistema/cam', {
-      [resultado.ok ? 'ok' : 'erro']: resultado.mensagem,
-    }),
+    comParametros('/sistema/cam', { [resultado.ok ? 'ok' : 'erro']: resultado.mensagem }),
   )
 }

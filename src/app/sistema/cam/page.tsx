@@ -4,9 +4,8 @@ import { Num } from '@/components/base/num'
 import { Etiqueta } from '@/components/base/selo'
 import { Aviso, Barra, CabecalhoTela, Painel, TrilhoEstados } from '@/components/sistema/base'
 import { ROTULO_ESTADO } from '@/lib/calculo/tipos'
-import { BASE } from '@/lib/seed'
+import { carregarDados, lancamentosDoCiclo } from '@/lib/dados/consultas'
 import { exigirFeature } from '@/lib/sistema'
-import { ciclos, lancamentos, proximoEstado } from '@/lib/sistema/estado'
 
 export const metadata: Metadata = { title: 'Dashboard da CAM' }
 export const dynamic = 'force-dynamic'
@@ -19,18 +18,19 @@ export default async function TelaCam({
   const { perfil } = await exigirFeature('painel-cam')
   const { ok, erro } = await searchParams
 
-  const todos = ciclos()
-  const emAndamento = todos.find((c) => c.estado === 'lancamento_aberto') ?? todos[todos.length - 1]
-  const lancados = lancamentos().filter((l) => l.cicloId === emAndamento.id)
+  const dados = await carregarDados()
+  const todos = dados.ciclos
+  const emAndamento = dados.cicloEmLancamento() ?? todos[todos.length - 1]
+  const lancados = await lancamentosDoCiclo(emAndamento.id)
 
-  const porArea = BASE.areas.map((area) => {
-    const indicadores = BASE.indicadores.filter((i) => i.areaId === area.id)
+  const porArea = dados.areas.map((area) => {
+    const indicadores = dados.indicadoresDaArea(area.id)
     const enviados = indicadores.filter((i) => lancados.some((l) => l.indicadorId === i.id))
     return { area, total: indicadores.length, enviados: enviados.length }
   })
 
   const pendentes = porArea.filter((linha) => linha.enviados < linha.total)
-  const seguinte = proximoEstado(emAndamento.estado)
+  const seguinte = dados.proximoEstado(emAndamento.estado)
   const podeAgir = perfil === 'cam'
 
   return (

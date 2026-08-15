@@ -4,9 +4,13 @@ import { Num } from '@/components/base/num'
 import { Etiqueta } from '@/components/base/selo'
 import { Aviso, CabecalhoTela, Painel } from '@/components/sistema/base'
 import { ROTULO_ESTADO } from '@/lib/calculo/tipos'
-import { BASE, pareceErroDeDigitacao } from '@/lib/seed'
+import {
+  carregarDados,
+  lancamentosDoCiclo,
+  pareceErroDeDigitacao,
+  vigente,
+} from '@/lib/dados/consultas'
 import { exigirFeature } from '@/lib/sistema'
-import { ciclos, lancamentoVigente } from '@/lib/sistema/estado'
 
 export const metadata: Metadata = { title: 'Lançamento' }
 export const dynamic = 'force-dynamic'
@@ -19,13 +23,15 @@ export default async function TelaLancamento({
   const { perfil } = await exigirFeature('lancamento')
   const { area: areaSelecionada, ok, erro } = await searchParams
 
-  const areaId = BASE.areas.some((a) => a.id === areaSelecionada)
+  const dados = await carregarDados()
+  const areaId = dados.areas.some((a) => a.id === areaSelecionada)
     ? (areaSelecionada as string)
-    : BASE.areas[0].id
-  const area = BASE.areas.find((a) => a.id === areaId)!
-  const indicadores = BASE.indicadores.filter((i) => i.areaId === areaId)
+    : dados.areas[0].id
+  const area = dados.areaPorId(areaId)!
+  const indicadores = dados.indicadoresDaArea(areaId)
 
-  const cicloAberto = ciclos().find((c) => c.estado === 'lancamento_aberto')
+  const cicloAberto = dados.cicloEmLancamento()
+  const lancados = cicloAberto ? await lancamentosDoCiclo(cicloAberto.id) : []
   const podeLancar = Boolean(cicloAberto) && (perfil === 'area_tecnica' || perfil === 'cam')
 
   return (
@@ -59,7 +65,7 @@ export default async function TelaLancamento({
               defaultValue={areaId}
               className="mt-1 block border border-linha px-2 py-1.5 text-sm"
             >
-              {BASE.areas.map((a) => (
+              {dados.areas.map((a) => (
                 <option key={a.id} value={a.id}>
                   {a.sigla} — {a.nome}
                 </option>
@@ -87,9 +93,7 @@ export default async function TelaLancamento({
       >
         <div className="space-y-3">
           {indicadores.map((indicador) => {
-            const atual = cicloAberto
-              ? lancamentoVigente(cicloAberto.id, indicador.id)
-              : undefined
+            const atual = cicloAberto ? vigente(lancados, indicador.id) : undefined
             const suspeito = atual ? pareceErroDeDigitacao(atual.valor, indicador.meta) : false
 
             return (

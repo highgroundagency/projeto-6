@@ -1,9 +1,9 @@
 import { type NextRequest } from 'next/server'
 import { z } from 'zod'
+import { repositorio } from '@/lib/dados'
+import { carregarDados } from '@/lib/dados/consultas'
 import { comParametros, redirecionar } from '@/lib/http'
-import { BASE } from '@/lib/seed'
 import { exigirFeature, perfilAtual } from '@/lib/sistema'
-import { abrirContestacao } from '@/lib/sistema/contestacoes'
 
 const corpoSchema = z.object({
   gestorId: z.string().min(1).max(80),
@@ -16,8 +16,8 @@ export async function POST(requisicao: NextRequest) {
   await exigirFeature('contestacao')
 
   const formulario = await requisicao.formData()
-
   const perfil = await perfilAtual()
+
   if (perfil !== 'gestor' && perfil !== 'cam') {
     return redirecionar(
       comParametros('/sistema/contestacao', { erro: 'Este perfil não abre contestação.' }),
@@ -41,27 +41,28 @@ export async function POST(requisicao: NextRequest) {
   }
 
   const dados = analisado.data
-  const gestorExiste = BASE.gestores.some((g) => g.id === dados.gestorId)
-  const cicloExiste = BASE.ciclos.some((c) => c.id === dados.cicloId)
+  const panorama = await carregarDados()
 
-  if (!gestorExiste || !cicloExiste) {
+  if (!panorama.gestorPorId(dados.gestorId) || !panorama.cicloPorId(dados.cicloId)) {
     return redirecionar(
       comParametros('/sistema/contestacao', { erro: 'Gestor ou ciclo desconhecido.' }),
     )
   }
 
-  abrirContestacao({
-    gestorId: dados.gestorId,
-    cicloId: dados.cicloId,
-    indicadorId: dados.indicadorId ?? null,
-    motivo: dados.motivo,
-    abertaEm: new Date().toISOString(),
-  })
+  const resultado = await repositorio().abrirContestacao(
+    {
+      gestorId: dados.gestorId,
+      cicloId: dados.cicloId,
+      indicadorId: dados.indicadorId ?? null,
+      motivo: dados.motivo,
+    },
+    new Date().toISOString(),
+  )
 
   return redirecionar(
     comParametros('/sistema/contestacao', {
       gestor: dados.gestorId,
-      ok: 'Contestação registrada. A comissão responde dentro do prazo do ciclo.',
+      [resultado.ok ? 'ok' : 'erro']: resultado.mensagem,
     }),
   )
 }

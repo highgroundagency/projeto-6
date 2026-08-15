@@ -3,7 +3,7 @@ import { Num } from '@/components/base/num'
 import { Etiqueta } from '@/components/base/selo'
 import { Aviso, CabecalhoTela, Painel, SomenteLeitura } from '@/components/sistema/base'
 import type { FaixaPontuacao, RegraDePontuacao } from '@/lib/calculo/tipos'
-import { BASE } from '@/lib/seed'
+import { carregarDados } from '@/lib/dados/consultas'
 import { exigirFeature } from '@/lib/sistema'
 
 export const metadata: Metadata = { title: 'Indicadores e regras' }
@@ -65,10 +65,11 @@ function DiffDeVersoes({ anterior, nova }: { anterior: RegraDePontuacao; nova: R
 export default async function TelaIndicadores() {
   await exigirFeature('indicadores')
 
-  const [v1, v2] = BASE.regras
-  const porArea = BASE.areas.map((area) => ({
+  const dados = await carregarDados()
+  const [v1, v2] = dados.regras
+  const porArea = dados.areas.map((area) => ({
     area,
-    indicadores: BASE.indicadores.filter((i) => i.areaId === area.id),
+    indicadores: dados.indicadoresDaArea(area.id),
   }))
 
   return (
@@ -89,7 +90,7 @@ export default async function TelaIndicadores() {
 
       <Painel
         titulo="Catálogo de indicadores"
-        descricao={`${BASE.indicadores.length} indicadores em ${BASE.areas.length} áreas.`}
+        descricao={`${dados.indicadores.length} indicadores em ${dados.areas.length} áreas.`}
       >
         <div className="space-y-5">
           {porArea.map(({ area, indicadores }) => (
@@ -135,7 +136,7 @@ export default async function TelaIndicadores() {
         descricao="Alterar uma regra cria uma nova versão. A vigente nunca é editada — sem isso, um ciclo homologado deixaria de reproduzir o próprio resultado."
       >
         <ul className="space-y-3">
-          {BASE.regras.map((regra) => (
+          {dados.regras.map((regra) => (
             <li key={regra.id} className="border border-linha p-3">
               <div className="flex flex-wrap items-baseline justify-between gap-2">
                 <span className="fonte-display text-base">

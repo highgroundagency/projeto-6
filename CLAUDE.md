@@ -56,9 +56,25 @@ src/
     ├── admin/           sessão, senha, rate limit, guard
     ├── calculo/         motor da gratificação (puro) e tipos
     ├── config/          config store com drivers
+    ├── dados/           repositório com drivers de seed e Supabase
     ├── seed/            base sintética com semente fixa
-    └── sistema/         camada de escrita do protótipo (em memória)
+    ├── supabase/        clientes, tipos de linha e testes de RLS
+    └── sistema/         identidade e camada de escrita do protótipo
+
+supabase/
+├── migrations/          schema, gatilhos e políticas de RLS (versionado)
+└── testes/              stubs para rodar as migrações num Postgres comum
 ```
+
+## Onde os dados vivem
+
+Sem `SUPABASE_URL`, o app usa o seed em memória — `git clone && npm run dev` funciona sem
+nenhuma credencial. Com ela, o Supabase assume e a autorização passa a ser política de RLS
+no banco. `NEXT_PUBLIC_DATA_MODE=seed` força o seed mesmo com o Supabase configurado.
+
+Regra que vale para os dois modos: **a aplicação não repete a autorização do banco**. Se
+uma política de RLS estiver errada, o lugar de corrigir é `supabase/migrations/`, não a
+tela.
 
 ## Comandos
 
@@ -69,6 +85,8 @@ src/
 | `npm run typecheck` | `tsc --noEmit` — quebra se um ciclo publicado estiver incompleto |
 | `npm run verificar-vazamento` | Prova que conteúdo futuro não vaza (exige `npm run build` antes) |
 | `npm run e2e` | Playwright |
+| `npm run testar-rls` | Políticas de RLS contra um Postgres real (exige `DATABASE_URL_TESTE`) |
+| `npm run semear` | Semeia a base sintética num projeto Supabase (exige service role) |
 | `npm run verificar` | typecheck + testes + build + verificação de vazamento |
 
 ## Antes de abrir PR

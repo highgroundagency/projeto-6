@@ -50,6 +50,8 @@ Copie `.env.example` para `.env.local`. Nada é obrigatório para rodar localmen
 | `NEXT_PUBLIC_DRIVE_URL` | Link da pasta do projeto no Drive. Sem valor, o link não aparece |
 | `ADMIN_SENHA` | Senha do painel (padrão `0321`) |
 | `ADMIN_COOKIE_SECRET` | Assinatura do cookie de sessão. **Obrigatória em produção** |
+| `SUPABASE_URL` · `SUPABASE_ANON_KEY` | Ativam o banco. Sem elas, o seed em memória assume |
+| `SUPABASE_SERVICE_ROLE` | Semeadura e configuração do site. Só no servidor |
 | `RELEASE_ADIANTAMENTO_DIAS` | Quantos dias à frente o site mostra (padrão `7`) |
 | `RELEASE_OVERRIDE` | Fixa o release num ciclo específico |
 | `RELEASE_TRAVAS` | JSON de travas por ciclo |
@@ -67,6 +69,8 @@ O que está coberto:
 
 - **222 testes de unidade** — aritmética de data no fuso do projeto, motor de releases,
   config store, sessão do admin, completude do registro, motor de cálculo e base sintética.
+- **23 verificações de banco** — políticas de RLS por perfil e invariantes de gatilho,
+  aplicando as migrações reais num PostgreSQL descartável (`npm run testar-rls`).
 - **120 verificações de vazamento** — nenhum conteúdo de release futuro no HTML, no payload
   RSC ou no bundle do cliente; rota não liberada responde 404.
 - **42 testes end-to-end** — jornadas críticas em desktop e em 360px.
@@ -76,7 +80,7 @@ O que está coberto:
 ## Stack
 
 Next.js 15 (App Router) · TypeScript · Tailwind v4 · zod · Vitest · Playwright · Supabase
-(a partir da F3) · Deploy na Vercel.
+(Postgres + Auth + RLS) · Deploy na Vercel.
 
 Quase nenhum JavaScript de aplicação chega ao navegador: as telas são Server Components e
 os formulários são HTML puro.
@@ -90,6 +94,7 @@ os formulários são HTML puro.
 | [`docs/seguranca.md`](docs/seguranca.md) | STRIDE, OWASP Top 10 e análise do próprio painel admin |
 | [`docs/privacidade.md`](docs/privacidade.md) | LGPD, base legal, Privacy by Design e direitos dos titulares |
 | [`docs/decisoes.md`](docs/decisoes.md) | ADRs — os porquês, em cinco linhas cada |
+| [`docs/supabase.md`](docs/supabase.md) | Como colocar o banco de pé, semear e testar as políticas de RLS |
 | [`docs/validacao.md`](docs/validacao.md) | O que é testado e os instrumentos de validação com o cliente |
 | [`docs/uso-de-ia.md`](docs/uso-de-ia.md) | Registro semanal de uso de IA, com quem validou |
 | [`CLAUDE.md`](CLAUDE.md) | Regras da casa para quem for mexer no código |

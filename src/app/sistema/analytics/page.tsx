@@ -3,8 +3,10 @@ import { Num } from '@/components/base/num'
 import { Etiqueta } from '@/components/base/selo'
 import { Aviso, CabecalhoTela, Painel } from '@/components/sistema/base'
 import { arredondar, calcularAtingimento } from '@/lib/calculo/motor'
-import { BASE, pareceErroDeDigitacao } from '@/lib/seed'
+import { repositorio } from '@/lib/dados'
+import { carregarDados, pareceErroDeDigitacao } from '@/lib/dados/consultas'
 import { exigirFeature } from '@/lib/sistema'
+import type { Area, Indicador, Lancamento } from '@/lib/calculo/tipos'
 
 export const metadata: Metadata = { title: 'Analytics' }
 export const dynamic = 'force-dynamic'
@@ -19,13 +21,17 @@ export const dynamic = 'force-dynamic'
  * métrica sempre ao lado do número.
  */
 
-function atingimentoMedioPorArea() {
-  return BASE.areas.map((area) => {
-    const indicadores = BASE.indicadores.filter((i) => i.areaId === area.id)
+function atingimentoMedioPorArea(
+  areas: readonly Area[],
+  indicadoresTodos: readonly Indicador[],
+  lancamentos: readonly Lancamento[],
+) {
+  return areas.map((area) => {
+    const indicadores = indicadoresTodos.filter((i) => i.areaId === area.id)
     const valores: number[] = []
 
     for (const indicador of indicadores) {
-      for (const lancamento of BASE.lancamentos.filter((l) => l.indicadorId === indicador.id)) {
+      for (const lancamento of lancamentos.filter((l) => l.indicadorId === indicador.id)) {
         const { comTeto } = calcularAtingimento(
           lancamento.valor,
           indicador.meta,
@@ -48,14 +54,18 @@ function atingimentoMedioPorArea() {
 export default async function TelaAnalytics() {
   await exigirFeature('analytics')
 
-  const porArea = atingimentoMedioPorArea()
+  const dados = await carregarDados()
+  const lancamentos = await repositorio().lancamentos()
+
+  const porArea = atingimentoMedioPorArea(dados.areas, dados.indicadores, lancamentos)
   const risco = [...porArea].sort((a, b) => a.media - b.media).slice(0, 5)
 
-  const suspeitos = BASE.lancamentos
+  const suspeitos = lancamentos
     .map((lancamento) => ({
       lancamento,
-      indicador: BASE.indicadores.find((i) => i.id === lancamento.indicadorId)!,
+      indicador: dados.indicadorPorId(lancamento.indicadorId)!,
     }))
+    .filter((item) => item.indicador)
     .filter(({ lancamento, indicador }) => pareceErroDeDigitacao(lancamento.valor, indicador.meta))
     .slice(0, 12)
 

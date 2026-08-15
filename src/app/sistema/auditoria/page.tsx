@@ -4,9 +4,9 @@ import { Num } from '@/components/base/num'
 import { Etiqueta } from '@/components/base/selo'
 import { Aviso, CabecalhoTela, Painel, SomenteLeitura } from '@/components/sistema/base'
 import type { TipoEvento } from '@/lib/calculo/tipos'
-import { BASE } from '@/lib/seed'
+import { carregarDados } from '@/lib/dados/consultas'
+import { repositorio } from '@/lib/dados'
 import { exigirFeature } from '@/lib/sistema'
-import { ciclos, eventos } from '@/lib/sistema/estado'
 
 export const metadata: Metadata = { title: 'Auditoria' }
 export const dynamic = 'force-dynamic'
@@ -50,7 +50,9 @@ export default async function TelaAuditoria({
   await exigirFeature('auditoria')
   const { tipo, ciclo } = await searchParams
 
-  const todos = eventos()
+  const dados = await carregarDados()
+  const todos = await repositorio().eventos(500)
+  const totalLancamentos = (await repositorio().lancamentos()).length
   const filtrados = todos.filter((evento) => {
     if (tipo && evento.tipo !== tipo) return false
     if (ciclo && !evento.entidade.includes(ciclo) && !evento.descricao.includes(ciclo)) return false
@@ -105,7 +107,7 @@ export default async function TelaAuditoria({
               className="numero mt-1 block border border-linha px-2 py-1.5 text-sm"
             >
               <option value="">todos</option>
-              {ciclos().map((c) => (
+              {dados.ciclos.map((c) => (
                 <option key={c.id} value={c.id}>
                   {c.competencia}
                 </option>
@@ -162,7 +164,7 @@ export default async function TelaAuditoria({
           })}
         </ul>
         <p className="mt-3 text-xs text-cinza-forte">
-          Base sintética com {BASE.lancamentos.length} lançamentos em {BASE.ciclos.length} ciclos.
+          {totalLancamentos} lançamentos em {dados.ciclos.length} ciclos.
         </p>
       </Painel>
     </>

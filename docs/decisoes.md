@@ -107,3 +107,50 @@ existir banco.
 **Consequência.** A demonstração é real e completa, mas as alterações se perdem no reinício
 — dito no próprio arquivo, em `seguranca.md` e nesta lista. Na F3 vira tabela com RLS,
 mantendo a forma dos dados.
+
+---
+
+## ADR-011 · Autorização é política de RLS, não `if` na aplicação
+
+**Contexto.** O RBAC do §8.1 precisa valer para qualquer caminho de acesso, inclusive a API
+do Supabase consumida direto.
+**Decisão.** Cada perfil vira política de RLS no banco; a aplicação não repete a checagem.
+**Consequência.** Um gestor que chame a API direto recebe só as próprias linhas. O custo é
+que política errada falha em silêncio — por isso existem 21 testes de RLS rodando contra um
+PostgreSQL real.
+
+---
+
+## ADR-012 · Invariantes críticos são gatilho, não política
+
+**Contexto.** A service role ignora RLS. Trilha append-only e máquina de estados não podem
+depender de quem está conectado.
+**Decisão.** Trilha imutável, transição de ciclo um passo por vez, janela de lançamento e
+regra imutável são gatilhos em `plpgsql`.
+**Consequência.** Nem um script de manutenção com a chave mais privilegiada consegue
+reescrever a trilha ou reabrir um ciclo homologado. Em troca, semear a base exige respeitar
+a mesma ordem de estados que a interface — e isso é uma feature, não um obstáculo.
+
+---
+
+## ADR-013 · Driver de dados escolhido pelo ambiente, com seed como padrão
+
+**Contexto.** A equipe tem seis pessoas; exigir credencial de Supabase para rodar o projeto
+travaria quem só quer mexer no registro.
+**Decisão.** `RepositorioDados` com dois drivers. Sem `SUPABASE_URL`, o seed em memória
+assume; com ela, o Supabase.
+**Consequência.** `git clone && npm run dev` funciona sem nenhum segredo, e a migração para
+o banco virou troca de driver em vez de reescrita de tela. O preço é manter os dois drivers
+coerentes — garantido por eles compartilharem os mesmos tipos de domínio.
+
+---
+
+## ADR-014 · Configuração do site grava pela service role, não pela sessão
+
+**Contexto.** O painel administrativo se autentica por senha própria (§7.1), não por
+Supabase Auth: não existe sessão de banco para carregar nas políticas.
+**Decisão.** `configuracao_site` tem leitura pública (o release do visitante depende dela) e
+**nenhuma** política de escrita. Gravar só pelo servidor, com a service role.
+**Consequência.** Não existe caminho de escrita a partir de um navegador, e o ADR-004 se
+encerra: produção finalmente persiste a configuração de release. O log de liberações é
+append-only pelo mesmo gatilho da trilha.

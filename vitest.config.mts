@@ -16,6 +16,9 @@ export default defineConfig({
   },
   test: {
     environment: 'node',
+    // Os testes de banco recriam o schema no `beforeAll`. Rodando arquivos em
+    // paralelo, um derrubava as tabelas do outro no meio da execução.
+    fileParallelism: false,
     include: ['src/**/*.test.ts', 'src/**/*.test.tsx'],
     // e2e/ é do Playwright — o Vitest não deve tentar rodar aquilo.
     exclude: ['e2e/**', 'node_modules/**', '.next/**'],

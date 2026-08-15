@@ -25,6 +25,9 @@ Regras que a equipe adotou:
 | 15/08/2026 | s2 | Claude (Anthropic) | Telas do sistema: dashboard da CAM, indicadores, lançamento, meu resultado, auditoria, gestão, analytics e contestação | `src/app/sistema/` | pendente |
 | 15/08/2026 | s2 | Claude (Anthropic) | Verificador automatizado de vazamento de conteúdo futuro e suíte end-to-end | `scripts/verificar-vazamento.ts`, `e2e/` | pendente |
 | 15/08/2026 | s2 | Claude (Anthropic) | Primeira versão dos documentos de arquitetura, segurança, privacidade, decisões, releases e validação | `docs/` | pendente |
+| 15/08/2026 | s2 | Claude (Anthropic) | Schema SQL, gatilhos de invariante e políticas de RLS do Supabase | `supabase/migrations/` | pendente |
+| 15/08/2026 | s2 | Claude (Anthropic) | Suíte que exercita as políticas de RLS contra um PostgreSQL real | `src/lib/supabase/rls.test.ts` | pendente |
+| 15/08/2026 | s2 | Claude (Anthropic) | Camada de dados com drivers de seed e Supabase, e script de semeadura | `src/lib/dados/`, `scripts/semear-supabase.ts` | pendente |
 
 ## O que a IA **não** fez
 
