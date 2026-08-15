@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import type { Ambiente } from '@/lib/ambiente'
 import { IDS_CICLOS, type CicloId } from '@/lib/cronograma'
 import { ADIANTAMENTO_PADRAO, type Trava, type Travas } from '@/lib/releases'
 
@@ -72,7 +73,7 @@ function lerTravasDaEnv(bruto: string | undefined): Travas {
  * gravado — e, em produção antes da F3, é a única forma de mudar o release
  * público (via env var + redeploy). Ver docs/releases.md.
  */
-export function configPadrao(env: NodeJS.ProcessEnv = process.env): ConfigSite {
+export function configPadrao(env: Ambiente = process.env): ConfigSite {
   const adiantamentoBruto = Number(env.RELEASE_ADIANTAMENTO_DIAS)
   const adiantamentoDias =
     Number.isFinite(adiantamentoBruto) && adiantamentoBruto >= 0 && adiantamentoBruto <= 120

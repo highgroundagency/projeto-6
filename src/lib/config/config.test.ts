@@ -10,7 +10,7 @@ const RELOGIO = () => '2026-08-15T12:00:00.000Z'
 
 describe('configPadrao', () => {
   it('cai no adiantamento de 7 dias sem env var', () => {
-    const config = configPadrao({} as NodeJS.ProcessEnv)
+    const config = configPadrao({})
     expect(config.adiantamentoDias).toBe(7)
     expect(config.overrideRelease).toBeNull()
     expect(config.travas).toEqual({})
@@ -20,7 +20,7 @@ describe('configPadrao', () => {
     const config = configPadrao({
       RELEASE_ADIANTAMENTO_DIAS: '14',
       RELEASE_OVERRIDE: 'sr1',
-    } as NodeJS.ProcessEnv)
+    })
     expect(config.adiantamentoDias).toBe(14)
     expect(config.overrideRelease).toBe('sr1')
   })
@@ -30,7 +30,7 @@ describe('configPadrao', () => {
       RELEASE_ADIANTAMENTO_DIAS: 'muitos',
       RELEASE_OVERRIDE: 's99',
       RELEASE_TRAVAS: '{isso nao e json',
-    } as NodeJS.ProcessEnv)
+    })
     expect(config.adiantamentoDias).toBe(7)
     expect(config.overrideRelease).toBeNull()
     expect(config.travas).toEqual({})
@@ -38,11 +38,11 @@ describe('configPadrao', () => {
 
   it('recusa adiantamento fora da faixa aceita', () => {
     expect(
-      configPadrao({ RELEASE_ADIANTAMENTO_DIAS: '-5' } as NodeJS.ProcessEnv)
+      configPadrao({ RELEASE_ADIANTAMENTO_DIAS: '-5' })
         .adiantamentoDias,
     ).toBe(7)
     expect(
-      configPadrao({ RELEASE_ADIANTAMENTO_DIAS: '9999' } as NodeJS.ProcessEnv)
+      configPadrao({ RELEASE_ADIANTAMENTO_DIAS: '9999' })
         .adiantamentoDias,
     ).toBe(7)
   })
@@ -50,7 +50,7 @@ describe('configPadrao', () => {
   it('lê travas em JSON e descarta ciclo inexistente', () => {
     const config = configPadrao({
       RELEASE_TRAVAS: '{"s9":"sempre_visivel","xx":"sempre_oculto"}',
-    } as NodeJS.ProcessEnv)
+    })
     expect(config.travas).toEqual({ s9: 'sempre_visivel' })
   })
 })
@@ -94,13 +94,13 @@ describe('descreverMudancas', () => {
 
 describe('driverMemoria', () => {
   it('grava e relê a configuração', async () => {
-    const store = driverMemoria(configPadrao({} as NodeJS.ProcessEnv), RELOGIO)
+    const store = driverMemoria(configPadrao({}), RELOGIO)
     await store.gravar({ adiantamentoDias: 21 }, 'admin')
     expect((await store.ler()).adiantamentoDias).toBe(21)
   })
 
   it('aceita voltar o override para automático', async () => {
-    const store = driverMemoria(configPadrao({} as NodeJS.ProcessEnv), RELOGIO)
+    const store = driverMemoria(configPadrao({}), RELOGIO)
     await store.gravar({ overrideRelease: 'sr2' }, 'admin')
     expect((await store.ler()).overrideRelease).toBe('sr2')
     await store.gravar({ overrideRelease: null }, 'admin')
@@ -108,7 +108,7 @@ describe('driverMemoria', () => {
   })
 
   it('recusa valor inválido', async () => {
-    const store = driverMemoria(configPadrao({} as NodeJS.ProcessEnv), RELOGIO)
+    const store = driverMemoria(configPadrao({}), RELOGIO)
     await expect(store.gravar({ adiantamentoDias: -1 }, 'admin')).rejects.toThrow()
     await expect(
       store.gravar({ overrideRelease: 'inexistente' as never }, 'admin'),
@@ -116,7 +116,7 @@ describe('driverMemoria', () => {
   })
 
   it('registra o histórico do mais novo para o mais antigo', async () => {
-    const store = driverMemoria(configPadrao({} as NodeJS.ProcessEnv), RELOGIO)
+    const store = driverMemoria(configPadrao({}), RELOGIO)
     await store.gravar({ adiantamentoDias: 14 }, 'admin')
     await store.gravar({ overrideRelease: 'sr1' }, 'admin')
 
@@ -127,7 +127,7 @@ describe('driverMemoria', () => {
   })
 
   it('não devolve referência interna mutável', async () => {
-    const store = driverMemoria(configPadrao({} as NodeJS.ProcessEnv), RELOGIO)
+    const store = driverMemoria(configPadrao({}), RELOGIO)
     const lida = await store.ler()
     lida.travas.s9 = 'sempre_visivel'
     expect((await store.ler()).travas).toEqual({})

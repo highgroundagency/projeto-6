@@ -41,3 +41,7 @@ export const PERGUNTA_DO_PROJETO =
  * painel admin avisa que falta configurar.
  */
 export const URL_DRIVE = process.env.NEXT_PUBLIC_DRIVE_URL ?? ''
+
+/** Repositório do projeto — usado como evidência de código nos ciclos. */
+export const URL_REPOSITORIO =
+  process.env.NEXT_PUBLIC_REPO_URL ?? 'https://github.com/highgroundagency/projeto-6'

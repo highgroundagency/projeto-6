@@ -1,9 +1,18 @@
+import { fileURLToPath } from 'node:url'
 import { defineConfig } from 'vitest/config'
 
 export default defineConfig({
+  // O tsconfig do Next fixa `jsx: preserve` (o compilador do Next cuida disso e
+  // reescreve o campo se alguém mudar). O Vitest, que usa oxc no Vite 8,
+  // precisa da transformação explícita para conseguir ler os .tsx de conteúdo.
+  oxc: { jsx: { runtime: 'automatic', importSource: 'react' } },
   resolve: {
     // Resolve o alias `@/*` do tsconfig sem plugin extra.
     tsconfigPaths: true,
+    alias: {
+      // `server-only` lança erro fora do runtime de Server Component.
+      'server-only': fileURLToPath(new URL('./test/stub-server-only.ts', import.meta.url)),
+    },
   },
   test: {
     environment: 'node',
