@@ -1,103 +1,91 @@
-import Image from "next/image";
+import Link from 'next/link'
+import { MarcaPrumo } from '@/components/base/marca'
+import { Rodape } from '@/components/base/rodape'
+import { PRODUTO } from '@/content/produto'
 
-export default function Home() {
+/**
+ * Porta de entrada (§1).
+ *
+ * Uma bifurcação, não uma landing page: o professor escolhe por onde entrar.
+ * Cabe na tela sem scroll, inclusive em 360px.
+ *
+ * É a única rota estática do site — não lê cookie nem data, então serve HTML
+ * pronto do CDN e mantém o LCP baixo.
+ */
+
+function Porta({
+  href,
+  ordem,
+  rotulo,
+  descricao,
+  className,
+}: {
+  href: string
+  ordem: string
+  rotulo: string
+  descricao: string
+  className?: string
+}) {
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+    <Link
+      href={href}
+      className={`group flex min-h-40 flex-col justify-between gap-6 bg-white p-5 transition-colors hover:bg-tinta focus-visible:bg-tinta sm:min-h-56 sm:p-7 ${className ?? ''}`}
+    >
+      <span className="rotulo numero text-cinza-forte transition-colors group-hover:text-papel/60 group-focus-visible:text-papel/60">
+        {ordem}
+      </span>
+      <span>
+        <span className="fonte-display block text-2xl leading-tight text-tinta transition-colors group-hover:text-papel group-focus-visible:text-papel sm:text-3xl">
+          {rotulo}
+        </span>
+        <span className="mt-1.5 flex items-center gap-2 text-sm text-cinza-forte transition-colors group-hover:text-papel/80 group-focus-visible:text-papel/80">
+          {descricao}
+          <span
+            aria-hidden
+            className="text-laranja transition-transform group-hover:translate-x-1"
+          >
+            →
+          </span>
+        </span>
+      </span>
+    </Link>
+  )
+}
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
+export default function PortaDeEntrada() {
+  return (
+    <main
+      id="conteudo"
+      className="mx-auto flex min-h-dvh max-w-5xl flex-col justify-between gap-8 px-5 py-7 sm:px-8"
+    >
+      <header>
+        <MarcaPrumo tamanho="grande" />
+        <p className="mt-2 max-w-sm text-sm leading-relaxed text-cinza-forte">
+          {PRODUTO.subtitulo}
+        </p>
+      </header>
+
+      <div>
+        {/* O trilho do semestre nasce aqui e atravessa a timeline do registro. */}
+        <div aria-hidden className="h-0.5 w-full bg-laranja" />
+        <nav aria-label="Escolha por onde entrar" className="grid border border-t-0 border-linha sm:grid-cols-2">
+          <Porta
+            href="/registro"
+            ordem="01"
+            rotulo="Registro do projeto"
+            descricao="A trajetória da equipe, semana a semana"
           />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
+          <Porta
+            href="/sistema"
+            ordem="02"
+            rotulo="Sistema"
+            descricao="O MVP funcionando"
+            className="border-t border-linha sm:border-l sm:border-t-0"
           />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
-  );
+        </nav>
+      </div>
+
+      <Rodape />
+    </main>
+  )
 }
