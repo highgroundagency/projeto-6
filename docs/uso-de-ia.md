@@ -21,7 +21,10 @@ Regras que a equipe adotou:
 | 15/08/2026 | s2 | Claude (Anthropic) | Sessão administrativa assinada com HMAC, conferência de senha em tempo constante e rate limit | `src/lib/admin/*` | pendente |
 | 15/08/2026 | s2 | Claude (Anthropic) | Tipos do registro semanal que quebram o build quando um ciclo está incompleto | `src/lib/registro/tipos.ts` | pendente |
 | 15/08/2026 | s2 | Claude (Anthropic) | Motor de cálculo da gratificação, memória de cálculo e testes de casos-limite | `src/lib/calculo/*` | pendente |
-| 15/08/2026 | s2 | Claude (Anthropic) | Gerador de dados sintéticos com semente fixa para o seed do sistema | `scripts/gerar-seed.ts` | pendente |
+| 15/08/2026 | s2 | Claude (Anthropic) | Gerador de dados sintéticos com semente fixa para o seed do sistema | `src/lib/seed/` | pendente |
+| 15/08/2026 | s2 | Claude (Anthropic) | Telas do sistema: dashboard da CAM, indicadores, lançamento, meu resultado, auditoria, gestão, analytics e contestação | `src/app/sistema/` | pendente |
+| 15/08/2026 | s2 | Claude (Anthropic) | Verificador automatizado de vazamento de conteúdo futuro e suíte end-to-end | `scripts/verificar-vazamento.ts`, `e2e/` | pendente |
+| 15/08/2026 | s2 | Claude (Anthropic) | Primeira versão dos documentos de arquitetura, segurança, privacidade, decisões, releases e validação | `docs/` | pendente |
 
 ## O que a IA **não** fez
 

@@ -1,4 +1,5 @@
 import { NextResponse, type NextRequest } from 'next/server'
+import { redirecionar } from '@/lib/http'
 import { ehPerfilValido, NOME_COOKIE_PERFIL } from '@/lib/sistema'
 
 /**
@@ -13,11 +14,7 @@ export async function POST(requisicao: NextRequest) {
   const perfil = String(formulario.get('perfil') ?? '')
   const voltarPara = String(formulario.get('voltarPara') ?? '/sistema')
 
-  const destino = requisicao.nextUrl.clone()
-  destino.pathname = voltarPara.startsWith('/sistema') ? voltarPara : '/sistema'
-  destino.search = ''
-
-  const resposta = NextResponse.redirect(destino, 303)
+  const resposta = redirecionar(voltarPara.startsWith('/sistema') ? voltarPara : '/sistema')
 
   if (ehPerfilValido(perfil)) {
     resposta.cookies.set(NOME_COOKIE_PERFIL, perfil, {

@@ -1,5 +1,6 @@
-import { NextResponse, type NextRequest } from 'next/server'
+import { type NextRequest } from 'next/server'
 import { z } from 'zod'
+import { comParametros, redirecionar } from '@/lib/http'
 import { BASE } from '@/lib/seed'
 import { exigirFeature, perfilAtual } from '@/lib/sistema'
 import { registrarLancamento } from '@/lib/sistema/estado'
@@ -22,8 +23,6 @@ export async function POST(requisicao: NextRequest) {
   await exigirFeature('lancamento')
 
   const formulario = await requisicao.formData()
-  const destino = requisicao.nextUrl.clone()
-  destino.pathname = '/sistema/lancamento'
 
   const analisado = corpoSchema.safeParse({
     indicadorId: formulario.get('indicadorId'),
@@ -35,25 +34,31 @@ export async function POST(requisicao: NextRequest) {
 
   if (!analisado.success) {
     const primeiro = analisado.error.issues[0]
-    destino.search = `?erro=${encodeURIComponent(
-      `Lançamento recusado: ${primeiro.path.join('.')} — ${primeiro.message}.`,
-    )}`
-    return NextResponse.redirect(destino, 303)
+    return redirecionar(
+      comParametros('/sistema/lancamento', {
+        area: String(formulario.get('area') ?? ''),
+        erro: `Lançamento recusado: ${primeiro.path.join('.')} — ${primeiro.message}.`,
+      }),
+    )
   }
 
   const dados = analisado.data
-  destino.search = `?area=${encodeURIComponent(dados.area)}`
 
   const perfil = await perfilAtual()
   if (perfil !== 'area_tecnica' && perfil !== 'cam') {
-    destino.search += `&erro=${encodeURIComponent('Este perfil não lança indicadores.')}`
-    return NextResponse.redirect(destino, 303)
+    return redirecionar(
+      comParametros('/sistema/lancamento', {
+        area: dados.area,
+        erro: 'Este perfil não lança indicadores.',
+      }),
+    )
   }
 
   const indicador = BASE.indicadores.find((i) => i.id === dados.indicadorId)
   if (!indicador) {
-    destino.search += `&erro=${encodeURIComponent('Indicador desconhecido.')}`
-    return NextResponse.redirect(destino, 303)
+    return redirecionar(
+      comParametros('/sistema/lancamento', { area: dados.area, erro: 'Indicador desconhecido.' }),
+    )
   }
 
   const resultado = registrarLancamento(
@@ -69,6 +74,10 @@ export async function POST(requisicao: NextRequest) {
     new Date().toISOString(),
   )
 
-  destino.search += `&${resultado.ok ? 'ok' : 'erro'}=${encodeURIComponent(resultado.mensagem)}`
-  return NextResponse.redirect(destino, 303)
+  return redirecionar(
+    comParametros('/sistema/lancamento', {
+      area: dados.area,
+      [resultado.ok ? 'ok' : 'erro']: resultado.mensagem,
+    }),
+  )
 }

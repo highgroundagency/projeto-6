@@ -1,5 +1,6 @@
 import { NextResponse, type NextRequest } from 'next/server'
 import { NOME_COOKIE_SESSAO, obterSegredo, sessaoValida } from '@/lib/admin/sessao'
+import { redirecionarNoMiddleware } from '@/lib/http'
 
 /**
  * Primeira camada de proteção do painel (§7.1).
@@ -36,10 +37,7 @@ export async function middleware(requisicao: NextRequest) {
     return NextResponse.json({ erro: 'não autorizado' }, { status: 401 })
   }
 
-  const destino = requisicao.nextUrl.clone()
-  destino.pathname = '/admin/entrar'
-  destino.search = ''
-  return NextResponse.redirect(destino)
+  return redirecionarNoMiddleware(requisicao, '/admin/entrar')
 }
 
 export const config = {

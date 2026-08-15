@@ -10,6 +10,7 @@ import {
   verificarToken,
 } from '@/lib/admin/sessao'
 import { obterStore } from '@/lib/config/store'
+import { redirecionar } from '@/lib/http'
 import { IDS_CICLOS, type CicloId } from '@/lib/cronograma'
 import { ehDataISO } from '@/lib/datas'
 import { overlaySchema, type Overlay } from '@/lib/visao'
@@ -121,10 +122,7 @@ export async function POST(requisicao: NextRequest) {
     }
   }
 
-  const destino = requisicao.nextUrl.clone()
-  destino.pathname = '/admin'
-  destino.search = store.gravavel ? '' : '?apenas-sessao=1'
-  const resposta = NextResponse.redirect(destino, 303)
+  const resposta = redirecionar(store.gravavel ? '/admin' : '/admin?apenas-sessao=1')
 
   if (acao === 'limpar-overlay') {
     resposta.cookies.delete(NOME_COOKIE_VISAO)

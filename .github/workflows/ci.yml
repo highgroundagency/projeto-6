@@ -1,0 +1,66 @@
+name: CI
+
+on:
+  push:
+    branches: ['**']
+  pull_request:
+
+jobs:
+  verificar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Instalar dependências
+        run: npm ci
+
+      # Este passo é o portão da tipagem: um ciclo publicado sem responsáveis,
+      # com lista vazia ou com integrante inexistente não compila.
+      - name: Checagem de tipos
+        run: npm run typecheck
+
+      - name: Testes de unidade
+        run: npm test
+
+      - name: Build de produção
+        run: npm run build
+
+      # Prova que conteúdo de release futuro não chega ao visitante (§6.3).
+      - name: Verificação de vazamento
+        run: npm run verificar-vazamento
+
+  e2e:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    needs: verificar
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Instalar dependências
+        run: npm ci
+
+      - name: Instalar navegador
+        run: npx playwright install --with-deps chromium
+
+      - name: Jornadas críticas
+        run: npm run e2e
+
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: relatorio-playwright
+          path: playwright-report/
+          retention-days: 7

@@ -1,5 +1,6 @@
-import { NextResponse, type NextRequest } from 'next/server'
+import { type NextRequest } from 'next/server'
 import { z } from 'zod'
+import { comParametros, redirecionar } from '@/lib/http'
 import { BASE } from '@/lib/seed'
 import { exigirFeature, perfilAtual } from '@/lib/sistema'
 import { abrirContestacao } from '@/lib/sistema/contestacoes'
@@ -15,13 +16,12 @@ export async function POST(requisicao: NextRequest) {
   await exigirFeature('contestacao')
 
   const formulario = await requisicao.formData()
-  const destino = requisicao.nextUrl.clone()
-  destino.pathname = '/sistema/contestacao'
 
   const perfil = await perfilAtual()
   if (perfil !== 'gestor' && perfil !== 'cam') {
-    destino.search = `?erro=${encodeURIComponent('Este perfil não abre contestação.')}`
-    return NextResponse.redirect(destino, 303)
+    return redirecionar(
+      comParametros('/sistema/contestacao', { erro: 'Este perfil não abre contestação.' }),
+    )
   }
 
   const analisado = corpoSchema.safeParse({
@@ -33,10 +33,11 @@ export async function POST(requisicao: NextRequest) {
 
   if (!analisado.success) {
     const primeiro = analisado.error.issues[0]
-    destino.search = `?erro=${encodeURIComponent(
-      `Contestação recusada: ${primeiro.path.join('.')} — ${primeiro.message}.`,
-    )}`
-    return NextResponse.redirect(destino, 303)
+    return redirecionar(
+      comParametros('/sistema/contestacao', {
+        erro: `Contestação recusada: ${primeiro.path.join('.')} — ${primeiro.message}.`,
+      }),
+    )
   }
 
   const dados = analisado.data
@@ -44,8 +45,9 @@ export async function POST(requisicao: NextRequest) {
   const cicloExiste = BASE.ciclos.some((c) => c.id === dados.cicloId)
 
   if (!gestorExiste || !cicloExiste) {
-    destino.search = `?erro=${encodeURIComponent('Gestor ou ciclo desconhecido.')}`
-    return NextResponse.redirect(destino, 303)
+    return redirecionar(
+      comParametros('/sistema/contestacao', { erro: 'Gestor ou ciclo desconhecido.' }),
+    )
   }
 
   abrirContestacao({
@@ -56,8 +58,10 @@ export async function POST(requisicao: NextRequest) {
     abertaEm: new Date().toISOString(),
   })
 
-  destino.search = `?gestor=${encodeURIComponent(dados.gestorId)}&ok=${encodeURIComponent(
-    'Contestação registrada. A comissão responde dentro do prazo do ciclo.',
-  )}`
-  return NextResponse.redirect(destino, 303)
+  return redirecionar(
+    comParametros('/sistema/contestacao', {
+      gestor: dados.gestorId,
+      ok: 'Contestação registrada. A comissão responde dentro do prazo do ciclo.',
+    }),
+  )
 }

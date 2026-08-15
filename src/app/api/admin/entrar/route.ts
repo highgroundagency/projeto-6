@@ -8,6 +8,7 @@ import {
 } from '@/lib/admin/rate-limit'
 import { senhaConfere, senhaEsperada } from '@/lib/admin/senha'
 import { criarTokenSessao, NOME_COOKIE_SESSAO, obterSegredo, opcoesCookieSessao } from '@/lib/admin/sessao'
+import { redirecionar } from '@/lib/http'
 
 /**
  * Login do painel (§7.1).
@@ -20,11 +21,8 @@ import { criarTokenSessao, NOME_COOKIE_SESSAO, obterSegredo, opcoesCookieSessao 
 const corpoSchema = z.object({ senha: z.string().min(1).max(200) })
 
 /** Erro genérico: não distingue senha errada de limite estourado. */
-function comErro(requisicao: NextRequest) {
-  const destino = requisicao.nextUrl.clone()
-  destino.pathname = '/admin/entrar'
-  destino.search = '?erro=1'
-  return NextResponse.redirect(destino, 303)
+function comErro() {
+  return redirecionar('/admin/entrar?erro=1')
 }
 
 export async function POST(requisicao: NextRequest) {
@@ -38,27 +36,24 @@ export async function POST(requisicao: NextRequest) {
 
   const ip = ipDaRequisicao(requisicao.headers)
   if (!verificarLimite(ip).permitido) {
-    return comErro(requisicao)
+    return comErro()
   }
 
   const formulario = await requisicao.formData()
   const analisado = corpoSchema.safeParse({ senha: formulario.get('senha') })
   if (!analisado.success) {
     registrarTentativa(ip)
-    return comErro(requisicao)
+    return comErro()
   }
 
   if (!(await senhaConfere(analisado.data.senha, senhaEsperada()))) {
     registrarTentativa(ip)
-    return comErro(requisicao)
+    return comErro()
   }
 
   limparTentativas(ip)
 
-  const destino = requisicao.nextUrl.clone()
-  destino.pathname = '/admin'
-  destino.search = ''
-  const resposta = NextResponse.redirect(destino, 303)
+  const resposta = redirecionar('/admin')
   resposta.cookies.set(NOME_COOKIE_SESSAO, await criarTokenSessao(segredo), opcoesCookieSessao())
   return resposta
 }
