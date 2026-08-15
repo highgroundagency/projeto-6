@@ -42,7 +42,13 @@ cada build.
 
 ## Painel administrativo
 
-Acesso pelo ponto discreto no rodapé → `/admin/entrar`. Senha em `ADMIN_SENHA`.
+Acesso por URL direta: **`/admin/entrar`**. Senha em `ADMIN_SENHA`. Nenhuma página do site
+aponta para lá — o ponto que ficava no rodapé saiu na ADR-015, porque anunciava o mecanismo
+a quem só estava visitando. Guarde o endereço; não há link para ele.
+
+> **Antes do primeiro deploy público:** troque `ADMIN_SENHA`. O padrão `0321` está no briefing
+> e neste repositório, que é público. É essa variável — não a ausência do link — que impede
+> alguém de entrar e mexer no que o professor vê.
 
 O painel controla **quando o que já existe fica visível**. Ele não edita conteúdo: conteúdo
 vive no Git, versionado, com histórico de quem escreveu o quê.

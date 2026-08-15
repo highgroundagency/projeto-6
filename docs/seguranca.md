@@ -9,7 +9,7 @@ usada para o resto — esconder isso seria pior do que ter o risco.
 | Ameaça | Onde se aplica | Mitigação atual | Estado |
 | --- | --- | --- | --- |
 | **S**poofing — fingir ser a CAM | Painel `/admin` | Senha única conferida só no servidor, em tempo constante; cookie httpOnly assinado com HMAC-SHA256; 30 dias de validade | Implementado |
-| **S**poofing — fingir ser outro perfil no sistema | Seletor de perfil | **Não mitigado, por design**: o seletor é login simulado e não protege nada, o que a tela declara. As políticas de RLS que resolveriam isso estão escritas e testadas em `supabase/migrations/`, mas não ligadas ao app | Risco aceito e declarado |
+| **S**poofing — fingir ser outro perfil no sistema | Seletor de perfil | **Não mitigado, por design**: o seletor é login simulado e não protege nada, o que a tela declara. Ele é cookie por visitante, então trocar de perfil não afeta terceiros. As políticas de RLS que resolveriam isso estão escritas e testadas em `supabase/migrations/`, mas não ligadas ao app | Risco aceito e declarado |
 | **T**ampering — adulterar o cookie de sessão | `/admin/*` | Payload assinado; qualquer alteração invalida a assinatura; comparação em tempo constante | Implementado |
 | **T**ampering — adulterar o overlay de visão | Cookie `prumo_visao` | Mesmo esquema de assinatura; conteúdo revalidado com zod após verificar a assinatura | Implementado |
 | **T**ampering — alterar resultado já homologado | Motor de cálculo | Regra versionada: alterar cria nova versão e não toca na vigente; recálculo do ciclo antigo reproduz o mesmo número | Implementado |
@@ -20,12 +20,13 @@ usada para o resto — esconder isso seria pior do que ter o risco.
 | **D**enial of service — sobrecarga da aplicação | Toda a aplicação | Limites da plataforma (Vercel); páginas leves e sem consulta pesada | Delegado à plataforma |
 | **E**levation of privilege — acessar `/admin` sem sessão | `/admin/*`, `/api/admin/*` | Middleware **e** revalidação da sessão dentro de cada page e route handler | Implementado |
 | **E**levation of privilege — agir fora do próprio perfil | APIs do sistema | Cada route handler confere o perfil antes de agir e recusa com motivo | Implementado (sobre login simulado) |
+| **T**ampering — adulterar a demonstração alheia | `/api/sistema/ciclo` | O estado do ciclo é compartilhado por todos os visitantes da instância e a transição não volta. Exige sessão de admin (`exigirAdmin`), e o controle não é renderizado para quem não a tem | Implementado |
 
 ## OWASP Top 10 (2021) — estado
 
 | Risco | Estado | Observação |
 | --- | --- | --- |
-| A01 Quebra de controle de acesso | **Parcial** | Painel protegido em duas camadas. No sistema, o RBAC roda sobre seletor simulado; as políticas de RLS existem e estão testadas, mas não estão ligadas ao app |
+| A01 Quebra de controle de acesso | **Parcial** | Painel protegido em duas camadas, e o avanço de ciclo passou a exigir a mesma sessão. No resto do sistema o RBAC roda sobre seletor simulado; as políticas de RLS existem e estão testadas, mas não estão ligadas ao app |
 | A02 Falhas criptográficas | **Coberto** | HMAC-SHA256 via Web Crypto; segredo só em env; nenhuma senha persistida |
 | A03 Injeção | **Coberto** | O app não emite SQL; toda entrada validada por zod; JSX escapa saída por padrão. O script de semeadura usa consultas parametrizadas |
 | A04 Design inseguro | **Coberto** | Regra versionada e auditoria append-only são decisões de design contra adulteração |
@@ -42,10 +43,16 @@ O painel foi criado pela equipe para controlar o que o professor vê. Isso é, p
 definição, um alvo. Os riscos, sem maquiagem:
 
 **A senha padrão `0321` é pública.** Ela está no briefing da disciplina e neste
-repositório. Quem ler o enunciado consegue entrar num deploy que não trocou
+repositório, que é público. Quem ler o enunciado consegue entrar num deploy que não trocou
 `ADMIN_SENHA`. Mitigação: trocar a variável no ambiente de produção. Enquanto não for
 trocada, o risco real é limitado — o painel não edita conteúdo, não expõe dado pessoal e
 só controla a data de liberação de material que será público de qualquer forma.
+
+**Nada no site aponta para o painel.** O rodapé já teve um ponto discreto levando a
+`/admin/entrar`; ele saiu na ADR-015, porque um link rotulado "Painel administrativo" é
+encontrado por Ctrl+F, por leitor de tela e por quem passa o mouse no canto. Isso reduz o
+tropeço, **não** é controle de acesso: este repositório é público e este próprio documento
+descreve o mecanismo, como o §7 exige. Quem protege é a senha trocada em produção.
 
 **Autenticação por senha única, sem identidade.** Não há usuário, não há MFA, não há
 revogação individual. Todo mundo da equipe usa a mesma senha, e o log de liberações
@@ -83,17 +90,34 @@ simulado, sem autenticação, e quem separa as visões é a própria aplicação
 para um protótipo com dados sintéticos e inadequado para qualquer coisa além disso — e é por
 isso que a tela diz "Perfil simulado" em vez de fingir um login.
 
-A consequência prática: **num deploy público, qualquer visitante pode trocar de perfil.** Como
-não há dado real e as funcionalidades ainda estão travadas por release, o risco é de
-demonstração, não de vazamento. Mas é um risco, e está aqui.
+A consequência prática precisa ser dita com precisão, porque a formulação óbvia erra o alvo.
+**Num deploy público, qualquer visitante troca de perfil** — e isso é quase inofensivo: o
+perfil é cookie do próprio visitante, ninguém afeta ninguém, e não há dado real para ver.
+
+O que importava era a **escrita em estado compartilhado**. `src/lib/sistema/estado.ts` guarda
+as alterações em variáveis de módulo, na memória do processo: elas valem para todos os
+visitantes daquela instância. Três ações escrevem ali, e elas não são equivalentes:
+
+| Ação | Efeito em terceiros | Decisão |
+| --- | --- | --- |
+| Avançar o estado do ciclo | Irreversível pela interface. Sair de `lancamento_aberto` fecha a janela para todo mundo | **Exige sessão de admin** (ADR-015); o controle nem aparece para os demais |
+| Registrar lançamento | Aditivo; entra na trilha com autor e timestamp | Aberto — é o fluxo que a banca precisa experimentar |
+| Abrir contestação | Aditivo; entra na lista do ciclo | Aberto, mesma razão |
+
+O risco residual é o de qualquer protótipo com escrita aberta: alguém polui a base sintética
+com lançamentos. Reseta no redeploy, aparece na auditoria e não expõe ninguém.
 
 ## Limitações conhecidas
 
 1. O seletor de perfil não é autenticação. Está rotulado como tal no código e na tela, mas
-   num deploy público qualquer pessoa alterna entre os quatro perfis.
+   num deploy público qualquer pessoa alterna entre os quatro perfis. A única credencial real
+   do projeto é a sessão de admin, e ela não vem do seletor.
 2. A camada de escrita do sistema vive em memória: alterações se perdem no reinício e podem
-   não valer entre requisições em serverless.
-3. A CSP usa `'unsafe-inline'` em `script-src` e `style-src`. O próximo passo é nonce por
+   não valer entre requisições em serverless. Lançamento e contestação seguem abertos a
+   qualquer visitante, por decisão — ver a tabela acima.
+3. Esconder o link do painel é redução de tropeço, não segurança. O repositório é público e
+   este documento descreve o mecanismo; a proteção efetiva é `ADMIN_SENHA` trocada em produção.
+4. A CSP usa `'unsafe-inline'` em `script-src` e `style-src`. O próximo passo é nonce por
    requisição.
-4. Não há proteção CSRF explícita além de `sameSite=lax` — suficiente para formulários
+5. Não há proteção CSRF explícita além de `sameSite=lax` — suficiente para formulários
    `POST` de mesma origem, insuficiente se algum dia houver API pública.

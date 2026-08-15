@@ -161,3 +161,27 @@ lançamento e regra imutável são gatilhos em `plpgsql`.
 ciclo homologado — o script de semeadura teve que obedecer à mesma ordem de estados que a
 interface. No app, sem banco, essas garantias dependem de `src/lib/sistema/estado.ts` ser o
 único caminho de escrita, o que é mais fraco e está declarado em docs/seguranca.md.
+
+---
+
+## ADR-015 · Avançar fase exige sessão de admin, e o controle some para os demais
+
+**Contexto.** Sem Supabase, o `/sistema` voltou a rodar sem autenticação. O estado do ciclo
+vive em variáveis de módulo (`src/lib/sistema/estado.ts`) — memória do processo, compartilhada
+por todos os visitantes daquela instância — e a transição não tem volta pela interface. A tela
+da CAM ainda oferecia o botão a qualquer um, desabilitado, com a legenda "Só o perfil CAM
+avança o estado do ciclo": um convite a trocar o perfil no seletor e clicar. Um clique alheio
+deixaria a janela de lançamento fechada para todo mundo, inclusive para o professor.
+
+**Decisão.** `/api/sistema/ciclo` chama `exigirAdmin()` antes de qualquer coisa, e o formulário
+de transição só é renderizado quando `ContextoSistema.admin` é verdadeiro. O ponto do rodapé
+que apontava para `/admin/entrar` saiu. Lançamento, contestação e o seletor de perfil continuam
+abertos: são o MVP que o professor precisa navegar, são aditivos e aparecem na trilha.
+
+**Consequência.** A demonstração deixa de ser adulterável por quem passa pelo site, e a prévia
+"ver como visitante" ficou fiel — `admin` também é `false` nela, então o admin enxerga
+exatamente os controles que o visitante enxergaria. O que **não** muda: o repositório é público
+e `docs/seguranca.md` descreve o painel, porque o §7 exige essa análise. Quem protege de fato é
+`ADMIN_SENHA` trocada em produção, não o esconderijo — enquanto ela for `0321`, isto é
+arrumação de interface, não controle de acesso. A resposta é 404, não 403, pela mesma razão de
+`exigirAdmin` em `/admin`: não confirmar o mecanismo a quem não deveria conhecê-lo.

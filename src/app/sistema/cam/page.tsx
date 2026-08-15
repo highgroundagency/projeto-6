@@ -15,7 +15,7 @@ export default async function TelaCam({
 }: {
   searchParams: Promise<{ ok?: string; erro?: string }>
 }) {
-  const { perfil } = await exigirFeature('painel-cam')
+  const { perfil, admin } = await exigirFeature('painel-cam')
   const { ok, erro } = await searchParams
 
   const dados = await carregarDados()
@@ -31,6 +31,15 @@ export default async function TelaCam({
 
   const pendentes = porArea.filter((linha) => linha.enviados < linha.total)
   const seguinte = dados.proximoEstado(emAndamento.estado)
+
+  /**
+   * O controle de transição só existe para quem tem sessão de admin (ADR-015).
+   *
+   * Ver em que fase o ciclo está é informação do MVP; movê-lo não é — o estado
+   * vive na memória do processo e é compartilhado por todos os visitantes, então
+   * um clique de qualquer pessoa mudaria a demonstração para as outras. Quem não
+   * é admin não vê o formulário nem qualquer menção a ele.
+   */
   const podeAgir = perfil === 'cam'
 
   return (
@@ -50,7 +59,11 @@ export default async function TelaCam({
       >
         <TrilhoEstados estado={emAndamento.estado} />
 
-        {seguinte ? (
+        {!seguinte ? (
+          <p className="mt-4 border-t border-linha pt-4 text-sm text-cinza-forte">
+            O ciclo já está publicado: não há transição seguinte.
+          </p>
+        ) : admin ? (
           <form action="/api/sistema/ciclo" method="post" className="mt-4 border-t border-linha pt-4">
             <input type="hidden" name="cicloId" value={emAndamento.id} />
             <p className="text-sm">
@@ -79,11 +92,7 @@ export default async function TelaCam({
               </p>
             ) : null}
           </form>
-        ) : (
-          <p className="mt-4 border-t border-linha pt-4 text-sm text-cinza-forte">
-            O ciclo já está publicado: não há transição seguinte.
-          </p>
-        )}
+        ) : null}
       </Painel>
 
       <Painel

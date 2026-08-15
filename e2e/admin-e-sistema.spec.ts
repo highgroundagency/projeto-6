@@ -22,10 +22,14 @@ async function entrarNoPainel(page: import('@playwright/test').Page) {
 }
 
 test.describe('acesso ao painel', () => {
-  test('o ponto do rodapé leva ao login', async ({ page }) => {
-    await page.goto('/registro')
-    await page.getByRole('link', { name: 'Painel administrativo' }).click()
-    await expect(page).toHaveURL(/\/admin\/entrar$/)
+  test('nenhuma página anuncia o painel', async ({ page }) => {
+    // O rodapé já teve um ponto discreto apontando para /admin/entrar. Ele saiu
+    // na ADR-015: um link rotulado é achado por Ctrl+F e por leitor de tela.
+    for (const rota of ['/', '/registro', '/sistema', '/transparencia-ia', '/status']) {
+      await page.goto(rota)
+      expect(await page.locator('a[href^="/admin"]').count(), `${rota} linka para /admin`).toBe(0)
+      expect(await page.content(), `${rota} cita o painel`).not.toContain('Painel administrativo')
+    }
   })
 
   test('sem sessão, /admin redireciona para o login', async ({ page }) => {
@@ -97,6 +101,44 @@ test.describe('gate das funcionalidades', () => {
   test('a casca do sistema é honesta sobre o que ainda não existe', async ({ page }) => {
     await page.goto('/sistema')
     await expect(page.getByText('O sistema ainda não entrou em operação')).toBeVisible()
+  })
+})
+
+/**
+ * Avanço de estado do ciclo — a única escrita do sistema com credencial.
+ *
+ * O estado vive na memória do processo e vale para todos os visitantes daquela
+ * instância, e a transição não tem volta pela interface. Ver ADR-015.
+ */
+test.describe('avanço de ciclo', () => {
+  const CONTROLE = /^(Avançar para|Homologar ciclo)/
+
+  test('sem sessão, a rota não existe', async ({ page }) => {
+    const resposta = await page.request.post('/api/sistema/ciclo', {
+      form: { cicloId: 'ciclo-2026-06', confirmo: 'on' },
+      maxRedirects: 0,
+    })
+    // 404, não 401: não confirmamos o mecanismo a quem não deveria conhecê-lo.
+    expect(resposta.status()).toBe(404)
+  })
+
+  test('a prévia de visitante esconde o controle que o admin tem', async ({ page }) => {
+    await entrarNoPainel(page)
+
+    await page.goto('/sistema/cam')
+    await expect(page.getByRole('button', { name: CONTROLE })).toBeVisible()
+
+    await page.goto('/admin')
+    await page.getByLabel('Ver como visitante').check()
+    // 19/09 é a data da s5: a tela da CAM já está liberada para o público.
+    await page.getByLabel('Data simulada').fill('2026-09-19')
+    await page.getByRole('button', { name: 'Aplicar', exact: true }).click()
+
+    await page.goto('/sistema/cam')
+    await expect(page.getByRole('heading', { name: 'Funil de lançamento por área' })).toBeVisible()
+    await expect(page.getByRole('button', { name: CONTROLE })).toHaveCount(0)
+    // E nem a dica de que existe transição: o visitante não sabe que dá para agir.
+    expect(await page.content()).not.toContain('Próxima transição')
   })
 })
 

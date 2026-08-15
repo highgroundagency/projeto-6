@@ -27,6 +27,18 @@ export interface ContextoSistema {
   identidade: Identidade
   perfil: PerfilId
   feature: Feature
+  /**
+   * Pode operar controle que muda estado compartilhado (ADR-015).
+   *
+   * É a sessão de admin — a única credencial real do projeto; o perfil do
+   * seletor é preferência de navegação e não serve para isso. Fica `false`
+   * também no "ver como visitante", para que a prévia mostre exatamente o que o
+   * visitante veria, controles inclusive.
+   *
+   * Não fecha tela nenhuma: o único gate que devolve 404 continua sendo o de
+   * release, logo abaixo.
+   */
+  admin: boolean
 }
 
 /**
@@ -43,5 +55,11 @@ export async function exigirFeature(id: FeatureId): Promise<ContextoSistema> {
   if (!visao.visiveis.includes(feature.ciclo)) notFound()
 
   const identidade = await identidadeAtual()
-  return { visao, identidade, perfil: identidade.perfil, feature }
+  return {
+    visao,
+    identidade,
+    perfil: identidade.perfil,
+    feature,
+    admin: visao.admin && !visao.verComoVisitante,
+  }
 }

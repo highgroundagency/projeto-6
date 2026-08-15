@@ -6,8 +6,11 @@ import { MarcaCesar } from './marca'
 /**
  * Rodapé comum a todas as páginas.
  *
- * O ponto no canto direito é a entrada do painel administrativo (§1): discreto
- * de propósito, mas com rótulo acessível para quem navega por leitor de tela.
+ * Já teve um ponto discreto levando ao painel administrativo. Ele saiu na
+ * ADR-015: um link rotulado "Painel administrativo" é achado por Ctrl+F, por
+ * leitor de tela e por qualquer pessoa que passe o mouse no canto — anunciava
+ * de graça o mecanismo que controla o que o professor vê. O painel continua em
+ * `/admin/entrar`, por URL direta; quem protege é a senha, não o esconderijo.
  */
 export function Rodape({ className }: { className?: string }) {
   return (
@@ -29,19 +32,9 @@ export function Rodape({ className }: { className?: string }) {
         <span>{INSTITUICAO.equipe}</span>
       </div>
 
-      <div className="flex items-center gap-4">
-        <Link href="/transparencia-ia" className="underline underline-offset-4 hover:text-tinta">
-          Transparência no uso de IA
-        </Link>
-        <Link
-          href="/admin/entrar"
-          aria-label="Painel administrativo"
-          title="Painel administrativo"
-          className="px-1 text-base leading-none text-cinza opacity-30 transition-opacity hover:opacity-100 focus-visible:opacity-100"
-        >
-          ·
-        </Link>
-      </div>
+      <Link href="/transparencia-ia" className="underline underline-offset-4 hover:text-tinta">
+        Transparência no uso de IA
+      </Link>
     </footer>
   )
 }

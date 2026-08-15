@@ -6,7 +6,7 @@
  *   DATABASE_URL=postgresql://... npm run semear
  *   DATABASE_URL=postgresql://... npm run semear -- --limpar
  *
- * O app NÃO usa banco (ver ADR-015 em docs/decisoes.md). Este script existe
+ * O app NÃO usa banco (ver ADR-011 em docs/decisoes.md). Este script existe
  * para que o schema guardado continue utilizável: aponte para qualquer
  * PostgreSQL — incluindo a connection string direta de um projeto Supabase — e
  * a base sintética entra inteira.

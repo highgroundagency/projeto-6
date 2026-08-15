@@ -9,7 +9,7 @@ import { ehPerfilValido, NOME_COOKIE_PERFIL } from '@/lib/sistema'
  * visões do sistema. Por isso o cookie não é assinado nem httpOnly — e por isso
  * mesmo ele não protege nada. O RBAC de verdade está em
  * `supabase/migrations/` como políticas de RLS, escrito e testado, mas não
- * ligado ao app — ver docs/decisoes.md (ADR-015).
+ * ligado ao app — ver docs/decisoes.md (ADR-011).
  */
 export async function POST(requisicao: NextRequest) {
   const formulario = await requisicao.formData()

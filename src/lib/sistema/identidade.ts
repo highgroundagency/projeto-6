@@ -20,7 +20,7 @@ export function ehPerfilValido(valor: string): valor is PerfilId {
  * uma banca de cinco minutos precisa.
  *
  * O RBAC de verdade está escrito e testado em `supabase/migrations/`, como
- * políticas de RLS. Ele não está ligado ao app: ver docs/decisoes.md (ADR-015)
+ * políticas de RLS. Ele não está ligado ao app: ver docs/decisoes.md (ADR-011)
  * e docs/seguranca.md.
  */
 export interface Identidade {

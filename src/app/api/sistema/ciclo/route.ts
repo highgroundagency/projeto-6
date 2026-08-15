@@ -1,5 +1,6 @@
 import { type NextRequest } from 'next/server'
 import { z } from 'zod'
+import { exigirAdmin } from '@/lib/admin/guard'
 import { repositorio } from '@/lib/dados'
 import { comParametros, redirecionar } from '@/lib/http'
 import { exigirFeature, perfilAtual } from '@/lib/sistema'
@@ -12,11 +13,18 @@ const corpoSchema = z.object({
 /**
  * Avanço de estado do ciclo.
  *
- * A checagem de perfil aqui é conveniência de interface, não segurança: o
- * seletor de perfil é simulado. A validação da transição vive na camada de
- * escrita — e, no schema de `supabase/migrations/`, num gatilho do banco.
+ * ÚNICA ESCRITA DO SISTEMA QUE EXIGE CREDENCIAL (ADR-015). O estado do ciclo é
+ * compartilhado por todos os visitantes da instância, e a transição não tem
+ * volta pela interface: um clique alheio deixaria a janela de lançamento
+ * fechada para todo mundo. `exigirAdmin` responde 404 em vez de 403 pela mesma
+ * razão de `/admin` — não confirmar o mecanismo a quem não deveria conhecê-lo.
+ *
+ * A checagem de perfil, essa sim, é conveniência de interface: o seletor de
+ * perfil é simulado. A validação da transição vive na camada de escrita — e, no
+ * schema de `supabase/migrations/`, num gatilho do banco.
  */
 export async function POST(requisicao: NextRequest) {
+  await exigirAdmin()
   await exigirFeature('painel-cam')
 
   if ((await perfilAtual()) !== 'cam') {

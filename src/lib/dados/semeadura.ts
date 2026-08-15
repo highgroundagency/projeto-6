@@ -12,7 +12,7 @@ import {
  * Plano de semeadura da base sintética num PostgreSQL com o schema de
  * `supabase/migrations/` aplicado.
  *
- * O app não usa banco (ver ADR-015); isto existe para que o schema guardado
+ * O app não usa banco (ver ADR-011); isto existe para que o schema guardado
  * continue utilizável — e para provar, em `semeadura.test.ts`, que a base
  * sintética cabe nele.
  *

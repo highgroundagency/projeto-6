@@ -29,7 +29,7 @@ export default async function LayoutSistema({ children }: { children: React.Reac
 
           {/* Login simulado (§8.1): preferência de navegação, não autenticação.
               O RBAC real está em supabase/migrations/ como políticas de RLS —
-              escrito e testado, mas não ligado ao app (ADR-015). */}
+              escrito e testado, mas não ligado ao app (ADR-011). */}
           <form
             action="/api/sistema/perfil"
             method="post"

@@ -11,7 +11,7 @@ export type { Panorama, RepositorioDados, Resultado } from './tipos'
  * permanece porque é ela que mantém as oito telas sem acesso a dados espalhado
  * — e porque o schema de `supabase/migrations/` está escrito e testado, então
  * ligar um driver de banco depois é acrescentar um arquivo, não reescrever
- * telas. Ver docs/decisoes.md (ADR-015).
+ * telas. Ver docs/decisoes.md (ADR-011).
  */
 let cache: RepositorioDados | null = null
 
