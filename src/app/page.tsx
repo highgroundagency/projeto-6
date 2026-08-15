@@ -29,13 +29,13 @@ function Porta({
   return (
     <Link
       href={href}
-      className={`group flex min-h-40 flex-col justify-between gap-6 bg-white p-5 transition-colors hover:bg-tinta focus-visible:bg-tinta sm:min-h-56 sm:p-7 ${className ?? ''}`}
+      className={`group flex min-h-40 flex-col justify-between gap-6 bg-white p-5 transition-colors hover:bg-tinta focus-visible:bg-tinta sm:p-7 ${className ?? ''}`}
     >
       <span className="rotulo numero text-cinza-forte transition-colors group-hover:text-papel/60 group-focus-visible:text-papel/60">
         {ordem}
       </span>
       <span>
-        <span className="fonte-display block text-2xl leading-tight text-tinta transition-colors group-hover:text-papel group-focus-visible:text-papel sm:text-3xl">
+        <span className="fonte-display block text-2xl leading-tight text-tinta transition-colors group-hover:text-papel group-focus-visible:text-papel sm:text-4xl">
           {rotulo}
         </span>
         <span className="mt-1.5 flex items-center gap-2 text-sm text-cinza-forte transition-colors group-hover:text-papel/80 group-focus-visible:text-papel/80">
@@ -56,7 +56,7 @@ export default function PortaDeEntrada() {
   return (
     <main
       id="conteudo"
-      className="mx-auto flex min-h-dvh max-w-5xl flex-col justify-between gap-8 px-5 py-7 sm:px-8"
+      className="mx-auto flex min-h-dvh max-w-5xl flex-col gap-6 px-5 py-7 sm:px-8"
     >
       <header>
         <MarcaPrumo tamanho="grande" />
@@ -65,10 +65,15 @@ export default function PortaDeEntrada() {
         </p>
       </header>
 
-      <div>
+      {/* Os dois botões são o elemento de design da tela: ocupam todo o espaço
+          entre o cabeçalho e o rodapé, em vez de flutuar no meio do vazio. */}
+      <div className="flex flex-1 flex-col">
         {/* O trilho do semestre nasce aqui e atravessa a timeline do registro. */}
-        <div aria-hidden className="h-0.5 w-full bg-laranja" />
-        <nav aria-label="Escolha por onde entrar" className="grid border border-t-0 border-linha sm:grid-cols-2">
+        <div aria-hidden className="h-0.5 w-full shrink-0 bg-laranja" />
+        <nav
+          aria-label="Escolha por onde entrar"
+          className="grid flex-1 border border-t-0 border-linha sm:grid-cols-2"
+        >
           <Porta
             href="/registro"
             ordem="01"
