@@ -1,0 +1,169 @@
+import type { Metadata } from 'next'
+import { Num } from '@/components/base/num'
+import { Etiqueta } from '@/components/base/selo'
+import { Aviso, CabecalhoTela, Painel, SomenteLeitura } from '@/components/sistema/base'
+import type { FaixaPontuacao, RegraDePontuacao } from '@/lib/calculo/tipos'
+import { BASE } from '@/lib/seed'
+import { exigirFeature } from '@/lib/sistema'
+
+export const metadata: Metadata = { title: 'Indicadores e regras' }
+export const dynamic = 'force-dynamic'
+
+function chaveFaixa(faixa: FaixaPontuacao): string {
+  return `${faixa.de}|${faixa.ate ?? '∞'}`
+}
+
+/** Diff visual entre duas versões da regra — o que mudou, campo a campo. */
+function DiffDeVersoes({ anterior, nova }: { anterior: RegraDePontuacao; nova: RegraDePontuacao }) {
+  const antigas = new Map(anterior.faixas.map((f) => [chaveFaixa(f), f]))
+  const novas = new Map(nova.faixas.map((f) => [chaveFaixa(f), f]))
+  const chaves = [...new Set([...antigas.keys(), ...novas.keys()])].sort(
+    (a, b) => Number(a.split('|')[0]) - Number(b.split('|')[0]),
+  )
+
+  return (
+    <div className="overflow-x-auto border border-linha">
+      <table className="w-full min-w-[32rem] border-collapse text-sm">
+        <thead>
+          <tr className="border-b border-linha bg-papel-2">
+            <th className="rotulo px-3 py-2 text-left">Faixa de atingimento</th>
+            <th className="rotulo px-3 py-2 text-left">v{anterior.versao}</th>
+            <th className="rotulo px-3 py-2 text-left">v{nova.versao}</th>
+            <th className="rotulo px-3 py-2 text-left">Mudança</th>
+          </tr>
+        </thead>
+        <tbody>
+          {chaves.map((chave) => {
+            const antiga = antigas.get(chave)
+            const atual = novas.get(chave)
+            const situacao = !antiga ? 'adicionada' : !atual ? 'removida' : antiga.pontos === atual.pontos ? 'igual' : 'alterada'
+            const [de, ate] = chave.split('|')
+
+            return (
+              <tr key={chave} className="border-b border-linha last:border-0">
+                <td className="numero px-3 py-1.5 whitespace-nowrap">
+                  {Math.round(Number(de) * 100)}% a {ate === '∞' ? '∞' : `<${Math.round(Number(ate) * 100)}%`}
+                </td>
+                <td className="numero px-3 py-1.5">{antiga ? `${antiga.pontos} pts` : '—'}</td>
+                <td className="numero px-3 py-1.5">{atual ? `${atual.pontos} pts` : '—'}</td>
+                <td className="px-3 py-1.5">
+                  {situacao === 'igual' ? (
+                    <span className="text-cinza-forte">sem mudança</span>
+                  ) : (
+                    <Etiqueta tom={situacao === 'removida' ? 'alerta' : 'laranja'}>{situacao}</Etiqueta>
+                  )}
+                </td>
+              </tr>
+            )
+          })}
+        </tbody>
+      </table>
+    </div>
+  )
+}
+
+export default async function TelaIndicadores() {
+  await exigirFeature('indicadores')
+
+  const [v1, v2] = BASE.regras
+  const porArea = BASE.areas.map((area) => ({
+    area,
+    indicadores: BASE.indicadores.filter((i) => i.areaId === area.id),
+  }))
+
+  return (
+    <>
+      <CabecalhoTela
+        titulo="Indicadores e regras"
+        descricao="O que é medido, com que meta e peso — e a regra que transforma atingimento em pontos."
+        acao={<SomenteLeitura />}
+      />
+
+      <div className="mt-5">
+        <Aviso>
+          Indicadores e regras são <strong>dados</strong>, não código: quando a portaria
+          mudar, o cadastro muda pela interface e o software fica igual. No protótipo o
+          catálogo é sintético e a edição chega com o backend (F3).
+        </Aviso>
+      </div>
+
+      <Painel
+        titulo="Catálogo de indicadores"
+        descricao={`${BASE.indicadores.length} indicadores em ${BASE.areas.length} áreas.`}
+      >
+        <div className="space-y-5">
+          {porArea.map(({ area, indicadores }) => (
+            <div key={area.id}>
+              <h3 className="rotulo text-tinta">
+                {area.sigla} · {area.nome}
+              </h3>
+              <div className="mt-2 overflow-x-auto border border-linha">
+                <table className="w-full min-w-[44rem] border-collapse text-sm">
+                  <thead>
+                    <tr className="border-b border-linha bg-papel-2">
+                      {['Indicador', 'Unidade', 'Direção', 'Meta', 'Peso', 'Periodicidade', 'Fonte'].map((c) => (
+                        <th key={c} className="rotulo px-3 py-2 text-left whitespace-nowrap">
+                          {c}
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {indicadores.map((indicador) => (
+                      <tr key={indicador.id} className="border-b border-linha last:border-0">
+                        <td className="px-3 py-1.5">{indicador.nome}</td>
+                        <td className="px-3 py-1.5 text-cinza-forte">{indicador.unidade}</td>
+                        <td className="px-3 py-1.5 whitespace-nowrap text-cinza-forte">
+                          {indicador.direcao === 'maior_melhor' ? 'maior é melhor' : 'menor é melhor'}
+                        </td>
+                        <td className="numero px-3 py-1.5">{indicador.meta}</td>
+                        <td className="numero px-3 py-1.5">{indicador.peso}</td>
+                        <td className="px-3 py-1.5 text-cinza-forte">{indicador.periodicidade}</td>
+                        <td className="px-3 py-1.5 text-cinza-forte">{indicador.fonte}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          ))}
+        </div>
+      </Painel>
+
+      <Painel
+        titulo="Regras de pontuação versionadas"
+        descricao="Alterar uma regra cria uma nova versão. A vigente nunca é editada — sem isso, um ciclo homologado deixaria de reproduzir o próprio resultado."
+      >
+        <ul className="space-y-3">
+          {BASE.regras.map((regra) => (
+            <li key={regra.id} className="border border-linha p-3">
+              <div className="flex flex-wrap items-baseline justify-between gap-2">
+                <span className="fonte-display text-base">
+                  {regra.id} <Num className="text-sm">v{regra.versao}</Num>
+                </span>
+                <Num className="text-xs text-cinza-forte">
+                  vigência {regra.vigenteDe} → {regra.vigenteAte ?? 'em aberto'}
+                </Num>
+              </div>
+              <p className="mt-1 text-sm text-cinza-forte">{regra.descricao}</p>
+              <p className="numero mt-2 text-xs text-cinza-forte">
+                teto {Math.round(regra.tetoAtingimento * 100)}% · arredondamento{' '}
+                {regra.arredondamento.casas} casas ({regra.arredondamento.modo.replace(/_/g, ' ')}) ·
+                sem lançamento: {regra.semLancamento.replace(/_/g, ' ')}
+              </p>
+            </li>
+          ))}
+        </ul>
+      </Painel>
+
+      {v1 && v2 ? (
+        <Painel
+          titulo={`Diff: v${v1.versao} → v${v2.versao}`}
+          descricao="O que exatamente mudou entre as versões da regra."
+        >
+          <DiffDeVersoes anterior={v1} nova={v2} />
+        </Painel>
+      ) : null}
+    </>
+  )
+}
