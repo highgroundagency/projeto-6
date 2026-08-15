@@ -1,0 +1,146 @@
+@import 'tailwindcss';
+
+/* ---------------------------------------------------------------------------
+   PRUMO — design tokens (§12 do briefing)
+
+   Tailwind v4 declara o tema em CSS, não em tailwind.config.js.
+   Cada token vira utilitário automaticamente: --color-laranja → bg-laranja,
+   text-laranja, border-laranja.
+--------------------------------------------------------------------------- */
+
+@theme {
+  --color-laranja: #f15a24;
+  --color-tinta: #131313;
+  --color-papel: #faf8f4;
+  --color-cinza: #8a8580;
+  --color-verde-ok: #1f7a5c;
+  --color-vinho-alerta: #9e2b25;
+
+  /* Derivados de suporte — mesma família, para superfícies e fios de grade. */
+  --color-papel-2: #f2eee7;
+  --color-linha: #e2dcd2;
+  --color-laranja-fraco: #fde9e0;
+  /* O cinza do briefing tem contraste 3,45:1 sobre papel: serve para texto
+     grande e elementos decorativos, mas reprova em AA para corpo de texto.
+     Esta variante escura (5,4:1) é a usada em texto pequeno secundário. */
+  --color-cinza-forte: #6b6660;
+
+  --font-display: var(--fonte-display), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--fonte-corpo), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--fonte-mono), ui-monospace, 'SFMono-Regular', monospace;
+}
+
+/* ---------------------------------------------------------------------------
+   Base
+--------------------------------------------------------------------------- */
+
+* {
+  border-color: var(--color-linha);
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background-color: var(--color-papel);
+  color: var(--color-tinta);
+  font-family: var(--font-sans);
+  font-feature-settings: 'kern' 1;
+  text-rendering: optimizeLegibility;
+}
+
+/* Display: peso alto e tracking apertado, caixa alta em rótulos. */
+.fonte-display {
+  font-family: var(--font-display);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+
+/* Rótulo de seção: caixa alta, pequeno, espaçado. */
+.rotulo {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.6875rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-cinza-forte);
+}
+
+/* Números, datas, scores e memória de cálculo — a "linguagem de auditoria". */
+.numero {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+}
+
+/* ---------------------------------------------------------------------------
+   Acessibilidade
+--------------------------------------------------------------------------- */
+
+:focus-visible {
+  outline: 3px solid var(--color-laranja);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* Pula para o conteúdo — visível só quando recebe foco de teclado. */
+.pular-para-conteudo {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 100;
+}
+
+.pular-para-conteudo:focus {
+  left: 0.5rem;
+  top: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  background: var(--color-tinta);
+  color: var(--color-papel);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Elemento-assinatura: o trilho do semestre.
+   Linha contínua que nasce na porta de entrada, atravessa a timeline do
+   registro e entra no sistema — a metáfora de planilha → sistema.
+--------------------------------------------------------------------------- */
+
+.trilho {
+  background-image: linear-gradient(
+    to right,
+    var(--color-laranja) 0%,
+    var(--color-laranja) 100%
+  );
+  background-repeat: no-repeat;
+  background-size: 100% 2px;
+  background-position: 0 50%;
+}
+
+.trilho-vertical {
+  background-image: linear-gradient(
+    to bottom,
+    var(--color-laranja) 0%,
+    var(--color-laranja) 100%
+  );
+  background-repeat: no-repeat;
+  background-size: 2px 100%;
+  background-position: 50% 0;
+}
+
+@media print {
+  .sem-impressao {
+    display: none !important;
+  }
+}

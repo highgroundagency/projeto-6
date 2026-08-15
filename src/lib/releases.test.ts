@@ -1,0 +1,175 @@
+import { describe, expect, it } from 'vitest'
+import {
+  ADIANTAMENTO_PADRAO,
+  calcularReleaseAtual,
+  cicloCorrente,
+  cicloVisivel,
+  ciclosVisiveis,
+  estadoDoMarco,
+  proximoMarco,
+  resumirRelease,
+  type Travas,
+} from './releases'
+import { CRONOGRAMA, cicloPorId } from './cronograma'
+
+describe('calcularReleaseAtual', () => {
+  it('usa uma semana de adiantamento por padrão', () => {
+    expect(ADIANTAMENTO_PADRAO).toBe(7)
+  })
+
+  it('libera até s7 em 12/10 com adiantamento 7 (exemplo do briefing)', () => {
+    expect(calcularReleaseAtual({ hoje: '2026-10-12', adiantamentoDias: 7 })).toBe('s7')
+  })
+
+  it('avança duas semanas de uma vez quando o adiantamento vira 14', () => {
+    expect(calcularReleaseAtual({ hoje: '2026-10-12', adiantamentoDias: 14 })).toBe('s8')
+  })
+
+  it('libera o ciclo quando a data cai exatamente na fronteira', () => {
+    // 15/08 + 7 = 22/08, que é a data de s3: o limite é inclusivo.
+    expect(calcularReleaseAtual({ hoje: '2026-08-15', adiantamentoDias: 7 })).toBe('s3')
+  })
+
+  it('não libera o ciclo seguinte um dia antes da fronteira', () => {
+    expect(calcularReleaseAtual({ hoje: '2026-08-14', adiantamentoDias: 7 })).toBe('s2')
+  })
+
+  it('sem adiantamento, libera só o que já aconteceu', () => {
+    expect(calcularReleaseAtual({ hoje: '2026-08-22', adiantamentoDias: 0 })).toBe('s3')
+    expect(calcularReleaseAtual({ hoje: '2026-08-21', adiantamentoDias: 0 })).toBe('s2')
+  })
+
+  it('devolve null antes do primeiro ciclo', () => {
+    expect(calcularReleaseAtual({ hoje: '2026-07-01', adiantamentoDias: 7 })).toBeNull()
+  })
+
+  it('fica no último ciclo depois do fim do semestre', () => {
+    expect(calcularReleaseAtual({ hoje: '2027-02-10', adiantamentoDias: 7 })).toBe('sr2')
+  })
+
+  it('aceita adiantamento maior que o semestre inteiro', () => {
+    expect(calcularReleaseAtual({ hoje: '2026-08-08', adiantamentoDias: 365 })).toBe('sr2')
+  })
+
+  it('override manual tem prioridade sobre o cálculo por data', () => {
+    expect(
+      calcularReleaseAtual({ hoje: '2026-08-15', adiantamentoDias: 7, override: 'sr2' }),
+    ).toBe('sr2')
+  })
+
+  it('override também serve para voltar atrás', () => {
+    expect(
+      calcularReleaseAtual({ hoje: '2026-11-30', adiantamentoDias: 7, override: 's1' }),
+    ).toBe('s1')
+  })
+
+  it('ignora override desconhecido em vez de quebrar a página', () => {
+    expect(
+      calcularReleaseAtual({
+        hoje: '2026-10-12',
+        adiantamentoDias: 7,
+        override: 'lixo-vindo-de-env-var' as never,
+      }),
+    ).toBe('s7')
+  })
+})
+
+describe('cicloVisivel e ciclosVisiveis', () => {
+  it('mostra o release e tudo que veio antes', () => {
+    const visiveis = ciclosVisiveis({ releaseAtual: 's3' })
+    expect(visiveis).toEqual(['s1', 's2', 's3'])
+  })
+
+  it('não mostra nada quando nenhum ciclo começou', () => {
+    expect(ciclosVisiveis({ releaseAtual: null })).toEqual([])
+  })
+
+  it('trava sempre_visivel libera um ciclo fora de ordem sem mexer no resto', () => {
+    const travas: Travas = { s9: 'sempre_visivel' }
+    const visiveis = ciclosVisiveis({ releaseAtual: 's3', travas })
+    expect(visiveis).toEqual(['s1', 's2', 's3', 's9'])
+    expect(visiveis).not.toContain('s7')
+  })
+
+  it('trava sempre_oculto esconde ciclo já vencido', () => {
+    const travas: Travas = { s2: 'sempre_oculto' }
+    expect(ciclosVisiveis({ releaseAtual: 's3', travas })).toEqual(['s1', 's3'])
+  })
+
+  it('trava vale mesmo sem release nenhum', () => {
+    const travas: Travas = { ko: 'sempre_visivel' }
+    expect(ciclosVisiveis({ releaseAtual: null, travas })).toEqual(['ko'])
+  })
+
+  it('trava automatico é o mesmo que não ter trava', () => {
+    expect(cicloVisivel('s2', { releaseAtual: 's3', travas: { s2: 'automatico' } })).toBe(
+      true,
+    )
+    expect(cicloVisivel('s7', { releaseAtual: 's3', travas: { s7: 'automatico' } })).toBe(
+      false,
+    )
+  })
+
+  it('devolve os ciclos na ordem do cronograma', () => {
+    const visiveis = ciclosVisiveis({
+      releaseAtual: 'sr1',
+      travas: { s11: 'sempre_visivel' },
+    })
+    const posicoes = visiveis.map((id) => CRONOGRAMA.findIndex((c) => c.id === id))
+    expect([...posicoes].sort((a, b) => a - b)).toEqual(posicoes)
+  })
+})
+
+describe('cicloCorrente', () => {
+  it('ignora o adiantamento e responde onde a equipe está de fato', () => {
+    // Em 12/10 o release já mostra s7, mas a equipe está na semana imprensada.
+    expect(cicloCorrente('2026-10-12')).toBe('i2')
+  })
+})
+
+describe('marcos', () => {
+  it('aponta o próximo marco a partir de hoje', () => {
+    expect(proximoMarco('2026-08-15')?.id).toBe('ko')
+    expect(proximoMarco('2026-09-13')?.id).toBe('sr1')
+    expect(proximoMarco('2026-12-06')).toBeNull()
+  })
+
+  it('considera o marco de hoje como o próximo', () => {
+    expect(proximoMarco('2026-10-03')?.id).toBe('sr1')
+  })
+
+  it('classifica a trilha em feito / atual / futuro', () => {
+    const hoje = '2026-09-20'
+    expect(estadoDoMarco(cicloPorId('ko'), hoje)).toBe('feito')
+    expect(estadoDoMarco(cicloPorId('sr1'), hoje)).toBe('atual')
+    expect(estadoDoMarco(cicloPorId('sr2'), hoje)).toBe('futuro')
+  })
+})
+
+describe('resumirRelease', () => {
+  it('empacota o estado completo para a UI', () => {
+    const resumo = resumirRelease({ hoje: '2026-10-12' })
+    expect(resumo.releaseAtual).toBe('s7')
+    expect(resumo.cicloCorrente).toBe('i2')
+    expect(resumo.adiantamentoDias).toBe(7)
+    expect(resumo.manual).toBe(false)
+    expect(resumo.visiveis).toContain('s7')
+    expect(resumo.visiveis).not.toContain('s8')
+  })
+
+  it('marca como manual quando há override válido', () => {
+    const resumo = resumirRelease({ hoje: '2026-10-12', override: 'sr2' })
+    expect(resumo.manual).toBe(true)
+    expect(resumo.override).toBe('sr2')
+    expect(resumo.visiveis).toHaveLength(18)
+  })
+
+  it('não marca como manual quando o override é inválido', () => {
+    const resumo = resumirRelease({
+      hoje: '2026-10-12',
+      override: 'nao-existe' as never,
+    })
+    expect(resumo.manual).toBe(false)
+    expect(resumo.override).toBeNull()
+  })
+})
