@@ -292,3 +292,46 @@ responsivo, acessível e sujeito às mesmas checagens do resto.
 **O selo saiu junto.** Com todos os blocos validados, a pílula "validado" repetida 40 vezes
 não informava nada. O `Selo` agora só renderiza em rascunho: o carimbo existe para avisar do
 que ainda não foi revisado, e ausência de aviso é a informação.
+
+---
+
+## ADR-020 · Semanas futuras são planejamento declarado, não relato
+
+**Contexto.** Pediu-se o registro preenchido até a Semana 12. Só que essas semanas não
+aconteceram — a Semana 5 é 19/09 e hoje é agosto. O registro é o artefato factual que a
+banca avalia: escrever "Avanços" de uma semana futura é afirmar que algo ocorreu.
+
+**Decisão.** Escrever as dez semanas restantes como **plano**, usando o mecanismo que o
+projeto já tinha: todos os blocos com selo `rascunho`, que a interface exibe como pílula
+visível — e as semanas já vividas, validadas, não exibem selo nenhum. A distinção fica na
+tela, não num rodapé que ninguém lê. O bloco `feedback` fica em `nenhum` em todas elas:
+retorno de professor ou de cliente é fala de terceiro, e escrever por eles seria fabricar
+evidência, não planejar.
+
+**Consequência.** O semestre inteiro fica navegável, o professor vê que houve planejamento
+até o SR2, e ninguém confunde plano com relato. O custo é disciplina de manutenção: quando a
+semana chegar, alguém precisa reescrever o bloco contra o que de fato aconteceu e trocar o
+selo — se não fizer, o site fica dizendo "rascunho" numa semana já vencida, que é o sintoma
+correto de um registro desatualizado.
+
+---
+
+## ADR-021 · A vitrine abre com prazo, não com interruptor
+
+**Contexto.** Para uma apresentação, o site inteiro precisa ficar visível por algumas horas.
+`RELEASE_OVERRIDE=sr2` já faz isso — e fica aberto até alguém lembrar de fechar. Numa semana
+de entrega, ninguém lembra.
+
+**Decisão.** `RELEASE_ABERTO_ATE` recebe um instante ISO 8601. Enquanto o relógio não passar
+dele, TODO visitante enxerga os 18 ciclos e as oito telas; depois, o recorte volta sozinho.
+`janelaAberta` é função pura com o "agora" injetado, e a faixa do topo anuncia a vitrine
+para todo mundo — não só para quem tem sessão.
+
+**Consequência.** Isto **suspende a garantia do §6.3 de propósito**, e é a única coisa no
+projeto que faz isso: com a janela aberta, conteúdo de semana futura chega ao HTML do
+visitante. É o comportamento pedido, tem prazo, e se anuncia. `verificar-vazamento` roda sem
+a variável e continua provando o comportamento normal — 90 verificações.
+
+Valor ausente, vazio ou malformado fecha a janela. Uma env var digitada errada não pode
+derrubar o site e, muito menos, abri-lo por acidente: `'amanhã de manhã'` resulta em fechada,
+com teste que prova.

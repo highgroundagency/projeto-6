@@ -14,6 +14,7 @@ import {
 } from './admin/sessao'
 import {
   ciclosVisiveis,
+  janelaAberta,
   resumirRelease,
   type ResumoRelease,
   type Travas,
@@ -58,6 +59,13 @@ export interface Visao {
   overlay: Overlay | null
   /** false quando o ambiente não persiste configuração global (produção). */
   configGravavel: boolean
+  /**
+   * Janela de vitrine aberta: TODO visitante está vendo o site inteiro.
+   *
+   * Não é privilégio de sessão — é um estado do ambiente, com prazo, e some
+   * sozinho quando o prazo vence. Ver `janelaAberta` em releases.ts.
+   */
+  janelaAberta: boolean
 }
 
 async function lerSessaoAdmin(): Promise<boolean> {
@@ -120,8 +128,14 @@ export async function obterVisao(agora: Date = new Date()): Promise<Visao> {
 
   const release = resumirRelease({ hoje, adiantamentoDias, override, travas })
 
+  // A janela abre para todo mundo, não só para quem tem sessão. Fica DEPOIS do
+  // cálculo do release de propósito: o resumo continua mostrando qual seria o
+  // recorte normal, para o painel não mentir sobre a data.
+  const aberta = janelaAberta(process.env, agora)
+
   return {
     admin,
+    janelaAberta: aberta,
     modoCompleto,
     verComoVisitante,
     hoje,
@@ -129,9 +143,13 @@ export async function obterVisao(agora: Date = new Date()): Promise<Visao> {
     dataSimulada,
     release,
     // Modo completo ignora o release: o admin vê o projeto inteiro (§7.2).
-    visiveis: modoCompleto
-      ? [...IDS_CICLOS]
-      : ciclosVisiveis({ releaseAtual: release.releaseAtual, travas }),
+    // Modo completo é privilégio de sessão; janela aberta vale para todos. O
+    // "ver como visitante" continua vencendo o modo completo, mas NÃO vence a
+    // janela — se o site está aberto ao público, a prévia tem que mostrar isso.
+    visiveis:
+      modoCompleto || aberta
+        ? [...IDS_CICLOS]
+        : ciclosVisiveis({ releaseAtual: release.releaseAtual, travas }),
     configGlobal,
     overlay,
     configGravavel: store.gravavel,

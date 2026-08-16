@@ -23,20 +23,22 @@ export const CARREGADORES: Record<CicloId, CarregadorCiclo | null> = {
   s2: () => import('./s2'),
   s3: () => import('./s3'),
   s4: () => import('./s4'),
+  // Imprensados não têm registro próprio: as entregas da semana são
+  // acumuladas na seguinte. `null` aqui é decisão, não esquecimento.
   i1: null,
   ko: () => import('./ko'),
-  s5: null,
-  s6: null,
-  sr1: null,
+  s5: () => import('./s5'),
+  s6: () => import('./s6'),
+  sr1: () => import('./sr1'),
   i2: null,
-  s7: null,
-  s8: null,
+  s7: () => import('./s7'),
+  s8: () => import('./s8'),
   i3: null,
-  s9: null,
-  s10: null,
-  s11: null,
-  s12: null,
-  sr2: null,
+  s9: () => import('./s9'),
+  s10: () => import('./s10'),
+  s11: () => import('./s11'),
+  s12: () => import('./s12'),
+  sr2: () => import('./sr2'),
 }
 
 export function temRegistro(id: CicloId): boolean {

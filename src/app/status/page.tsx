@@ -26,6 +26,7 @@ export default async function PaginaStatus() {
     ['Configuração gravável', status.configuracaoGravavel ? 'sim' : 'não'],
     ['Hoje (America/Recife)', status.hojeRecife],
     ['Release público', status.releasePublico],
+    ['Vitrine aberta', status.vitrineAberta ? 'sim (todos veem tudo)' : 'não'],
     ['Ciclos no cronograma', String(status.ciclosNoCronograma)],
     ['Funcionalidades mapeadas', String(status.funcionalidades)],
     ['Áreas · indicadores', `${status.registros.areas} · ${status.registros.indicadores}`],

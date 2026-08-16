@@ -9,6 +9,7 @@
  * Quem faz I/O é `src/lib/config` e `src/lib/visao.ts`.
  */
 
+import type { Ambiente } from './ambiente'
 import { CRONOGRAMA, type Ciclo, type CicloId } from './cronograma'
 import { somarDias, type DataISO } from './datas'
 
@@ -165,4 +166,34 @@ export function resumirRelease({
     hoje,
     manual: ehCicloConhecido(override, ciclos),
   }
+}
+
+/**
+ * Janela de vitrine: abre o site inteiro para TODO MUNDO, até um instante.
+ *
+ * `RELEASE_ABERTO_ATE` recebe um instante ISO 8601 (ex.: `2026-08-17T05:54:00Z`).
+ * Enquanto o relógio não passar dele, todo visitante enxerga os 18 ciclos e as
+ * oito telas do sistema — como se fosse admin em modo completo. Depois disso o
+ * recorte volta sozinho ao cálculo normal.
+ *
+ * POR QUE COM PRAZO E NÃO UM INTERRUPTOR: `RELEASE_OVERRIDE=sr2` já abre tudo,
+ * mas fica aberto até alguém lembrar de fechar — e é justamente numa semana
+ * corrida que ninguém lembra. Prazo que expira sozinho não depende de memória.
+ *
+ * ISTO SUSPENDE A GARANTIA DO §6.3 DE PROPÓSITO. Enquanto a janela estiver
+ * aberta, conteúdo de semana futura chega ao HTML do visitante, porque é
+ * exatamente o que se pediu. `scripts/verificar-vazamento.ts` roda sem a
+ * variável e continua provando o comportamento normal.
+ *
+ * Valor ausente, vazio ou malformado = janela fechada. Nunca lança: uma env var
+ * digitada errada não pode derrubar o site nem, pior, abri-lo por acidente.
+ */
+export function janelaAberta(env: Ambiente = process.env, agora: Date = new Date()): boolean {
+  const bruto = env.RELEASE_ABERTO_ATE?.trim()
+  if (!bruto) return false
+
+  const limite = Date.parse(bruto)
+  if (Number.isNaN(limite)) return false
+
+  return agora.getTime() < limite
 }

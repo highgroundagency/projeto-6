@@ -4,7 +4,7 @@ import { CRONOGRAMA } from '@/lib/cronograma'
 import { hojeEmRecife } from '@/lib/datas'
 import { FEATURES } from '@/lib/features'
 import { repositorio } from '@/lib/dados'
-import { calcularReleaseAtual } from '@/lib/releases'
+import { calcularReleaseAtual, janelaAberta } from '@/lib/releases'
 
 export interface Status {
   produto: string
@@ -17,6 +17,8 @@ export interface Status {
   configuracaoGravavel: boolean
   hojeRecife: string
   releasePublico: string
+  /** Janela de vitrine aberta: todo visitante vê o semestre inteiro. */
+  vitrineAberta: boolean
   ciclosNoCronograma: number
   funcionalidades: number
   registros: { areas: number; indicadores: number; ciclos: number; lancamentos: number }
@@ -51,6 +53,7 @@ export async function coletarStatus(): Promise<Status> {
     configuracaoGravavel: store.gravavel,
     hojeRecife: hoje,
     releasePublico: release ?? '—',
+    vitrineAberta: janelaAberta(),
     ciclosNoCronograma: CRONOGRAMA.length,
     funcionalidades: FEATURES.length,
     registros: {

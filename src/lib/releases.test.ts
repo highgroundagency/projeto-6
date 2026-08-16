@@ -6,6 +6,7 @@ import {
   cicloVisivel,
   ciclosVisiveis,
   estadoDoMarco,
+  janelaAberta,
   proximoMarco,
   resumirRelease,
   type Travas,
@@ -171,5 +172,39 @@ describe('resumirRelease', () => {
     })
     expect(resumo.manual).toBe(false)
     expect(resumo.override).toBeNull()
+  })
+})
+
+describe('janela de vitrine com prazo', () => {
+  const agora = new Date('2026-08-16T18:00:00Z')
+
+  it('fica fechada sem a variável', () => {
+    expect(janelaAberta({}, agora)).toBe(false)
+  })
+
+  it('fica fechada com valor vazio ou só espaço', () => {
+    expect(janelaAberta({ RELEASE_ABERTO_ATE: '' }, agora)).toBe(false)
+    expect(janelaAberta({ RELEASE_ABERTO_ATE: '   ' }, agora)).toBe(false)
+  })
+
+  it('abre enquanto o prazo não venceu', () => {
+    expect(janelaAberta({ RELEASE_ABERTO_ATE: '2026-08-17T06:00:00Z' }, agora)).toBe(true)
+  })
+
+  it('fecha sozinha quando o prazo vence', () => {
+    const depois = new Date('2026-08-17T06:00:01Z')
+    expect(janelaAberta({ RELEASE_ABERTO_ATE: '2026-08-17T06:00:00Z' }, depois)).toBe(false)
+  })
+
+  it('fecha no instante exato do prazo, sem empate a favor', () => {
+    const exato = new Date('2026-08-17T06:00:00Z')
+    expect(janelaAberta({ RELEASE_ABERTO_ATE: '2026-08-17T06:00:00Z' }, exato)).toBe(false)
+  })
+
+  it('trata valor malformado como fechada, em vez de lançar', () => {
+    // Uma env var digitada errada não pode derrubar o site — e muito menos
+    // abri-lo por acidente.
+    expect(janelaAberta({ RELEASE_ABERTO_ATE: 'amanhã de manhã' }, agora)).toBe(false)
+    expect(janelaAberta({ RELEASE_ABERTO_ATE: '17/08/2026' }, agora)).toBe(false)
   })
 })

@@ -9,6 +9,22 @@ import type { Visao } from '@/lib/visao'
  * Existe para que ninguém confunda o que está vendo com o que o professor vê.
  */
 export function FaixaAdmin({ visao }: { visao: Visao }) {
+  // A janela de vitrine aparece para TODO MUNDO, inclusive sem sessão: se o
+  // site está aberto ao público, quem chega tem direito de saber que aquilo
+  // não é o recorte normal — e a equipe tem direito de perceber que esqueceu
+  // aberto. Ver `janelaAberta` em releases.ts.
+  if (visao.janelaAberta) {
+    return (
+      <div className="sem-impressao flex flex-wrap items-center justify-between gap-x-4 gap-y-1 bg-acento px-4 py-1.5 text-xs text-ink sm:px-8">
+        <span className="rotulo text-inherit">Vitrine aberta — o semestre inteiro visível</span>
+        <span className="lowercase">
+          fora desta janela, o site mostra só até{' '}
+          <Num>{visao.release.releaseAtual ?? '—'}</Num>
+        </span>
+      </div>
+    )
+  }
+
   if (!visao.admin) return null
 
   const completo = visao.modoCompleto
