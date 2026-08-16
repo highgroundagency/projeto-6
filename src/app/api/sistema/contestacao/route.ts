@@ -35,7 +35,7 @@ export async function POST(requisicao: NextRequest) {
     const primeiro = analisado.error.issues[0]
     return redirecionar(
       comParametros('/sistema/contestacao', {
-        erro: `Contestação recusada: ${primeiro.path.join('.')} — ${primeiro.message}.`,
+        erro: `Contestação recusada em ${primeiro.path.join('.')}: ${primeiro.message}.`,
       }),
     )
   }

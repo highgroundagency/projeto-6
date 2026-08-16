@@ -48,11 +48,7 @@ export function verificarLimite(
 }
 
 /** Registra uma tentativa falha. Acerto limpa o contador. */
-export function registrarTentativa(
-  chave: string,
-  agora = Date.now(),
-  armazem = memoria,
-): void {
+export function registrarTentativa(chave: string, agora = Date.now(), armazem = memoria): void {
   const registro = armazem.get(chave) ?? { tentativas: [] }
   const recentes = registro.tentativas.filter((t) => agora - t < JANELA_MS)
   recentes.push(agora)

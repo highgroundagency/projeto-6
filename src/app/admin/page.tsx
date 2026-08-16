@@ -90,12 +90,11 @@ export default async function PainelAdmin({
 
       {!store.gravavel ? (
         <p className="mt-5 border border-alerta/40 bg-alerta/10 px-4 py-3 text-sm">
-          <strong>Configuração global somente leitura neste ambiente.</strong> O
-          filesystem da Vercel não aceita escrita e o projeto não usa banco. O que você
-          mudar aqui vale para a <strong>sua sessão</strong>; para mudar o que o público
-          vê, altere as variáveis <Num>RELEASE_ADIANTAMENTO_DIAS</Num>,{' '}
-          <Num>RELEASE_OVERRIDE</Num> e <Num>RELEASE_TRAVAS</Num> e faça o redeploy. Ver{' '}
-          <Num>docs/releases.md</Num>.
+          <strong>Configuração global somente leitura neste ambiente.</strong> O filesystem da
+          Vercel não aceita escrita e o projeto não usa banco. O que você mudar aqui vale para a{' '}
+          <strong>sua sessão</strong>; para mudar o que o público vê, altere as variáveis{' '}
+          <Num>RELEASE_ADIANTAMENTO_DIAS</Num>, <Num>RELEASE_OVERRIDE</Num> e{' '}
+          <Num>RELEASE_TRAVAS</Num> e faça o redeploy. Ver <Num>docs/releases.md</Num>.
         </p>
       ) : null}
 
@@ -111,14 +110,18 @@ export default async function PainelAdmin({
             { termo: 'Hoje (Recife)', valor: formatarBR(visao.hojeReal) },
             {
               termo: 'Data em uso',
-              valor: visao.hoje === visao.hojeReal ? 'real' : `simulada ${formatarBR(visao.hoje)}`,
+              valor:
+                visao.hoje === visao.hojeReal ? 'real' : `simulada ${formatarBR(visao.hoje)}`,
             },
             {
               termo: 'Release atual',
-              valor: `${visao.release.releaseAtual ?? '—'}${visao.release.manual ? ' (fixado)' : ''}`,
+              valor: `${visao.release.releaseAtual ?? 'nenhum'}${visao.release.manual ? ' (fixado)' : ''}`,
             },
             { termo: 'Adiantamento', valor: `${visao.release.adiantamentoDias} dias` },
-            { termo: 'Ciclos visíveis', valor: `${visao.visiveis.length} de ${CRONOGRAMA.length}` },
+            {
+              termo: 'Ciclos visíveis',
+              valor: `${visao.visiveis.length} de ${CRONOGRAMA.length}`,
+            },
             { termo: 'Modo', valor: visao.modoCompleto ? 'completo' : 'como visitante' },
             { termo: 'Driver de configuração', valor: store.nome },
             { termo: 'Travas ativas', valor: String(Object.keys(visao.release.travas).length) },
@@ -133,9 +136,13 @@ export default async function PainelAdmin({
 
       <Secao
         titulo="Ver como visitante"
-        descricao="Enxergue exatamente o recorte público — opcionalmente numa data futura."
+        descricao="Enxergue exatamente o recorte público: opcionalmente numa data futura."
       >
-        <form action="/api/admin/config" method="post" className="flex flex-wrap items-end gap-4">
+        <form
+          action="/api/admin/config"
+          method="post"
+          className="flex flex-wrap items-end gap-4"
+        >
           <input type="hidden" name="acao" value="visao" />
 
           <label className="flex items-center gap-2 text-sm">
@@ -201,10 +208,11 @@ export default async function PainelAdmin({
                     key={previa.dias}
                     className={cn(
                       'border border-linha px-2 py-1',
-                      previa.dias === visao.release.adiantamentoDias && 'border-acento bg-acento-fraco',
+                      previa.dias === visao.release.adiantamentoDias &&
+                        'border-acento bg-acento-fraco',
                     )}
                   >
-                    <Num>{previa.dias}d</Num> → <Num>{previa.release ?? '—'}</Num>
+                    <Num>{previa.dias}d</Num> → <Num>{previa.release ?? 'nenhum'}</Num>
                   </li>
                 ))}
               </ul>
@@ -224,7 +232,7 @@ export default async function PainelAdmin({
               <option value="">automático (pela data)</option>
               {CRONOGRAMA.map((ciclo) => (
                 <option key={ciclo.id} value={ciclo.id}>
-                  {ciclo.id} — {ciclo.rotulo} ({formatarBR(ciclo.data)})
+                  {ciclo.id}: {ciclo.rotulo} ({formatarBR(ciclo.data)})
                 </option>
               ))}
             </select>
@@ -276,18 +284,20 @@ export default async function PainelAdmin({
                           <Etiqueta>vazio</Etiqueta>
                         )}
                       </td>
-                      {(['automatico', 'sempre_visivel', 'sempre_oculto'] as const).map((opcao) => (
-                        <td key={opcao} className="px-3 py-1.5">
-                          <input
-                            type="radio"
-                            name={`trava:${ciclo.id}`}
-                            value={opcao}
-                            defaultChecked={atual === opcao}
-                            aria-label={`${ciclo.rotulo}: ${opcao}`}
-                            className="size-4 accent-[color:var(--color-laranja)]"
-                          />
-                        </td>
-                      ))}
+                      {(['automatico', 'sempre_visivel', 'sempre_oculto'] as const).map(
+                        (opcao) => (
+                          <td key={opcao} className="px-3 py-1.5">
+                            <input
+                              type="radio"
+                              name={`trava:${ciclo.id}`}
+                              value={opcao}
+                              defaultChecked={atual === opcao}
+                              aria-label={`${ciclo.rotulo}: ${opcao}`}
+                              className="size-4 accent-[color:var(--color-laranja)]"
+                            />
+                          </td>
+                        ),
+                      )}
                     </tr>
                   )
                 })}
@@ -306,7 +316,10 @@ export default async function PainelAdmin({
           {FEATURES.map((feature) => {
             const liberada = visao.visiveis.includes(feature.ciclo)
             return (
-              <li key={feature.id} className="flex items-start justify-between gap-3 bg-fundo px-3 py-2">
+              <li
+                key={feature.id}
+                className="flex items-start justify-between gap-3 bg-fundo px-3 py-2"
+              >
                 <div>
                   <p className="text-sm font-medium">{feature.rotulo}</p>
                   <p className="numero text-xs text-apagado">{feature.rota}</p>
@@ -325,17 +338,20 @@ export default async function PainelAdmin({
         descricao="Toda alteração de configuração global fica registrada aqui."
       >
         {historico.length === 0 ? (
-          <p className="text-sm text-apagado">
-            Nenhuma alteração registrada neste ambiente.
-          </p>
+          <p className="text-sm text-apagado">Nenhuma alteração registrada neste ambiente.</p>
         ) : (
           <ol className="divide-y divide-linha border-y border-linha text-sm">
             {historico.map((linha) => (
               <li key={linha.id} className="flex flex-wrap items-baseline gap-x-3 py-2">
-                <Num className="text-xs text-apagado">{linha.quando.slice(0, 16).replace('T', ' ')}</Num>
+                <Num className="text-xs text-apagado">
+                  {linha.quando.slice(0, 16).replace('T', ' ')}
+                </Num>
                 <span className="numero text-xs">{linha.campo}</span>
                 <span>
-                  <Num>{linha.de}</Num> <span aria-hidden className="text-acento">→</span>{' '}
+                  <Num>{linha.de}</Num>{' '}
+                  <span aria-hidden className="text-acento">
+                    →
+                  </span>{' '}
                   <Num>{linha.para}</Num>
                 </span>
                 <span className="rotulo">{linha.autor}</span>
@@ -347,7 +363,7 @@ export default async function PainelAdmin({
 
       <Secao
         titulo="Checklist da matriz"
-        descricao="Evidências exigidas por ciclo. Editável em src/content/checklist.ts — status é conteúdo e vive no Git."
+        descricao="Evidências exigidas por ciclo. Editável em src/content/checklist.ts, status é conteúdo e vive no Git."
       >
         <div className="overflow-x-auto border border-linha">
           <table className="w-full min-w-[42rem] border-collapse text-sm">
@@ -362,7 +378,9 @@ export default async function PainelAdmin({
             <tbody>
               {checklist.map((linha, i) => (
                 <tr key={`${linha.ciclo}-${i}`} className="border-b border-linha last:border-0">
-                  <td className="numero px-3 py-1.5 text-xs whitespace-nowrap">{linha.ciclo}</td>
+                  <td className="numero px-3 py-1.5 text-xs whitespace-nowrap">
+                    {linha.ciclo}
+                  </td>
                   <td className="px-3 py-1.5">
                     {linha.link ? (
                       <Link href={linha.link} className="underline underline-offset-2">
@@ -373,10 +391,14 @@ export default async function PainelAdmin({
                     )}
                   </td>
                   <td className="px-3 py-1.5">
-                    <Etiqueta tom={TOM_STATUS[linha.status]}>{ROTULO_STATUS[linha.status]}</Etiqueta>
+                    <Etiqueta tom={TOM_STATUS[linha.status]}>
+                      {ROTULO_STATUS[linha.status]}
+                    </Etiqueta>
                   </td>
                   <td className="px-3 py-1.5 text-apagado">
-                    {linha.responsavel ? integrantePorId(linha.responsavel).nome : '—'}
+                    {linha.responsavel
+                      ? integrantePorId(linha.responsavel).nome
+                      : 'sem responsável'}
                   </td>
                 </tr>
               ))}
@@ -391,7 +413,10 @@ export default async function PainelAdmin({
       >
         <ul className="divide-y divide-linha border-y border-linha">
           {MARCOS_PARALELOS.map((marco) => (
-            <li key={`${marco.trilha}-${marco.data}`} className="grid gap-1 py-2.5 sm:grid-cols-[9rem_1fr] sm:gap-4">
+            <li
+              key={`${marco.trilha}-${marco.data}`}
+              className="grid gap-1 py-2.5 sm:grid-cols-[9rem_1fr] sm:gap-4"
+            >
               <div className="flex items-baseline gap-2">
                 <Num className="text-xs">{formatarBR(marco.data)}</Num>
                 <Etiqueta>{marco.trilha}</Etiqueta>

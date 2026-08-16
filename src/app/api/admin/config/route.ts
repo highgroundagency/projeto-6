@@ -59,7 +59,11 @@ export async function POST(requisicao: NextRequest) {
 
   const overlay = await lerOverlayAtual(segredo)
   let novoOverlay: Overlay = { ...overlay }
-  let patchGlobal: { adiantamentoDias?: number; overrideRelease?: CicloId | null; travas?: Overlay['travas'] } = {}
+  let patchGlobal: {
+    adiantamentoDias?: number
+    overrideRelease?: CicloId | null
+    travas?: Overlay['travas']
+  } = {}
 
   switch (acao) {
     case 'visao': {

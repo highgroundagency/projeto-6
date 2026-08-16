@@ -83,7 +83,10 @@ describe('conteúdo dos ciclos', () => {
       it('mantém selo e validador coerentes', () => {
         for (const [nome, bloco] of blocos(registro)) {
           if (bloco.selo === 'rascunho') {
-            expect(bloco.validadoPor, `bloco "${nome}" em rascunho não pode ter validador`).toBeNull()
+            expect(
+              bloco.validadoPor,
+              `bloco "${nome}" em rascunho não pode ter validador`,
+            ).toBeNull()
           } else {
             expect(
               bloco.validadoPor && IDS_INTEGRANTES.has(bloco.validadoPor),

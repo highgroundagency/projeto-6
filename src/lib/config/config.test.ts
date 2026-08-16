@@ -37,14 +37,8 @@ describe('configPadrao', () => {
   })
 
   it('recusa adiantamento fora da faixa aceita', () => {
-    expect(
-      configPadrao({ RELEASE_ADIANTAMENTO_DIAS: '-5' })
-        .adiantamentoDias,
-    ).toBe(7)
-    expect(
-      configPadrao({ RELEASE_ADIANTAMENTO_DIAS: '9999' })
-        .adiantamentoDias,
-    ).toBe(7)
+    expect(configPadrao({ RELEASE_ADIANTAMENTO_DIAS: '-5' }).adiantamentoDias).toBe(7)
+    expect(configPadrao({ RELEASE_ADIANTAMENTO_DIAS: '9999' }).adiantamentoDias).toBe(7)
   })
 
   it('lê travas em JSON e descarta ciclo inexistente', () => {
@@ -72,9 +66,9 @@ describe('descreverMudancas', () => {
     expect(descreverMudancas(base, { ...base, overrideRelease: 'sr1' })).toEqual([
       { campo: 'overrideRelease', de: 'automático', para: 'sr1' },
     ])
-    expect(
-      descreverMudancas({ ...base, overrideRelease: 'sr1' }, base),
-    ).toEqual([{ campo: 'overrideRelease', de: 'sr1', para: 'automático' }])
+    expect(descreverMudancas({ ...base, overrideRelease: 'sr1' }, base)).toEqual([
+      { campo: 'overrideRelease', de: 'sr1', para: 'automático' },
+    ])
   })
 
   it('registra trava por ciclo nos dois sentidos', () => {
@@ -123,7 +117,12 @@ describe('driverMemoria', () => {
     const log = await store.historico()
     expect(log).toHaveLength(2)
     expect(log[0].campo).toBe('overrideRelease')
-    expect(log[1]).toMatchObject({ campo: 'adiantamentoDias', de: '7', para: '14', autor: 'admin' })
+    expect(log[1]).toMatchObject({
+      campo: 'adiantamentoDias',
+      de: '7',
+      para: '14',
+      autor: 'admin',
+    })
   })
 
   it('não devolve referência interna mutável', async () => {

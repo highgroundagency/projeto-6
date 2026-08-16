@@ -33,7 +33,7 @@ function Diff({ antes, depois }: { antes: unknown; depois: unknown }) {
       {antes !== null ? (
         <span className="text-alerta">antes: {JSON.stringify(antes)}</span>
       ) : (
-        <span className="text-apagado">antes: —</span>
+        <span className="text-apagado">antes:, </span>
       )}
       {depois !== null ? (
         <span className="text-ok">depois: {JSON.stringify(depois)}</span>
@@ -55,7 +55,8 @@ export default async function TelaAuditoria({
   const totalLancamentos = (await repositorio().lancamentos()).length
   const filtrados = todos.filter((evento) => {
     if (tipo && evento.tipo !== tipo) return false
-    if (ciclo && !evento.entidade.includes(ciclo) && !evento.descricao.includes(ciclo)) return false
+    if (ciclo && !evento.entidade.includes(ciclo) && !evento.descricao.includes(ciclo))
+      return false
     return true
   })
 
@@ -69,8 +70,8 @@ export default async function TelaAuditoria({
 
       <div className="mt-5">
         <Aviso>
-          A trilha é <strong>append-only</strong>: correções entram como novos eventos, com
-          o valor anterior preservado. Trilha que pode ser editada não serve de prova — e é
+          A trilha é <strong>append-only</strong>: correções entram como novos eventos, com o
+          valor anterior preservado. Trilha que pode ser editada não serve de prova, e é
           justamente o que falta na planilha.
         </Aviso>
       </div>
@@ -156,7 +157,10 @@ export default async function TelaAuditoria({
             const quantidade = todos.filter((e) => e.tipo === valor).length
             if (quantidade === 0) return null
             return (
-              <li key={valor} className="flex items-baseline justify-between border border-linha px-3 py-1.5 text-sm">
+              <li
+                key={valor}
+                className="flex items-baseline justify-between border border-linha px-3 py-1.5 text-sm"
+              >
                 <span>{rotulo}</span>
                 <Num>{quantidade}</Num>
               </li>

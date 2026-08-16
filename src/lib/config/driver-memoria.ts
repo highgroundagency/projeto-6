@@ -42,7 +42,12 @@ export function driverMemoria(
       }
 
       for (const mudanca of descreverMudancas(antes, depois)) {
-        log.unshift({ id: `log-${++sequencia}`, quando: depois.atualizadoEm, autor, ...mudanca })
+        log.unshift({
+          id: `log-${++sequencia}`,
+          quando: depois.atualizadoEm,
+          autor,
+          ...mudanca,
+        })
       }
 
       atual = depois

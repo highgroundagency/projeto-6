@@ -7,7 +7,10 @@ import {
   lancamentos as lancamentosDoOverlay,
   registrarLancamento as registrarNoOverlay,
 } from '@/lib/sistema/estado'
-import { abrirContestacao, contestacoes as contestacoesDoOverlay } from '@/lib/sistema/contestacoes'
+import {
+  abrirContestacao,
+  contestacoes as contestacoesDoOverlay,
+} from '@/lib/sistema/contestacoes'
 import type {
   EntradaContestacao,
   EntradaLancamento,

@@ -42,7 +42,9 @@ describe('assinatura de token', () => {
   it('recusa assinatura adulterada', async () => {
     const token = await assinarToken({ admin: true }, SEGREDO)
     const [corpo, assinatura] = token.split('.')
-    const trocado = assinatura.startsWith('A') ? `B${assinatura.slice(1)}` : `A${assinatura.slice(1)}`
+    const trocado = assinatura.startsWith('A')
+      ? `B${assinatura.slice(1)}`
+      : `A${assinatura.slice(1)}`
     expect(await verificarToken(`${corpo}.${trocado}`, SEGREDO)).toBeNull()
   })
 
@@ -84,10 +86,7 @@ describe('sessão', () => {
   })
 
   it('recusa payload de versão desconhecida', async () => {
-    const token = await assinarToken(
-      { v: 99, iat: 0, exp: 9_999_999_999, jti: 'x' },
-      SEGREDO,
-    )
+    const token = await assinarToken({ v: 99, iat: 0, exp: 9_999_999_999, jti: 'x' }, SEGREDO)
     expect(await sessaoValida(token, SEGREDO, agora)).toBe(false)
   })
 
@@ -112,9 +111,7 @@ describe('obterSegredo', () => {
   })
 
   it('falha fechado em produção quando o segredo está ausente', () => {
-    expect(() => obterSegredo({ NODE_ENV: 'production' })).toThrow(
-      /ADMIN_COOKIE_SECRET/,
-    )
+    expect(() => obterSegredo({ NODE_ENV: 'production' })).toThrow(/ADMIN_COOKIE_SECRET/)
   })
 
   it('falha fechado em produção quando o segredo é curto demais', () => {

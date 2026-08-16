@@ -45,7 +45,7 @@ export const registro = {
       {
         decisao: 'Chamar o produto de Prumo.',
         porque:
-          'O fio de prumo diz se algo está alinhado — é exatamente o que falta ao cálculo hoje.',
+          'O fio de prumo diz se algo está alinhado, é exatamente o que falta ao cálculo hoje.',
       },
     ],
   },
@@ -137,7 +137,7 @@ export const documentos = [
         <Lista
           itens={[
             'Cliente real e acessível: a Secretaria opera o processo hoje e sente a dor todo ciclo.',
-            'Problema com regra explícita: existe portaria, existem indicadores, existe cálculo — dá para modelar de verdade.',
+            'Problema com regra explícita: existe portaria, existem indicadores, existe cálculo, dá para modelar de verdade.',
             'Espaço para as três lentes: sistema (Projeto), previsão e perfis (ML) e tratamento de dados de servidores (Direito).',
           ]}
         />

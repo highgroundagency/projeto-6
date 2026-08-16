@@ -71,7 +71,7 @@ test.describe('modo completo e visão de visitante', () => {
     await entrarNoPainel(page)
     await page.goto('/registro')
 
-    await expect(page.getByText('Modo completo — visível só para você')).toBeVisible()
+    await expect(page.getByText('Modo completo: visível só para você')).toBeVisible()
     expect(await page.content()).toContain('PRUMO-MARCADOR-CICLO-s4')
   })
 

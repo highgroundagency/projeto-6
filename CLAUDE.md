@@ -30,7 +30,10 @@ Site do Projeto 6 da CESAR School (2026.2, Equipe 2). Duas camadas:
 6. **Data nunca é `Date`.** Sempre `YYYY-MM-DD` em string, comparada lexicograficamente. O
    "hoje" é injetado nas funções de regra, nunca lido dentro delas.
 7. **Motor de cálculo é função pura.** Sem I/O, sem relógio, sem aleatoriedade.
-8. **Um acento só.** `--color-acento` é o laranja da CESAR e aparece em no máximo três
+8. **Nada de travessão na copy.** Em texto que aparece na tela, use dois-pontos quando for
+   rótulo e explicação (`semana 5: arquitetura`) e vírgula ou ponto quando for prosa. Em
+   comentário de código o travessão continua livre: comentário não é copy.
+9. **Um acento só.** `--color-acento` é o laranja da CESAR e aparece em no máximo três
    lugares por tela: número grande, chamada sólida e pílula/ícone do fluxo. Se precisar de
    mais uma cor para diferenciar alguma coisa, use hairline e caixa alta, não cor.
 

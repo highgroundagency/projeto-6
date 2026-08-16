@@ -68,7 +68,7 @@ describe('cronograma', () => {
   })
 
   it('localiza ciclo por id e por índice', () => {
-    expect(cicloPorId('s5').rotulo).toBe('Semana 5 — Arquitetura')
+    expect(cicloPorId('s5').rotulo).toBe('Semana 5: Arquitetura')
     expect(indiceDoCiclo('s1')).toBe(0)
     expect(indiceDoCiclo('sr2')).toBe(17)
   })

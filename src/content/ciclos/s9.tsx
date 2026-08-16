@@ -91,7 +91,7 @@ export const documentos = [
             ['quando', 'Momento exato, para ordenar e para conferir prazo'],
             ['o quê', 'Tipo do evento: lançamento, correção, transição, homologação'],
             ['entidade', 'A que o evento se refere: qual ciclo, qual indicador'],
-            ['antes', 'Estado anterior — nulo só quando o registro está nascendo'],
+            ['antes', 'Estado anterior: nulo só quando o registro está nascendo'],
             ['depois', 'Estado novo, que é o que passa a valer'],
           ]}
         />

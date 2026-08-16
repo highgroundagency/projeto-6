@@ -44,9 +44,7 @@ export function ehDataISO(valor: string): boolean {
   if (!PADRAO_ISO.test(valor)) return false
   const [ano, mes, dia] = valor.split('-').map(Number)
   const d = new Date(Date.UTC(ano, mes - 1, dia))
-  return (
-    d.getUTCFullYear() === ano && d.getUTCMonth() === mes - 1 && d.getUTCDate() === dia
-  )
+  return d.getUTCFullYear() === ano && d.getUTCMonth() === mes - 1 && d.getUTCDate() === dia
 }
 
 function paraEpochUTC(data: DataISO): number {
@@ -73,8 +71,18 @@ export function formatarBR(data: DataISO): string {
 }
 
 const MESES = [
-  'janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho',
-  'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro',
+  'janeiro',
+  'fevereiro',
+  'março',
+  'abril',
+  'maio',
+  'junho',
+  'julho',
+  'agosto',
+  'setembro',
+  'outubro',
+  'novembro',
+  'dezembro',
 ]
 
 export function formatarExtenso(data: DataISO): string {
@@ -83,8 +91,13 @@ export function formatarExtenso(data: DataISO): string {
 }
 
 const DIAS_SEMANA = [
-  'domingo', 'segunda-feira', 'terça-feira', 'quarta-feira',
-  'quinta-feira', 'sexta-feira', 'sábado',
+  'domingo',
+  'segunda-feira',
+  'terça-feira',
+  'quarta-feira',
+  'quinta-feira',
+  'sexta-feira',
+  'sábado',
 ]
 
 export function diaDaSemana(data: DataISO): string {

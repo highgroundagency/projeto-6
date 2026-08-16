@@ -1,5 +1,11 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
-import { assinarToken, criarTokenSessao, NOME_COOKIE_SESSAO, NOME_COOKIE_VISAO, obterSegredo } from './admin/sessao'
+import {
+  assinarToken,
+  criarTokenSessao,
+  NOME_COOKIE_SESSAO,
+  NOME_COOKIE_VISAO,
+  obterSegredo,
+} from './admin/sessao'
 import type { Overlay } from './visao'
 
 /**

@@ -54,9 +54,7 @@ export interface CicloCarregado {
  * Carrega apenas os ciclos informados — que devem ser, sempre, o resultado do
  * gate de release. Passar a lista completa aqui anularia toda a proteção.
  */
-export async function carregarCiclos(
-  ids: readonly CicloId[],
-): Promise<CicloCarregado[]> {
+export async function carregarCiclos(ids: readonly CicloId[]): Promise<CicloCarregado[]> {
   const carregados = await Promise.all(
     ids.map(async (id) => {
       const carregador = CARREGADORES[id]

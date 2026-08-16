@@ -11,7 +11,7 @@ import type { Avaliacao } from '@/lib/calculo/tipos'
  */
 
 function porcentagem(valor: number | null): string {
-  return valor === null ? '—' : `${(valor * 100).toFixed(1)}%`
+  return valor === null ? ', ' : `${(valor * 100).toFixed(1)}%`
 }
 
 export function MemoriaDeCalculo({ avaliacao }: { avaliacao: Avaliacao }) {
@@ -41,7 +41,8 @@ export function MemoriaDeCalculo({ avaliacao }: { avaliacao: Avaliacao }) {
             </Num>
           </span>
           <span>
-            <span className="rotulo">Pontuação máxima</span> <Num>{memoria.pontuacaoMaxima}</Num>
+            <span className="rotulo">Pontuação máxima</span>{' '}
+            <Num>{memoria.pontuacaoMaxima}</Num>
           </span>
           <span>
             <span className="rotulo">Soma dos pesos</span> <Num>{memoria.somaPesos}</Num>
@@ -52,18 +53,28 @@ export function MemoriaDeCalculo({ avaliacao }: { avaliacao: Avaliacao }) {
           <table className="numero w-full min-w-[46rem] border-collapse text-xs">
             <thead>
               <tr className="border-b border-linha bg-superficie">
-                {['Indicador', 'Valor', 'Meta', 'Atingimento', 'Faixa', 'Pontos', 'Peso', 'Contribuição'].map(
-                  (coluna) => (
-                    <th key={coluna} className="rotulo px-2 py-1.5 text-left whitespace-nowrap">
-                      {coluna}
-                    </th>
-                  ),
-                )}
+                {[
+                  'Indicador',
+                  'Valor',
+                  'Meta',
+                  'Atingimento',
+                  'Faixa',
+                  'Pontos',
+                  'Peso',
+                  'Contribuição',
+                ].map((coluna) => (
+                  <th key={coluna} className="rotulo px-2 py-1.5 text-left whitespace-nowrap">
+                    {coluna}
+                  </th>
+                ))}
               </tr>
             </thead>
             <tbody>
               {memoria.passos.map((passo) => (
-                <tr key={passo.indicadorId} className="border-b border-linha last:border-0 align-top">
+                <tr
+                  key={passo.indicadorId}
+                  className="border-b border-linha last:border-0 align-top"
+                >
                   <td className="px-2 py-1.5">
                     <span className="font-sans">{passo.indicador}</span>
                     <span className="mt-0.5 block text-[0.65rem] text-apagado">
@@ -72,13 +83,20 @@ export function MemoriaDeCalculo({ avaliacao }: { avaliacao: Avaliacao }) {
                     </span>
                   </td>
                   <td className="px-2 py-1.5 whitespace-nowrap">
-                    {passo.valor === null ? <span className="text-alerta">sem lançamento</span> : passo.valor}
+                    {passo.valor === null ? (
+                      <span className="text-alerta">sem lançamento</span>
+                    ) : (
+                      passo.valor
+                    )}
                   </td>
                   <td className="px-2 py-1.5 whitespace-nowrap">{passo.meta}</td>
                   <td className="px-2 py-1.5 whitespace-nowrap">
                     {porcentagem(passo.atingimento)}
                     {passo.aplicouTeto ? (
-                      <span className="ml-1 text-[0.65rem] text-acento" title="Atingimento limitado pelo teto da regra">
+                      <span
+                        className="ml-1 text-[0.65rem] text-acento"
+                        title="Atingimento limitado pelo teto da regra"
+                      >
                         (teto)
                       </span>
                     ) : null}
@@ -105,8 +123,8 @@ export function MemoriaDeCalculo({ avaliacao }: { avaliacao: Avaliacao }) {
           <p className="rotulo">Fórmula</p>
           <p className="numero mt-1 text-xs">{memoria.formula}</p>
           <p className="numero mt-1.5 text-sm">
-            ({memoria.somaContribuicoes}) ÷ ({memoria.somaPesos} × {memoria.pontuacaoMaxima}) × 100 ={' '}
-            <strong>{memoria.score}</strong>
+            ({memoria.somaContribuicoes}) ÷ ({memoria.somaPesos} × {memoria.pontuacaoMaxima}) ×
+            100 = <strong>{memoria.score}</strong>
           </p>
         </div>
 
@@ -141,7 +159,7 @@ export function CartaoScore({ avaliacao }: { avaliacao: Avaliacao }) {
 
       <div className="text-right">
         <p className="rotulo">Faixa de gratificação</p>
-        <p className="fonte-display mt-1 text-xl">{avaliacao.faixa?.rotulo ?? '—'}</p>
+        <p className="fonte-display mt-1 text-xl">{avaliacao.faixa?.rotulo ?? 'sem faixa'}</p>
         {avaliacao.faixa ? (
           <p className="numero mt-0.5 text-sm text-apagado">
             {avaliacao.faixa.percentual}% da gratificação

@@ -101,7 +101,7 @@ export const documentos = [
   },
   {
     id: 'pitch',
-    titulo: 'Roteiro do pitch — SR1',
+    titulo: 'Roteiro do pitch: SR1',
     resumo: 'os cinco minutos divididos, com o que provar em cada trecho.',
     Conteudo: () => (
       <>

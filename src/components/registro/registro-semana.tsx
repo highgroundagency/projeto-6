@@ -268,7 +268,7 @@ export function CicloSemRegistro({ ciclo }: { ciclo: CicloId }) {
       <Num className="text-xs">{formatarBR(dados.data)}</Num>
       <p className="mt-1">
         {dados.tipo === 'pausa'
-          ? 'Semana imprensada — as entregas são acumuladas na semana seguinte.'
+          ? 'Semana imprensada: as entregas são acumuladas na semana seguinte.'
           : 'Registro desta semana ainda não publicado.'}
       </p>
     </article>

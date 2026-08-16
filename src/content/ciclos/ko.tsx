@@ -112,7 +112,7 @@ export const registro = {
 export const documentos = [
   {
     id: 'roteiro-pitch',
-    titulo: 'Roteiro do pitch — 5 minutos',
+    titulo: 'Roteiro do pitch: 5 minutos',
     resumo: 'os cinco minutos minuto a minuto, com o que dizer em cada um.',
     Conteudo: () => (
       <>
@@ -168,14 +168,14 @@ export const documentos = [
       <>
         <Lista
           itens={[
-            'Slide 1 — Prumo, uma linha: o cálculo da gratificação que se explica sozinho.',
-            'Slide 2 — O processo hoje, em cinco etapas, com o ponto de quebra marcado.',
-            'Slide 3 — As três pessoas afetadas, com uma frase de cada.',
-            'Slide 4 — A causa raiz: a regra vive dentro da fórmula.',
-            'Slide 5 — A ideia: regra como dado, versionada.',
-            'Slide 6 — Demonstração ao vivo da memória de cálculo.',
-            'Slide 7 — O que os modelos respondem, com a métrica ao lado.',
-            'Slide 8 — Direcionamento até o SR1 e o que estará pronto lá.',
+            'Slide 1: Prumo, uma linha: o cálculo da gratificação que se explica sozinho.',
+            'Slide 2: O processo hoje, em cinco etapas, com o ponto de quebra marcado.',
+            'Slide 3: As três pessoas afetadas, com uma frase de cada.',
+            'Slide 4: A causa raiz: a regra vive dentro da fórmula.',
+            'Slide 5: A ideia: regra como dado, versionada.',
+            'Slide 6: Demonstração ao vivo da memória de cálculo.',
+            'Slide 7: O que os modelos respondem, com a métrica ao lado.',
+            'Slide 8: Direcionamento até o SR1 e o que estará pronto lá.',
           ]}
         />
       </>
@@ -189,9 +189,9 @@ export const documentos = [
       <>
         <Lista
           itens={[
-            '“Por que não usar uma ferramenta pronta?” — Nenhuma versiona regra normativa nem produz memória de cálculo; a resposta está no benchmarking da Semana 2.',
-            '“E se a portaria mudar?” — Regra é dado, não código: cria-se uma nova versão, e os ciclos já homologados continuam reproduzindo o resultado antigo.',
-            '“Vocês usam dados reais de servidores?” — Não. O MVP roda com dados sintéticos gerados por script com semente fixa, e isso está documentado.',
+            '“Por que não usar uma ferramenta pronta?”, Nenhuma versiona regra normativa nem produz memória de cálculo; a resposta está no benchmarking da Semana 2.',
+            '“E se a portaria mudar?”: Regra é dado, não código: cria-se uma nova versão, e os ciclos já homologados continuam reproduzindo o resultado antigo.',
+            '“Vocês usam dados reais de servidores?”, Não. O MVP roda com dados sintéticos gerados por script com semente fixa, e isso está documentado.',
           ]}
         />
         <div className="mt-3">

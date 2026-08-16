@@ -19,9 +19,7 @@ export const configSiteSchema = z.object({
 export type ConfigSite = z.infer<typeof configSiteSchema> & { travas: Travas }
 
 /** Alterações que o painel pode aplicar. */
-export const patchConfigSchema = configSiteSchema
-  .omit({ atualizadoEm: true })
-  .partial()
+export const patchConfigSchema = configSiteSchema.omit({ atualizadoEm: true }).partial()
 
 export type PatchConfig = z.infer<typeof patchConfigSchema>
 

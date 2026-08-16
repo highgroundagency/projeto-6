@@ -135,7 +135,10 @@ export function registrarLancamento(
 }
 
 /** Lançamento vigente de um indicador num ciclo: o último registrado vence. */
-export function lancamentoVigente(cicloId: string, indicadorId: string): Lancamento | undefined {
+export function lancamentoVigente(
+  cicloId: string,
+  indicadorId: string,
+): Lancamento | undefined {
   return [...lancamentos()]
     .reverse()
     .find((l) => l.cicloId === cicloId && l.indicadorId === indicadorId)

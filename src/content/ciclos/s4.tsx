@@ -130,7 +130,7 @@ export const documentos = [
             'O quê: um sistema web que substitui a planilha de consolidação da gratificação por desempenho.',
             'Para quem: CAM, áreas técnicas que informam dados, gestores avaliados e auditoria.',
             'Como: indicadores e regras cadastrados pela interface; regra versionada; cálculo por função pura; memória de cálculo exibida junto de cada resultado; trilha de auditoria imutável.',
-            'Por que agora: o processo depende de poucas pessoas e não tem rastreabilidade — um erro só aparece depois do pagamento.',
+            'Por que agora: o processo depende de poucas pessoas e não tem rastreabilidade, um erro só aparece depois do pagamento.',
             'Como saberemos que deu certo: qualquer número do resultado responde “de onde veio?” em um clique, e o mesmo ciclo recalculado devolve o mesmo valor.',
           ]}
         />

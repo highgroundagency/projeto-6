@@ -36,7 +36,10 @@ export default async function TelaMeuResultado({
         descricao="Seu score no ciclo, a faixa de gratificação e o caminho completo até cada número."
       />
 
-      <Painel titulo="Gestor avaliado" descricao="Seletor simulado enquanto o login real não entra (F3).">
+      <Painel
+        titulo="Gestor avaliado"
+        descricao="Seletor simulado enquanto o login real não entra (F3)."
+      >
         <form method="get" className="flex flex-wrap items-end gap-3">
           <div>
             <label htmlFor="gestor" className="rotulo">
@@ -50,7 +53,7 @@ export default async function TelaMeuResultado({
             >
               {dados.gestores.map((g) => (
                 <option key={g.id} value={g.id}>
-                  {g.nome} — {dados.areaPorId(g.areaId)?.sigla}
+                  {g.nome}: {dados.areaPorId(g.areaId)?.sigla}
                 </option>
               ))}
             </select>
@@ -83,9 +86,9 @@ export default async function TelaMeuResultado({
       {!avaliacao ? (
         <div className="mt-6">
           <Aviso>
-            Ainda não há resultado publicado para este gestor. Ciclos em lançamento não
-            produzem avaliação — inventar um número aqui seria exatamente o oposto do que
-            este sistema defende.
+            Ainda não há resultado publicado para este gestor. Ciclos em lançamento não produzem
+            avaliação: inventar um número aqui seria exatamente o oposto do que este sistema
+            defende.
           </Aviso>
         </div>
       ) : (
@@ -104,7 +107,10 @@ export default async function TelaMeuResultado({
                 const largura = melhor > 0 ? (item.score / melhor) * 100 : 0
                 const atual = item.cicloId === avaliacao.cicloId
                 return (
-                  <li key={item.cicloId} className="grid gap-2 sm:grid-cols-[6rem_1fr_4rem] sm:items-center">
+                  <li
+                    key={item.cicloId}
+                    className="grid gap-2 sm:grid-cols-[6rem_1fr_4rem] sm:items-center"
+                  >
                     <Num className={`text-sm ${atual ? 'font-semibold' : 'text-apagado'}`}>
                       {dados.cicloPorId(item.cicloId)?.competencia}
                     </Num>

@@ -49,7 +49,7 @@ export const registro = {
     selo: 'validado',
     validadoPor: 'fernando',
     conteudo: [
-      'Registro da dinâmica real das três técnicas pendente — esta seção é preenchida na semana com fotos e artefatos.',
+      'Registro da dinâmica real das três técnicas pendente, esta seção é preenchida na semana com fotos e artefatos.',
     ],
   },
 
@@ -200,9 +200,9 @@ export const documentos = [
       <>
         <Lista
           itens={[
-            'Impacto: ataca a causa do problema — a regra da portaria hoje só existe dentro de fórmulas de planilha.',
+            'Impacto: ataca a causa do problema, a regra da portaria hoje só existe dentro de fórmulas de planilha.',
             'Aderência: parametrizar indicadores e regras pela interface permite que mudança de portaria não vire mudança de software.',
-            'Esforço: alto, mas fatiável — lançamento, cálculo e memória cabem até o SR1; auditoria e gestão vêm nas sprints.',
+            'Esforço: alto, mas fatiável: lançamento, cálculo e memória cabem até o SR1; auditoria e gestão vêm nas sprints.',
             'Sinergia: o modelo preditivo não virou produto separado; entrou como funcionalidade da mesma base de dados.',
           ]}
         />

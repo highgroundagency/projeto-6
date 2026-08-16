@@ -24,12 +24,13 @@ export default async function PaginaEntrar({
   const { erro } = await searchParams
 
   return (
-    <main id="conteudo" className="mx-auto flex min-h-dvh max-w-sm flex-col justify-center px-5">
+    <main
+      id="conteudo"
+      className="mx-auto flex min-h-dvh max-w-sm flex-col justify-center px-5"
+    >
       <MarcaPrumo tamanho="medio" />
       <h1 className="fonte-display mt-4 text-2xl">Painel administrativo</h1>
-      <p className="mt-1 text-sm text-apagado">
-        Acesso restrito à equipe do projeto.
-      </p>
+      <p className="mt-1 text-sm text-apagado">Acesso restrito à equipe do projeto.</p>
 
       <form action="/api/admin/entrar" method="post" className="mt-6 space-y-3">
         <div>

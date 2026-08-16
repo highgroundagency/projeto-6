@@ -155,7 +155,7 @@ export function obterSegredo(env: Ambiente = process.env): string {
   if (!avisou) {
     avisou = true
     console.warn(
-      '[prumo] ADMIN_COOKIE_SECRET não definido — usando segredo de desenvolvimento. NUNCA suba isso para produção.',
+      '[prumo] ADMIN_COOKIE_SECRET não definido: usando segredo de desenvolvimento. NUNCA suba isso para produção.',
     )
   }
   return SEGREDO_DEV

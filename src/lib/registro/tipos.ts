@@ -41,12 +41,7 @@ export interface Contribuicao {
   readonly contribuicao: string
 }
 
-export type TipoEvidencia =
-  | 'prototipo'
-  | 'codigo'
-  | 'testes'
-  | 'dashboard'
-  | 'documento'
+export type TipoEvidencia = 'prototipo' | 'codigo' | 'testes' | 'dashboard' | 'documento'
 
 export interface Evidencia {
   readonly tipo: TipoEvidencia

@@ -282,8 +282,7 @@ export function calcularAvaliacao({
       somaContribuicoes,
       pontuacaoMaxima: regra.pontuacaoMaxima,
       score: scoreLimitado,
-      formula:
-        'score = (Σ pontos × peso) ÷ (Σ peso × pontuação máxima) × 100',
+      formula: 'score = (Σ pontos × peso) ÷ (Σ peso × pontuação máxima) × 100',
     },
     avisos,
   }

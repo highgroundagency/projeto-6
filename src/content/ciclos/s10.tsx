@@ -90,24 +90,24 @@ export const documentos = [
           colunas={['Caderno', 'O que faz']}
           linhas={[
             [
-              '01 — EDA',
+              '01: EDA',
               'Distribuição do atingimento por área. É aqui que aparece o achado que muda o projeto: quase nada bate a meta',
             ],
             [
-              '02 — Pré-processamento',
+              '02: Pré-processamento',
               'Atributos com shift(1) e separação treino/teste temporal, para o modelo nunca ver o futuro',
             ],
             [
-              '03 — Classificação',
+              '03: Classificação',
               'Duas perguntas: "vai bater a meta?" (fracassa) e "vai melhorar?" (funciona)',
             ],
-            ['04 — Regressão', 'Atingimento esperado, com importância dos atributos'],
+            ['04: Regressão', 'Atingimento esperado, com importância dos atributos'],
             [
-              '05 — Clustering',
-              'Agrupamento de ÁREAS — nunca de pessoas — com a silhueta publicada ao lado',
+              '05: Clustering',
+              'Agrupamento de ÁREAS: nunca de pessoas: com a silhueta publicada ao lado',
             ],
             [
-              '06 — Conclusões',
+              '06: Conclusões',
               'Comparação entre os quatro modelos e o limite que não se negocia',
             ],
           ]}
@@ -116,7 +116,7 @@ export const documentos = [
           O classificador de &ldquo;vai bater a meta&rdquo; NÃO supera o palpite de chutar a
           classe majoritária, e fica publicado assim na tela de analytics. O caderno 01 já
           explicava o porquê: com pouquíssimos positivos, o alvo não tem sinal. Não é o modelo
-          que é ruim — é a pergunta que é mal posta nesta base. Esconder o que falhou e mostrar
+          que é ruim: é a pergunta que é mal posta nesta base. Esconder o que falhou e mostrar
           só o que deu certo seria escolher a métrica depois de ver o resultado.
         </Nota>
       </>
@@ -133,7 +133,7 @@ export const documentos = [
           linhas={[
             [
               'Base',
-              'Exclusivamente sintética, com semente fixa — nenhum dado real de pessoa ou da SESAU',
+              'Exclusivamente sintética, com semente fixa: nenhum dado real de pessoa ou da SESAU',
             ],
             [
               'Escopo',

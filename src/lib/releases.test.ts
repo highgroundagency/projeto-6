@@ -105,12 +105,8 @@ describe('cicloVisivel e ciclosVisiveis', () => {
   })
 
   it('trava automatico é o mesmo que não ter trava', () => {
-    expect(cicloVisivel('s2', { releaseAtual: 's3', travas: { s2: 'automatico' } })).toBe(
-      true,
-    )
-    expect(cicloVisivel('s7', { releaseAtual: 's3', travas: { s7: 'automatico' } })).toBe(
-      false,
-    )
+    expect(cicloVisivel('s2', { releaseAtual: 's3', travas: { s2: 'automatico' } })).toBe(true)
+    expect(cicloVisivel('s7', { releaseAtual: 's3', travas: { s7: 'automatico' } })).toBe(false)
   })
 
   it('devolve os ciclos na ordem do cronograma', () => {

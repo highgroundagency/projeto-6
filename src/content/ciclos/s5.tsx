@@ -119,7 +119,7 @@ export const documentos = [
             [
               'Dados (lib/dados/)',
               'De onde vêm áreas, indicadores e lançamentos',
-              'Isola as telas da fonte — trocar seed por banco não reescreve tela',
+              'Isola as telas da fonte: trocar seed por banco não reescreve tela',
             ],
             [
               'Release (lib/releases.ts)',
@@ -131,7 +131,7 @@ export const documentos = [
         <Lista
           itens={[
             'Nenhuma camada acima chama a de baixo pulando a do meio: a tela fala com dados, dados falam com a fonte.',
-            'O motor de cálculo não conhece nem tela nem banco — recebe números e devolve números com a conta aberta.',
+            'O motor de cálculo não conhece nem tela nem banco, recebe números e devolve números com a conta aberta.',
           ]}
         />
       </>

@@ -40,25 +40,22 @@ export default async function CascaDoSistema() {
         <section className="mt-8 border border-dashed border-linha px-5 py-8">
           <h2 className="fonte-display text-xl">O sistema ainda não entrou em operação</h2>
           <p className="mt-2 max-w-prose text-sm leading-relaxed">
-            As telas do MVP são liberadas a partir da{' '}
-            <strong>{abertura?.rotulo}</strong>, em{' '}
-            <Num>{abertura ? formatarBR(abertura.data) : '—'}</Num>. Até lá, a trajetória do
-            projeto está no{' '}
+            As telas do MVP são liberadas a partir da <strong>{abertura?.rotulo}</strong>, em{' '}
+            <Num>{abertura ? formatarBR(abertura.data) : 'data a definir'}</Num>. Até lá, a
+            trajetória do projeto está no{' '}
             <Link href="/registro" className="underline underline-offset-4">
               registro
             </Link>
             .
           </p>
           <p className="mt-3 max-w-prose text-xs text-apagado">
-            Esta página não lista o que ainda não existe: funcionalidade não liberada
-            responde 404, e não uma prévia do que vem por aí.
+            Esta página não lista o que ainda não existe: funcionalidade não liberada responde
+            404, e não uma prévia do que vem por aí.
           </p>
         </section>
       ) : (
         <section className="mt-8">
-          <h2 className="rotulo">
-            Telas disponíveis para o perfil {PERFIS[perfil].rotulo}
-          </h2>
+          <h2 className="rotulo">Telas disponíveis para o perfil {PERFIS[perfil].rotulo}</h2>
           <p className="mt-1 text-sm text-apagado">{PERFIS[perfil].descricao}</p>
 
           <ul className="mt-3 grid gap-px border border-linha bg-linha sm:grid-cols-2">

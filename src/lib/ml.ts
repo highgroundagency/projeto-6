@@ -80,8 +80,8 @@ export function modeloPorId(id: string): ModeloExportado | undefined {
 
 /** Rótulo curto de cada família, para o cabeçalho do painel. */
 export const ROTULO_MODELO: Record<string, string> = {
-  classificacao: 'Classificação — atingir a meta',
-  classificacao_tendencia: 'Classificação — tendência',
+  classificacao: 'Classificação: atingir a meta',
+  classificacao_tendencia: 'Classificação: tendência',
   regressao: 'Regressão',
   clustering: 'Clustering',
 }

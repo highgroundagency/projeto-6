@@ -39,7 +39,7 @@ export async function POST(requisicao: NextRequest) {
     return redirecionar(
       comParametros('/sistema/lancamento', {
         area: String(formulario.get('area') ?? ''),
-        erro: `Lançamento recusado: ${primeiro.path.join('.')} — ${primeiro.message}.`,
+        erro: `Lançamento recusado em ${primeiro.path.join('.')}: ${primeiro.message}.`,
       }),
     )
   }
@@ -60,7 +60,10 @@ export async function POST(requisicao: NextRequest) {
   const indicador = panorama.indicadorPorId(dados.indicadorId)
   if (!indicador) {
     return redirecionar(
-      comParametros('/sistema/lancamento', { area: dados.area, erro: 'Indicador desconhecido.' }),
+      comParametros('/sistema/lancamento', {
+        area: dados.area,
+        erro: 'Indicador desconhecido.',
+      }),
     )
   }
 
@@ -71,7 +74,8 @@ export async function POST(requisicao: NextRequest) {
       cicloId: dados.cicloId,
       valor: dados.valor,
       evidencia: dados.evidencia,
-      autor: identidade.nome !== 'Perfil simulado' ? identidade.nome : `gestor-${indicador.areaId}`,
+      autor:
+        identidade.nome !== 'Perfil simulado' ? identidade.nome : `gestor-${indicador.areaId}`,
     },
     agora,
   )

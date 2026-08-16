@@ -50,8 +50,16 @@ export default async function TelaCam({
         acao={<Etiqueta tom="acento">{ROTULO_ESTADO[emAndamento.estado]}</Etiqueta>}
       />
 
-      {ok ? <div className="mt-5"><Aviso tom="ok">{decodeURIComponent(ok)}</Aviso></div> : null}
-      {erro ? <div className="mt-5"><Aviso tom="alerta">{decodeURIComponent(erro)}</Aviso></div> : null}
+      {ok ? (
+        <div className="mt-5">
+          <Aviso tom="ok">{decodeURIComponent(ok)}</Aviso>
+        </div>
+      ) : null}
+      {erro ? (
+        <div className="mt-5">
+          <Aviso tom="alerta">{decodeURIComponent(erro)}</Aviso>
+        </div>
+      ) : null}
 
       <Painel
         titulo={`Ciclo ${emAndamento.competencia}`}
@@ -64,7 +72,11 @@ export default async function TelaCam({
             O ciclo já está publicado: não há transição seguinte.
           </p>
         ) : admin ? (
-          <form action="/api/sistema/ciclo" method="post" className="mt-4 border-t border-linha pt-4">
+          <form
+            action="/api/sistema/ciclo"
+            method="post"
+            className="mt-4 border-t border-linha pt-4"
+          >
             <input type="hidden" name="cicloId" value={emAndamento.id} />
             <p className="text-sm">
               Próxima transição: <strong>{ROTULO_ESTADO[emAndamento.estado]}</strong> →{' '}
@@ -79,12 +91,14 @@ export default async function TelaCam({
                 className="mt-0.5 size-4 accent-[color:var(--color-laranja)]"
               />
               <span>
-                Confirmo a transição. A mudança é registrada na trilha de auditoria com o
-                estado anterior e o novo.
+                Confirmo a transição. A mudança é registrada na trilha de auditoria com o estado
+                anterior e o novo.
               </span>
             </label>
             <Botao type="submit" variante="primario" className="mt-3" disabled={!podeAgir}>
-              {seguinte === 'homologado' ? 'Homologar ciclo' : `Avançar para ${ROTULO_ESTADO[seguinte]}`}
+              {seguinte === 'homologado'
+                ? 'Homologar ciclo'
+                : `Avançar para ${ROTULO_ESTADO[seguinte]}`}
             </Botao>
             {!podeAgir ? (
               <p className="mt-2 text-xs text-apagado">
@@ -106,8 +120,7 @@ export default async function TelaCam({
               className="grid gap-2 py-2.5 sm:grid-cols-[14rem_1fr] sm:items-center sm:gap-4"
             >
               <span className="text-sm">
-                <Num className="text-xs text-apagado">{linha.area.sigla}</Num>{' '}
-                {linha.area.nome}
+                <Num className="text-xs text-apagado">{linha.area.sigla}</Num> {linha.area.nome}
               </span>
               <Barra valor={linha.enviados} total={linha.total} />
             </li>

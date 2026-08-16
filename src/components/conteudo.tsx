@@ -21,21 +21,13 @@ export function Secao({
   return (
     <section className="mt-8 first:mt-0">
       <h4 className="fonte-display text-lg text-texto">{titulo}</h4>
-      {descricao ? (
-        <p className="mt-1 max-w-prose text-sm text-apagado">{descricao}</p>
-      ) : null}
+      {descricao ? <p className="mt-1 max-w-prose text-sm text-apagado">{descricao}</p> : null}
       <div className="mt-3">{children}</div>
     </section>
   )
 }
 
-export function Grade({
-  colunas = 2,
-  children,
-}: {
-  colunas?: 2 | 3
-  children: ReactNode
-}) {
+export function Grade({ colunas = 2, children }: { colunas?: 2 | 3; children: ReactNode }) {
   return (
     <div
       className={cn(
@@ -127,7 +119,7 @@ export function Tabela({
                   key={j}
                   className={cn(
                     'px-3 py-2 align-top leading-relaxed',
-                    alinharNumeros && j > 0 && /^[\d.,%\s—-]+$/.test(celula)
+                    alinharNumeros && j > 0 && /^[\d.,%\s: -]+$/.test(celula)
                       ? 'numero whitespace-nowrap'
                       : '',
                   )}

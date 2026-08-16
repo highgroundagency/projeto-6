@@ -37,7 +37,7 @@ export const registro = {
       {
         decisao: 'Demonstrar ao vivo, sem vídeo gravado.',
         porque:
-          'Gravação esconde travamento e não prova que roda. Se cair, cai na frente de todo mundo — e isso também é informação.',
+          'Gravação esconde travamento e não prova que roda. Se cair, cai na frente de todo mundo, e isso também é informação.',
       },
     ],
   },
@@ -72,7 +72,7 @@ export const registro = {
       { tipo: 'documento', rotulo: 'Pacote de entrega do SR1', url: '#doc-sr1-pacote' },
       {
         tipo: 'documento',
-        rotulo: 'Direito — base legal e dados pessoais',
+        rotulo: 'Direito: base legal e dados pessoais',
         url: '#doc-sr1-direito-base-legal',
       },
       { tipo: 'prototipo', rotulo: 'Protótipo apresentado', url: '/sistema' },
@@ -83,18 +83,18 @@ export const registro = {
 export const documentos = [
   {
     id: 'direito-base-legal',
-    titulo: 'Direito — base legal e dados pessoais',
+    titulo: 'Direito: base legal e dados pessoais',
     resumo: 'que dado o sistema trataria, de quem, e sob qual artigo da lgpd.',
     Conteudo: () => (
       <>
         <Secao
           titulo="Base legal do tratamento"
-          descricao="Art. 7º, III da LGPD — execução de política pública prevista em lei e regulamento."
+          descricao="Art. 7º, III da LGPD: execução de política pública prevista em lei e regulamento."
         >
           <Lista
             itens={[
               'A gratificação é instituída por portaria: o tratamento é indispensável para executá-la.',
-              'Não se pede consentimento, e nem se deveria — numa relação funcional assimétrica ele seria frágil, e a recusa não poderia ser honrada sem inviabilizar a política.',
+              'Não se pede consentimento, e nem se deveria, numa relação funcional assimétrica ele seria frágil, e a recusa não poderia ser honrada sem inviabilizar a política.',
               'Controladora: Secretaria de Saúde do Recife. Encarregado designado pela Prefeitura; o sistema apenas expõe o canal.',
             ]}
           />
@@ -144,7 +144,7 @@ export const documentos = [
         <Secao titulo="No MVP, nada disso existe">
           <Lista
             itens={[
-              'A base é 100% sintética, com semente fixa — nenhum servidor real está no repositório.',
+              'A base é 100% sintética, com semente fixa, nenhum servidor real está no repositório.',
               'Há teste automatizado que falha se CPF, e-mail, telefone ou matrícula aparecerem na base.',
               'O mapeamento acima descreve o que existiria em produção, para que a análise jurídica não dependa de esperar o dado real chegar.',
             ]}

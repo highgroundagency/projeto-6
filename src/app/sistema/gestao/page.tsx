@@ -126,7 +126,14 @@ export default async function TelaGestao({
           <table className="w-full min-w-[34rem] border-collapse text-sm">
             <thead>
               <tr className="border-b border-linha bg-superficie">
-                {['#', anonimizado ? 'Identificação' : 'Gestor', 'Área', 'Score', 'Faixa', 'Avisos'].map((c) => (
+                {[
+                  '#',
+                  anonimizado ? 'Identificação' : 'Gestor',
+                  'Área',
+                  'Score',
+                  'Faixa',
+                  'Avisos',
+                ].map((c) => (
                   <th key={c} className="rotulo px-3 py-2 text-left">
                     {c}
                   </th>
@@ -142,21 +149,25 @@ export default async function TelaGestao({
                     <td className="numero px-3 py-1.5">{i + 1}</td>
                     <td className="px-3 py-1.5">
                       {anonimizado ? (
-                        <Num className="text-apagado">gestor {String(i + 1).padStart(2, '0')}</Num>
+                        <Num className="text-apagado">
+                          gestor {String(i + 1).padStart(2, '0')}
+                        </Num>
                       ) : (
                         gestor?.nome
                       )}
                     </td>
                     <td className="px-3 py-1.5 text-apagado">
-                      {anonimizado ? '—' : `${area?.sigla} · ${area?.nome}`}
+                      {anonimizado ? ', ' : `${area?.sigla} · ${area?.nome}`}
                     </td>
-                    <td className="numero px-3 py-1.5 font-semibold">{avaliacao.score.toFixed(2)}</td>
-                    <td className="px-3 py-1.5">{avaliacao.faixa?.rotulo ?? '—'}</td>
+                    <td className="numero px-3 py-1.5 font-semibold">
+                      {avaliacao.score.toFixed(2)}
+                    </td>
+                    <td className="px-3 py-1.5">{avaliacao.faixa?.rotulo ?? 'sem faixa'}</td>
                     <td className="px-3 py-1.5">
                       {avaliacao.avisos.length > 0 ? (
                         <Etiqueta tom="alerta">{avaliacao.avisos.length}</Etiqueta>
                       ) : (
-                        <span className="text-apagado">—</span>
+                        <span className="text-apagado">, </span>
                       )}
                     </td>
                   </tr>
@@ -168,9 +179,9 @@ export default async function TelaGestao({
 
         <div className="mt-3">
           <Aviso>
-            O ranking é uma ferramenta de gestão, não de exposição. A anonimização existe
-            para que a comparação entre áreas possa ser discutida sem constranger pessoas —
-            e para que o painel possa ser projetado numa reunião.
+            O ranking é uma ferramenta de gestão, não de exposição. A anonimização existe para
+            que a comparação entre áreas possa ser discutida sem constranger pessoas, e para que
+            o painel possa ser projetado numa reunião.
           </Aviso>
         </div>
       </Painel>

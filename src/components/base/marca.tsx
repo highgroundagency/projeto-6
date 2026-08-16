@@ -63,7 +63,7 @@ export function MarcaCesar({ className }: { className?: string }) {
     // eslint-disable-next-line @next/next/no-img-element -- asset local, sem otimização necessária
     <img
       src="/marca/cesar.png"
-      alt={`${INSTITUICAO.escola} — ${INSTITUICAO.curso}`}
+      alt={`${INSTITUICAO.escola}: ${INSTITUICAO.curso}`}
       width={1440}
       height={863}
       // A logo empilha o símbolo e o wordmark "c.e.s.a.r": abaixo de ~28px de

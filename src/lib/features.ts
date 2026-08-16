@@ -100,7 +100,7 @@ export function featurePorRota(rota: string): Feature | undefined {
 export const PERFIS: Record<PerfilId, { rotulo: string; descricao: string }> = {
   cam: {
     rotulo: 'CAM',
-    descricao: 'Comissão de Avaliação de Metas — gere ciclos, regras e homologação.',
+    descricao: 'Comissão de Avaliação de Metas: gere ciclos, regras e homologação.',
   },
   area_tecnica: {
     rotulo: 'Área técnica',

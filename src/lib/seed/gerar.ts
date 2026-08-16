@@ -53,7 +53,7 @@ const REGRAS: readonly RegraDePontuacao[] = [
   {
     id: 'regra-v1',
     versao: 1,
-    descricao: 'Faixas iniciais do ciclo 2026 — cinco patamares de atingimento.',
+    descricao: 'Faixas iniciais do ciclo 2026: cinco patamares de atingimento.',
     vigenteDe: '2026-01',
     vigenteAte: '2026-03',
     faixas: [
@@ -183,7 +183,7 @@ export function gerarBase(semente: number = SEMENTE_PADRAO): BaseSintetica {
         indicadorId: definicao.id,
         cicloId: ciclo.id,
         valor: arredondarValor(valor, definicao.unidade),
-        evidencia: `Extração de ${definicao.fonte} — competência ${ciclo.competencia}`,
+        evidencia: `Extração de ${definicao.fonte}: competência ${ciclo.competencia}`,
         autor: `gestor-${definicao.areaId}`,
         registradoEm: carimbo(ciclo.competencia, 10 + Math.floor(aleatorio() * 8)),
         status: aberto ? 'enviado' : 'validado',
@@ -294,7 +294,12 @@ function gerarEventos(
       depois: { competencia: ciclo.competencia, estado: 'rascunho', regraId: ciclo.regraId },
     })
 
-    const transicoes: EstadoCiclo[] = ['lancamento_aberto', 'em_validacao', 'homologado', 'publicado']
+    const transicoes: EstadoCiclo[] = [
+      'lancamento_aberto',
+      'em_validacao',
+      'homologado',
+      'publicado',
+    ]
     let anterior: EstadoCiclo = 'rascunho'
     for (const [i, estado] of transicoes.entries()) {
       const alcancado =

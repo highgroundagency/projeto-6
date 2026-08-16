@@ -14,7 +14,13 @@ function chaveFaixa(faixa: FaixaPontuacao): string {
 }
 
 /** Diff visual entre duas versões da regra — o que mudou, campo a campo. */
-function DiffDeVersoes({ anterior, nova }: { anterior: RegraDePontuacao; nova: RegraDePontuacao }) {
+function DiffDeVersoes({
+  anterior,
+  nova,
+}: {
+  anterior: RegraDePontuacao
+  nova: RegraDePontuacao
+}) {
   const antigas = new Map(anterior.faixas.map((f) => [chaveFaixa(f), f]))
   const novas = new Map(nova.faixas.map((f) => [chaveFaixa(f), f]))
   const chaves = [...new Set([...antigas.keys(), ...novas.keys()])].sort(
@@ -36,21 +42,34 @@ function DiffDeVersoes({ anterior, nova }: { anterior: RegraDePontuacao; nova: R
           {chaves.map((chave) => {
             const antiga = antigas.get(chave)
             const atual = novas.get(chave)
-            const situacao = !antiga ? 'adicionada' : !atual ? 'removida' : antiga.pontos === atual.pontos ? 'igual' : 'alterada'
+            const situacao = !antiga
+              ? 'adicionada'
+              : !atual
+                ? 'removida'
+                : antiga.pontos === atual.pontos
+                  ? 'igual'
+                  : 'alterada'
             const [de, ate] = chave.split('|')
 
             return (
               <tr key={chave} className="border-b border-linha last:border-0">
                 <td className="numero px-3 py-1.5 whitespace-nowrap">
-                  {Math.round(Number(de) * 100)}% a {ate === '∞' ? '∞' : `<${Math.round(Number(ate) * 100)}%`}
+                  {Math.round(Number(de) * 100)}% a{' '}
+                  {ate === '∞' ? '∞' : `<${Math.round(Number(ate) * 100)}%`}
                 </td>
-                <td className="numero px-3 py-1.5">{antiga ? `${antiga.pontos} pts` : '—'}</td>
-                <td className="numero px-3 py-1.5">{atual ? `${atual.pontos} pts` : '—'}</td>
+                <td className="numero px-3 py-1.5">
+                  {antiga ? `${antiga.pontos} pts` : 'não havia'}
+                </td>
+                <td className="numero px-3 py-1.5">
+                  {atual ? `${atual.pontos} pts` : 'não havia'}
+                </td>
                 <td className="px-3 py-1.5">
                   {situacao === 'igual' ? (
                     <span className="text-apagado">sem mudança</span>
                   ) : (
-                    <Etiqueta tom={situacao === 'removida' ? 'alerta' : 'acento'}>{situacao}</Etiqueta>
+                    <Etiqueta tom={situacao === 'removida' ? 'alerta' : 'acento'}>
+                      {situacao}
+                    </Etiqueta>
                   )}
                 </td>
               </tr>
@@ -76,15 +95,15 @@ export default async function TelaIndicadores() {
     <>
       <CabecalhoTela
         titulo="Indicadores e regras"
-        descricao="O que é medido, com que meta e peso — e a regra que transforma atingimento em pontos."
+        descricao="O que é medido, com que meta e peso, e a regra que transforma atingimento em pontos."
         acao={<SomenteLeitura />}
       />
 
       <div className="mt-5">
         <Aviso>
-          Indicadores e regras são <strong>dados</strong>, não código: quando a portaria
-          mudar, o cadastro muda pela interface e o software fica igual. No protótipo o
-          catálogo é sintético e a edição ainda não está construída.
+          Indicadores e regras são <strong>dados</strong>, não código: quando a portaria mudar,
+          o cadastro muda pela interface e o software fica igual. No protótipo o catálogo é
+          sintético e a edição ainda não está construída.
         </Aviso>
       </div>
 
@@ -102,7 +121,15 @@ export default async function TelaIndicadores() {
                 <table className="w-full min-w-[44rem] border-collapse text-sm">
                   <thead>
                     <tr className="border-b border-linha bg-superficie">
-                      {['Indicador', 'Unidade', 'Direção', 'Meta', 'Peso', 'Periodicidade', 'Fonte'].map((c) => (
+                      {[
+                        'Indicador',
+                        'Unidade',
+                        'Direção',
+                        'Meta',
+                        'Peso',
+                        'Periodicidade',
+                        'Fonte',
+                      ].map((c) => (
                         <th key={c} className="rotulo px-3 py-2 text-left whitespace-nowrap">
                           {c}
                         </th>
@@ -115,7 +142,9 @@ export default async function TelaIndicadores() {
                         <td className="px-3 py-1.5">{indicador.nome}</td>
                         <td className="px-3 py-1.5 text-apagado">{indicador.unidade}</td>
                         <td className="px-3 py-1.5 whitespace-nowrap text-apagado">
-                          {indicador.direcao === 'maior_melhor' ? 'maior é melhor' : 'menor é melhor'}
+                          {indicador.direcao === 'maior_melhor'
+                            ? 'maior é melhor'
+                            : 'menor é melhor'}
                         </td>
                         <td className="numero px-3 py-1.5">{indicador.meta}</td>
                         <td className="numero px-3 py-1.5">{indicador.peso}</td>
@@ -133,7 +162,7 @@ export default async function TelaIndicadores() {
 
       <Painel
         titulo="Regras de pontuação versionadas"
-        descricao="Alterar uma regra cria uma nova versão. A vigente nunca é editada — sem isso, um ciclo homologado deixaria de reproduzir o próprio resultado."
+        descricao="Alterar uma regra cria uma nova versão. A vigente nunca é editada, sem isso, um ciclo homologado deixaria de reproduzir o próprio resultado."
       >
         <ul className="space-y-3">
           {dados.regras.map((regra) => (
@@ -149,8 +178,9 @@ export default async function TelaIndicadores() {
               <p className="mt-1 text-sm text-apagado">{regra.descricao}</p>
               <p className="numero mt-2 text-xs text-apagado">
                 teto {Math.round(regra.tetoAtingimento * 100)}% · arredondamento{' '}
-                {regra.arredondamento.casas} casas ({regra.arredondamento.modo.replace(/_/g, ' ')}) ·
-                sem lançamento: {regra.semLancamento.replace(/_/g, ' ')}
+                {regra.arredondamento.casas} casas (
+                {regra.arredondamento.modo.replace(/_/g, ' ')}) · sem lançamento:{' '}
+                {regra.semLancamento.replace(/_/g, ' ')}
               </p>
             </li>
           ))}

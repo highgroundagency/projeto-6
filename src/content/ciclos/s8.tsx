@@ -132,8 +132,8 @@ export const documentos = [
               'A regra vigente converte o valor informado em pontos, pela faixa',
             ],
             ['Peso', 'Cada indicador tem peso próprio, definido em portaria'],
-            ['Soma ponderada', 'Σ (pontos × peso) — o numerador'],
-            ['Teto', 'Σ (peso × pontuação máxima) — o denominador'],
+            ['Soma ponderada', 'Σ (pontos × peso): o numerador'],
+            ['Teto', 'Σ (peso × pontuação máxima): o denominador'],
             ['Score', '(soma ponderada ÷ teto) × 100, de 0 a 100'],
             ['Faixa', 'O score cai numa faixa da regra, que define o percentual pago'],
           ]}

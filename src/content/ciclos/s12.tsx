@@ -78,7 +78,7 @@ export const registro = {
       { tipo: 'documento', rotulo: 'Trabalho futuro declarado', url: '#doc-s12-futuro' },
       {
         tipo: 'documento',
-        rotulo: 'Direito — Privacy by Design e direitos dos titulares',
+        rotulo: 'Direito: Privacy by Design e direitos dos titulares',
         url: '#doc-s12-direito-titulares',
       },
     ],
@@ -88,7 +88,7 @@ export const registro = {
 export const documentos = [
   {
     id: 'direito-titulares',
-    titulo: 'Direito — Privacy by Design e direitos dos titulares',
+    titulo: 'Direito: Privacy by Design e direitos dos titulares',
     resumo: 'onde a privacidade está no código, e como cada direito do art. 18 é atendido.',
     Conteudo: () => (
       <>
@@ -101,7 +101,7 @@ export const documentos = [
             linhas={[
               [
                 'Minimização',
-                'A base sintética não tem CPF, e-mail nem telefone — e há teste que falha se aparecerem',
+                'A base sintética não tem CPF, e-mail nem telefone, e há teste que falha se aparecerem',
               ],
               [
                 'Finalidade',
@@ -149,14 +149,14 @@ export const documentos = [
         <Secao titulo="O art. 20 é o centro deste projeto">
           <Lista
             itens={[
-              'Decisão automatizada que afeta interesse do titular exige direito a revisão — e gratificação afeta remuneração.',
+              'Decisão automatizada que afeta interesse do titular exige direito a revisão, e gratificação afeta remuneração.',
               'Por isso o cálculo não é caixa-preta: a regra é dado versionado e a memória de cálculo mostra a conta inteira.',
               'Por isso, também, nenhuma saída dos modelos de machine learning entra na conta. Eles informam onde olhar; quem decide é a comissão, e a decisão é contestável.',
             ]}
           />
           <Nota>
             Esta é a razão pela qual a lente de Direito não é um anexo do projeto: ela
-            determinou uma decisão de arquitetura — o motor de cálculo ser função pura e
+            determinou uma decisão de arquitetura: o motor de cálculo ser função pura e
             auditável, e o ML ficar fora dele.
           </Nota>
         </Secao>
@@ -172,20 +172,20 @@ export const documentos = [
         <Tabela
           colunas={['Marco', 'Planejado', 'Realizado', 'Desvio']}
           linhas={[
-            ['Kick-off', 'Problema, pergunta e recorte', '—', 'A preencher no SR2'],
-            ['SR1', 'Pesquisa e protótipo navegável', '—', 'A preencher no SR2'],
+            ['Kick-off', 'Problema, pergunta e recorte', ', ', 'A preencher no SR2'],
+            ['SR1', 'Pesquisa e protótipo navegável', ', ', 'A preencher no SR2'],
             [
               'Sprints 1–4',
               'Ciclo completo, auditoria, gestão e analytics',
-              '—',
+              ', ',
               'A preencher no SR2',
             ],
-            ['Semana 11', 'Validação com a CAM', '—', 'A preencher no SR2'],
+            ['Semana 11', 'Validação com a CAM', ', ', 'A preencher no SR2'],
           ]}
         />
         <Lista
           itens={[
-            'A coluna "realizado" é preenchida no fim, com o que aconteceu — não antes.',
+            'A coluna "realizado" é preenchida no fim, com o que aconteceu, não antes.',
             'Desvio sem explicação não conta: cada linha diz por que mudou.',
           ]}
         />
@@ -203,7 +203,7 @@ export const documentos = [
           linhas={[
             [
               'Persistência em banco no runtime',
-              'O schema com RLS está escrito e testado, mas o app roda no seed — ver ADR-011',
+              'O schema com RLS está escrito e testado, mas o app roda no seed, ver ADR-011',
             ],
             [
               'Autenticação real por perfil',

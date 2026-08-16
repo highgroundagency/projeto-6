@@ -51,8 +51,16 @@ export default async function TelaContestacao({
         descricao="Questionamento formal de um resultado, com registro e resposta da comissão."
       />
 
-      {ok ? <div className="mt-5"><Aviso tom="ok">{decodeURIComponent(ok)}</Aviso></div> : null}
-      {erro ? <div className="mt-5"><Aviso tom="alerta">{decodeURIComponent(erro)}</Aviso></div> : null}
+      {ok ? (
+        <div className="mt-5">
+          <Aviso tom="ok">{decodeURIComponent(ok)}</Aviso>
+        </div>
+      ) : null}
+      {erro ? (
+        <div className="mt-5">
+          <Aviso tom="alerta">{decodeURIComponent(erro)}</Aviso>
+        </div>
+      ) : null}
 
       <Painel
         titulo="Abrir contestação"
@@ -156,11 +164,15 @@ export default async function TelaContestacao({
             {minhas.map((contestacao) => (
               <li key={contestacao.id} className="py-3">
                 <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-                  <Num className="text-xs text-apagado">{contestacao.abertaEm.slice(0, 10)}</Num>
+                  <Num className="text-xs text-apagado">
+                    {contestacao.abertaEm.slice(0, 10)}
+                  </Num>
                   <Num className="text-xs">
                     ciclo {dados.cicloPorId(contestacao.cicloId)?.competencia}
                   </Num>
-                  <Etiqueta tom={TOM[contestacao.status]}>{ROTULO[contestacao.status]}</Etiqueta>
+                  <Etiqueta tom={TOM[contestacao.status]}>
+                    {ROTULO[contestacao.status]}
+                  </Etiqueta>
                 </div>
                 <p className="mt-1 text-sm">{contestacao.motivo}</p>
                 {contestacao.indicadorId ? (

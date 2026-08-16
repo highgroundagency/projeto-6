@@ -50,8 +50,16 @@ export default async function TelaLancamento({
         }
       />
 
-      {ok ? <div className="mt-5"><Aviso tom="ok">{decodeURIComponent(ok)}</Aviso></div> : null}
-      {erro ? <div className="mt-5"><Aviso tom="alerta">{decodeURIComponent(erro)}</Aviso></div> : null}
+      {ok ? (
+        <div className="mt-5">
+          <Aviso tom="ok">{decodeURIComponent(ok)}</Aviso>
+        </div>
+      ) : null}
+      {erro ? (
+        <div className="mt-5">
+          <Aviso tom="alerta">{decodeURIComponent(erro)}</Aviso>
+        </div>
+      ) : null}
 
       <Painel titulo="Área" descricao="Cada área informa apenas os próprios indicadores.">
         <form method="get" className="flex flex-wrap items-end gap-3">
@@ -67,7 +75,7 @@ export default async function TelaLancamento({
             >
               {dados.areas.map((a) => (
                 <option key={a.id} value={a.id}>
-                  {a.sigla} — {a.nome}
+                  {a.sigla}: {a.nome}
                 </option>
               ))}
             </select>
@@ -82,7 +90,7 @@ export default async function TelaLancamento({
         <div className="mt-6">
           <Aviso tom="alerta">
             Não há ciclo com janela de lançamento aberta. Fora da janela, o lançamento fica
-            bloqueado — e a tentativa continua registrada na auditoria.
+            bloqueado: e a tentativa continua registrada na auditoria.
           </Aviso>
         </div>
       ) : null}
@@ -111,8 +119,8 @@ export default async function TelaLancamento({
                   <span className="text-sm font-medium">{indicador.nome}</span>
                   <Num className="text-xs text-apagado">
                     meta {indicador.meta} {indicador.unidade} ·{' '}
-                    {indicador.direcao === 'maior_melhor' ? 'maior é melhor' : 'menor é melhor'} ·
-                    peso {indicador.peso}
+                    {indicador.direcao === 'maior_melhor' ? 'maior é melhor' : 'menor é melhor'}{' '}
+                    · peso {indicador.peso}
                   </Num>
                 </div>
 
@@ -157,8 +165,8 @@ export default async function TelaLancamento({
 
                 {suspeito ? (
                   <p className="mt-2 border-l-2 border-alerta bg-alerta/5 px-2 py-1.5 text-xs text-alerta">
-                    Valor muito distante da meta — confira se a vírgula está no lugar. O
-                    sistema apenas sinaliza: quem decide é você.
+                    Valor muito distante da meta: confira se a vírgula está no lugar. O sistema
+                    apenas sinaliza: quem decide é você.
                   </p>
                 ) : null}
               </form>

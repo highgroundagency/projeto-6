@@ -54,7 +54,7 @@ export async function coletarStatus(): Promise<Status> {
     driverConfiguracao: store.nome,
     configuracaoGravavel: store.gravavel,
     hojeRecife: hoje,
-    releasePublico: release ?? '—',
+    releasePublico: release ?? 'nenhum',
     vitrineAberta: janelaAberta(),
     dataSimulada: janelaAberta() ? dataSimuladaDaJanela() : null,
     ciclosNoCronograma: CRONOGRAMA.length,

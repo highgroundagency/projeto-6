@@ -165,7 +165,10 @@ describe('faixas', () => {
 
   it('cobre do zero ao infinito sem buraco', () => {
     for (const atingimento of [0, 0.1, 0.7, 0.84, 0.85, 0.94, 0.95, 0.99, 1, 1.5, 99]) {
-      expect(faixaDoAtingimento(atingimento, REGRA_V1), `sem faixa para ${atingimento}`).not.toBeNull()
+      expect(
+        faixaDoAtingimento(atingimento, REGRA_V1),
+        `sem faixa para ${atingimento}`,
+      ).not.toBeNull()
     }
   })
 
@@ -179,7 +182,11 @@ describe('faixas', () => {
 
 describe('calcularAvaliacao', () => {
   it('desempenho perfeito dá exatamente 100, sem sobra de arredondamento', () => {
-    const indicadores = [indicador({ id: 'i1' }), indicador({ id: 'i2' }), indicador({ id: 'i3' })]
+    const indicadores = [
+      indicador({ id: 'i1' }),
+      indicador({ id: 'i2' }),
+      indicador({ id: 'i3' }),
+    ]
     const avaliacao = avaliar(indicadores, [
       lancamento('i1', 100),
       lancamento('i2', 100),

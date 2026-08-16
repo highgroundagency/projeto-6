@@ -10,7 +10,9 @@ function Texto({ texto }: { texto: string }) {
           {segmento.forte ? (
             <strong className="font-semibold">{segmento.texto}</strong>
           ) : segmento.mono ? (
-            <code className="numero bg-superficie px-1 py-0.5 text-[0.85em]">{segmento.texto}</code>
+            <code className="numero bg-superficie px-1 py-0.5 text-[0.85em]">
+              {segmento.texto}
+            </code>
           ) : (
             segmento.texto
           )}
@@ -28,10 +30,7 @@ export function Markdown({ nos }: { nos: NoMarkdown[] }) {
         switch (no.tipo) {
           case 'titulo':
             return no.nivel === 1 ? null : (
-              <h2
-                key={i}
-                className="fonte-display mt-8 text-xl first:mt-0"
-              >
+              <h2 key={i} className="fonte-display mt-8 text-xl first:mt-0">
                 <Texto texto={no.texto} />
               </h2>
             )
@@ -58,7 +57,9 @@ export function Markdown({ nos }: { nos: NoMarkdown[] }) {
             )
 
           case 'tabela':
-            return <Tabela key={i} colunas={no.colunas} linhas={no.linhas} alinharNumeros={false} />
+            return (
+              <Tabela key={i} colunas={no.colunas} linhas={no.linhas} alinharNumeros={false} />
+            )
         }
       })}
     </div>

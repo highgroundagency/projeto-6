@@ -30,9 +30,12 @@ describe('analisarMarkdown', () => {
 
   it('lê tabela com cabeçalho e corpo', () => {
     const nos = analisarMarkdown(
-      ['| Data | Ferramenta |', '| --- | --- |', '| 08/08 | Claude |', '| 15/08 | Claude |'].join(
-        '\n',
-      ),
+      [
+        '| Data | Ferramenta |',
+        '| --- | --- |',
+        '| 08/08 | Claude |',
+        '| 15/08 | Claude |',
+      ].join('\n'),
     )
     expect(nos).toEqual([
       {

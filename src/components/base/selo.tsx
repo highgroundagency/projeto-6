@@ -9,13 +9,7 @@ import type { Selo as TipoSelo } from '@/lib/registro/tipos'
  * tudo não informa nada e ainda enche a tela de pílula. O selo existe para
  * avisar do que ainda NÃO foi revisado; quando não há aviso, não há selo.
  */
-export function Selo({
-  selo,
-  className,
-}: {
-  selo: TipoSelo
-  className?: string
-}) {
+export function Selo({ selo, className }: { selo: TipoSelo; className?: string }) {
   if (selo === 'validado') return null
 
   return (

@@ -254,7 +254,9 @@ describe.skipIf(!temBanco)('RLS — o que cada perfil pode escrever', () => {
       ).toMatch(/row-level security/i)
 
       // Sem política de update para auditoria, o comando não alcança linha alguma.
-      const resultado = await c.query(`update ciclos set estado = 'em_validacao' where id = 'c1'`)
+      const resultado = await c.query(
+        `update ciclos set estado = 'em_validacao' where id = 'c1'`,
+      )
       expect(resultado.rowCount).toBe(0)
     })
   })
@@ -305,7 +307,9 @@ describe.skipIf(!temBanco)('RLS — o que cada perfil pode escrever', () => {
     await como(USUARIOS.areaAps, async (c) => {
       // A política de escrita de ciclos exige CAM: para a área técnica, a
       // linha simplesmente não existe para efeito de UPDATE.
-      const bloqueado = await c.query(`update ciclos set estado = 'em_validacao' where id = 'c1'`)
+      const bloqueado = await c.query(
+        `update ciclos set estado = 'em_validacao' where id = 'c1'`,
+      )
       expect(bloqueado.rowCount).toBe(0)
     })
 
@@ -327,9 +331,9 @@ describe.skipIf(!temBanco)('invariantes que valem até para a service role', () 
         cliente.query(`update eventos_auditoria set descricao = 'reescrito' where id = 1`),
       ).rejects.toThrow(/append-only/i)
 
-      await expect(
-        cliente.query('delete from eventos_auditoria where id = 1'),
-      ).rejects.toThrow(/append-only/i)
+      await expect(cliente.query('delete from eventos_auditoria where id = 1')).rejects.toThrow(
+        /append-only/i,
+      )
     } finally {
       cliente.release()
     }
@@ -337,9 +341,9 @@ describe.skipIf(!temBanco)('invariantes que valem até para a service role', () 
 
   it('o ciclo não pula estado nem volta atrás', async () => {
     await como(USUARIOS.cam, async (c) => {
-      expect(
-        await recusa(c, `update ciclos set estado = 'publicado' where id = 'c1'`),
-      ).toMatch(/avança um estado por vez/i)
+      expect(await recusa(c, `update ciclos set estado = 'publicado' where id = 'c1'`)).toMatch(
+        /avança um estado por vez/i,
+      )
 
       await c.query(`update ciclos set estado = 'em_validacao' where id = 'c1'`)
 
@@ -386,9 +390,7 @@ describe.skipIf(!temBanco)('invariantes que valem até para a service role', () 
     const cliente = await pool.connect()
     try {
       await expect(
-        cliente.query(
-          `update regras_pontuacao set faixas = '[]'::jsonb where id = 'regra-v1'`,
-        ),
+        cliente.query(`update regras_pontuacao set faixas = '[]'::jsonb where id = 'regra-v1'`),
       ).rejects.toThrow(/imutável/i)
 
       // Trocar a vigência (encerrar a regra antiga) continua permitido.
@@ -406,9 +408,9 @@ describe.skipIf(!temBanco)('invariantes que valem até para a service role', () 
       await cliente.query(
         `insert into log_releases (autor, campo, de, para) values ('painel', 'adiantamentoDias', '7', '14')`,
       )
-      await expect(
-        cliente.query(`update log_releases set para = '21'`),
-      ).rejects.toThrow(/append-only/i)
+      await expect(cliente.query(`update log_releases set para = '21'`)).rejects.toThrow(
+        /append-only/i,
+      )
     } finally {
       cliente.release()
     }

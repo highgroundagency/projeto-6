@@ -59,7 +59,9 @@ describe.skipIf(!temBanco)('semeadura da base sintética', () => {
         // é preciso desativar o gatilho explicitamente — e o fato de isso ser
         // trabalhoso é exatamente o ponto.
         if (tabela === 'eventos_auditoria') {
-          await cliente.query('alter table eventos_auditoria disable trigger trilha_append_only')
+          await cliente.query(
+            'alter table eventos_auditoria disable trigger trilha_append_only',
+          )
           await cliente.query('delete from eventos_auditoria')
           await cliente.query('alter table eventos_auditoria enable trigger trilha_append_only')
           continue
@@ -92,7 +94,9 @@ describe.skipIf(!temBanco)('semeadura da base sintética', () => {
       }
 
       const contar = async (tabela: string) =>
-        Number((await cliente.query(`select count(*)::int as total from ${tabela}`)).rows[0].total)
+        Number(
+          (await cliente.query(`select count(*)::int as total from ${tabela}`)).rows[0].total,
+        )
 
       expect(await contar('areas')).toBe(resumo.areas)
       expect(await contar('indicadores')).toBe(resumo.indicadores)
@@ -102,7 +106,9 @@ describe.skipIf(!temBanco)('semeadura da base sintética', () => {
 
       // Os estados finais precisam bater com o que a base descreve.
       for (const ciclo of base.ciclos) {
-        const { rows } = await cliente.query('select estado from ciclos where id = $1', [ciclo.id])
+        const { rows } = await cliente.query('select estado from ciclos where id = $1', [
+          ciclo.id,
+        ])
         expect(rows[0].estado, `estado final de ${ciclo.id}`).toBe(ciclo.estado)
       }
 

@@ -15,7 +15,9 @@ export function CabecalhoProjeto() {
               {linha}
             </p>
           ))}
-          <p className="rotulo pt-1">Cliente: {CLIENTE.orgao} — {CLIENTE.area}</p>
+          <p className="rotulo pt-1">
+            Cliente: {CLIENTE.orgao}: {CLIENTE.area}
+          </p>
         </div>
 
         <div className="self-start border-l-2 border-acento bg-fundo p-5">

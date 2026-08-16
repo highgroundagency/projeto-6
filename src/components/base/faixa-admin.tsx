@@ -17,7 +17,10 @@ export function FaixaAdmin({ visao }: { visao: Visao }) {
     return (
       <div className="sem-impressao flex flex-wrap items-center justify-between gap-x-4 gap-y-1 bg-acento px-4 py-1.5 text-xs text-ink sm:px-8">
         <span className="rotulo text-inherit">
-          Vitrine aberta{visao.dataSimulada ? ' — o site está simulando outra data' : ' — o semestre inteiro visível'}
+          Vitrine aberta
+          {visao.dataSimulada
+            ? ', o site está simulando outra data'
+            : ', o semestre inteiro visível'}
         </span>
         <span className="lowercase">
           {visao.dataSimulada ? (
@@ -28,7 +31,7 @@ export function FaixaAdmin({ visao }: { visao: Visao }) {
           ) : (
             <>
               fora desta janela, o site mostra só até{' '}
-              <Num>{visao.release.releaseAtual ?? '—'}</Num>
+              <Num>{visao.release.releaseAtual ?? 'nenhum'}</Num>
             </>
           )}
         </span>
@@ -49,7 +52,7 @@ export function FaixaAdmin({ visao }: { visao: Visao }) {
       }`}
     >
       <span className="rotulo text-inherit">
-        {completo ? 'Modo completo — visível só para você' : 'Vendo como visitante'}
+        {completo ? 'Modo completo: visível só para você' : 'Vendo como visitante'}
       </span>
 
       <span className="flex flex-wrap items-center gap-x-3 gap-y-1">
@@ -59,8 +62,7 @@ export function FaixaAdmin({ visao }: { visao: Visao }) {
           </span>
         ) : null}
         <span>
-          release{' '}
-          <Num>{visao.release.releaseAtual ?? '—'}</Num>
+          release <Num>{visao.release.releaseAtual ?? 'nenhum'}</Num>
           {visao.release.manual ? ' (fixado)' : ` (+${visao.release.adiantamentoDias}d)`}
         </span>
         <Link href="/admin" className="underline underline-offset-2">

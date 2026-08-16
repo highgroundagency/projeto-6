@@ -92,7 +92,13 @@ export function Barra({ valor, total }: { valor: number; total: number }) {
   )
 }
 
-export function Aviso({ tom = 'neutro', children }: { tom?: 'neutro' | 'ok' | 'alerta'; children: ReactNode }) {
+export function Aviso({
+  tom = 'neutro',
+  children,
+}: {
+  tom?: 'neutro' | 'ok' | 'alerta'
+  children: ReactNode
+}) {
   return (
     <p
       className={cn(

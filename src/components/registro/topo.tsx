@@ -66,7 +66,7 @@ export function TopoRegistro({
             <dd>
               {marco.rotulo} em <Num>{formatarBR(marco.data)}</Num>{' '}
               <span className="text-apagado">
-                {diasAteMarco === 0 ? '— é hoje' : `— faltam ${diasAteMarco} dias`}
+                {diasAteMarco === 0 ? ', é hoje' : `, faltam ${diasAteMarco} dias`}
               </span>
             </dd>
           </div>

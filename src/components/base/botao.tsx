@@ -18,11 +18,11 @@ export const estiloBotao = cva(
     variants: {
       variante: {
         // Sólido, e inverte no hover — o movimento nº 4 da identidade.
-        primario:
-          'border-acento bg-acento text-ink hover:bg-transparent hover:text-acento',
+        primario: 'border-acento bg-acento text-ink hover:bg-transparent hover:text-acento',
         secundario:
           'border-linha-alta bg-transparent text-texto hover:border-acento hover:text-acento',
-        contorno: 'border-linha bg-transparent text-apagado hover:border-linha-alta hover:text-texto',
+        contorno:
+          'border-linha bg-transparent text-apagado hover:border-linha-alta hover:text-texto',
         fantasma: 'border-transparent bg-transparent text-apagado hover:text-texto',
         perigo: 'border-alerta/50 bg-transparent text-alerta hover:bg-alerta hover:text-ink',
       },

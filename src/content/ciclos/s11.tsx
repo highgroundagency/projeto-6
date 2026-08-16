@@ -51,7 +51,7 @@ export const registro = {
     selo: 'rascunho',
     validadoPor: null,
     conteudo: [
-      'A validação depende da agenda da CAM, que não está sob controle da equipe — marcar com antecedência é o único mitigador.',
+      'A validação depende da agenda da CAM, que não está sob controle da equipe, marcar com antecedência é o único mitigador.',
     ],
   },
 
@@ -124,7 +124,7 @@ export const documentos = [
         />
         <Lista
           itens={[
-            'Perguntas abertas, sem sugerir a resposta — nada de "não seria melhor se…".',
+            'Perguntas abertas, sem sugerir a resposta, nada de "não seria melhor se…".',
             'Quem conduz não defende o produto: se a pessoa criticar, a resposta é "me conta mais".',
             'Nenhum dado real de servidor é solicitado ou anotado.',
           ]}

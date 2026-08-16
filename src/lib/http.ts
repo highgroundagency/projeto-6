@@ -16,7 +16,10 @@ export function redirecionar(caminho: string, status: 303 | 307 | 308 = 303): Ne
 }
 
 /** Monta `?chave=valor` já com escape, ignorando valores vazios. */
-export function comParametros(caminho: string, parametros: Record<string, string | undefined>): string {
+export function comParametros(
+  caminho: string,
+  parametros: Record<string, string | undefined>,
+): string {
   const busca = new URLSearchParams()
   for (const [chave, valor] of Object.entries(parametros)) {
     if (valor) busca.set(chave, valor)

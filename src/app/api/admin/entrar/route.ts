@@ -7,7 +7,12 @@ import {
   verificarLimite,
 } from '@/lib/admin/rate-limit'
 import { senhaConfere, senhaEsperada } from '@/lib/admin/senha'
-import { criarTokenSessao, NOME_COOKIE_SESSAO, obterSegredo, opcoesCookieSessao } from '@/lib/admin/sessao'
+import {
+  criarTokenSessao,
+  NOME_COOKIE_SESSAO,
+  obterSegredo,
+  opcoesCookieSessao,
+} from '@/lib/admin/sessao'
 import { redirecionar } from '@/lib/http'
 
 /**
@@ -54,6 +59,10 @@ export async function POST(requisicao: NextRequest) {
   limparTentativas(ip)
 
   const resposta = redirecionar('/admin')
-  resposta.cookies.set(NOME_COOKIE_SESSAO, await criarTokenSessao(segredo), opcoesCookieSessao())
+  resposta.cookies.set(
+    NOME_COOKIE_SESSAO,
+    await criarTokenSessao(segredo),
+    opcoesCookieSessao(),
+  )
   return resposta
 }

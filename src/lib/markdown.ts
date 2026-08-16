@@ -82,7 +82,11 @@ export function analisarMarkdown(bruto: string): NoMarkdown[] {
     }
 
     const paragrafo: string[] = []
-    while (i < linhas.length && linhas[i].trim() && !/^(#{1,3}\s|\s*[-*]\s|\d+\.\s)/.test(linhas[i])) {
+    while (
+      i < linhas.length &&
+      linhas[i].trim() &&
+      !/^(#{1,3}\s|\s*[-*]\s|\d+\.\s)/.test(linhas[i])
+    ) {
       paragrafo.push(linhas[i].trim())
       i++
     }

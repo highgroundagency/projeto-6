@@ -15,7 +15,9 @@ export function contestacoes(): Contestacao[] {
   return [...novas, ...BASE.contestacoes].sort((a, b) => (a.abertaEm < b.abertaEm ? 1 : -1))
 }
 
-export function abrirContestacao(dados: Omit<Contestacao, 'id' | 'status' | 'resposta'>): Contestacao {
+export function abrirContestacao(
+  dados: Omit<Contestacao, 'id' | 'status' | 'resposta'>,
+): Contestacao {
   const contestacao: Contestacao = {
     ...dados,
     id: `cont-app-${String(++sequencia).padStart(4, '0')}`,

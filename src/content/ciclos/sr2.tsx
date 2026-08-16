@@ -83,13 +83,13 @@ export const documentos = [
         <Tabela
           colunas={['Peça', 'Onde está']}
           linhas={[
-            ['MVP funcionando', 'Sistema — oito telas com dados sintéticos'],
+            ['MVP funcionando', 'Sistema: oito telas com dados sintéticos'],
             ['Registro das doze semanas', 'Página inicial, seção Registro semanal'],
             ['Documentos de pesquisa e proposta', 'Dentro de cada semana, em sanfona'],
             ['Arquitetura e modelo de dados', 'Registro, Semana 5, e docs/arquitetura.md'],
-            ['Análise de segurança', 'docs/seguranca.md — STRIDE e OWASP Top 10'],
-            ['Análise de privacidade', 'docs/privacidade.md — LGPD e Privacy by Design'],
-            ['Decisões de arquitetura', 'docs/decisoes.md — ADRs com o que se perdeu em troca'],
+            ['Análise de segurança', 'docs/seguranca.md: STRIDE e OWASP Top 10'],
+            ['Análise de privacidade', 'docs/privacidade.md: LGPD e Privacy by Design'],
+            ['Decisões de arquitetura', 'docs/decisoes.md: ADRs com o que se perdeu em troca'],
             ['Uso de IA', 'Transparência no uso de IA'],
             ['Planejado × realizado', 'Registro, Semana 12'],
           ]}
@@ -131,7 +131,7 @@ export const documentos = [
         />
         <Lista
           itens={[
-            'As três lentes atravessam o mesmo produto — não são três trabalhos costurados.',
+            'As três lentes atravessam o mesmo produto, não são três trabalhos costurados.',
             'A lente de ML não decide pagamento: a regra da portaria é determinística e continua sendo.',
           ]}
         />

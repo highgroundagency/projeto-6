@@ -25,9 +25,10 @@ describe('checklist da matriz', () => {
   it('atribui responsáveis que existem na equipe', () => {
     for (const item of CHECKLIST) {
       if (item.responsavel) {
-        expect(IDS_INTEGRANTES.has(item.responsavel), `responsável inexistente: ${item.responsavel}`).toBe(
-          true,
-        )
+        expect(
+          IDS_INTEGRANTES.has(item.responsavel),
+          `responsável inexistente: ${item.responsavel}`,
+        ).toBe(true)
       }
     }
   })

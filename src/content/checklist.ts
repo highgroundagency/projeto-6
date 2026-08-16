@@ -43,7 +43,12 @@ export const CHECKLIST: readonly ItemChecklist[] = [
   },
 
   { ciclo: 's2', evidencia: 'Pesquisa estruturada', status: 'feito', responsavel: 'matheus' },
-  { ciclo: 's2', evidencia: 'Problema contextualizado', status: 'feito', responsavel: 'matheus' },
+  {
+    ciclo: 's2',
+    evidencia: 'Problema contextualizado',
+    status: 'feito',
+    responsavel: 'matheus',
+  },
   {
     ciclo: 's2',
     evidencia: 'Personas e stakeholders',
@@ -51,23 +56,64 @@ export const CHECKLIST: readonly ItemChecklist[] = [
     responsavel: 'matheus',
     link: '/registro#ciclo-s2',
   },
-  { ciclo: 's2', evidencia: 'Mapa de empatia', status: 'feito', responsavel: 'matheus', link: '/registro#ciclo-s2' },
+  {
+    ciclo: 's2',
+    evidencia: 'Mapa de empatia',
+    status: 'feito',
+    responsavel: 'matheus',
+    link: '/registro#ciclo-s2',
+  },
   { ciclo: 's2', evidencia: 'Benchmarking', status: 'feito', responsavel: 'fernando' },
   { ciclo: 's2', evidencia: 'SWOT', status: 'feito', responsavel: 'gabriel' },
   { ciclo: 's2', evidencia: 'Objetivos', status: 'feito', responsavel: 'gabriel' },
-  { ciclo: 's2', evidencia: 'Cronograma inicial', status: 'validado', responsavel: 'joao-henrique' },
+  {
+    ciclo: 's2',
+    evidencia: 'Cronograma inicial',
+    status: 'validado',
+    responsavel: 'joao-henrique',
+  },
 
-  { ciclo: 's3', evidencia: "Brainwriting, Brainstorming e Crazy 8's registrados", status: 'feito', responsavel: 'joao-pedro' },
-  { ciclo: 's3', evidencia: 'Alternativas levantadas', status: 'feito', responsavel: 'joao-pedro' },
+  {
+    ciclo: 's3',
+    evidencia: "Brainwriting, Brainstorming e Crazy 8's registrados",
+    status: 'feito',
+    responsavel: 'joao-pedro',
+  },
+  {
+    ciclo: 's3',
+    evidencia: 'Alternativas levantadas',
+    status: 'feito',
+    responsavel: 'joao-pedro',
+  },
   { ciclo: 's3', evidencia: 'Critérios de decisão', status: 'feito', responsavel: 'gabriel' },
-  { ciclo: 's3', evidencia: 'Ideia escolhida com justificativa', status: 'feito', responsavel: 'gabriel' },
+  {
+    ciclo: 's3',
+    evidencia: 'Ideia escolhida com justificativa',
+    status: 'feito',
+    responsavel: 'gabriel',
+  },
 
   { ciclo: 's4', evidencia: 'Proposta de solução', status: 'feito', responsavel: 'gabriel' },
-  { ciclo: 's4', evidencia: 'Escopo preliminar', status: 'feito', responsavel: 'joao-henrique' },
+  {
+    ciclo: 's4',
+    evidencia: 'Escopo preliminar',
+    status: 'feito',
+    responsavel: 'joao-henrique',
+  },
   { ciclo: 's4', evidencia: 'Backlog inicial', status: 'feito', responsavel: 'gabriel' },
 
-  { ciclo: 'ko', evidencia: 'Pitch de 5 min: problema, relevância, ideia priorizada, direcionamento', status: 'em_andamento', responsavel: 'gabriel' },
-  { ciclo: 'ko', evidencia: 'Fala distribuída entre os 6 integrantes', status: 'em_andamento', responsavel: 'joao-pedro' },
+  {
+    ciclo: 'ko',
+    evidencia: 'Pitch de 5 min: problema, relevância, ideia priorizada, direcionamento',
+    status: 'em_andamento',
+    responsavel: 'gabriel',
+  },
+  {
+    ciclo: 'ko',
+    evidencia: 'Fala distribuída entre os 6 integrantes',
+    status: 'em_andamento',
+    responsavel: 'joao-pedro',
+  },
 ]
 
 export interface LinhaChecklist {

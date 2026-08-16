@@ -27,7 +27,7 @@ export default async function PaginaStatus() {
     ['Hoje (America/Recife)', status.hojeRecife],
     ['Release público', status.releasePublico],
     ['Vitrine aberta', status.vitrineAberta ? 'sim (todos veem tudo)' : 'não'],
-    ['Data simulada', status.dataSimulada ?? '— (data real)'],
+    ['Data simulada', status.dataSimulada ?? 'nenhuma (data real)'],
     ['Ciclos no cronograma', String(status.ciclosNoCronograma)],
     ['Funcionalidades mapeadas', String(status.funcionalidades)],
     ['Áreas · indicadores', `${status.registros.areas} · ${status.registros.indicadores}`],

@@ -98,11 +98,6 @@ describe('formatação', () => {
 describe('ordenação lexicográfica', () => {
   it('comparar strings ISO equivale a comparar datas', () => {
     const datas = ['2026-12-05', '2026-08-08', '2026-10-03', '2026-09-12']
-    expect([...datas].sort()).toEqual([
-      '2026-08-08',
-      '2026-09-12',
-      '2026-10-03',
-      '2026-12-05',
-    ])
+    expect([...datas].sort()).toEqual(['2026-08-08', '2026-09-12', '2026-10-03', '2026-12-05'])
   })
 })

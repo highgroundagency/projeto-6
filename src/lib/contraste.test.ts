@@ -48,9 +48,10 @@ describe('contraste dos pares que a identidade usa', () => {
   for (const [nome, frente, atras] of pares) {
     it(`${nome} passa em AA`, () => {
       const razao = contraste(token(frente), token(atras))
-      expect(razao, `${frente} sobre ${atras} deu ${razao.toFixed(2)}:1`).toBeGreaterThanOrEqual(
-        MINIMO_AA,
-      )
+      expect(
+        razao,
+        `${frente} sobre ${atras} deu ${razao.toFixed(2)}:1`,
+      ).toBeGreaterThanOrEqual(MINIMO_AA)
     })
   }
 

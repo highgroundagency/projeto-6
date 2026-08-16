@@ -79,7 +79,7 @@ test.describe('registro do projeto', () => {
     await expect(page.getByText(/confiável, transparente, sustentável e auditável/)).toBeVisible()
     await expect(page.getByRole('heading', { name: 'Evolução do projeto' })).toBeVisible()
 
-    for (const marco of ['Kick-off', 'SR1', 'SR2 — Final']) {
+    for (const marco of ['Kick-off', 'SR1', 'SR2: Final']) {
       await expect(page.getByText(marco, { exact: true }).first()).toBeVisible()
     }
   })

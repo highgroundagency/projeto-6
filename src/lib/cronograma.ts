@@ -28,7 +28,7 @@ export const CRONOGRAMA = [
   {
     id: 's1',
     data: '2026-08-08',
-    rotulo: 'Semana 1 — Partida',
+    rotulo: 'Semana 1: Partida',
     tipo: 'semana',
     peso: 3,
     evidencias: [
@@ -41,7 +41,7 @@ export const CRONOGRAMA = [
   {
     id: 's2',
     data: '2026-08-15',
-    rotulo: 'Semana 2 — Imersão',
+    rotulo: 'Semana 2: Imersão',
     tipo: 'semana',
     peso: 7,
     evidencias: [
@@ -58,7 +58,7 @@ export const CRONOGRAMA = [
   {
     id: 's3',
     data: '2026-08-22',
-    rotulo: 'Semana 3 — Ideação',
+    rotulo: 'Semana 3: Ideação',
     tipo: 'semana',
     peso: 5,
     evidencias: [
@@ -71,7 +71,7 @@ export const CRONOGRAMA = [
   {
     id: 's4',
     data: '2026-08-29',
-    rotulo: 'Semana 4 — Proposta',
+    rotulo: 'Semana 4: Proposta',
     tipo: 'semana',
     peso: 5,
     evidencias: [
@@ -104,7 +104,7 @@ export const CRONOGRAMA = [
   {
     id: 's5',
     data: '2026-09-19',
-    rotulo: 'Semana 5 — Arquitetura',
+    rotulo: 'Semana 5: Arquitetura',
     tipo: 'semana',
     peso: 10,
     evidencias: [
@@ -118,7 +118,7 @@ export const CRONOGRAMA = [
   {
     id: 's6',
     data: '2026-09-26',
-    rotulo: 'Semana 6 — Pré-SR1',
+    rotulo: 'Semana 6: Pré-SR1',
     tipo: 'semana',
     peso: 5,
     evidencias: [
@@ -155,7 +155,7 @@ export const CRONOGRAMA = [
   {
     id: 's7',
     data: '2026-10-17',
-    rotulo: 'Semana 7 — Sprint 1',
+    rotulo: 'Semana 7: Sprint 1',
     tipo: 'semana',
     peso: 8,
     evidencias: [
@@ -168,7 +168,7 @@ export const CRONOGRAMA = [
   {
     id: 's8',
     data: '2026-10-24',
-    rotulo: 'Semana 8 — Sprint 2',
+    rotulo: 'Semana 8: Sprint 2',
     tipo: 'semana',
     peso: 8,
     evidencias: [
@@ -188,20 +188,15 @@ export const CRONOGRAMA = [
   {
     id: 's9',
     data: '2026-11-07',
-    rotulo: 'Semana 9 — Sprint 3',
+    rotulo: 'Semana 9: Sprint 3',
     tipo: 'semana',
     peso: 8,
-    evidencias: [
-      'Nova versão funcional',
-      'Integração',
-      'Registros de testes',
-      'Backlog',
-    ],
+    evidencias: ['Nova versão funcional', 'Integração', 'Registros de testes', 'Backlog'],
   },
   {
     id: 's10',
     data: '2026-11-14',
-    rotulo: 'Semana 10 — Sprint 4',
+    rotulo: 'Semana 10: Sprint 4',
     tipo: 'semana',
     peso: 8,
     evidencias: ['Versão revisada', 'Correções do SR1', 'Evidências de testes'],
@@ -209,7 +204,7 @@ export const CRONOGRAMA = [
   {
     id: 's11',
     data: '2026-11-21',
-    rotulo: 'Semana 11 — Validação',
+    rotulo: 'Semana 11: Validação',
     tipo: 'semana',
     peso: 10,
     evidencias: [
@@ -222,7 +217,7 @@ export const CRONOGRAMA = [
   {
     id: 's12',
     data: '2026-11-28',
-    rotulo: 'Semana 12 — Pré-SR2',
+    rotulo: 'Semana 12: Pré-SR2',
     tipo: 'semana',
     peso: 5,
     evidencias: [
@@ -235,7 +230,7 @@ export const CRONOGRAMA = [
   {
     id: 'sr2',
     data: '2026-12-05',
-    rotulo: 'SR2 — Final',
+    rotulo: 'SR2: Final',
     tipo: 'marco',
     peso: 18,
     evidencias: [
@@ -290,37 +285,39 @@ export const MARCOS_PARALELOS: readonly MarcoParalelo[] = [
   {
     trilha: 'ml',
     data: '2026-09-23',
-    rotulo: 'ML — entrega parcial',
+    rotulo: 'ML: entrega parcial',
     oQueOProjetoAlimenta: 'Gerador sintético e recorte inicial do dataset de indicadores',
   },
   {
     trilha: 'ml',
     data: '2026-09-30',
-    rotulo: 'ML — AV1',
+    rotulo: 'ML: AV1',
     oQueOProjetoAlimenta: 'EDA e pré-processamento sobre os dados do projeto',
   },
   {
     trilha: 'ml',
     data: '2026-11-18',
-    rotulo: 'ML — entrega final',
-    oQueOProjetoAlimenta: 'Classificação, regressão e clustering exportados para a tela de analytics',
+    rotulo: 'ML: entrega final',
+    oQueOProjetoAlimenta:
+      'Classificação, regressão e clustering exportados para a tela de analytics',
   },
   {
     trilha: 'ml',
     data: '2026-12-02',
-    rotulo: 'ML — AV2',
+    rotulo: 'ML: AV2',
     oQueOProjetoAlimenta: 'Conclusões e comparação honesta entre modelos',
   },
   {
     trilha: 'direito',
     data: '2026-10-02',
-    rotulo: 'Direito — AV1',
-    oQueOProjetoAlimenta: 'Base legal do tratamento e mapeamento de dados pessoais (docs/privacidade.md)',
+    rotulo: 'Direito: AV1',
+    oQueOProjetoAlimenta:
+      'Base legal do tratamento e mapeamento de dados pessoais (docs/privacidade.md)',
   },
   {
     trilha: 'direito',
     data: '2026-11-27',
-    rotulo: 'Direito — AV2',
+    rotulo: 'Direito: AV2',
     oQueOProjetoAlimenta: 'Privacy by Design aplicado ao MVP e direitos dos titulares',
   },
 ]

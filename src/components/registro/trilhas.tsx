@@ -124,21 +124,20 @@ export function TimelineCiclos({
                     title={ciclo.rotulo}
                   >
                     {conteudo}
-                    <span className="sr-only">{ciclo.rotulo} — registro disponível</span>
+                    <span className="sr-only">{ciclo.rotulo}: registro disponível</span>
                   </a>
                 ) : (
                   <div
                     className="px-1 py-0.5"
                     title={
                       liberado
-                        ? `${ciclo.rotulo} — sem registro semanal`
-                        : `${ciclo.rotulo} — ainda não liberado`
+                        ? `${ciclo.rotulo}: sem registro semanal`
+                        : `${ciclo.rotulo}: ainda não liberado`
                     }
                   >
                     {conteudo}
                     <span className="sr-only">
-                      {ciclo.rotulo} —{' '}
-                      {liberado ? 'sem registro semanal' : 'ainda não liberado'}
+                      {ciclo.rotulo}: {liberado ? 'sem registro semanal' : 'ainda não liberado'}
                     </span>
                   </div>
                 )}

@@ -33,7 +33,9 @@ const cicloIdSchema = z.enum(IDS_CICLOS as unknown as [CicloId, ...CicloId[]])
 export const overlaySchema = z.object({
   adiantamentoDias: z.number().int().min(0).max(120).optional(),
   overrideRelease: cicloIdSchema.nullable().optional(),
-  travas: z.partialRecord(cicloIdSchema, z.enum(['automatico', 'sempre_visivel', 'sempre_oculto'])).optional(),
+  travas: z
+    .partialRecord(cicloIdSchema, z.enum(['automatico', 'sempre_visivel', 'sempre_oculto']))
+    .optional(),
   /** Data simulada, `YYYY-MM-DD`. Só faz efeito com "ver como visitante". */
   dataSimulada: z.string().optional(),
   verComoVisitante: z.boolean().optional(),

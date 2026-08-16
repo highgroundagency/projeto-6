@@ -1,12 +1,6 @@
 import type { BaseSintetica } from '@/lib/seed/gerar'
 import { ORDEM_ESTADOS, type EstadoCiclo } from '@/lib/calculo/tipos'
-import {
-  deAvaliacao,
-  deCiclo,
-  deIndicador,
-  deLancamento,
-  deRegra,
-} from './mapeadores'
+import { deAvaliacao, deCiclo, deIndicador, deLancamento, deRegra } from './mapeadores'
 
 /**
  * Plano de semeadura da base sintética num PostgreSQL com o schema de
@@ -172,11 +166,17 @@ export function contasDeDemonstracao(base: BaseSintetica): ContaDemonstracao[] {
   const primeiroGestor = base.gestores[0]
 
   return [
-    { email: 'cam@prumo.exemplo', perfil: 'cam', nome: 'Comissão de Avaliação de Metas', areaId: null, gestorId: null },
+    {
+      email: 'cam@prumo.exemplo',
+      perfil: 'cam',
+      nome: 'Comissão de Avaliação de Metas',
+      areaId: null,
+      gestorId: null,
+    },
     {
       email: 'area@prumo.exemplo',
       perfil: 'area_tecnica',
-      nome: `Área técnica — ${primeiraArea.sigla}`,
+      nome: `Área técnica: ${primeiraArea.sigla}`,
       areaId: primeiraArea.id,
       gestorId: null,
     },
@@ -187,6 +187,12 @@ export function contasDeDemonstracao(base: BaseSintetica): ContaDemonstracao[] {
       areaId: null,
       gestorId: primeiroGestor.id,
     },
-    { email: 'auditoria@prumo.exemplo', perfil: 'auditoria', nome: 'Auditoria', areaId: null, gestorId: null },
+    {
+      email: 'auditoria@prumo.exemplo',
+      perfil: 'auditoria',
+      nome: 'Auditoria',
+      areaId: null,
+      gestorId: null,
+    },
   ]
 }

@@ -6,7 +6,7 @@ declarado nos marcos.
 
 Regras que a equipe adotou:
 
-1. Nenhum dado real de pessoa ou da SESAU entra em prompt — nem para "testar".
+1. Nenhum dado real de pessoa ou da SESAU entra em prompt: nem para "testar".
 2. Todo artefato gerado tem um integrante responsável por revisar e assinar.
 3. O que a ferramenta escreveu e ninguém validou fica com selo `rascunho` no registro.
 4. Código gerado só entra com teste que prove o comportamento.

@@ -16,8 +16,15 @@ export async function GET(requisicao: NextRequest) {
   const avaliacoes = [...(await avaliacoesDoCiclo(ciclo.id))].sort((a, b) => b.score - a.score)
 
   const cabecalho = [
-    'posicao', 'gestor', 'area', 'score', 'faixa',
-    'percentual_gratificacao', 'regra', 'versao_regra', 'avisos',
+    'posicao',
+    'gestor',
+    'area',
+    'score',
+    'faixa',
+    'percentual_gratificacao',
+    'regra',
+    'versao_regra',
+    'avisos',
   ]
 
   const linhas = avaliacoes.map((avaliacao, i) => {

@@ -79,7 +79,11 @@ export default async function Pagina() {
         </section>
 
         {/* Equipe: nome, papel e frente de cada integrante. */}
-        <section id="equipe" className="bloco revelar scroll-mt-20" aria-labelledby="titulo-equipe">
+        <section
+          id="equipe"
+          className="bloco revelar scroll-mt-20"
+          aria-labelledby="titulo-equipe"
+        >
           <div className="flex flex-wrap items-center gap-3">
             <h2 id="titulo-equipe" className="rotulo">
               equipe
@@ -205,7 +209,10 @@ export default async function Pagina() {
               <Conector />
               <EstadoDoFluxo>homologado</EstadoDoFluxo>
               <Conector />
-              <AcaoDoFluxo icone={<ScrollText size={24} strokeWidth={1.5} />} titulo="gestor confere">
+              <AcaoDoFluxo
+                icone={<ScrollText size={24} strokeWidth={1.5} />}
+                titulo="gestor confere"
+              >
                 cada número aberto até a origem. discordou, contesta no prazo.
               </AcaoDoFluxo>
               <Conector />

@@ -42,7 +42,7 @@ export const registro = {
         decisao:
           'Tratar a memória de cálculo como funcionalidade central, não como relatório extra.',
         porque:
-          'É o que responde "de onde veio este número?" — a pergunta que a planilha não responde.',
+          'É o que responde "de onde veio este número?", a pergunta que a planilha não responde.',
       },
       {
         decisao:
@@ -240,7 +240,7 @@ export const documentos = [
         </Secao>
 
         <Secao
-          titulo="Mapa de empatia — analista da CAM"
+          titulo="Mapa de empatia: analista da CAM"
           descricao="A pessoa que carrega o processo hoje."
         >
           <ListaDefinicao
@@ -297,7 +297,7 @@ export const documentos = [
             ],
             [
               'Sistemas de monitoramento de metas do SUS',
-              'Indicador com fonte, periodicidade e meta pactuada — vocabulário que a SESAU já usa',
+              'Indicador com fonte, periodicidade e meta pactuada, vocabulário que a SESAU já usa',
               'Regra de cálculo fixa no sistema; nossa portaria muda e precisa ser parametrizável',
             ],
             [
@@ -307,7 +307,7 @@ export const documentos = [
             ],
             [
               'Ferramenta de OKR (gestão por resultados corporativa)',
-              'Peso por objetivo e agregação de score — modelo matemático parecido com o nosso',
+              'Peso por objetivo e agregação de score, modelo matemático parecido com o nosso',
               'Score é gerencial, não é ato administrativo com efeito em folha; e a licença por usuário não cabe no órgão',
             ],
             [
@@ -321,7 +321,7 @@ export const documentos = [
           <Nota>
             Conclusão do benchmarking: nenhuma ferramenta pronta cobre a combinação “regra
             normativa versionada + memória de cálculo + trilha de auditoria”. Ela é o núcleo do
-            problema — e é por isso que a decisão foi construir.
+            problema: e é por isso que a decisão foi construir.
           </Nota>
         </div>
       </>
