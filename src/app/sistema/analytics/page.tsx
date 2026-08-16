@@ -5,6 +5,7 @@ import { Aviso, CabecalhoTela, Painel } from '@/components/sistema/base'
 import { arredondar, calcularAtingimento } from '@/lib/calculo/motor'
 import { repositorio } from '@/lib/dados'
 import { carregarDados, pareceErroDeDigitacao } from '@/lib/dados/consultas'
+import { ML, ROTULO_MODELO } from '@/lib/ml'
 import { exigirFeature } from '@/lib/sistema'
 import type { Area, Indicador, Lancamento } from '@/lib/calculo/tipos'
 
@@ -14,11 +15,19 @@ export const dynamic = 'force-dynamic'
 /**
  * Tela de analytics (§10.3).
  *
- * ESTADO ATUAL: os números abaixo vêm de heurísticas explicáveis calculadas
- * sobre a própria base — média histórica de atingimento e distância da meta.
- * Os modelos treinados (classificação, regressão e clustering) entram na F4 e
- * substituem cada card, mantendo o mesmo contrato de transparência: método e
- * métrica sempre ao lado do número.
+ * Duas camadas, e a tela diz qual é qual:
+ *
+ * 1. MODELOS TREINADOS — classificação, regressão e clustering, treinados
+ *    offline em `ml/` e lidos de `src/content/ml/resultados.json`. Cada painel
+ *    mostra método, métrica E a linha de base, porque acurácia sem referência
+ *    engana: num alvo desbalanceado, chutar a classe majoritária já acerta a
+ *    maioria. Um modelo que não supera a referência é publicado dizendo isso.
+ *
+ * 2. HEURÍSTICAS EXPLICÁVEIS sobre a base atual, que respondem "onde olhar
+ *    agora" com o dado que está na tela, sem depender do treino.
+ *
+ * O contrato vale para as duas: método sempre ao lado do número, e nenhuma
+ * saída daqui entra no cálculo da gratificação.
  */
 
 function atingimentoMedioPorArea(
@@ -92,12 +101,103 @@ export default async function TelaAnalytics() {
 
       <div className="mt-5">
         <Aviso>
-          Os cards desta tela usam <strong>heurísticas explicáveis</strong> sobre a base
-          sintética, não modelos treinados. Os modelos de classificação, regressão e
-          clustering entram na etapa de Machine Learning e substituem cada card — mantendo
-          método e métrica sempre visíveis.
+          {ML.aviso} Base <strong>{ML.base}</strong>. Treino de{' '}
+          <Num>{ML.gerado_em}</Num>, semente <Num>{ML.semente}</Num>, scikit-learn{' '}
+          <Num>{ML.versao_sklearn}</Num>, commit <Num>{ML.commit}</Num> — os mesmos dois
+          comandos reproduzem cada número desta tela.
         </Aviso>
       </div>
+
+      {ML.modelos.map((m) => {
+        const supera = m.metricas.supera_referencia
+        return (
+          <Painel
+            key={m.modelo}
+            titulo={ROTULO_MODELO[m.modelo] ?? m.modelo}
+            descricao={`${m.pergunta} — ${m.metodo}`}
+          >
+            {supera === false ? (
+              <div className="mb-4">
+                <Aviso tom="alerta">
+                  Este modelo <strong>não supera</strong> a linha de base
+                  ({m.referencia.nome}). Fica publicado assim: esconder o resultado que
+                  falhou e mostrar só o que deu certo seria escolher a métrica depois de
+                  ver o resultado.
+                </Aviso>
+              </div>
+            ) : null}
+
+            <ul className="flex flex-wrap gap-x-8 gap-y-2 border-y border-linha py-3 text-sm">
+              {[
+                ['acurácia', m.metricas.acuracia],
+                ['precisão', m.metricas.precisao],
+                ['revocação', m.metricas.revocacao],
+                ['f1', m.metricas.f1],
+                ['mae', m.metricas.mae],
+                ['r²', m.metricas.r2],
+                ['silhueta', m.metricas.silhueta],
+              ]
+                .filter(([, valor]) => valor !== undefined)
+                .map(([rotulo, valor]) => (
+                  <li key={String(rotulo)}>
+                    <span className="rotulo block">{rotulo}</span>
+                    <Num className="text-base text-texto">{String(valor)}</Num>
+                  </li>
+                ))}
+              <li>
+                <span className="rotulo block">referência</span>
+                <span className="text-xs">
+                  {m.referencia.nome}
+                  {m.referencia.acuracia !== undefined ? (
+                    <>
+                      {' '}
+                      · acurácia <Num>{m.referencia.acuracia}</Num>
+                    </>
+                  ) : null}
+                  {m.referencia.mae !== undefined ? (
+                    <>
+                      {' '}
+                      · mae <Num>{m.referencia.mae}</Num>
+                    </>
+                  ) : null}
+                </span>
+              </li>
+            </ul>
+
+            {m.metricas.importancias ? (
+              <ul className="mt-4 space-y-1.5 text-sm">
+                {m.metricas.importancias.map((imp) => (
+                  <li key={imp.atributo} className="flex items-center gap-3">
+                    <span className="w-48 shrink-0 text-xs">{imp.atributo}</span>
+                    <span aria-hidden className="h-1 bg-acento" style={{ width: `${imp.peso * 240}px` }} />
+                    <Num className="text-xs">{imp.peso}</Num>
+                  </li>
+                ))}
+              </ul>
+            ) : null}
+
+            {m.metricas.areas ? (
+              <ul className="mt-4 divide-y divide-linha border-y border-linha text-sm">
+                {m.metricas.areas.map((a) => (
+                  <li key={a.area_id} className="flex flex-wrap items-baseline justify-between gap-2 py-2">
+                    <Num className="text-xs">{a.area_id}</Num>
+                    <span className="flex items-baseline gap-3">
+                      <span className="text-xs">
+                        média <Num>{a.atingimento_medio}</Num> · vol <Num>{a.volatilidade}</Num>
+                      </span>
+                      <Etiqueta>{a.grupo}</Etiqueta>
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            ) : null}
+
+            <p className="mt-4 max-w-prose text-xs">
+              <span className="rotulo">limitação</span> {m.limitacao}
+            </p>
+          </Painel>
+        )
+      })}
 
       <Painel
         titulo="Risco de não-atingimento no próximo ciclo"

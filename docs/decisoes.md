@@ -335,3 +335,39 @@ a variável e continua provando o comportamento normal — 90 verificações.
 Valor ausente, vazio ou malformado fecha a janela. Uma env var digitada errada não pode
 derrubar o site e, muito menos, abri-lo por acidente: `'amanhã de manhã'` resulta em fechada,
 com teste que prova.
+
+---
+
+## ADR-022 · Modelos treinam offline; o site lê o resultado versionado
+
+**Contexto.** A tela de analytics precisava sair de heurística para modelo treinado. Rodar
+scikit-learn dentro do Next não é opção: o site é serverless, e carregar o runtime de ML a
+cada requisição custaria segundos de cold start para exibir números que só mudam entre
+deploys.
+
+**Decisão.** `ml/` treina offline em Python e escreve `src/content/ml/resultados.json`, que é
+versionado. O app lê o JSON por `src/lib/ml.ts` e nunca infere em tempo real. O pacote carrega
+semente, commit, versão do sklearn e data do treino.
+
+**Consequência.** A tela fica instantânea e — o que importa mais — o número fica auditável:
+qualquer pessoa reproduz rodando `python ml/gerador.py && python ml/exportar.py`. O custo é
+que o JSON precisa ser regerado quando o gerador ou os modelos mudarem; não há automação que
+force isso, e é uma pendência honesta.
+
+**Três decisões metodológicas ficaram no código, não só no notebook.** A separação
+treino/teste é **temporal**, nunca aleatória — sortear linhas deixaria o modelo ver
+competências futuras do mesmo indicador, que é o erro clássico de vazamento em série
+temporal. Todo modelo é publicado **com a linha de base ao lado**, porque acurácia sem
+referência engana num alvo desbalanceado. E o clustering agrupa **áreas**, nunca pessoas.
+
+**O resultado negativo fica publicado.** O classificador de "vai bater a meta" não supera o
+palpite de chutar a classe majoritária — só 5 dos 30 indicadores batem a meta no mês de
+teste, e não há sinal a extrair. A tela diz isso em vermelho. Ao lado dele fica a mesma
+família de modelo numa pergunta bem posta ("vai melhorar?"), que supera a referência com F1
+de 0,80. Publicar as duas é a diferença entre relatar e escolher a métrica depois de ver o
+resultado.
+
+**E o limite que a lente de Direito impôs à de ML:** nenhuma saída dos modelos entra no
+cálculo da gratificação. O art. 20 da LGPD dá ao titular direito a revisão de decisão
+automatizada, e gratificação afeta remuneração — por isso o motor de cálculo é determinístico
+e auditável, e o ML fica fora dele, sinalizando onde olhar sem decidir nada.

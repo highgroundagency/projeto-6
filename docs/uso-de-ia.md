@@ -30,6 +30,8 @@ Regras que a equipe adotou:
 | 15/08/2026 | s2 | Claude (Anthropic) | Camada de dados que isola as telas da fonte, e script de semeadura | `src/lib/dados/`, `scripts/semear.ts` | pendente |
 | 15/08/2026 | s2 | Claude (Anthropic) | Remoção do Supabase do runtime, preservando o schema como evidência (ADR-011 e ADR-012) | `src/`, `docs/banco.md` | pendente |
 | 16/08/2026 | s2 | Claude (Anthropic) | Trava do avanço de fase na sessão de admin e remoção do link do painel (ADR-015) | `src/app/api/sistema/ciclo/`, `src/app/sistema/cam/`, `src/components/base/rodape.tsx` | pendente |
+| 16/08/2026 | s2 | Claude (Anthropic) | Lente de ML: gerador sintético, três famílias de modelo com linha de base, seis cadernos e export auditável (ADR-022) | `ml/`, `src/lib/ml.ts`, `src/app/sistema/analytics/` | pendente |
+| 16/08/2026 | s2 | Claude (Anthropic) | Lente de Direito trazida para dentro do site: base legal, mapeamento de dados, Privacy by Design e direitos do art. 18 | `src/content/ciclos/sr1.tsx`, `src/content/ciclos/s12.tsx` | pendente |
 | 16/08/2026 | s2 | Claude (Anthropic) | Planejamento das semanas 5 a 12, SR1 e SR2 escrito como rascunho declarado, com feedback vazio por princípio (ADR-020) | `src/content/ciclos/` | pendente |
 | 16/08/2026 | s2 | Claude (Anthropic) | Janela de vitrine com prazo de expiração (ADR-021) | `src/lib/releases.ts`, `src/lib/visao.ts` | pendente |
 | 16/08/2026 | s2 | Claude (Anthropic) | Documentos de entrega (SWOT, personas, mapa de empatia, backlog) renderizados dentro do site em sanfona, com âncoras verificadas por teste (ADR-019) | `src/content/ciclos/`, `src/lib/registro/tipos.ts`, `src/components/registro/registro-semana.tsx` | pendente |

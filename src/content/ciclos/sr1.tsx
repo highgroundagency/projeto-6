@@ -1,4 +1,4 @@
-import { Lista, Tabela } from '@/components/conteudo'
+import { Lista, Nota, Secao, Tabela } from '@/components/conteudo'
 import type { Documento, RegistroSemana } from '@/lib/registro/tipos'
 
 /**
@@ -70,12 +70,89 @@ export const registro = {
     validadoPor: null,
     conteudo: [
       { tipo: 'documento', rotulo: 'Pacote de entrega do SR1', url: '#doc-sr1-pacote' },
+      {
+        tipo: 'documento',
+        rotulo: 'Direito — base legal e dados pessoais',
+        url: '#doc-sr1-direito-base-legal',
+      },
       { tipo: 'prototipo', rotulo: 'Protótipo apresentado', url: '/sistema' },
     ],
   },
 } satisfies RegistroSemana
 
 export const documentos = [
+  {
+    id: 'direito-base-legal',
+    titulo: 'Direito — base legal e dados pessoais',
+    resumo: 'que dado o sistema trataria, de quem, e sob qual artigo da lgpd.',
+    Conteudo: () => (
+      <>
+        <Secao
+          titulo="Base legal do tratamento"
+          descricao="Art. 7º, III da LGPD — execução de política pública prevista em lei e regulamento."
+        >
+          <Lista
+            itens={[
+              'A gratificação é instituída por portaria: o tratamento é indispensável para executá-la.',
+              'Não se pede consentimento, e nem se deveria — numa relação funcional assimétrica ele seria frágil, e a recusa não poderia ser honrada sem inviabilizar a política.',
+              'Controladora: Secretaria de Saúde do Recife. Encarregado designado pela Prefeitura; o sistema apenas expõe o canal.',
+            ]}
+          />
+        </Secao>
+
+        <Secao
+          titulo="Mapeamento dos dados"
+          descricao="O que entraria em produção, por titular e por finalidade."
+        >
+          <Tabela
+            colunas={['Categoria', 'Titular', 'Necessário para']}
+            linhas={[
+              [
+                'Identificação funcional (nome, matrícula, cargo, lotação)',
+                'Servidor avaliado',
+                'Vincular o resultado à pessoa certa',
+              ],
+              [
+                'Vínculo organizacional (área, período de exercício)',
+                'Servidor avaliado',
+                'Saber quais indicadores se aplicam',
+              ],
+              [
+                'Desempenho (score, faixa, memória de cálculo, histórico)',
+                'Servidor avaliado',
+                'Calcular e justificar a gratificação',
+              ],
+              [
+                'Autoria de lançamento (quem informou, quando)',
+                'Servidor da área técnica',
+                'Rastreabilidade e responsabilização',
+              ],
+              [
+                'Contestação (motivo, resposta da comissão)',
+                'Servidor avaliado',
+                'Devido processo',
+              ],
+            ]}
+          />
+          <Nota>
+            Não são tratados: dados sensíveis do art. 5º, II, dados de pacientes, dados
+            bancários ou valores de folha. O sistema calcula o percentual devido; a folha é
+            outro sistema, e está declaradamente fora do escopo.
+          </Nota>
+        </Secao>
+
+        <Secao titulo="No MVP, nada disso existe">
+          <Lista
+            itens={[
+              'A base é 100% sintética, com semente fixa — nenhum servidor real está no repositório.',
+              'Há teste automatizado que falha se CPF, e-mail, telefone ou matrícula aparecerem na base.',
+              'O mapeamento acima descreve o que existiria em produção, para que a análise jurídica não dependa de esperar o dado real chegar.',
+            ]}
+          />
+        </Secao>
+      </>
+    ),
+  },
   {
     id: 'pacote',
     titulo: 'Pacote de entrega do SR1',

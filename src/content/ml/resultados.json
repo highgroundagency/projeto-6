@@ -1,0 +1,163 @@
+{
+  "gerado_em": "2026-08-16",
+  "semente": 20262,
+  "commit": "5fab13e",
+  "versao_sklearn": "1.9.0",
+  "base": "sintética, gerada por ml/gerador.py com semente fixa",
+  "aviso": "Nenhum resultado desta lista entra no cálculo da gratificação.",
+  "modelos": [
+    {
+      "modelo": "classificacao",
+      "pergunta": "Este indicador vai bater a meta na próxima competência?",
+      "metodo": "Random Forest com 400 árvores e classes reequilibradas, sobre atingimento anterior, média móvel, peso e direção. Separação treino/teste temporal.",
+      "metricas": {
+        "acuracia": 0.667,
+        "precisao": 0.143,
+        "revocacao": 0.2,
+        "f1": 0.167,
+        "amostras_teste": 30,
+        "positivos_no_teste": 5,
+        "supera_referencia": false
+      },
+      "referencia": {
+        "nome": "chutar sempre a classe majoritária",
+        "acuracia": 0.833,
+        "f1": 0.0
+      },
+      "limitacao": "Classe positiva é minoria: acurácia isolada engana, e por isso a referência vai ao lado. Treinado sobre base sintética — o modelo aprende a regra que gerou os dados, não a rede real."
+    },
+    {
+      "modelo": "classificacao_tendencia",
+      "pergunta": "Este indicador vai melhorar em relação à competência anterior?",
+      "metodo": "Random Forest com 400 árvores e classes reequilibradas. Mesmo conjunto de atributos e mesma separação temporal do modelo anterior — só o alvo muda.",
+      "metricas": {
+        "acuracia": 0.767,
+        "precisao": 0.737,
+        "revocacao": 0.875,
+        "f1": 0.8,
+        "amostras_teste": 30,
+        "positivos_no_teste": 16,
+        "supera_referencia": true
+      },
+      "referencia": {
+        "nome": "chutar sempre a classe majoritária",
+        "acuracia": 0.533,
+        "f1": 0.696
+      },
+      "limitacao": "Alvo equilibrado, mas a série tem seis competências. O resultado sustenta priorização de atenção, não decisão sobre pagamento — que segue determinística pela portaria."
+    },
+    {
+      "modelo": "regressao",
+      "pergunta": "Qual atingimento esperar na próxima competência?",
+      "metodo": "Random Forest com 300 árvores sobre os mesmos atributos. Separação treino/teste temporal.",
+      "metricas": {
+        "mae": 0.1051,
+        "r2": 0.239,
+        "amostras_teste": 30,
+        "importancias": [
+          {
+            "atributo": "media_movel",
+            "peso": 0.437
+          },
+          {
+            "atributo": "atingimento_anterior",
+            "peso": 0.335
+          },
+          {
+            "atributo": "menor_melhor",
+            "peso": 0.086
+          },
+          {
+            "atributo": "mes_ordinal",
+            "peso": 0.074
+          },
+          {
+            "atributo": "peso",
+            "peso": 0.068
+          }
+        ]
+      },
+      "referencia": {
+        "nome": "média do treino",
+        "mae": 0.1179
+      },
+      "limitacao": "Seis competências é série curta. O R² aqui mede consistência do gerador, não capacidade de prever a rede real."
+    },
+    {
+      "modelo": "clustering",
+      "pergunta": "Quais áreas se comportam de forma parecida?",
+      "metodo": "K-Means com k=3 sobre atingimento médio, volatilidade e taxa de meta, com atributos padronizados.",
+      "metricas": {
+        "silhueta": 0.357,
+        "k": 3,
+        "areas": [
+          {
+            "area_id": "aps",
+            "grupo": "mais alto, estável",
+            "atingimento_medio": 0.915,
+            "volatilidade": 0.085
+          },
+          {
+            "area_id": "vis",
+            "grupo": "mais alto, estável",
+            "atingimento_medio": 0.901,
+            "volatilidade": 0.095
+          },
+          {
+            "area_id": "sb",
+            "grupo": "mais alto, estável",
+            "atingimento_medio": 0.886,
+            "volatilidade": 0.108
+          },
+          {
+            "area_id": "gp",
+            "grupo": "mais baixo, oscilante",
+            "atingimento_medio": 0.866,
+            "volatilidade": 0.115
+          },
+          {
+            "area_id": "plan",
+            "grupo": "intermediário, oscilante",
+            "atingimento_medio": 0.85,
+            "volatilidade": 0.172
+          },
+          {
+            "area_id": "sm",
+            "grupo": "intermediário, oscilante",
+            "atingimento_medio": 0.848,
+            "volatilidade": 0.156
+          },
+          {
+            "area_id": "ouv",
+            "grupo": "intermediário, oscilante",
+            "atingimento_medio": 0.846,
+            "volatilidade": 0.15
+          },
+          {
+            "area_id": "reg",
+            "grupo": "mais baixo, oscilante",
+            "atingimento_medio": 0.805,
+            "volatilidade": 0.113
+          },
+          {
+            "area_id": "urg",
+            "grupo": "mais baixo, oscilante",
+            "atingimento_medio": 0.796,
+            "volatilidade": 0.18
+          },
+          {
+            "area_id": "af",
+            "grupo": "mais baixo, oscilante",
+            "atingimento_medio": 0.72,
+            "volatilidade": 0.149
+          }
+        ]
+      },
+      "referencia": {
+        "nome": "silhueta de referência",
+        "observacao": "acima de 0,5 indica separação nítida"
+      },
+      "limitacao": "Agrupa ÁREAS, nunca pessoas. Dez áreas é amostra pequena: o k foi escolhido pela silhueta, e mudaria com mais dados."
+    }
+  ]
+}

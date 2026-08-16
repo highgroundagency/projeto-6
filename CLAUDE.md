@@ -80,6 +80,12 @@ src/
 supabase/
 ├── migrations/          schema, gatilhos e políticas de RLS — versionado, NÃO ligado ao app
 └── testes/              stubs para rodar as migrações num Postgres comum
+
+ml/                      lente de machine learning — treina offline, o app lê o JSON
+├── gerador.py           base sintética espelhando src/lib/seed/
+├── modelos.py           classificação, regressão e clustering, com linha de base
+├── exportar.py          escreve src/content/ml/resultados.json
+└── notebooks/           os seis cadernos da disciplina
 ```
 
 ## Onde os dados vivem

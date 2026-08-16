@@ -1,4 +1,4 @@
-import { Lista, Tabela } from '@/components/conteudo'
+import { Lista, Nota, Secao, Tabela } from '@/components/conteudo'
 import type { Documento, RegistroSemana } from '@/lib/registro/tipos'
 
 /** Semana 12 — Pré-SR2. PLANEJAMENTO: ver a nota em s5.tsx. */
@@ -76,11 +76,93 @@ export const registro = {
     conteudo: [
       { tipo: 'documento', rotulo: 'Planejado × realizado', url: '#doc-s12-planejado' },
       { tipo: 'documento', rotulo: 'Trabalho futuro declarado', url: '#doc-s12-futuro' },
+      {
+        tipo: 'documento',
+        rotulo: 'Direito — Privacy by Design e direitos dos titulares',
+        url: '#doc-s12-direito-titulares',
+      },
     ],
   },
 } satisfies RegistroSemana
 
 export const documentos = [
+  {
+    id: 'direito-titulares',
+    titulo: 'Direito — Privacy by Design e direitos dos titulares',
+    resumo: 'onde a privacidade está no código, e como cada direito do art. 18 é atendido.',
+    Conteudo: () => (
+      <>
+        <Secao
+          titulo="Privacy by Design, apontando o código"
+          descricao="Princípio que não aponta para um arquivo é declaração de intenção."
+        >
+          <Tabela
+            colunas={['Princípio', 'Onde está no código']}
+            linhas={[
+              [
+                'Minimização',
+                'A base sintética não tem CPF, e-mail nem telefone — e há teste que falha se aparecerem',
+              ],
+              [
+                'Finalidade',
+                'O sistema calcula o percentual devido; folha de pagamento está fora do escopo desde a proposta',
+              ],
+              [
+                'Transparência',
+                'A memória de cálculo abre cada passo até a origem, para o próprio avaliado',
+              ],
+              [
+                'Segurança',
+                'Trilha append-only, regra versionada e políticas de RLS escritas em supabase/migrations/',
+              ],
+              ['Prestação de contas', 'Cada evento guarda quem, quando, antes e depois'],
+            ]}
+          />
+        </Secao>
+
+        <Secao
+          titulo="Direitos do titular (art. 18)"
+          descricao="Cada direito, e a tela que o atende."
+        >
+          <Tabela
+            colunas={['Direito', 'Como o sistema atende']}
+            linhas={[
+              [
+                'Confirmação e acesso',
+                'Tela "meu resultado": score, faixa, histórico e memória de cálculo do próprio avaliado',
+              ],
+              [
+                'Correção',
+                'Contestação com resposta da comissão; correção de lançamento gera evento novo sem apagar o anterior',
+              ],
+              ['Anonimização', 'Ranking anonimizável no painel da gestão'],
+              ['Portabilidade', 'Exportação em CSV'],
+              ['Informação sobre compartilhamento', 'Não há compartilhamento com terceiros'],
+              [
+                'Revisão de decisão automatizada (art. 20)',
+                'O cálculo é determinístico e a memória mostra cada passo; o ML sinaliza e nunca bloqueia',
+              ],
+            ]}
+          />
+        </Secao>
+
+        <Secao titulo="O art. 20 é o centro deste projeto">
+          <Lista
+            itens={[
+              'Decisão automatizada que afeta interesse do titular exige direito a revisão — e gratificação afeta remuneração.',
+              'Por isso o cálculo não é caixa-preta: a regra é dado versionado e a memória de cálculo mostra a conta inteira.',
+              'Por isso, também, nenhuma saída dos modelos de machine learning entra na conta. Eles informam onde olhar; quem decide é a comissão, e a decisão é contestável.',
+            ]}
+          />
+          <Nota>
+            Esta é a razão pela qual a lente de Direito não é um anexo do projeto: ela
+            determinou uma decisão de arquitetura — o motor de cálculo ser função pura e
+            auditável, e o ML ficar fora dele.
+          </Nota>
+        </Secao>
+      </>
+    ),
+  },
   {
     id: 'planejado',
     titulo: 'Planejado × realizado',

@@ -49,3 +49,9 @@ next-env.d.ts
 # Artefatos de teste
 /test-results/
 /playwright-report/
+
+# Dados gerados pela lente de ML: reproduzíveis por `python ml/gerador.py`.
+# O que é versionado é o RESULTADO (src/content/ml/resultados.json), porque é
+# ele que a tela lê e que precisa ser auditável.
+ml/dados/
+__pycache__/

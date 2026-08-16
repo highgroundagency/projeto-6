@@ -1,4 +1,5 @@
-import { Tabela } from '@/components/conteudo'
+import { Nota, Tabela } from '@/components/conteudo'
+import { URL_REPOSITORIO } from '@/content/produto'
 import type { Documento, RegistroSemana } from '@/lib/registro/tipos'
 
 /** Semana 10 — Sprint 4. PLANEJAMENTO: ver a nota em s5.tsx. */
@@ -72,11 +73,55 @@ export const registro = {
     conteudo: [
       { tipo: 'dashboard', rotulo: 'Analytics', url: '/sistema/analytics' },
       { tipo: 'documento', rotulo: 'Método e limitações', url: '#doc-s10-metodo' },
+      { tipo: 'documento', rotulo: 'Os seis cadernos', url: '#doc-s10-cadernos' },
+      { tipo: 'codigo', rotulo: 'Notebooks e modelos', url: URL_REPOSITORIO },
     ],
   },
 } satisfies RegistroSemana
 
 export const documentos = [
+  {
+    id: 'cadernos',
+    titulo: 'Os seis cadernos e o resultado negativo',
+    resumo: 'o que cada notebook faz, e por que um dos modelos fica publicado como fracasso.',
+    Conteudo: () => (
+      <>
+        <Tabela
+          colunas={['Caderno', 'O que faz']}
+          linhas={[
+            [
+              '01 — EDA',
+              'Distribuição do atingimento por área. É aqui que aparece o achado que muda o projeto: quase nada bate a meta',
+            ],
+            [
+              '02 — Pré-processamento',
+              'Atributos com shift(1) e separação treino/teste temporal, para o modelo nunca ver o futuro',
+            ],
+            [
+              '03 — Classificação',
+              'Duas perguntas: "vai bater a meta?" (fracassa) e "vai melhorar?" (funciona)',
+            ],
+            ['04 — Regressão', 'Atingimento esperado, com importância dos atributos'],
+            [
+              '05 — Clustering',
+              'Agrupamento de ÁREAS — nunca de pessoas — com a silhueta publicada ao lado',
+            ],
+            [
+              '06 — Conclusões',
+              'Comparação entre os quatro modelos e o limite que não se negocia',
+            ],
+          ]}
+        />
+        <Nota>
+          O classificador de &ldquo;vai bater a meta&rdquo; NÃO supera o palpite de chutar a
+          classe majoritária, e fica publicado assim na tela de analytics. O caderno 01 já
+          explicava o porquê: com pouquíssimos positivos, o alvo não tem sinal. Não é o modelo
+          que é ruim — é a pergunta que é mal posta nesta base. Esconder o que falhou e mostrar
+          só o que deu certo seria escolher a métrica depois de ver o resultado.
+        </Nota>
+      </>
+    ),
+  },
   {
     id: 'metodo',
     titulo: 'Método e limitações',
