@@ -14,7 +14,6 @@ import { EQUIPE, SELO_PAPEIS } from '@/content/equipe'
 import { INSTITUICAO, PERGUNTA_DO_PROJETO, PROBLEMA } from '@/content/produto'
 import { cicloPorId } from '@/lib/cronograma'
 import { formatarBR } from '@/lib/datas'
-import { BASE } from '@/lib/seed'
 import { obterVisao } from '@/lib/visao'
 
 /**
@@ -29,12 +28,6 @@ import { obterVisao } from '@/lib/visao'
  * não admite nenhum dos dois. O custo é uma renderização por requisição.
  */
 export const dynamic = 'force-dynamic'
-
-const NUMEROS = [
-  { valor: BASE.indicadores.length, legenda: 'indicadores na base sintética' },
-  { valor: BASE.areas.length, legenda: 'áreas que lançam dados' },
-  { valor: BASE.regras.length, legenda: 'versões da mesma regra' },
-] as const
 
 export default async function Pagina() {
   const visao = await obterVisao()
@@ -66,24 +59,15 @@ export default async function Pagina() {
 
           <h1 className="hero cursor mt-8">gratificação fora da planilha</h1>
 
+          {/* O subtítulo diz o que o sistema FAZ. O que é o problema fica para o
+              bloco abaixo — antes os dois contavam a mesma coisa. */}
           <p className="prosa mt-7 text-base lowercase">
-            dezenas de indicadores, várias áreas, uma portaria. hoje isso vive em planilha
-            manual na comissão de avaliação de metas.
+            a regra vira dado versionado, e cada valor abre até a origem que o gerou.
           </p>
 
           <div className="mt-9">
             <Chamada href="/sistema">ver o sistema →</Chamada>
           </div>
-        </section>
-
-        {/* Número no lugar de frase. */}
-        <section aria-label="O caso em números" className="grade-blocos grade-3">
-          {NUMEROS.map((item) => (
-            <div key={item.legenda} className="bloco revelar">
-              <p className="stat numero">{item.valor}</p>
-              <p className="rotulo mt-3">{item.legenda}</p>
-            </div>
-          ))}
         </section>
 
         <section className="bloco revelar" aria-labelledby="titulo-problema">
@@ -141,6 +125,9 @@ export default async function Pagina() {
           <p className="prosa mt-2 text-sm lowercase">
             uma semana por linha. a setinha abre as entregas daquela semana.
           </p>
+          {/* Todas recolhidas, sem exceção. Quem chega procura UMA semana; abrir
+              qualquer uma por padrão empurra as outras para fora da tela. A da
+              vez vem marcada, que resolve o mesmo sem ocupar espaço. */}
 
           {emOrdemInversa.length === 0 ? (
             <p className="mt-6 border border-dashed border-linha px-4 py-6 text-sm">
@@ -150,12 +137,12 @@ export default async function Pagina() {
           ) : (
             <>
               <div className="mt-6">
-                {emOrdemInversa.map(({ id, modulo }, indice) => (
+                {emOrdemInversa.map(({ id, modulo }) => (
                   <RegistroSemana
                     key={id}
                     registro={modulo.registro}
                     detalhes={modulo.Detalhes ? <modulo.Detalhes /> : undefined}
-                    aberta={indice === 0}
+                    atual={id === visao.release.cicloCorrente}
                   />
                 ))}
               </div>
@@ -172,7 +159,7 @@ export default async function Pagina() {
         </section>
 
         {/* O fluxo real do ciclo, não um fluxo ilustrativo. */}
-        <section className="bloco revelar">
+        <section className="bloco revelar border-b-0">
           <h2 className="titulo-bloco">o ciclo</h2>
           <p className="prosa mt-2 text-sm lowercase">
             cada estado só avança um passo por vez, e a passagem fica na trilha.
@@ -193,6 +180,9 @@ export default async function Pagina() {
               <Conector />
               <AcaoDoFluxo icone={<Scale size={24} strokeWidth={1.5} />} titulo="cam apura">
                 a regra vigente na competência vira score, faixa e memória de cálculo.
+                <span className="numero mt-2 block text-xs">
+                  score = (Σ pontos × peso) ÷ (Σ peso × pontuação máxima) × 100
+                </span>
               </AcaoDoFluxo>
               <Conector />
               <EstadoDoFluxo>homologado</EstadoDoFluxo>
@@ -203,21 +193,6 @@ export default async function Pagina() {
               <Conector />
               <EstadoDoFluxo>publicado</EstadoDoFluxo>
             </Fluxo>
-          </div>
-        </section>
-
-        <section className="bloco revelar border-b-0">
-          <h2 className="titulo-bloco">memória de cálculo</h2>
-          <p className="prosa mt-2 text-sm lowercase">
-            planilha manual sai. cada valor fica rastreável até a origem.
-          </p>
-          <p className="numero mt-6 text-sm">
-            score = (Σ pontos × peso) ÷ (Σ peso × pontuação máxima) × 100
-          </p>
-          <div className="mt-8">
-            <Chamada href="/sistema" variante="secundario">
-              ver o sistema →
-            </Chamada>
           </div>
         </section>
 

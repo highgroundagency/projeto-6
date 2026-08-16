@@ -68,12 +68,18 @@ function Itens({ itens }: { itens: readonly string[] }) {
 export function RegistroSemana({
   registro,
   detalhes,
-  aberta = false,
+  atual = false,
 }: {
   registro: TipoRegistro
   detalhes?: ReactNode
-  /** A semana mais recente abre sozinha; as anteriores ficam dobradas. */
-  aberta?: boolean
+  /**
+   * A semana em curso. Não abre sozinha — nenhuma abre —, mas fica marcada.
+   *
+   * O professor volta aqui toda semana procurando UMA linha. Abrir alguma por
+   * padrão só empurra as outras para fora da tela; marcar qual é a da vez
+   * resolve o mesmo problema sem ocupar espaço.
+   */
+  atual?: boolean
 }) {
   const ciclo = cicloPorId(registro.ciclo)
   const bloqueios = registro.bloqueios.conteudo
@@ -84,7 +90,6 @@ export function RegistroSemana({
       id={`ciclo-${ciclo.id}`}
       data-marcador={registro.marcador}
       data-ciclo={ciclo.id}
-      open={aberta}
       className="group scroll-mt-20 border border-linha bg-fundo [&+&]:mt-[-1px]"
     >
       <summary className="flex cursor-pointer list-none flex-wrap items-baseline justify-between gap-x-4 gap-y-2 px-4 py-4 transition-colors hover:bg-superficie sm:px-5 [&::-webkit-details-marker]:hidden">
@@ -95,6 +100,7 @@ export function RegistroSemana({
           <h3 className="fonte-display text-xl">{ciclo.rotulo}</h3>
         </span>
         <span className="flex items-center gap-3">
+          {atual ? <Etiqueta tom="acento">esta semana</Etiqueta> : null}
           {ciclo.tipo === 'marco' ? <Etiqueta tom="acento">marco</Etiqueta> : null}
           <Num className="text-sm">{formatarBR(ciclo.data)}</Num>
           <ChevronDown

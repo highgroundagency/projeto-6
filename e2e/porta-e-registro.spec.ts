@@ -55,6 +55,9 @@ test.describe('registro do projeto', () => {
 
     await expect(page.getByRole('heading', { name: 'Registro semanal' })).toBeVisible()
 
+    // As semanas chegam recolhidas: abrir uma é o que expõe os oito blocos.
+    await page.locator('details[data-ciclo]').first().getByRole('heading').click()
+
     for (const bloco of [
       'Objetivo da semana',
       'Avanços',
@@ -81,22 +84,26 @@ test.describe('registro do projeto', () => {
     }
   })
 
-  test('a semana mais recente abre sozinha e as outras dobram', async ({ page }) => {
+  test('todas as semanas chegam recolhidas, e a setinha abre uma', async ({ page }) => {
     await page.goto('/')
 
     const semanas = page.locator('details[data-ciclo]')
     const quantas = await semanas.count()
     expect(quantas).toBeGreaterThan(1)
 
-    // A primeira já vem aberta: quem chega quer a semana atual.
-    await expect(semanas.first()).toHaveAttribute('open', '')
-    await expect(semanas.nth(1)).not.toHaveAttribute('open', '')
+    // Nenhuma aberta: o professor procura UMA linha, não rola um muro de texto.
+    for (let i = 0; i < quantas; i++) {
+      await expect(semanas.nth(i)).not.toHaveAttribute('open', '')
+    }
+
+    // E a da vez vem marcada, para ele achar sem ler data por data.
+    await expect(page.getByText('esta semana').first()).toBeVisible()
 
     // A setinha abre as entregas daquela semana — sem JavaScript nosso.
-    const dobrada = semanas.nth(1)
-    await dobrada.getByRole('heading').click()
-    await expect(dobrada).toHaveAttribute('open', '')
-    await expect(dobrada.getByRole('heading', { name: 'Objetivo da semana' })).toBeVisible()
+    const escolhida = semanas.first()
+    await escolhida.getByRole('heading').click()
+    await expect(escolhida).toHaveAttribute('open', '')
+    await expect(escolhida.getByRole('heading', { name: 'Objetivo da semana' })).toBeVisible()
   })
 
   test('não entrega conteúdo de ciclo ainda não liberado', async ({ page }) => {

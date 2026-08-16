@@ -252,3 +252,16 @@ conferidas — não é cobertura perdida, é a mesma rota deixando de ser confer
 
 O acordeão é `<details>` nativo, não Radix: zero JavaScript, teclado de graça, e nenhum
 componente cliente perto de conteúdo de ciclo (ADR-005 e ADR-006).
+
+**Nenhuma semana abre por padrão.** A primeira versão abria a mais recente. O uso real é
+outro: o professor volta toda semana procurando UMA linha, e qualquer semana aberta empurra
+as demais para fora da tela. A semana corrente vem marcada com uma pílula, o que resolve
+achar sem ocupar espaço — e ela nem sempre é a do topo, porque o release roda sete dias à
+frente.
+
+**O que saiu por repetição.** O bloco de números (30 indicadores / 10 áreas / 2 regras)
+dizia o mesmo que o subtítulo do hero e que o bloco "o problema" — e dizia com os números da
+base sintética, que são os mais fracos dos três. O bloco "memória de cálculo" repetia a
+headline e o card "gestor confere"; a fórmula migrou para dentro do fluxo, onde ela pertence,
+e a segunda chamada para o sistema saiu junto. A logo da CESAR ficou só no hero. O subtítulo
+do hero foi reescrito para dizer o que o sistema **faz**, já que o problema tem bloco próprio.

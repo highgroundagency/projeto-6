@@ -1,7 +1,6 @@
 import Link from 'next/link'
 import { INSTITUICAO } from '@/content/produto'
 import { cn } from '@/lib/utils'
-import { MarcaCesar } from './marca'
 
 /**
  * Rodapé comum a todas as páginas.
@@ -20,8 +19,12 @@ export function Rodape({ className }: { className?: string }) {
         className,
       )}
     >
-      <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
-        <MarcaCesar />
+      {/* A logo da CESAR fica no hero. Repetir a mesma imagem no rodapé da
+          mesma página era só barulho — aqui basta a linha institucional. */}
+      <div className="flex flex-wrap items-center gap-x-3 gap-y-2 lowercase">
+        <span>
+          {INSTITUICAO.escola} · {INSTITUICAO.curso}
+        </span>
         <span aria-hidden className="text-linha-alta">
           ·
         </span>
@@ -29,7 +32,7 @@ export function Rodape({ className }: { className?: string }) {
         <span aria-hidden className="text-linha-alta">
           ·
         </span>
-        <span className="lowercase">{INSTITUICAO.equipe}</span>
+        <span>{INSTITUICAO.equipe}</span>
       </div>
 
       <Link
