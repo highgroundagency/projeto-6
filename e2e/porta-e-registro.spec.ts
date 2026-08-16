@@ -1,22 +1,31 @@
 import { expect, test } from '@playwright/test'
 
 test.describe('porta de entrada', () => {
-  test('mostra as duas escolhas e cabe na tela sem scroll', async ({ page }) => {
+  test('mostra as duas escolhas e a chamada acima da dobra', async ({ page }) => {
     await page.goto('/')
 
-    await expect(page.getByRole('link', { name: /Registro do projeto/ })).toBeVisible()
-    await expect(page.getByRole('link', { name: /Sistema/ })).toBeVisible()
+    await expect(page.getByRole('link', { name: /registro do projeto/ })).toBeVisible()
+    await expect(page.getByRole('link', { name: /^02/ })).toBeVisible()
 
-    // A porta é uma bifurcação, não uma landing page: não pode ter scroll.
-    const precisaRolar = await page.evaluate(
-      () => document.documentElement.scrollHeight > window.innerHeight + 1,
+    // A porta virou folha de especificação e rola de propósito — mas o hero e a
+    // chamada têm que caber sem rolagem, senão a primeira tela não diz nada.
+    const chamada = page.getByRole('link', { name: /ver o registro/ })
+    await expect(chamada).toBeInViewport()
+    await expect(page.getByRole('heading', { level: 1 })).toBeInViewport()
+  })
+
+  test('não estoura a largura da tela', async ({ page }) => {
+    await page.goto('/')
+    // Mono é bem mais largo que sans: a headline já estourou 360px uma vez.
+    const estoura = await page.evaluate(
+      () => document.documentElement.scrollWidth > window.innerWidth,
     )
-    expect(precisaRolar).toBe(false)
+    expect(estoura).toBe(false)
   })
 
   test('leva ao registro e ao sistema', async ({ page }) => {
     await page.goto('/')
-    await page.getByRole('link', { name: /Registro do projeto/ }).click()
+    await page.getByRole('link', { name: /registro do projeto/ }).click()
     await expect(page).toHaveURL(/\/registro$/)
 
     await page.goto('/')
@@ -77,7 +86,7 @@ test.describe('registro do projeto', () => {
     await page.goto('/registro')
     // O registro tem dois caminhos para a página: o cartão de evidência da s1 e
     // o link do rodapé. Aqui exercitamos o do rodapé.
-    await page.getByRole('link', { name: 'Transparência no uso de IA', exact: true }).click()
+    await page.getByRole('link', { name: 'transparência no uso de ia', exact: true }).click()
     await expect(page).toHaveURL(/\/transparencia-ia$/)
     // A frase aparece no cabeçalho da página e de novo no documento renderizado.
     await expect(page.getByText(/gerado ≠ entregue/).first()).toBeVisible()

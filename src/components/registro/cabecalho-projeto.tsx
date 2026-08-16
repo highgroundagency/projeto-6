@@ -18,7 +18,7 @@ export function CabecalhoProjeto() {
           <p className="rotulo pt-1">Cliente: {CLIENTE.orgao} — {CLIENTE.area}</p>
         </div>
 
-        <div className="self-start border-l-2 border-laranja bg-white p-5">
+        <div className="self-start border-l-2 border-acento bg-fundo p-5">
           <h3 className="rotulo">A pergunta do projeto</h3>
           <p className="fonte-display mt-2 text-xl leading-snug">{PERGUNTA_DO_PROJETO}</p>
         </div>
@@ -39,17 +39,17 @@ export function Equipe() {
 
       <ul className="mt-3 grid gap-px border border-linha bg-linha sm:grid-cols-2 lg:grid-cols-3">
         {EQUIPE.map((integrante) => (
-          <li key={integrante.id} className="flex gap-3 bg-white p-4">
+          <li key={integrante.id} className="flex gap-3 bg-fundo p-4">
             <span
               aria-hidden
-              className="numero flex size-9 shrink-0 items-center justify-center border border-tinta text-xs font-semibold"
+              className="numero flex size-9 shrink-0 items-center justify-center border border-linha-alta text-xs font-semibold"
             >
               {integrante.iniciais}
             </span>
             <div className="min-w-0">
               <p className="fonte-display text-sm leading-tight">{integrante.nome}</p>
-              <p className="rotulo mt-1 text-laranja">{integrante.papel}</p>
-              <p className="mt-1 text-xs leading-relaxed text-cinza-forte">{integrante.frente}</p>
+              <p className="rotulo mt-1 text-acento">{integrante.papel}</p>
+              <p className="mt-1 text-xs leading-relaxed text-apagado">{integrante.frente}</p>
             </div>
           </li>
         ))}

@@ -24,6 +24,16 @@ Site do Projeto 6 da CESAR School (2026.2, Equipe 1). Duas camadas:
 5. **Data nunca é `Date`.** Sempre `YYYY-MM-DD` em string, comparada lexicograficamente. O
    "hoje" é injetado nas funções de regra, nunca lido dentro delas.
 6. **Motor de cálculo é função pura.** Sem I/O, sem relógio, sem aleatoriedade.
+7. **Um acento só.** `--color-acento` é o laranja da CESAR e aparece em no máximo três
+   lugares por tela: número grande, chamada sólida e pílula/ícone do fluxo. Se precisar de
+   mais uma cor para diferenciar alguma coisa, use hairline e caixa alta, não cor.
+
+## A identidade em uma linha
+
+Folha de especificação em modo escuro: tudo monoespaçado e minúsculo, blocos delimitados por
+hairline de 1px que se encostam como tabela (`.bloco`, com `margin-top: -1px`), raio zero
+exceto em pílulas, e o gradiente granulado como única imagem do site. Caixa alta só em rótulo
+de estado ou etapa. Os detalhes e os contrastes conferidos estão na ADR-016.
 
 ## Idioma
 
@@ -38,7 +48,7 @@ pior que escolher um. Mantenha a consistência.
 src/
 ├── app/                 rotas (App Router)
 ├── components/
-│   ├── base/            botão, selo, marca, rodapé, faixa do admin
+│   ├── base/            botão, selo, marca, rodapé, cabeçalho, fluxo, faixa do admin
 │   ├── registro/        topo, trilhas, cartão do registro semanal
 │   ├── sistema/         memória de cálculo, painéis
 │   └── conteudo.tsx     primitivos usados pelo conteúdo dos ciclos

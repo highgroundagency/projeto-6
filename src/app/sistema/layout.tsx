@@ -18,7 +18,7 @@ export default async function LayoutSistema({ children }: { children: React.Reac
     <>
       <FaixaAdmin visao={visao} />
 
-      <div className="border-b border-linha bg-white">
+      <div className="border-b border-linha bg-fundo">
         <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-5 py-3 sm:px-8">
           <div className="flex items-baseline gap-3">
             <Link href="/sistema">
@@ -52,7 +52,7 @@ export default async function LayoutSistema({ children }: { children: React.Reac
             </select>
             <button
               type="submit"
-              className="border border-tinta px-2 py-1 text-xs hover:bg-tinta hover:text-papel"
+              className="border border-linha-alta px-2 py-1 text-xs hover:bg-superficie hover:text-texto"
             >
               Trocar
             </button>
@@ -64,7 +64,7 @@ export default async function LayoutSistema({ children }: { children: React.Reac
             <ul className="flex flex-wrap gap-x-4 gap-y-1 text-sm">
               {doPerfil.map((feature) => (
                 <li key={feature.id}>
-                  <Link href={feature.rota} className="hover:text-laranja">
+                  <Link href={feature.rota} className="hover:text-acento">
                     {feature.rotulo}
                   </Link>
                 </li>

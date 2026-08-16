@@ -107,11 +107,11 @@ export default async function TelaAnalytics() {
           {risco.map(({ area, media, desvio, amostras }) => (
             <li key={area.id} className="flex flex-wrap items-baseline justify-between gap-2 py-2.5">
               <span className="text-sm">
-                <Num className="text-xs text-cinza-forte">{area.sigla}</Num> {area.nome}
+                <Num className="text-xs text-apagado">{area.sigla}</Num> {area.nome}
               </span>
               <span className="flex items-baseline gap-3 text-sm">
                 <Num>{(media * 100).toFixed(1)}%</Num>
-                <span className="text-xs text-cinza-forte">
+                <span className="text-xs text-apagado">
                   desvio <Num>{(desvio * 100).toFixed(1)}</Num> · <Num>{amostras}</Num> obs.
                 </span>
                 <Etiqueta tom={media < 0.9 ? 'alerta' : 'neutro'}>
@@ -133,7 +133,7 @@ export default async function TelaAnalytics() {
           <div className="overflow-x-auto border border-linha">
             <table className="w-full min-w-[36rem] border-collapse text-sm">
               <thead>
-                <tr className="border-b border-linha bg-papel-2">
+                <tr className="border-b border-linha bg-superficie">
                   {['Ciclo', 'Indicador', 'Valor', 'Meta', 'Razão'].map((c) => (
                     <th key={c} className="rotulo px-3 py-2 text-left">
                       {c}
@@ -146,7 +146,7 @@ export default async function TelaAnalytics() {
                   <tr key={lancamento.id} className="border-b border-linha last:border-0">
                     <td className="numero px-3 py-1.5">{lancamento.cicloId.replace('ciclo-', '')}</td>
                     <td className="px-3 py-1.5">{indicador.nome}</td>
-                    <td className="numero px-3 py-1.5 text-vinho-alerta">{lancamento.valor}</td>
+                    <td className="numero px-3 py-1.5 text-alerta">{lancamento.valor}</td>
                     <td className="numero px-3 py-1.5">{indicador.meta}</td>
                     <td className="numero px-3 py-1.5">
                       {arredondar(lancamento.valor / indicador.meta, 1)}×
@@ -165,7 +165,7 @@ export default async function TelaAnalytics() {
       >
         <ul className="grid gap-px border border-linha bg-linha sm:grid-cols-2">
           {perfis.map(({ area, perfil }) => (
-            <li key={area.id} className="flex items-baseline justify-between gap-3 bg-white px-3 py-2 text-sm">
+            <li key={area.id} className="flex items-baseline justify-between gap-3 bg-fundo px-3 py-2 text-sm">
               <span>{area.nome}</span>
               <span className="rotulo shrink-0">{perfil}</span>
             </li>

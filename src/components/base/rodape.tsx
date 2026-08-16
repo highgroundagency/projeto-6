@@ -16,24 +16,27 @@ export function Rodape({ className }: { className?: string }) {
   return (
     <footer
       className={cn(
-        'flex flex-wrap items-center justify-between gap-3 border-t border-linha pt-4 text-xs text-cinza-forte',
+        'flex flex-wrap items-center justify-between gap-4 border-t border-linha pt-5 text-xs text-apagado',
         className,
       )}
     >
-      <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+      <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
         <MarcaCesar />
-        <span aria-hidden className="text-linha">
+        <span aria-hidden className="text-linha-alta">
           ·
         </span>
         <span className="numero">{INSTITUICAO.periodo}</span>
-        <span aria-hidden className="text-linha">
+        <span aria-hidden className="text-linha-alta">
           ·
         </span>
-        <span>{INSTITUICAO.equipe}</span>
+        <span className="lowercase">{INSTITUICAO.equipe}</span>
       </div>
 
-      <Link href="/transparencia-ia" className="underline underline-offset-4 hover:text-tinta">
-        Transparência no uso de IA
+      <Link
+        href="/transparencia-ia"
+        className="underline decoration-linha-alta underline-offset-4 lowercase transition-colors hover:text-acento hover:decoration-acento"
+      >
+        transparência no uso de ia
       </Link>
     </footer>
   )

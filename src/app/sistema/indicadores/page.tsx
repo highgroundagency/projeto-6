@@ -25,7 +25,7 @@ function DiffDeVersoes({ anterior, nova }: { anterior: RegraDePontuacao; nova: R
     <div className="overflow-x-auto border border-linha">
       <table className="w-full min-w-[32rem] border-collapse text-sm">
         <thead>
-          <tr className="border-b border-linha bg-papel-2">
+          <tr className="border-b border-linha bg-superficie">
             <th className="rotulo px-3 py-2 text-left">Faixa de atingimento</th>
             <th className="rotulo px-3 py-2 text-left">v{anterior.versao}</th>
             <th className="rotulo px-3 py-2 text-left">v{nova.versao}</th>
@@ -48,9 +48,9 @@ function DiffDeVersoes({ anterior, nova }: { anterior: RegraDePontuacao; nova: R
                 <td className="numero px-3 py-1.5">{atual ? `${atual.pontos} pts` : '—'}</td>
                 <td className="px-3 py-1.5">
                   {situacao === 'igual' ? (
-                    <span className="text-cinza-forte">sem mudança</span>
+                    <span className="text-apagado">sem mudança</span>
                   ) : (
-                    <Etiqueta tom={situacao === 'removida' ? 'alerta' : 'laranja'}>{situacao}</Etiqueta>
+                    <Etiqueta tom={situacao === 'removida' ? 'alerta' : 'acento'}>{situacao}</Etiqueta>
                   )}
                 </td>
               </tr>
@@ -95,13 +95,13 @@ export default async function TelaIndicadores() {
         <div className="space-y-5">
           {porArea.map(({ area, indicadores }) => (
             <div key={area.id}>
-              <h3 className="rotulo text-tinta">
+              <h3 className="rotulo text-texto">
                 {area.sigla} · {area.nome}
               </h3>
               <div className="mt-2 overflow-x-auto border border-linha">
                 <table className="w-full min-w-[44rem] border-collapse text-sm">
                   <thead>
-                    <tr className="border-b border-linha bg-papel-2">
+                    <tr className="border-b border-linha bg-superficie">
                       {['Indicador', 'Unidade', 'Direção', 'Meta', 'Peso', 'Periodicidade', 'Fonte'].map((c) => (
                         <th key={c} className="rotulo px-3 py-2 text-left whitespace-nowrap">
                           {c}
@@ -113,14 +113,14 @@ export default async function TelaIndicadores() {
                     {indicadores.map((indicador) => (
                       <tr key={indicador.id} className="border-b border-linha last:border-0">
                         <td className="px-3 py-1.5">{indicador.nome}</td>
-                        <td className="px-3 py-1.5 text-cinza-forte">{indicador.unidade}</td>
-                        <td className="px-3 py-1.5 whitespace-nowrap text-cinza-forte">
+                        <td className="px-3 py-1.5 text-apagado">{indicador.unidade}</td>
+                        <td className="px-3 py-1.5 whitespace-nowrap text-apagado">
                           {indicador.direcao === 'maior_melhor' ? 'maior é melhor' : 'menor é melhor'}
                         </td>
                         <td className="numero px-3 py-1.5">{indicador.meta}</td>
                         <td className="numero px-3 py-1.5">{indicador.peso}</td>
-                        <td className="px-3 py-1.5 text-cinza-forte">{indicador.periodicidade}</td>
-                        <td className="px-3 py-1.5 text-cinza-forte">{indicador.fonte}</td>
+                        <td className="px-3 py-1.5 text-apagado">{indicador.periodicidade}</td>
+                        <td className="px-3 py-1.5 text-apagado">{indicador.fonte}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -142,12 +142,12 @@ export default async function TelaIndicadores() {
                 <span className="fonte-display text-base">
                   {regra.id} <Num className="text-sm">v{regra.versao}</Num>
                 </span>
-                <Num className="text-xs text-cinza-forte">
+                <Num className="text-xs text-apagado">
                   vigência {regra.vigenteDe} → {regra.vigenteAte ?? 'em aberto'}
                 </Num>
               </div>
-              <p className="mt-1 text-sm text-cinza-forte">{regra.descricao}</p>
-              <p className="numero mt-2 text-xs text-cinza-forte">
+              <p className="mt-1 text-sm text-apagado">{regra.descricao}</p>
+              <p className="numero mt-2 text-xs text-apagado">
                 teto {Math.round(regra.tetoAtingimento * 100)}% · arredondamento{' '}
                 {regra.arredondamento.casas} casas ({regra.arredondamento.modo.replace(/_/g, ' ')}) ·
                 sem lançamento: {regra.semLancamento.replace(/_/g, ' ')}

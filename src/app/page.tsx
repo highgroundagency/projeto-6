@@ -1,17 +1,29 @@
 import Link from 'next/link'
-import { MarcaPrumo } from '@/components/base/marca'
+import { ClipboardCheck, ScrollText, Scale } from 'lucide-react'
+import { Chamada } from '@/components/base/botao'
+import { Cabecalho } from '@/components/base/cabecalho'
+import { AcaoDoFluxo, Conector, EstadoDoFluxo, Fluxo } from '@/components/base/fluxo'
 import { Rodape } from '@/components/base/rodape'
-import { PRODUTO } from '@/content/produto'
+import { INSTITUICAO } from '@/content/produto'
+import { BASE } from '@/lib/seed'
 
 /**
- * Porta de entrada (§1).
+ * Porta de entrada.
  *
- * Uma bifurcação, não uma landing page: o professor escolhe por onde entrar.
- * Cabe na tela sem scroll, inclusive em 360px.
+ * Uma folha de especificação: o que a coisa faz, em números e em fluxo, sem
+ * parágrafo de venda. A bifurcação continua sendo o centro — o professor
+ * escolhe entrar pelo registro ou pelo sistema —, agora ancorada no que o
+ * sistema é.
  *
- * É a única rota estática do site — não lê cookie nem data, então serve HTML
+ * É a única rota estática do site: não lê cookie nem data, então serve HTML
  * pronto do CDN e mantém o LCP baixo.
  */
+
+const NUMEROS = [
+  { valor: BASE.indicadores.length, legenda: 'indicadores na base sintética' },
+  { valor: BASE.areas.length, legenda: 'áreas que lançam dados' },
+  { valor: BASE.regras.length, legenda: 'versões da mesma regra' },
+] as const
 
 function Porta({
   href,
@@ -29,21 +41,14 @@ function Porta({
   return (
     <Link
       href={href}
-      className={`group flex min-h-40 flex-col justify-between gap-6 bg-white p-5 transition-colors hover:bg-tinta focus-visible:bg-tinta sm:p-7 ${className ?? ''}`}
+      className={`group flex min-h-52 flex-col justify-between gap-8 border border-linha p-8 transition-colors hover:bg-superficie focus-visible:bg-superficie sm:p-10 ${className ?? ''}`}
     >
-      <span className="rotulo numero text-cinza-forte transition-colors group-hover:text-papel/60 group-focus-visible:text-papel/60">
-        {ordem}
-      </span>
+      <span className="ordinal numero transition-colors group-hover:text-acento">{ordem}</span>
       <span>
-        <span className="fonte-display block text-2xl leading-tight text-tinta transition-colors group-hover:text-papel group-focus-visible:text-papel sm:text-4xl">
-          {rotulo}
-        </span>
-        <span className="mt-1.5 flex items-center gap-2 text-sm text-cinza-forte transition-colors group-hover:text-papel/80 group-focus-visible:text-papel/80">
+        <span className="titulo-bloco block text-2xl sm:text-3xl">{rotulo}</span>
+        <span className="mt-2 flex items-center gap-2 text-sm lowercase">
           {descricao}
-          <span
-            aria-hidden
-            className="text-laranja transition-transform group-hover:translate-x-1"
-          >
+          <span aria-hidden className="text-acento transition-transform group-hover:translate-x-1">
             →
           </span>
         </span>
@@ -54,43 +59,102 @@ function Porta({
 
 export default function PortaDeEntrada() {
   return (
-    <main
-      id="conteudo"
-      className="mx-auto flex min-h-dvh max-w-5xl flex-col gap-6 px-5 py-7 sm:px-8"
-    >
-      <header>
-        <MarcaPrumo tamanho="grande" />
-        <p className="mt-2 max-w-sm text-sm leading-relaxed text-cinza-forte">
-          {PRODUTO.subtitulo}
-        </p>
-      </header>
+    <>
+      <Cabecalho />
 
-      {/* Os dois botões são o elemento de design da tela: ocupam todo o espaço
-          entre o cabeçalho e o rodapé, em vez de flutuar no meio do vazio. */}
-      <div className="flex flex-1 flex-col">
-        {/* O trilho do semestre nasce aqui e atravessa a timeline do registro. */}
-        <div aria-hidden className="h-0.5 w-full shrink-0 bg-laranja" />
-        <nav
-          aria-label="Escolha por onde entrar"
-          className="grid flex-1 border border-t-0 border-linha sm:grid-cols-2"
-        >
+      {/* Sangria total no mobile: em 360px cada pixel de padding lateral tira
+          tamanho da headline, e o bloco encostado na borda reforça a leitura
+          de tabela. Do sm para cima o conteúdo volta a respirar. */}
+      <main id="conteudo" className="mx-auto max-w-[1100px] px-0 pt-16 sm:px-8">
+        {/* Hero — o único lugar da página com imagem. */}
+        <section className="grao bloco border-x-0 border-t-0 pt-20 sm:pt-28">
+          {/* O período fica de fora: já está no rodapé, e a pílula com os três
+              precisava quebrar em duas linhas em 360px. */}
+          <span className="pilula numero">
+            {INSTITUICAO.escola} · {INSTITUICAO.equipe}
+          </span>
+
+          <h1 className="hero cursor mt-8">gratificação fora da planilha</h1>
+
+          <p className="prosa mt-7 text-base lowercase">
+            dezenas de indicadores, várias áreas, uma portaria. hoje isso vive em planilha
+            manual na comissão de avaliação de metas.
+          </p>
+
+          <div className="mt-9">
+            <Chamada href="/registro">ver o registro →</Chamada>
+          </div>
+        </section>
+
+        {/* Número no lugar de frase. */}
+        <section aria-label="O caso em números" className="grade-blocos grade-3">
+          {NUMEROS.map((item) => (
+            <div key={item.legenda} className="bloco revelar">
+              <p className="stat numero">{item.valor}</p>
+              <p className="rotulo mt-3">{item.legenda}</p>
+            </div>
+          ))}
+        </section>
+
+        <nav aria-label="Escolha por onde entrar" className="grade-blocos grade-2">
           <Porta
             href="/registro"
             ordem="01"
-            rotulo="Registro do projeto"
-            descricao="A trajetória da equipe, semana a semana"
+            rotulo="registro do projeto"
+            descricao="a trajetória da equipe, semana a semana"
           />
           <Porta
             href="/sistema"
             ordem="02"
-            rotulo="Sistema"
-            descricao="O MVP funcionando"
-            className="border-t border-linha sm:border-l sm:border-t-0"
+            rotulo="sistema"
+            descricao="o mvp funcionando"
           />
         </nav>
-      </div>
 
-      <Rodape />
-    </main>
+        {/* O fluxo real do ciclo, não um fluxo ilustrativo. */}
+        <section className="bloco revelar">
+          <h2 className="titulo-bloco">o ciclo</h2>
+          <p className="prosa mt-2 text-sm lowercase">
+            cada estado só avança um passo por vez, e a passagem fica na trilha.
+          </p>
+
+          <div className="mt-10">
+            <Fluxo>
+              <EstadoDoFluxo>lançamento aberto</EstadoDoFluxo>
+              <Conector />
+              <AcaoDoFluxo icone={<ClipboardCheck size={24} strokeWidth={1.5} />} titulo="área técnica informa">
+                valor e evidência de cada indicador, dentro da janela do ciclo.
+              </AcaoDoFluxo>
+              <Conector />
+              <EstadoDoFluxo>em validação</EstadoDoFluxo>
+              <Conector />
+              <AcaoDoFluxo icone={<Scale size={24} strokeWidth={1.5} />} titulo="cam apura">
+                a regra vigente na competência vira score, faixa e memória de cálculo.
+              </AcaoDoFluxo>
+              <Conector />
+              <EstadoDoFluxo>homologado</EstadoDoFluxo>
+              <Conector />
+              <AcaoDoFluxo icone={<ScrollText size={24} strokeWidth={1.5} />} titulo="gestor confere">
+                cada número aberto até a origem. discordou, contesta no prazo.
+              </AcaoDoFluxo>
+              <Conector />
+              <EstadoDoFluxo>publicado</EstadoDoFluxo>
+            </Fluxo>
+          </div>
+        </section>
+
+        <section className="bloco revelar border-b-0">
+          <h2 className="titulo-bloco">memória de cálculo</h2>
+          <p className="prosa mt-2 text-sm lowercase">
+            planilha manual sai. cada valor fica rastreável até a origem.
+          </p>
+          <p className="numero mt-6 text-sm text-apagado">
+            score = (Σ pontos × peso) ÷ (Σ peso × pontuação máxima) × 100
+          </p>
+        </section>
+
+        <Rodape className="px-6 pb-8 sm:px-0" />
+      </main>
+    </>
   )
 }

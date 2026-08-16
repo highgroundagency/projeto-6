@@ -20,9 +20,9 @@ export function Secao({
 }) {
   return (
     <section className="mt-8 first:mt-0">
-      <h4 className="fonte-display text-lg text-tinta">{titulo}</h4>
+      <h4 className="fonte-display text-lg text-texto">{titulo}</h4>
       {descricao ? (
-        <p className="mt-1 max-w-prose text-sm text-cinza-forte">{descricao}</p>
+        <p className="mt-1 max-w-prose text-sm text-apagado">{descricao}</p>
       ) : null}
       <div className="mt-3">{children}</div>
     </section>
@@ -58,12 +58,12 @@ export function Cartao({
   children: ReactNode
 }) {
   return (
-    <article className="border border-linha bg-white p-4">
+    <article className="border border-linha bg-fundo p-4">
       <header className="flex items-baseline justify-between gap-2">
-        <h5 className="fonte-display text-sm text-tinta">{titulo}</h5>
+        <h5 className="fonte-display text-sm text-texto">{titulo}</h5>
         {etiqueta ? <span className="rotulo shrink-0">{etiqueta}</span> : null}
       </header>
-      <div className="mt-2 space-y-2 text-sm leading-relaxed text-tinta/85">{children}</div>
+      <div className="mt-2 space-y-2 text-sm leading-relaxed text-apagado">{children}</div>
     </article>
   )
 }
@@ -73,7 +73,7 @@ export function Lista({ itens }: { itens: readonly string[] }) {
     <ul className="space-y-1.5 text-sm leading-relaxed">
       {itens.map((item) => (
         <li key={item} className="flex gap-2">
-          <span aria-hidden className="mt-2 h-px w-3 shrink-0 bg-laranja" />
+          <span aria-hidden className="mt-2 h-px w-3 shrink-0 bg-acento" />
           <span>{item}</span>
         </li>
       ))}
@@ -111,7 +111,7 @@ export function Tabela({
     <div className="overflow-x-auto border border-linha">
       <table className="w-full min-w-[34rem] border-collapse text-sm">
         <thead>
-          <tr className="border-b border-linha bg-papel-2">
+          <tr className="border-b border-linha bg-superficie">
             {colunas.map((coluna) => (
               <th key={coluna} className="rotulo px-3 py-2 text-left">
                 {coluna}
@@ -152,8 +152,8 @@ export function Quadro({
   return (
     <div className="grid gap-3 sm:grid-cols-2">
       {quadrantes.map((quadrante) => (
-        <div key={quadrante.titulo} className="border border-linha bg-white p-4">
-          <h5 className="rotulo text-tinta">{quadrante.titulo}</h5>
+        <div key={quadrante.titulo} className="border border-linha bg-fundo p-4">
+          <h5 className="rotulo text-texto">{quadrante.titulo}</h5>
           <div className="mt-2">
             <Lista itens={quadrante.itens} />
           </div>
@@ -165,7 +165,7 @@ export function Quadro({
 
 export function Citacao({ children, fonte }: { children: ReactNode; fonte?: string }) {
   return (
-    <blockquote className="border-l-2 border-laranja bg-papel-2 px-4 py-3">
+    <blockquote className="border-l-2 border-acento bg-superficie px-4 py-3">
       <p className="text-sm leading-relaxed">{children}</p>
       {fonte ? <footer className="rotulo mt-2">{fonte}</footer> : null}
     </blockquote>
@@ -174,7 +174,7 @@ export function Citacao({ children, fonte }: { children: ReactNode; fonte?: stri
 
 export function Nota({ children }: { children: ReactNode }) {
   return (
-    <p className="border border-dashed border-cinza/50 bg-papel-2 px-3 py-2 text-sm text-cinza-forte">
+    <p className="border border-dashed border-linha-alta bg-superficie px-3 py-2 text-sm text-apagado">
       {children}
     </p>
   )

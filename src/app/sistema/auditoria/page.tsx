@@ -31,12 +31,12 @@ function Diff({ antes, depois }: { antes: unknown; depois: unknown }) {
   return (
     <div className="numero mt-1 flex flex-wrap gap-x-3 text-xs">
       {antes !== null ? (
-        <span className="text-vinho-alerta">antes: {JSON.stringify(antes)}</span>
+        <span className="text-alerta">antes: {JSON.stringify(antes)}</span>
       ) : (
-        <span className="text-cinza-forte">antes: —</span>
+        <span className="text-apagado">antes: —</span>
       )}
       {depois !== null ? (
-        <span className="text-verde-ok">depois: {JSON.stringify(depois)}</span>
+        <span className="text-ok">depois: {JSON.stringify(depois)}</span>
       ) : null}
     </div>
   )
@@ -129,14 +129,14 @@ export default async function TelaAuditoria({
           {filtrados.slice(0, LIMITE).map((evento) => (
             <li key={evento.id} className="py-2.5">
               <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-                <Num className="text-xs text-cinza-forte">
+                <Num className="text-xs text-apagado">
                   {evento.quando.slice(0, 16).replace('T', ' ')}
                 </Num>
                 <Etiqueta>{ROTULO_TIPO[evento.tipo]}</Etiqueta>
                 <span className="text-sm">{evento.descricao}</span>
               </div>
               <div className="mt-0.5 flex flex-wrap items-baseline gap-x-3">
-                <Num className="text-[0.65rem] text-cinza-forte">
+                <Num className="text-[0.65rem] text-apagado">
                   {evento.entidade} · {evento.autor} ({evento.perfil})
                 </Num>
               </div>
@@ -146,7 +146,7 @@ export default async function TelaAuditoria({
         </ol>
 
         {filtrados.length === 0 ? (
-          <p className="text-sm text-cinza-forte">Nenhum evento para este filtro.</p>
+          <p className="text-sm text-apagado">Nenhum evento para este filtro.</p>
         ) : null}
       </Painel>
 
@@ -163,7 +163,7 @@ export default async function TelaAuditoria({
             )
           })}
         </ul>
-        <p className="mt-3 text-xs text-cinza-forte">
+        <p className="mt-3 text-xs text-apagado">
           {totalLancamentos} lançamentos em {dados.ciclos.length} ciclos.
         </p>
       </Painel>

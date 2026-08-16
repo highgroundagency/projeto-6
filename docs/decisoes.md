@@ -91,6 +91,10 @@ editar um arquivo em vez de clicar.
 
 ## ADR-009 · Botão primário usa tinta sobre laranja, não branco
 
+> **Superada pela ADR-016.** O raciocínio de contraste continua valendo e é por isso que o
+> botão primário do tema escuro também não usa branco. O tema claro que ela descreve não
+> existe mais.
+
 **Contexto.** Branco sobre `#F15A24` dá 3,37:1, abaixo do mínimo AA para texto normal.
 **Decisão.** Botão primário é laranja com texto em tinta (6,45:1). Cinza do briefing fica
 para texto grande; texto pequeno secundário usa uma variante escurecida (5,36:1).
@@ -185,3 +189,40 @@ e `docs/seguranca.md` descreve o painel, porque o §7 exige essa análise. Quem 
 `ADMIN_SENHA` trocada em produção, não o esconderijo — enquanto ela for `0321`, isto é
 arrumação de interface, não controle de acesso. A resposta é 404, não 403, pela mesma razão de
 `exigirAdmin` em `/admin`: não confirmar o mecanismo a quem não deveria conhecê-lo.
+
+---
+
+## ADR-016 · Identidade "folha de especificação": escuro, monoespaçado, um acento
+
+**Contexto.** O visual anterior era claro e sans-serif, com a mono reservada aos números. Ele
+funcionava e não dizia nada: parecia um site institucional qualquer. O produto é uma memória
+de cálculo auditável, e a página deveria parecer o que o produto é.
+
+**Decisão.** Modo escuro (`#0A0B0A`), tudo monoespaçado (Martian Mono no display, JetBrains
+Mono no resto), blocos delimitados por hairline de 1px com `margin-top: -1px` para as bordas
+colapsarem como tabela, raio zero exceto em pílulas, e **um único acento**. O acento é o
+laranja da CESAR tirado do arquivo da logo — `#F7580B`, não o `#F15A24` do briefing, que não
+bate com o asset real. O verde da referência original foi descartado: dois acentos numa
+página com a logo laranja matam a identidade.
+
+**Consequência.** Contraste conferido em todos os pares que a identidade usa: acento sobre
+fundo 5,97:1, texto apagado sobre fundo 6,00:1, acento sobre o preenchimento de pílula 5,47:1,
+`ink` sobre acento sólido 5,97:1 — todos acima de 4,5:1. A escala tipográfica do briefing
+original teve que ser recalibrada: mono tem avanço fixo e bem mais largo, e a headline mínima
+de 2,5rem estourava 360px. O que se perdeu: a paleta clara do §12 do briefing deixou de
+existir, e a ADR-009 foi superada. O que se ganhou: uma tela que a banca reconhece de longe.
+
+---
+
+## ADR-017 · Reveal no scroll sem JavaScript
+
+**Contexto.** A identidade pede que os blocos entrem com fade e deslocamento. O site inteiro
+funciona sem JavaScript (ADR-006) e não queríamos abrir exceção por causa de animação.
+
+**Decisão.** `animation-timeline: view()` em CSS, dentro de `@supports`. Onde houver suporte,
+o bloco anima conforme o scroll; onde não houver, ele já nasce visível.
+
+**Consequência.** Zero bytes de JS e nenhum observer. Em contrapartida, o conteúdo abaixo da
+dobra fica em `opacity: 0` até ser rolado — o que confunde captura de tela de página inteira
+e exigiria cuidado se algum dia houver impressão. `prefers-reduced-motion` desliga tudo e
+força opacidade cheia.

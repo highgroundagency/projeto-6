@@ -1,33 +1,47 @@
 @import 'tailwindcss';
 
 /* ---------------------------------------------------------------------------
-   PRUMO — design tokens (§12 do briefing)
+   PRUMO — design tokens
 
-   Tailwind v4 declara o tema em CSS, não em tailwind.config.js.
-   Cada token vira utilitário automaticamente: --color-laranja → bg-laranja,
-   text-laranja, border-laranja.
+   Identidade "folha de especificação": modo escuro, tudo monoespaçado, blocos
+   delimitados por hairline de 1px que se encostam como tabela, um único acento.
+
+   O acento é o laranja da CESAR, tirado do próprio arquivo da logo (#F7580B) —
+   não do briefing, que trazia #F15A24. Um acento só: o verde da referência
+   original brigaria com a logo. Ver ADR-016 em docs/decisoes.md.
+
+   Tailwind v4 declara o tema em CSS, não em tailwind.config.js. Cada token vira
+   utilitário: --color-acento → bg-acento, text-acento, border-acento.
 --------------------------------------------------------------------------- */
 
 @theme {
-  --color-laranja: #f15a24;
-  --color-tinta: #131313;
-  --color-papel: #faf8f4;
-  --color-cinza: #8a8580;
-  --color-verde-ok: #1f7a5c;
-  --color-vinho-alerta: #9e2b25;
+  /* Fundo e superfície */
+  --color-fundo: #0a0b0a;
+  --color-superficie: #0f110e;
 
-  /* Derivados de suporte — mesma família, para superfícies e fios de grade. */
-  --color-papel-2: #f2eee7;
-  --color-linha: #e2dcd2;
-  --color-laranja-fraco: #fde9e0;
-  /* O cinza do briefing tem contraste 3,45:1 sobre papel: serve para texto
-     grande e elementos decorativos, mas reprova em AA para corpo de texto.
-     Esta variante escura (5,4:1) é a usada em texto pequeno secundário. */
-  --color-cinza-forte: #6b6660;
+  /* Hairlines — a única fonte de profundidade da página */
+  --color-linha: #23261f;
+  --color-linha-alta: #3a402f;
 
-  --font-display: var(--fonte-display), ui-sans-serif, system-ui, sans-serif;
-  --font-sans: var(--fonte-corpo), ui-sans-serif, system-ui, sans-serif;
+  /* Texto */
+  --color-texto: #ffffff;
+  --color-apagado: #8c8f86;
+
+  /* Acento — laranja CESAR. 5,97:1 sobre o fundo: passa AA em corpo de texto */
+  --color-acento: #f7580b;
+  /* O mesmo laranja a 12% sobre o fundo. Preenchimento de pílula: o acento
+     escrito por cima dá 5,47:1 */
+  --color-acento-fraco: #1f140a;
+  /* Texto sobre preenchimento sólido de acento */
+  --color-ink: #0a0b0a;
+
+  /* Estados — dessaturados para não competirem com o acento */
+  --color-ok: #7ea06a;
+  --color-alerta: #d2694f;
+
+  --font-display: var(--fonte-display), ui-monospace, monospace;
   --font-mono: var(--fonte-mono), ui-monospace, 'SFMono-Regular', monospace;
+  --font-sans: var(--fonte-mono), ui-monospace, 'SFMono-Regular', monospace;
 }
 
 /* ---------------------------------------------------------------------------
@@ -43,35 +57,280 @@ html {
 }
 
 body {
-  background-color: var(--color-papel);
-  color: var(--color-tinta);
-  font-family: var(--font-sans);
-  font-feature-settings: 'kern' 1;
+  background-color: var(--color-fundo);
+  color: var(--color-apagado);
+  font-family: var(--font-mono);
+  /* Zero cortado: é uma folha de especificação, o 0 não pode virar O. */
+  font-feature-settings: 'zero' 1, 'kern' 1;
+  font-size: 0.95rem;
+  line-height: 1.7;
   text-rendering: optimizeLegibility;
 }
 
-/* Display: peso alto e tracking apertado, caixa alta em rótulos. */
+/* Corpo de texto nunca passa de 62ch — mono cansa mais que sans em linha longa. */
+.prosa {
+  max-width: 62ch;
+}
+
+/* ---------------------------------------------------------------------------
+   Tipografia
+--------------------------------------------------------------------------- */
+
 .fonte-display {
   font-family: var(--font-display);
-  font-weight: 800;
-  letter-spacing: -0.03em;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--color-texto);
+  text-transform: lowercase;
 }
 
-/* Rótulo de seção: caixa alta, pequeno, espaçado. */
-.rotulo {
+/* A escala do briefing original (min 2.5rem) foi pensada para sans-serif.
+   Martian Mono tem avanço fixo e bem mais largo: "gratificação" são 12 caracteres
+   que a 2.5rem passam de 380px e estouram a tela de 360. O mínimo cai para
+   2.05rem, que é o maior valor em que a palavra mais longa ainda cabe. */
+.hero {
   font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 0.6875rem;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--color-cinza-forte);
+  font-size: clamp(2.05rem, 9vw, 5.5rem);
+  line-height: 0.98;
+  letter-spacing: -0.02em;
+  font-weight: 600;
+  color: var(--color-texto);
+  text-transform: lowercase;
 }
 
-/* Números, datas, scores e memória de cálculo — a "linguagem de auditoria". */
-.numero {
-  font-family: var(--font-mono);
+/* Número grande — o acento no lugar de um parágrafo. */
+.stat {
+  font-family: var(--font-display);
+  font-size: clamp(2.25rem, 9vw, 4rem);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: var(--color-acento);
   font-variant-numeric: tabular-nums;
+}
+
+.titulo-bloco {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--color-texto);
   letter-spacing: -0.01em;
+  text-transform: lowercase;
+  line-height: 1.3;
+}
+
+/* Rótulo de estado/etapa — a única coisa em caixa alta. */
+.rotulo {
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-apagado);
+}
+
+/* Números, datas, scores e memória de cálculo. Tudo já é mono; aqui o que
+   importa é a tabularidade, para as colunas alinharem. */
+.numero {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'zero' 1;
+}
+
+/* Numeração de etapa: 01, 02, 03 — grande e recuada, só quando a ordem
+   significa alguma coisa. */
+.ordinal {
+  font-family: var(--font-display);
+  font-size: 1.75rem;
+  line-height: 1;
+  color: var(--color-linha-alta);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------------------------------------------------------------------------
+   Blocos de borda colapsada
+
+   Cada bloco tem 1px de borda e -1px de margem: as linhas se encostam e a
+   página vira uma tabela. Sem gap, sem sombra, sem raio.
+--------------------------------------------------------------------------- */
+
+.bloco {
+  border: 1px solid var(--color-linha);
+  margin-top: -1px;
+  padding: 40px 24px;
+  position: relative;
+}
+
+@media (min-width: 768px) {
+  .bloco {
+    padding: 72px 56px;
+  }
+}
+
+/* Variante compacta, para linhas de tabela e itens de lista densos. */
+.bloco-raso {
+  border: 1px solid var(--color-linha);
+  margin-top: -1px;
+  padding: 20px 24px;
+  position: relative;
+}
+
+/* Grade de blocos: as bordas verticais também colapsam. */
+.grade-blocos {
+  display: grid;
+}
+
+.grade-blocos > * {
+  margin-left: -1px;
+}
+
+@media (min-width: 768px) {
+  .grade-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .grade-3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* Pílula — a única coisa arredondada da identidade. */
+.pilula {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-radius: 999px;
+  padding: 0.3rem 0.85rem;
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  border: 1px solid var(--color-linha);
+  /* Sem nowrap: em 360px uma pílula longa estourava a viewport em vez de
+     quebrar. Quem precisa de nowrap pede explicitamente. */
+  text-wrap: balance;
+}
+
+.pilula-acento {
+  background: var(--color-acento-fraco);
+  border-color: transparent;
+  color: var(--color-acento);
+}
+
+/* ---------------------------------------------------------------------------
+   Fundo granulado — a única imagem da página.
+
+   Gradiente radial no laranja da casa, escurecido até o preto, com ruído SVG
+   por cima. Fica atrás do hero e em mais nenhum lugar.
+--------------------------------------------------------------------------- */
+
+.grao {
+  position: relative;
+  isolation: isolate;
+  background:
+    radial-gradient(120% 90% at 50% 0%, #2a1408 0%, #120c07 45%, var(--color-fundo) 100%);
+}
+
+.grao::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity: 0.38;
+  mix-blend-mode: overlay;
+  pointer-events: none;
+}
+
+/* ---------------------------------------------------------------------------
+   Conector do fluxo vertical: 40px de linha tracejada entre dois nós.
+--------------------------------------------------------------------------- */
+
+.conector {
+  width: 1px;
+  height: 40px;
+  margin-inline: auto;
+  background-image: linear-gradient(
+    to bottom,
+    var(--color-linha-alta) 0 6px,
+    transparent 6px 12px
+  );
+  background-size: 1px 12px;
+  background-repeat: repeat-y;
+}
+
+/* ---------------------------------------------------------------------------
+   Motion — quatro coisas, e nada além.
+--------------------------------------------------------------------------- */
+
+/* 1. Cursor piscando no fim da headline. */
+.cursor::after {
+  content: '_';
+  color: var(--color-acento);
+  animation: piscar 1s steps(1) infinite;
+}
+
+@keyframes piscar {
+  50% {
+    opacity: 0;
+  }
+}
+
+/* 2. Reveal no scroll. Sem JS: `animation-timeline: view()` onde houver
+   suporte; onde não houver, o bloco simplesmente já está visível. */
+@supports (animation-timeline: view()) {
+  .revelar {
+    animation: entrar linear both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 40%;
+  }
+}
+
+@keyframes entrar {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* 3. A linha tracejada do fluxo se desenha conforme o scroll. */
+@supports (animation-timeline: view()) {
+  .conector-anima {
+    animation: desenhar linear both;
+    animation-timeline: view();
+    animation-range: entry 0% cover 30%;
+  }
+}
+
+@keyframes desenhar {
+  from {
+    height: 0;
+  }
+  to {
+    height: 40px;
+  }
+}
+
+/* 4. O hover de inversão do CTA vive em botao.tsx. */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .cursor::after {
+    opacity: 1;
+  }
+
+  .revelar,
+  .conector-anima {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
 }
 
 /* ---------------------------------------------------------------------------
@@ -79,12 +338,10 @@ body {
 --------------------------------------------------------------------------- */
 
 :focus-visible {
-  outline: 3px solid var(--color-laranja);
+  outline: 2px solid var(--color-acento);
   outline-offset: 2px;
-  border-radius: 2px;
 }
 
-/* Pula para o conteúdo — visível só quando recebe foco de teclado. */
 .pular-para-conteudo {
   position: absolute;
   left: -9999px;
@@ -96,47 +353,8 @@ body {
   left: 0.5rem;
   top: 0.5rem;
   padding: 0.5rem 0.75rem;
-  background: var(--color-tinta);
-  color: var(--color-papel);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.001ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.001ms !important;
-    scroll-behavior: auto !important;
-  }
-}
-
-/* ---------------------------------------------------------------------------
-   Elemento-assinatura: o trilho do semestre.
-   Linha contínua que nasce na porta de entrada, atravessa a timeline do
-   registro e entra no sistema — a metáfora de planilha → sistema.
---------------------------------------------------------------------------- */
-
-.trilho {
-  background-image: linear-gradient(
-    to right,
-    var(--color-laranja) 0%,
-    var(--color-laranja) 100%
-  );
-  background-repeat: no-repeat;
-  background-size: 100% 2px;
-  background-position: 0 50%;
-}
-
-.trilho-vertical {
-  background-image: linear-gradient(
-    to bottom,
-    var(--color-laranja) 0%,
-    var(--color-laranja) 100%
-  );
-  background-repeat: no-repeat;
-  background-size: 2px 100%;
-  background-position: 50% 0;
+  background: var(--color-acento);
+  color: var(--color-ink);
 }
 
 @media print {

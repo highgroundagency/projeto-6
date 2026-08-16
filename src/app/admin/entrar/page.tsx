@@ -27,7 +27,7 @@ export default async function PaginaEntrar({
     <main id="conteudo" className="mx-auto flex min-h-dvh max-w-sm flex-col justify-center px-5">
       <MarcaPrumo tamanho="medio" />
       <h1 className="fonte-display mt-4 text-2xl">Painel administrativo</h1>
-      <p className="mt-1 text-sm text-cinza-forte">
+      <p className="mt-1 text-sm text-apagado">
         Acesso restrito à equipe do projeto.
       </p>
 
@@ -43,14 +43,14 @@ export default async function PaginaEntrar({
             autoComplete="current-password"
             required
             autoFocus
-            className="numero mt-1.5 w-full border border-tinta bg-white px-3 py-2 text-base"
+            className="numero mt-1.5 w-full border border-linha-alta bg-fundo px-3 py-2 text-base"
           />
         </div>
 
         {erro ? (
           <p
             role="alert"
-            className="border border-vinho-alerta/40 bg-vinho-alerta/10 px-3 py-2 text-sm text-vinho-alerta"
+            className="border border-alerta/40 bg-alerta/10 px-3 py-2 text-sm text-alerta"
           >
             Não foi possível entrar.
           </p>
@@ -61,7 +61,7 @@ export default async function PaginaEntrar({
         </Botao>
       </form>
 
-      <Link href="/" className="rotulo mt-6 hover:text-tinta">
+      <Link href="/" className="rotulo mt-6 hover:text-texto">
         ← Voltar ao início
       </Link>
     </main>

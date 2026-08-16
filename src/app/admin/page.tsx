@@ -23,9 +23,9 @@ export const metadata: Metadata = {
 
 export const dynamic = 'force-dynamic'
 
-const TOM_STATUS: Record<StatusEvidencia, 'neutro' | 'laranja' | 'ok'> = {
+const TOM_STATUS: Record<StatusEvidencia, 'neutro' | 'acento' | 'ok'> = {
   a_fazer: 'neutro',
-  em_andamento: 'laranja',
+  em_andamento: 'acento',
   feito: 'ok',
   validado: 'ok',
 }
@@ -40,10 +40,10 @@ function Secao({
   children: React.ReactNode
 }) {
   return (
-    <section className="mt-8 border border-linha bg-white">
+    <section className="mt-8 border border-linha bg-fundo">
       <header className="border-b border-linha px-4 py-3">
         <h2 className="fonte-display text-lg">{titulo}</h2>
-        {descricao ? <p className="mt-0.5 text-sm text-cinza-forte">{descricao}</p> : null}
+        {descricao ? <p className="mt-0.5 text-sm text-apagado">{descricao}</p> : null}
       </header>
       <div className="px-4 py-4">{children}</div>
     </section>
@@ -77,7 +77,7 @@ export default async function PainelAdmin({
           <h1 className="fonte-display mt-1 text-2xl">Painel administrativo</h1>
         </div>
         <div className="flex items-center gap-3">
-          <Link href="/registro" className="rotulo hover:text-tinta">
+          <Link href="/registro" className="rotulo hover:text-texto">
             Ver registro
           </Link>
           <form action="/api/admin/sair" method="post">
@@ -89,7 +89,7 @@ export default async function PainelAdmin({
       </header>
 
       {!store.gravavel ? (
-        <p className="mt-5 border border-vinho-alerta/40 bg-vinho-alerta/10 px-4 py-3 text-sm">
+        <p className="mt-5 border border-alerta/40 bg-alerta/10 px-4 py-3 text-sm">
           <strong>Configuração global somente leitura neste ambiente.</strong> O
           filesystem da Vercel não aceita escrita e o projeto não usa banco. O que você
           mudar aqui vale para a <strong>sua sessão</strong>; para mudar o que o público
@@ -100,7 +100,7 @@ export default async function PainelAdmin({
       ) : null}
 
       {apenasSessao ? (
-        <p className="mt-5 border border-laranja/50 bg-laranja-fraco px-4 py-3 text-sm">
+        <p className="mt-5 border border-acento/50 bg-acento-fraco px-4 py-3 text-sm">
           Mudança aplicada apenas à sua sessão.
         </p>
       ) : null}
@@ -195,13 +195,13 @@ export default async function PainelAdmin({
                 defaultValue={visao.release.adiantamentoDias}
                 className="numero w-24 border border-linha px-2 py-1.5 text-sm"
               />
-              <ul className="flex flex-wrap gap-2 text-xs text-cinza-forte">
+              <ul className="flex flex-wrap gap-2 text-xs text-apagado">
                 {previaAdiantamento.map((previa) => (
                   <li
                     key={previa.dias}
                     className={cn(
                       'border border-linha px-2 py-1',
-                      previa.dias === visao.release.adiantamentoDias && 'border-laranja bg-laranja-fraco',
+                      previa.dias === visao.release.adiantamentoDias && 'border-acento bg-acento-fraco',
                     )}
                   >
                     <Num>{previa.dias}d</Num> → <Num>{previa.release ?? '—'}</Num>
@@ -246,7 +246,7 @@ export default async function PainelAdmin({
           <div className="overflow-x-auto border border-linha">
             <table className="w-full min-w-[38rem] border-collapse text-sm">
               <thead>
-                <tr className="border-b border-linha bg-papel-2">
+                <tr className="border-b border-linha bg-superficie">
                   <th className="rotulo px-3 py-2 text-left">Ciclo</th>
                   <th className="rotulo px-3 py-2 text-left">Data</th>
                   <th className="rotulo px-3 py-2 text-left">Registro</th>
@@ -264,7 +264,7 @@ export default async function PainelAdmin({
                     <tr key={ciclo.id} className="border-b border-linha last:border-0">
                       <td className="px-3 py-1.5">
                         <Num className="text-xs">{ciclo.id}</Num>{' '}
-                        <span className="text-cinza-forte">{ciclo.rotulo}</span>
+                        <span className="text-apagado">{ciclo.rotulo}</span>
                       </td>
                       <td className="numero px-3 py-1.5 whitespace-nowrap">
                         {formatarBR(ciclo.data)}
@@ -306,10 +306,10 @@ export default async function PainelAdmin({
           {FEATURES.map((feature) => {
             const liberada = visao.visiveis.includes(feature.ciclo)
             return (
-              <li key={feature.id} className="flex items-start justify-between gap-3 bg-white px-3 py-2">
+              <li key={feature.id} className="flex items-start justify-between gap-3 bg-fundo px-3 py-2">
                 <div>
                   <p className="text-sm font-medium">{feature.rotulo}</p>
-                  <p className="numero text-xs text-cinza-forte">{feature.rota}</p>
+                  <p className="numero text-xs text-apagado">{feature.rota}</p>
                 </div>
                 <Etiqueta tom={liberada ? 'ok' : 'neutro'}>
                   {feature.ciclo} · {liberada ? 'no ar' : '404'}
@@ -325,17 +325,17 @@ export default async function PainelAdmin({
         descricao="Toda alteração de configuração global fica registrada aqui."
       >
         {historico.length === 0 ? (
-          <p className="text-sm text-cinza-forte">
+          <p className="text-sm text-apagado">
             Nenhuma alteração registrada neste ambiente.
           </p>
         ) : (
           <ol className="divide-y divide-linha border-y border-linha text-sm">
             {historico.map((linha) => (
               <li key={linha.id} className="flex flex-wrap items-baseline gap-x-3 py-2">
-                <Num className="text-xs text-cinza-forte">{linha.quando.slice(0, 16).replace('T', ' ')}</Num>
+                <Num className="text-xs text-apagado">{linha.quando.slice(0, 16).replace('T', ' ')}</Num>
                 <span className="numero text-xs">{linha.campo}</span>
                 <span>
-                  <Num>{linha.de}</Num> <span aria-hidden className="text-laranja">→</span>{' '}
+                  <Num>{linha.de}</Num> <span aria-hidden className="text-acento">→</span>{' '}
                   <Num>{linha.para}</Num>
                 </span>
                 <span className="rotulo">{linha.autor}</span>
@@ -352,7 +352,7 @@ export default async function PainelAdmin({
         <div className="overflow-x-auto border border-linha">
           <table className="w-full min-w-[42rem] border-collapse text-sm">
             <thead>
-              <tr className="border-b border-linha bg-papel-2">
+              <tr className="border-b border-linha bg-superficie">
                 <th className="rotulo px-3 py-2 text-left">Ciclo</th>
                 <th className="rotulo px-3 py-2 text-left">Evidência</th>
                 <th className="rotulo px-3 py-2 text-left">Status</th>
@@ -375,7 +375,7 @@ export default async function PainelAdmin({
                   <td className="px-3 py-1.5">
                     <Etiqueta tom={TOM_STATUS[linha.status]}>{ROTULO_STATUS[linha.status]}</Etiqueta>
                   </td>
-                  <td className="px-3 py-1.5 text-cinza-forte">
+                  <td className="px-3 py-1.5 text-apagado">
                     {linha.responsavel ? integrantePorId(linha.responsavel).nome : '—'}
                   </td>
                 </tr>
@@ -398,7 +398,7 @@ export default async function PainelAdmin({
               </div>
               <div>
                 <p className="text-sm font-medium">{marco.rotulo}</p>
-                <p className="text-xs text-cinza-forte">{marco.oQueOProjetoAlimenta}</p>
+                <p className="text-xs text-apagado">{marco.oQueOProjetoAlimenta}</p>
               </div>
             </li>
           ))}

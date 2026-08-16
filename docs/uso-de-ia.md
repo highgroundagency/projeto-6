@@ -29,6 +29,8 @@ Regras que a equipe adotou:
 | 15/08/2026 | s2 | Claude (Anthropic) | Suíte que exercita as políticas de RLS contra um PostgreSQL real | `src/lib/supabase/rls.test.ts` | pendente |
 | 15/08/2026 | s2 | Claude (Anthropic) | Camada de dados que isola as telas da fonte, e script de semeadura | `src/lib/dados/`, `scripts/semear.ts` | pendente |
 | 15/08/2026 | s2 | Claude (Anthropic) | Remoção do Supabase do runtime, preservando o schema como evidência (ADR-011 e ADR-012) | `src/`, `docs/banco.md` | pendente |
+| 16/08/2026 | s2 | Claude (Anthropic) | Trava do avanço de fase na sessão de admin e remoção do link do painel (ADR-015) | `src/app/api/sistema/ciclo/`, `src/app/sistema/cam/`, `src/components/base/rodape.tsx` | pendente |
+| 16/08/2026 | s2 | Claude (Anthropic) | Implementação da identidade "folha de especificação" a partir de direção de arte escrita pela equipe: tokens, tipografia, blocos de borda colapsada, fluxo vertical e conferência de contraste (ADR-016 e ADR-017) | `src/app/globals.css`, `src/components/base/`, `src/app/page.tsx` | pendente |
 
 ## O que a IA **não** fez
 

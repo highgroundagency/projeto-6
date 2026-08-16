@@ -24,7 +24,7 @@ export function TopoRegistro({
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
           <MarcaPrumo tamanho="medio" />
-          <p className="mt-1 text-sm text-cinza-forte">Registro do projeto · {PRODUTO.subtitulo}</p>
+          <p className="mt-1 text-sm text-apagado">Registro do projeto · {PRODUTO.subtitulo}</p>
         </div>
 
         {URL_DRIVE ? (
@@ -32,12 +32,12 @@ export function TopoRegistro({
             href={URL_DRIVE}
             target="_blank"
             rel="noreferrer noopener"
-            className="border border-linha bg-white px-3 py-1.5 text-xs hover:border-tinta"
+            className="border border-linha bg-fundo px-3 py-1.5 text-xs hover:border-linha-alta"
           >
             Pasta do projeto no Drive ↗
           </a>
         ) : admin ? (
-          <span className="border border-dashed border-vinho-alerta/50 px-3 py-1.5 text-xs text-vinho-alerta">
+          <span className="border border-dashed border-alerta/50 px-3 py-1.5 text-xs text-alerta">
             Configure NEXT_PUBLIC_DRIVE_URL para exibir o link do Drive
           </span>
         ) : null}
@@ -55,7 +55,7 @@ export function TopoRegistro({
           <div className="flex items-baseline gap-2">
             <dt className="rotulo">Ciclo atual</dt>
             <dd>
-              <Etiqueta tom="laranja">{ciclo.rotulo}</Etiqueta>
+              <Etiqueta tom="acento">{ciclo.rotulo}</Etiqueta>
             </dd>
           </div>
         ) : null}
@@ -65,7 +65,7 @@ export function TopoRegistro({
             <dt className="rotulo">Próximo marco</dt>
             <dd>
               {marco.rotulo} em <Num>{formatarBR(marco.data)}</Num>{' '}
-              <span className="text-cinza-forte">
+              <span className="text-apagado">
                 {diasAteMarco === 0 ? '— é hoje' : `— faltam ${diasAteMarco} dias`}
               </span>
             </dd>

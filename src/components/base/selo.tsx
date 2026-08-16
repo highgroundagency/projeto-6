@@ -2,6 +2,12 @@ import type { ReactNode } from 'react'
 import { cn } from '@/lib/utils'
 import type { Selo as TipoSelo } from '@/lib/registro/tipos'
 
+/**
+ * Selo de validação do bloco (rascunho × validado).
+ *
+ * Pílula: junto com as etiquetas de estado, é a única coisa arredondada da
+ * identidade. Tudo o mais tem raio zero.
+ */
 export function Selo({
   selo,
   className,
@@ -12,10 +18,8 @@ export function Selo({
   return (
     <span
       className={cn(
-        'rotulo inline-flex shrink-0 items-center border px-1.5 py-0.5',
-        selo === 'validado'
-          ? 'border-verde-ok/40 bg-verde-ok/10 text-verde-ok'
-          : 'border-cinza/40 bg-papel-2 text-cinza-forte',
+        'pilula',
+        selo === 'validado' ? 'border-ok/40 text-ok' : 'text-apagado',
         className,
       )}
       title={
@@ -35,17 +39,18 @@ export function Etiqueta({
   className,
 }: {
   children: ReactNode
-  tom?: 'neutro' | 'laranja' | 'ok' | 'alerta'
+  /** `acento` é o tom caro: no máximo três usos do laranja por tela. */
+  tom?: 'neutro' | 'acento' | 'ok' | 'alerta'
   className?: string
 }) {
   return (
     <span
       className={cn(
-        'rotulo inline-flex shrink-0 items-center border px-1.5 py-0.5',
-        tom === 'laranja' && 'border-laranja/50 bg-laranja-fraco text-tinta',
-        tom === 'ok' && 'border-verde-ok/40 bg-verde-ok/10 text-verde-ok',
-        tom === 'alerta' && 'border-vinho-alerta/40 bg-vinho-alerta/10 text-vinho-alerta',
-        tom === 'neutro' && 'border-linha bg-papel-2 text-cinza-forte',
+        'pilula',
+        tom === 'acento' && 'pilula-acento',
+        tom === 'ok' && 'border-ok/40 text-ok',
+        tom === 'alerta' && 'border-alerta/40 text-alerta',
+        tom === 'neutro' && 'text-apagado',
         className,
       )}
     >

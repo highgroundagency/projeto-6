@@ -18,15 +18,15 @@ export function MemoriaDeCalculo({ avaliacao }: { avaliacao: Avaliacao }) {
   const { memoria } = avaliacao
 
   return (
-    <details className="group border border-linha bg-white">
-      <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-4 py-3 hover:bg-papel-2">
+    <details className="group border border-linha bg-fundo">
+      <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-4 py-3 hover:bg-superficie">
         <span>
           <span className="fonte-display text-base">Memória de cálculo</span>
-          <span className="mt-0.5 block text-xs text-cinza-forte">
+          <span className="mt-0.5 block text-xs text-apagado">
             Cada passo do cálculo, do lançamento ao score.
           </span>
         </span>
-        <span className="rotulo shrink-0 text-laranja">
+        <span className="rotulo shrink-0 text-acento">
           <span className="group-open:hidden">abrir</span>
           <span className="hidden group-open:inline">fechar</span>
         </span>
@@ -51,7 +51,7 @@ export function MemoriaDeCalculo({ avaliacao }: { avaliacao: Avaliacao }) {
         <div className="mt-3 overflow-x-auto border border-linha">
           <table className="numero w-full min-w-[46rem] border-collapse text-xs">
             <thead>
-              <tr className="border-b border-linha bg-papel-2">
+              <tr className="border-b border-linha bg-superficie">
                 {['Indicador', 'Valor', 'Meta', 'Atingimento', 'Faixa', 'Pontos', 'Peso', 'Contribuição'].map(
                   (coluna) => (
                     <th key={coluna} className="rotulo px-2 py-1.5 text-left whitespace-nowrap">
@@ -66,24 +66,24 @@ export function MemoriaDeCalculo({ avaliacao }: { avaliacao: Avaliacao }) {
                 <tr key={passo.indicadorId} className="border-b border-linha last:border-0 align-top">
                   <td className="px-2 py-1.5">
                     <span className="font-sans">{passo.indicador}</span>
-                    <span className="mt-0.5 block text-[0.65rem] text-cinza-forte">
+                    <span className="mt-0.5 block text-[0.65rem] text-apagado">
                       {passo.direcao === 'maior_melhor' ? 'maior é melhor' : 'menor é melhor'} ·{' '}
                       {passo.unidade}
                     </span>
                   </td>
                   <td className="px-2 py-1.5 whitespace-nowrap">
-                    {passo.valor === null ? <span className="text-vinho-alerta">sem lançamento</span> : passo.valor}
+                    {passo.valor === null ? <span className="text-alerta">sem lançamento</span> : passo.valor}
                   </td>
                   <td className="px-2 py-1.5 whitespace-nowrap">{passo.meta}</td>
                   <td className="px-2 py-1.5 whitespace-nowrap">
                     {porcentagem(passo.atingimento)}
                     {passo.aplicouTeto ? (
-                      <span className="ml-1 text-[0.65rem] text-laranja" title="Atingimento limitado pelo teto da regra">
+                      <span className="ml-1 text-[0.65rem] text-acento" title="Atingimento limitado pelo teto da regra">
                         (teto)
                       </span>
                     ) : null}
                   </td>
-                  <td className="px-2 py-1.5 whitespace-nowrap text-cinza-forte">{passo.faixa}</td>
+                  <td className="px-2 py-1.5 whitespace-nowrap text-apagado">{passo.faixa}</td>
                   <td className="px-2 py-1.5">{passo.pontos}</td>
                   <td className="px-2 py-1.5">{passo.peso}</td>
                   <td className="px-2 py-1.5 font-semibold">{passo.contribuicao}</td>
@@ -91,7 +91,7 @@ export function MemoriaDeCalculo({ avaliacao }: { avaliacao: Avaliacao }) {
               ))}
             </tbody>
             <tfoot>
-              <tr className="border-t-2 border-tinta bg-papel-2">
+              <tr className="border-t-2 border-linha-alta bg-superficie">
                 <td colSpan={7} className="rotulo px-2 py-1.5 text-right">
                   Soma das contribuições
                 </td>
@@ -101,7 +101,7 @@ export function MemoriaDeCalculo({ avaliacao }: { avaliacao: Avaliacao }) {
           </table>
         </div>
 
-        <div className="mt-3 border-l-2 border-laranja bg-papel-2 px-3 py-2">
+        <div className="mt-3 border-l-2 border-acento bg-superficie px-3 py-2">
           <p className="rotulo">Fórmula</p>
           <p className="numero mt-1 text-xs">{memoria.formula}</p>
           <p className="numero mt-1.5 text-sm">
@@ -115,8 +115,8 @@ export function MemoriaDeCalculo({ avaliacao }: { avaliacao: Avaliacao }) {
             <p className="rotulo">Avisos</p>
             <ul className="mt-1 space-y-1 text-xs">
               {avaliacao.avisos.map((aviso) => (
-                <li key={aviso} className="flex gap-2 text-vinho-alerta">
-                  <span aria-hidden className="mt-1.5 h-px w-3 shrink-0 bg-vinho-alerta" />
+                <li key={aviso} className="flex gap-2 text-alerta">
+                  <span aria-hidden className="mt-1.5 h-px w-3 shrink-0 bg-alerta" />
                   <span>{aviso}</span>
                 </li>
               ))}
@@ -130,20 +130,20 @@ export function MemoriaDeCalculo({ avaliacao }: { avaliacao: Avaliacao }) {
 
 export function CartaoScore({ avaliacao }: { avaliacao: Avaliacao }) {
   return (
-    <div className="flex flex-wrap items-end justify-between gap-4 border border-linha bg-white p-5">
+    <div className="flex flex-wrap items-end justify-between gap-4 border border-linha bg-fundo p-5">
       <div>
         <p className="rotulo">Score do ciclo</p>
         <p className="numero mt-1 text-5xl font-semibold leading-none">
           {avaliacao.score.toFixed(2)}
         </p>
-        <p className="mt-1 text-xs text-cinza-forte">de 0 a 100</p>
+        <p className="mt-1 text-xs text-apagado">de 0 a 100</p>
       </div>
 
       <div className="text-right">
         <p className="rotulo">Faixa de gratificação</p>
         <p className="fonte-display mt-1 text-xl">{avaliacao.faixa?.rotulo ?? '—'}</p>
         {avaliacao.faixa ? (
-          <p className="numero mt-0.5 text-sm text-cinza-forte">
+          <p className="numero mt-0.5 text-sm text-apagado">
             {avaliacao.faixa.percentual}% da gratificação
           </p>
         ) : null}

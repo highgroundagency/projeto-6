@@ -107,7 +107,7 @@ export default async function TelaGestao({
           { rotulo: 'Gestores avaliados', valor: String(avaliacoes.length) },
           { rotulo: 'Avaliações com aviso', valor: String(comAviso) },
         ].map((item) => (
-          <div key={item.rotulo} className="border border-linha bg-white px-4 py-3">
+          <div key={item.rotulo} className="border border-linha bg-fundo px-4 py-3">
             <p className="rotulo">{item.rotulo}</p>
             <p className="numero mt-1 text-2xl">{item.valor}</p>
           </div>
@@ -125,7 +125,7 @@ export default async function TelaGestao({
         <div className="overflow-x-auto border border-linha">
           <table className="w-full min-w-[34rem] border-collapse text-sm">
             <thead>
-              <tr className="border-b border-linha bg-papel-2">
+              <tr className="border-b border-linha bg-superficie">
                 {['#', anonimizado ? 'Identificação' : 'Gestor', 'Área', 'Score', 'Faixa', 'Avisos'].map((c) => (
                   <th key={c} className="rotulo px-3 py-2 text-left">
                     {c}
@@ -142,12 +142,12 @@ export default async function TelaGestao({
                     <td className="numero px-3 py-1.5">{i + 1}</td>
                     <td className="px-3 py-1.5">
                       {anonimizado ? (
-                        <Num className="text-cinza-forte">gestor {String(i + 1).padStart(2, '0')}</Num>
+                        <Num className="text-apagado">gestor {String(i + 1).padStart(2, '0')}</Num>
                       ) : (
                         gestor?.nome
                       )}
                     </td>
-                    <td className="px-3 py-1.5 text-cinza-forte">
+                    <td className="px-3 py-1.5 text-apagado">
                       {anonimizado ? '—' : `${area?.sigla} · ${area?.nome}`}
                     </td>
                     <td className="numero px-3 py-1.5 font-semibold">{avaliacao.score.toFixed(2)}</td>
@@ -156,7 +156,7 @@ export default async function TelaGestao({
                       {avaliacao.avisos.length > 0 ? (
                         <Etiqueta tom="alerta">{avaliacao.avisos.length}</Etiqueta>
                       ) : (
-                        <span className="text-cinza-forte">—</span>
+                        <span className="text-apagado">—</span>
                       )}
                     </td>
                   </tr>

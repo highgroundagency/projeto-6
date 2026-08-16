@@ -29,9 +29,9 @@ export function TrilhaMarcos({ hoje }: { hoje: DataISO }) {
             <li
               key={marco.id}
               className={cn(
-                'relative bg-white p-4',
-                estado === 'atual' && 'bg-laranja-fraco',
-                estado === 'futuro' && 'text-cinza-forte',
+                'relative bg-fundo p-4',
+                estado === 'atual' && 'bg-acento-fraco',
+                estado === 'futuro' && 'text-apagado',
               )}
               aria-current={estado === 'atual' ? 'step' : undefined}
             >
@@ -39,13 +39,13 @@ export function TrilhaMarcos({ hoje }: { hoje: DataISO }) {
                 aria-hidden
                 className={cn(
                   'absolute inset-x-0 top-0 h-0.5',
-                  estado === 'feito' && 'bg-laranja',
-                  estado === 'atual' && 'bg-laranja',
+                  estado === 'feito' && 'bg-acento',
+                  estado === 'atual' && 'bg-acento',
                   estado === 'futuro' && 'bg-linha',
                 )}
               />
               <div className="flex items-baseline justify-between gap-2">
-                <span className="fonte-display text-base text-tinta">{marco.rotulo}</span>
+                <span className="fonte-display text-base text-texto">{marco.rotulo}</span>
                 <Num className="text-xs">{formatarBR(marco.data)}</Num>
               </div>
               <p className="rotulo mt-1.5">{TEXTO_ESTADO[estado]}</p>
@@ -94,23 +94,23 @@ export function TimelineCiclos({
                   aria-hidden
                   className={cn(
                     'mb-2 block size-2.5 rounded-full border-2',
-                    liberado ? 'border-laranja bg-laranja' : 'border-linha bg-papel',
-                    atual && 'ring-2 ring-laranja/30 ring-offset-2 ring-offset-papel',
+                    liberado ? 'border-acento bg-acento' : 'border-linha bg-fundo',
+                    atual && 'ring-2 ring-acento/30 ring-offset-2 ring-offset-papel',
                   )}
                 />
                 <span
                   className={cn(
                     'block text-xs font-medium',
-                    liberado ? 'text-tinta' : 'text-cinza-forte',
+                    liberado ? 'text-texto' : 'text-apagado',
                   )}
                 >
                   {ciclo.id.toUpperCase()}
                 </span>
-                <Num className="mt-0.5 block text-[0.65rem] text-cinza-forte">
+                <Num className="mt-0.5 block text-[0.65rem] text-apagado">
                   {formatarBR(ciclo.data).slice(0, 5)}
                 </Num>
                 {!liberado ? (
-                  <Lock aria-hidden className="mt-1 size-3 text-cinza" strokeWidth={2.5} />
+                  <Lock aria-hidden className="mt-1 size-3 text-apagado" strokeWidth={2.5} />
                 ) : null}
               </>
             )
@@ -120,7 +120,7 @@ export function TimelineCiclos({
                 {liberado && temConteudo ? (
                   <a
                     href={`#ciclo-${ciclo.id}`}
-                    className="block rounded-sm px-1 py-0.5 hover:bg-papel-2"
+                    className="block rounded-sm px-1 py-0.5 hover:bg-superficie"
                     title={ciclo.rotulo}
                   >
                     {conteudo}

@@ -105,12 +105,12 @@ export default async function TelaMeuResultado({
                 const atual = item.cicloId === avaliacao.cicloId
                 return (
                   <li key={item.cicloId} className="grid gap-2 sm:grid-cols-[6rem_1fr_4rem] sm:items-center">
-                    <Num className={`text-sm ${atual ? 'font-semibold' : 'text-cinza-forte'}`}>
+                    <Num className={`text-sm ${atual ? 'font-semibold' : 'text-apagado'}`}>
                       {dados.cicloPorId(item.cicloId)?.competencia}
                     </Num>
-                    <div className="h-3 border border-linha bg-papel-2">
+                    <div className="h-3 border border-linha bg-superficie">
                       <div
-                        className={atual ? 'h-full bg-laranja' : 'h-full bg-cinza'}
+                        className={atual ? 'h-full bg-acento' : 'h-full bg-linha-alta'}
                         style={{ width: `${largura}%` }}
                       />
                     </div>
@@ -133,7 +133,7 @@ export default async function TelaMeuResultado({
                 Abrir contestação
               </BotaoLink>
             ) : (
-              <p className="text-sm text-cinza-forte">
+              <p className="text-sm text-apagado">
                 O fluxo de contestação entra numa etapa posterior do projeto.
               </p>
             )}

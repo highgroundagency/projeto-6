@@ -11,9 +11,9 @@ import { exigirFeature } from '@/lib/sistema'
 export const metadata: Metadata = { title: 'Contestação' }
 export const dynamic = 'force-dynamic'
 
-const TOM: Record<StatusContestacao, 'neutro' | 'laranja' | 'ok' | 'alerta'> = {
-  aberta: 'laranja',
-  em_analise: 'laranja',
+const TOM: Record<StatusContestacao, 'neutro' | 'acento' | 'ok' | 'alerta'> = {
+  aberta: 'acento',
+  em_analise: 'acento',
   respondida: 'neutro',
   acatada: 'ok',
   recusada: 'alerta',
@@ -131,14 +131,14 @@ export default async function TelaContestacao({
               placeholder="Descreva o que precisa ser revisto e por quê."
               className="mt-1 w-full border border-linha px-2 py-1.5 text-sm"
             />
-            <p className="mt-1 text-xs text-cinza-forte">Entre 20 e 1000 caracteres.</p>
+            <p className="mt-1 text-xs text-apagado">Entre 20 e 1000 caracteres.</p>
           </div>
 
           <Botao type="submit" variante="primario" disabled={!podeAbrir}>
             Abrir contestação
           </Botao>
           {!podeAbrir ? (
-            <p className="text-xs text-cinza-forte">
+            <p className="text-xs text-apagado">
               Só o gestor avaliado (ou a CAM em nome dele) abre contestação.
             </p>
           ) : null}
@@ -150,13 +150,13 @@ export default async function TelaContestacao({
         descricao={`${minhas.length} de ${todas.length} registradas no sistema.`}
       >
         {minhas.length === 0 ? (
-          <p className="text-sm text-cinza-forte">Nenhuma contestação registrada.</p>
+          <p className="text-sm text-apagado">Nenhuma contestação registrada.</p>
         ) : (
           <ul className="divide-y divide-linha border-y border-linha">
             {minhas.map((contestacao) => (
               <li key={contestacao.id} className="py-3">
                 <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-                  <Num className="text-xs text-cinza-forte">{contestacao.abertaEm.slice(0, 10)}</Num>
+                  <Num className="text-xs text-apagado">{contestacao.abertaEm.slice(0, 10)}</Num>
                   <Num className="text-xs">
                     ciclo {dados.cicloPorId(contestacao.cicloId)?.competencia}
                   </Num>
@@ -164,12 +164,12 @@ export default async function TelaContestacao({
                 </div>
                 <p className="mt-1 text-sm">{contestacao.motivo}</p>
                 {contestacao.indicadorId ? (
-                  <p className="mt-1 text-xs text-cinza-forte">
+                  <p className="mt-1 text-xs text-apagado">
                     Indicador: {dados.indicadorPorId(contestacao.indicadorId)?.nome}
                   </p>
                 ) : null}
                 {contestacao.resposta ? (
-                  <p className="mt-2 border-l-2 border-laranja bg-papel-2 px-3 py-2 text-sm">
+                  <p className="mt-2 border-l-2 border-acento bg-superficie px-3 py-2 text-sm">
                     <span className="rotulo block">Resposta da comissão</span>
                     {contestacao.resposta}
                   </p>

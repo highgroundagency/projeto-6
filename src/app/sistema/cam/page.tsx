@@ -47,7 +47,7 @@ export default async function TelaCam({
       <CabecalhoTela
         titulo="Dashboard da CAM"
         descricao="Funil de lançamento por área, pendências e avanço do estado do ciclo."
-        acao={<Etiqueta tom="laranja">{ROTULO_ESTADO[emAndamento.estado]}</Etiqueta>}
+        acao={<Etiqueta tom="acento">{ROTULO_ESTADO[emAndamento.estado]}</Etiqueta>}
       />
 
       {ok ? <div className="mt-5"><Aviso tom="ok">{decodeURIComponent(ok)}</Aviso></div> : null}
@@ -60,7 +60,7 @@ export default async function TelaCam({
         <TrilhoEstados estado={emAndamento.estado} />
 
         {!seguinte ? (
-          <p className="mt-4 border-t border-linha pt-4 text-sm text-cinza-forte">
+          <p className="mt-4 border-t border-linha pt-4 text-sm text-apagado">
             O ciclo já está publicado: não há transição seguinte.
           </p>
         ) : admin ? (
@@ -87,7 +87,7 @@ export default async function TelaCam({
               {seguinte === 'homologado' ? 'Homologar ciclo' : `Avançar para ${ROTULO_ESTADO[seguinte]}`}
             </Botao>
             {!podeAgir ? (
-              <p className="mt-2 text-xs text-cinza-forte">
+              <p className="mt-2 text-xs text-apagado">
                 Só o perfil CAM avança o estado do ciclo.
               </p>
             ) : null}
@@ -106,7 +106,7 @@ export default async function TelaCam({
               className="grid gap-2 py-2.5 sm:grid-cols-[14rem_1fr] sm:items-center sm:gap-4"
             >
               <span className="text-sm">
-                <Num className="text-xs text-cinza-forte">{linha.area.sigla}</Num>{' '}
+                <Num className="text-xs text-apagado">{linha.area.sigla}</Num>{' '}
                 {linha.area.nome}
               </span>
               <Barra valor={linha.enviados} total={linha.total} />
@@ -125,9 +125,9 @@ export default async function TelaCam({
           <ul className="space-y-1.5 text-sm">
             {pendentes.map((linha) => (
               <li key={linha.area.id} className="flex flex-wrap items-baseline gap-2">
-                <span aria-hidden className="mt-2 h-px w-3 shrink-0 bg-vinho-alerta" />
+                <span aria-hidden className="mt-2 h-px w-3 shrink-0 bg-alerta" />
                 <span className="font-medium">{linha.area.nome}</span>
-                <Num className="text-xs text-cinza-forte">
+                <Num className="text-xs text-apagado">
                   faltam {linha.total - linha.enviados} de {linha.total}
                 </Num>
               </li>
@@ -141,7 +141,7 @@ export default async function TelaCam({
           {[...todos].reverse().map((c) => (
             <li key={c.id} className="flex flex-wrap items-center justify-between gap-2 py-2">
               <Num>{c.competencia}</Num>
-              <span className="text-cinza-forte">{c.regraId}</span>
+              <span className="text-apagado">{c.regraId}</span>
               <Etiqueta tom={c.estado === 'publicado' ? 'ok' : 'neutro'}>
                 {ROTULO_ESTADO[c.estado]}
               </Etiqueta>

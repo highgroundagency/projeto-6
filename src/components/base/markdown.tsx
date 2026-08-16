@@ -10,7 +10,7 @@ function Texto({ texto }: { texto: string }) {
           {segmento.forte ? (
             <strong className="font-semibold">{segmento.texto}</strong>
           ) : segmento.mono ? (
-            <code className="numero bg-papel-2 px-1 py-0.5 text-[0.85em]">{segmento.texto}</code>
+            <code className="numero bg-superficie px-1 py-0.5 text-[0.85em]">{segmento.texto}</code>
           ) : (
             segmento.texto
           )}
@@ -48,7 +48,7 @@ export function Markdown({ nos }: { nos: NoMarkdown[] }) {
               <ul key={i} className="max-w-prose space-y-1.5 text-sm leading-relaxed">
                 {no.itens.map((item, j) => (
                   <li key={j} className="flex gap-2">
-                    <span aria-hidden className="mt-2 h-px w-3 shrink-0 bg-laranja" />
+                    <span aria-hidden className="mt-2 h-px w-3 shrink-0 bg-acento" />
                     <span>
                       <Texto texto={item} />
                     </span>

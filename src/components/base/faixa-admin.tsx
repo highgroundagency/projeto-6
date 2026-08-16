@@ -15,8 +15,10 @@ export function FaixaAdmin({ visao }: { visao: Visao }) {
 
   return (
     <div
-      className={`sem-impressao flex flex-wrap items-center justify-between gap-x-4 gap-y-1 px-4 py-1.5 text-xs sm:px-8 ${
-        completo ? 'bg-tinta text-papel' : 'bg-laranja text-tinta'
+      className={`sem-impressao flex flex-wrap items-center justify-between gap-x-4 gap-y-1 border-b px-4 py-1.5 text-xs sm:px-8 ${
+        completo
+          ? 'border-linha-alta bg-superficie text-apagado'
+          : 'border-transparent bg-acento text-ink'
       }`}
     >
       <span className="rotulo text-inherit">

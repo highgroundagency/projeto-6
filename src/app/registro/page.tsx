@@ -65,7 +65,7 @@ export default async function PaginaRegistro() {
           </h2>
 
           {emOrdemInversa.length === 0 ? (
-            <p className="mt-3 border border-dashed border-linha px-4 py-6 text-sm text-cinza-forte">
+            <p className="mt-3 border border-dashed border-linha px-4 py-6 text-sm text-apagado">
               O semestre ainda não começou. O primeiro registro é publicado em{' '}
               {cicloPorId('s1').data.split('-').reverse().join('/')}.
             </p>

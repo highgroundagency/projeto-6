@@ -28,10 +28,10 @@ export default async function CascaDoSistema() {
     <>
       <header className="border-b border-linha pb-5">
         <h1 className="fonte-display text-3xl">Gratificação por desempenho</h1>
-        <p className="mt-1 max-w-prose text-sm text-cinza-forte">
+        <p className="mt-1 max-w-prose text-sm text-apagado">
           MVP para a {CLIENTE.orgao}. Todos os dados exibidos são sintéticos.
         </p>
-        <p className="mt-3 max-w-prose border-l-2 border-laranja pl-3 text-sm">
+        <p className="mt-3 max-w-prose border-l-2 border-acento pl-3 text-sm">
           {PERGUNTA_DO_PROJETO}
         </p>
       </header>
@@ -49,7 +49,7 @@ export default async function CascaDoSistema() {
             </Link>
             .
           </p>
-          <p className="mt-3 max-w-prose text-xs text-cinza-forte">
+          <p className="mt-3 max-w-prose text-xs text-apagado">
             Esta página não lista o que ainda não existe: funcionalidade não liberada
             responde 404, e não uma prévia do que vem por aí.
           </p>
@@ -59,24 +59,24 @@ export default async function CascaDoSistema() {
           <h2 className="rotulo">
             Telas disponíveis para o perfil {PERFIS[perfil].rotulo}
           </h2>
-          <p className="mt-1 text-sm text-cinza-forte">{PERFIS[perfil].descricao}</p>
+          <p className="mt-1 text-sm text-apagado">{PERFIS[perfil].descricao}</p>
 
           <ul className="mt-3 grid gap-px border border-linha bg-linha sm:grid-cols-2">
             {liberadas.map((feature) => {
               const doPerfil = feature.perfis.includes(perfil)
               return (
-                <li key={feature.id} className="bg-white">
+                <li key={feature.id} className="bg-fundo">
                   {doPerfil ? (
-                    <Link href={feature.rota} className="block h-full p-4 hover:bg-papel-2">
+                    <Link href={feature.rota} className="block h-full p-4 hover:bg-superficie">
                       <span className="fonte-display block text-base">{feature.rotulo}</span>
-                      <span className="mt-1 block text-sm text-cinza-forte">
+                      <span className="mt-1 block text-sm text-apagado">
                         {feature.descricao}
                       </span>
                     </Link>
                   ) : (
                     <div className="h-full p-4 opacity-50">
                       <span className="fonte-display block text-base">{feature.rotulo}</span>
-                      <span className="mt-1 block text-sm text-cinza-forte">
+                      <span className="mt-1 block text-sm text-apagado">
                         Não faz parte das atribuições deste perfil.
                       </span>
                     </div>

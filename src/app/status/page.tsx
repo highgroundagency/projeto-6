@@ -38,7 +38,7 @@ export default async function PaginaStatus() {
       <header className="flex items-end justify-between gap-4 border-b border-linha pb-5">
         <div>
           <h1 className="fonte-display text-2xl">Status</h1>
-          <p className="mt-1 text-sm text-cinza-forte">Health check da aplicação.</p>
+          <p className="mt-1 text-sm text-apagado">Health check da aplicação.</p>
         </div>
         <Etiqueta tom="ok">operacional</Etiqueta>
       </header>
@@ -52,7 +52,7 @@ export default async function PaginaStatus() {
         ))}
       </dl>
 
-      <p className="mt-4 text-xs text-cinza-forte">
+      <p className="mt-4 text-xs text-apagado">
         Versão em JSON para monitoração:{' '}
         <Link href="/api/status" className="underline underline-offset-4">
           /api/status

@@ -41,7 +41,7 @@ export default async function TelaLancamento({
         descricao="A área técnica informa os valores do ciclo, com a evidência que sustenta cada número."
         acao={
           cicloAberto ? (
-            <Etiqueta tom="laranja">
+            <Etiqueta tom="acento">
               ciclo {cicloAberto.competencia} · {ROTULO_ESTADO[cicloAberto.estado]}
             </Etiqueta>
           ) : (
@@ -109,7 +109,7 @@ export default async function TelaLancamento({
 
                 <div className="flex flex-wrap items-baseline justify-between gap-2">
                   <span className="text-sm font-medium">{indicador.nome}</span>
-                  <Num className="text-xs text-cinza-forte">
+                  <Num className="text-xs text-apagado">
                     meta {indicador.meta} {indicador.unidade} ·{' '}
                     {indicador.direcao === 'maior_melhor' ? 'maior é melhor' : 'menor é melhor'} ·
                     peso {indicador.peso}
@@ -156,7 +156,7 @@ export default async function TelaLancamento({
                 </div>
 
                 {suspeito ? (
-                  <p className="mt-2 border-l-2 border-vinho-alerta bg-vinho-alerta/5 px-2 py-1.5 text-xs text-vinho-alerta">
+                  <p className="mt-2 border-l-2 border-alerta bg-alerta/5 px-2 py-1.5 text-xs text-alerta">
                     Valor muito distante da meta — confira se a vírgula está no lugar. O
                     sistema apenas sinaliza: quem decide é você.
                   </p>
@@ -167,7 +167,7 @@ export default async function TelaLancamento({
         </div>
 
         {!podeLancar && cicloAberto ? (
-          <p className="mt-3 text-xs text-cinza-forte">
+          <p className="mt-3 text-xs text-apagado">
             O perfil atual não lança indicadores. Troque para Área técnica no seletor acima.
           </p>
         ) : null}
