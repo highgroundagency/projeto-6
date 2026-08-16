@@ -9,6 +9,7 @@ import {
   ROTULO_EVIDENCIA,
   ROTULO_ORIGEM,
   type Bloco as TipoBloco,
+  type Documento,
   type RegistroSemana as TipoRegistro,
 } from '@/lib/registro/tipos'
 
@@ -29,9 +30,11 @@ function Bloco({
   children: ReactNode
 }) {
   return (
-    <div className="grid gap-1.5 border-t border-linha py-3 first:border-t-0 sm:grid-cols-[11rem_1fr] sm:gap-4">
+    <div className="grid gap-1.5 border-t border-linha py-4 first:border-t-0 sm:grid-cols-[12rem_1fr] sm:gap-6">
       <div className="flex items-start gap-2 sm:flex-col sm:gap-1.5">
-        <h4 className="rotulo pt-0.5">{rotulo}</h4>
+        {/* Maior e em branco: são as âncoras que o professor procura ao varrer
+            a semana, e em cinza pequeno elas sumiam no corpo do texto. */}
+        <h4 className="rotulo pt-0.5 text-sm text-texto">{rotulo}</h4>
         <Selo selo={bloco.selo} />
       </div>
       <div className="text-sm leading-relaxed">{children}</div>
@@ -67,10 +70,13 @@ function Itens({ itens }: { itens: readonly string[] }) {
  */
 export function RegistroSemana({
   registro,
+  documentos = [],
   detalhes,
   atual = false,
 }: {
   registro: TipoRegistro
+  /** Documentos da semana. Cada um abre numa sanfona dentro da própria página. */
+  documentos?: readonly Documento[]
   detalhes?: ReactNode
   /**
    * A semana em curso. Não abre sozinha — nenhuma abre —, mas fica marcada.
@@ -205,10 +211,45 @@ export function RegistroSemana({
         </Bloco>
       </div>
 
+      {documentos.length > 0 ? (
+        <div className="border-t border-linha bg-superficie px-4 py-5 sm:px-5">
+          <h4 className="rotulo text-sm text-texto">Documentos</h4>
+          <p className="mt-1 text-xs lowercase">
+            clique no título e o documento abre aqui mesmo. nenhum pdf, nenhuma aba nova.
+          </p>
+
+          <div className="mt-4">
+            {documentos.map((doc) => (
+              <details
+                key={doc.id}
+                id={`doc-${ciclo.id}-${doc.id}`}
+                className="group/doc scroll-mt-24 border border-linha bg-fundo [&+&]:mt-[-1px]"
+              >
+                <summary className="flex cursor-pointer list-none items-start justify-between gap-4 px-4 py-3 transition-colors hover:bg-superficie [&::-webkit-details-marker]:hidden">
+                  <span className="min-w-0">
+                    <span className="fonte-display block text-base">{doc.titulo}</span>
+                    <span className="mt-0.5 block text-xs lowercase">{doc.resumo}</span>
+                  </span>
+                  <ChevronDown
+                    aria-hidden
+                    size={18}
+                    strokeWidth={1.5}
+                    className="mt-1 shrink-0 text-acento transition-transform group-open/doc:rotate-180"
+                  />
+                </summary>
+                <div className="border-t border-linha px-4 py-5">
+                  <doc.Conteudo />
+                </div>
+              </details>
+            ))}
+          </div>
+        </div>
+      ) : null}
+
       {detalhes ? (
         <div className="border-t border-linha bg-superficie px-4 py-5 sm:px-5">
-          <h4 className="rotulo mb-3">Detalhamento</h4>
-          {detalhes}
+          <h4 className="rotulo text-sm text-texto">Detalhamento</h4>
+          <div className="mt-3">{detalhes}</div>
         </div>
       ) : null}
     </details>

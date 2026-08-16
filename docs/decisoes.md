@@ -265,3 +265,30 @@ base sintética, que são os mais fracos dos três. O bloco "memória de cálcul
 headline e o card "gestor confere"; a fórmula migrou para dentro do fluxo, onde ela pertence,
 e a segunda chamada para o sistema saiu junto. A logo da CESAR ficou só no hero. O subtítulo
 do hero foi reescrito para dizer o que o sistema **faz**, já que o problema tem bloco próprio.
+
+---
+
+## ADR-019 · Documento de entrega é TSX renderizado, não PDF anexado
+
+**Contexto.** SWOT, personas, mapa de empatia e backlog estavam escritos num bloco
+"Detalhamento" no fim de cada semana, e as evidências apontavam para `/registro#s2` — uma
+URL que deixou de existir quando o registro virou seção da raiz. Quem avaliasse teria que
+rolar um bloco longo procurando o documento certo, ou clicar num link morto.
+
+**Decisão.** Documento vira peça de primeira classe: `ModuloCiclo.documentos` é uma lista de
+`{ id, titulo, resumo, Conteudo }`, e cada um abre numa sanfona própria dentro da semana. A
+evidência correspondente aponta para a âncora `#doc-<ciclo>-<id>`.
+
+**Consequência.** O professor clica no título e lê ali — sem PDF, sem aba nova, sem download,
+sem link que expira. O documento fica versionado em TSX: um diff mostra o que mudou na SWOT
+entre duas semanas, coisa que anexo binário não dá. Dois testes novos seguram o arranjo: um
+recusa âncora sem documento correspondente, outro exige id único e resumo em cada documento.
+
+O custo é real e vale dizer: escrever documento em TSX é mais trabalhoso que exportar um PDF
+do Figma ou do Docs, e quem escreve precisa usar os primitivos de `components/conteudo.tsx`
+em vez de formatar à vontade. Em troca, o documento é conteúdo do site — pesquisável,
+responsivo, acessível e sujeito às mesmas checagens do resto.
+
+**O selo saiu junto.** Com todos os blocos validados, a pílula "validado" repetida 40 vezes
+não informava nada. O `Selo` agora só renderiza em rascunho: o carimbo existe para avisar do
+que ainda não foi revisado, e ausência de aviso é a informação.

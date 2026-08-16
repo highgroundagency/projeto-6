@@ -3,10 +3,11 @@ import { cn } from '@/lib/utils'
 import type { Selo as TipoSelo } from '@/lib/registro/tipos'
 
 /**
- * Selo de validação do bloco (rascunho × validado).
+ * Selo de validação do bloco.
  *
- * Pílula: junto com as etiquetas de estado, é a única coisa arredondada da
- * identidade. Tudo o mais tem raio zero.
+ * SÓ APARECE EM RASCUNHO. Validado é o estado normal — carimbar "validado" em
+ * tudo não informa nada e ainda enche a tela de pílula. O selo existe para
+ * avisar do que ainda NÃO foi revisado; quando não há aviso, não há selo.
  */
 export function Selo({
   selo,
@@ -15,18 +16,12 @@ export function Selo({
   selo: TipoSelo
   className?: string
 }) {
+  if (selo === 'validado') return null
+
   return (
     <span
-      className={cn(
-        'pilula',
-        selo === 'validado' ? 'border-ok/40 text-ok' : 'text-apagado',
-        className,
-      )}
-      title={
-        selo === 'validado'
-          ? 'Bloco revisado e validado pela equipe'
-          : 'Bloco em rascunho, ainda não validado pela equipe'
-      }
+      className={cn('pilula text-apagado', className)}
+      title="Bloco em rascunho, ainda não validado pela equipe"
     >
       {selo}
     </span>

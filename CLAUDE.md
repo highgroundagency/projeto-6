@@ -22,10 +22,15 @@ Site do Projeto 6 da CESAR School (2026.2, Equipe 2). Duas camadas:
    precisar de interatividade, use um componente compartilhado de `src/components/`.
 4. **Conteúdo vive no Git, não em formulário.** O painel administrativo decide *quando* o
    que já existe fica visível; ele não edita texto.
-5. **Data nunca é `Date`.** Sempre `YYYY-MM-DD` em string, comparada lexicograficamente. O
+5. **Documento de entrega é TSX, nunca PDF.** SWOT, personas, mapa de empatia, backlog —
+   tudo entra em `documentos` no arquivo do ciclo e é renderizado dentro da página. Quem
+   avalia clica no título e lê ali; não baixa arquivo, não troca de aba, não depende de link
+   que expira. Evidência que aponta para documento usa a âncora `#doc-<ciclo>-<id>`, e há
+   teste que falha se a âncora não tiver destino.
+6. **Data nunca é `Date`.** Sempre `YYYY-MM-DD` em string, comparada lexicograficamente. O
    "hoje" é injetado nas funções de regra, nunca lido dentro delas.
-6. **Motor de cálculo é função pura.** Sem I/O, sem relógio, sem aleatoriedade.
-7. **Um acento só.** `--color-acento` é o laranja da CESAR e aparece em no máximo três
+7. **Motor de cálculo é função pura.** Sem I/O, sem relógio, sem aleatoriedade.
+8. **Um acento só.** `--color-acento` é o laranja da CESAR e aparece em no máximo três
    lugares por tela: número grande, chamada sólida e pílula/ícone do fluxo. Se precisar de
    mais uma cor para diferenciar alguma coisa, use hairline e caixa alta, não cor.
 

@@ -50,7 +50,9 @@ export default async function Pagina() {
       <main id="conteudo" className="mx-auto max-w-[1100px] px-0 sm:px-8">
         {/* Hero — o único lugar da página com imagem. */}
         <section className="grao bloco border-x-0 border-t-0 pt-16 sm:pt-24">
-          <div className="flex flex-wrap items-center gap-x-5 gap-y-3">
+          {/* No mobile a marca e a pílula ficam centradas e empilhadas; da
+              largura sm para cima voltam a alinhar à esquerda com o resto. */}
+          <div className="flex flex-col items-center gap-4 text-center sm:flex-row sm:items-center sm:gap-5 sm:text-left">
             <MarcaCesar className="h-10" />
             <span className="pilula numero">
               {INSTITUICAO.curso} · {INSTITUICAO.equipe}
@@ -65,8 +67,13 @@ export default async function Pagina() {
             a regra vira dado versionado, e cada valor abre até a origem que o gerou.
           </p>
 
-          <div className="mt-9">
+          {/* Dois caminhos, um por linha: o sistema e as entregas da semana.
+              O segundo é âncora na própria página, logo abaixo. */}
+          <div className="mt-9 flex flex-col items-start gap-3">
             <Chamada href="/sistema">ver o sistema →</Chamada>
+            <Chamada href="#registro" variante="secundario">
+              ver entregas ↓
+            </Chamada>
           </div>
         </section>
 
@@ -145,6 +152,7 @@ export default async function Pagina() {
                   <RegistroSemana
                     key={id}
                     registro={modulo.registro}
+                    documentos={modulo.documentos}
                     detalhes={modulo.Detalhes ? <modulo.Detalhes /> : undefined}
                     atual={id === visao.release.cicloCorrente}
                   />

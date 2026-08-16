@@ -111,10 +111,34 @@ describe('conteúdo dos ciclos', () => {
       it('só tem link de evidência utilizável', () => {
         for (const evidencia of registro.evidencias.conteudo) {
           expect(
-            /^(https?:\/\/|\/)/.test(evidencia.url),
+            /^(https?:\/\/|\/|#doc-)/.test(evidencia.url),
             `evidência "${evidencia.rotulo}" com url inválida: ${evidencia.url}`,
           ).toBe(true)
           expect(evidencia.rotulo.trim()).not.toBe('')
+        }
+      })
+
+      it('não aponta para documento que não existe', () => {
+        // Âncora de documento é link interno: se o id mudar e a evidência não
+        // acompanhar, o professor clica e não acontece nada. O CI acusa antes.
+        const existentes = new Set((modulo.documentos ?? []).map((d) => `#doc-${id}-${d.id}`))
+        const ancoras = registro.evidencias.conteudo
+          .map((e) => e.url)
+          .filter((url) => url.startsWith('#doc-'))
+
+        for (const ancora of ancoras) {
+          expect(existentes.has(ancora), `âncora sem documento correspondente: ${ancora}`).toBe(
+            true,
+          )
+        }
+      })
+
+      it('dá id único e resumo a cada documento', () => {
+        const docs = modulo.documentos ?? []
+        expect(new Set(docs.map((d) => d.id)).size).toBe(docs.length)
+        for (const doc of docs) {
+          expect(doc.titulo.trim(), 'documento sem título').not.toBe('')
+          expect(doc.resumo.trim(), `documento "${doc.titulo}" sem resumo`).not.toBe('')
         }
       })
 

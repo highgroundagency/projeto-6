@@ -81,9 +81,30 @@ export interface RegistroSemana {
  * componentes compartilhados em `src/components/`, que existem no bundle
  * independentemente do release e portanto não revelam nada.
  */
+/**
+ * Um documento da semana — SWOT, personas, mapa de empatia, backlog.
+ *
+ * O documento vive AQUI, em TSX versionado, e é renderizado dentro da própria
+ * página. Nada de PDF: quem avalia clica no título e lê ali mesmo, sem trocar
+ * de aba, sem baixar arquivo e sem depender de link que expira.
+ *
+ * Como qualquer conteúdo de ciclo, é Server Component — a regra de ouro acima
+ * vale igual aqui.
+ */
+export interface Documento {
+  /** Único dentro do ciclo. Vira a âncora `#doc-<ciclo>-<id>`. */
+  readonly id: string
+  readonly titulo: string
+  /** Uma linha dizendo o que o documento entrega, visível com ele fechado. */
+  readonly resumo: string
+  readonly Conteudo: () => ReactNode
+}
+
 export interface ModuloCiclo {
   readonly registro: RegistroSemana
-  /** Conteúdo longo do ciclo (personas, SWOT, backlog…), opcional. */
+  /** Documentos da semana, cada um numa sanfona própria. */
+  readonly documentos?: readonly Documento[]
+  /** Conteúdo longo que não é documento fechado (roteiros, notas). */
   readonly Detalhes?: () => ReactNode
 }
 

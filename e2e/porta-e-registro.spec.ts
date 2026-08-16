@@ -106,6 +106,39 @@ test.describe('registro do projeto', () => {
     await expect(escolhida.getByRole('heading', { name: 'Objetivo da semana' })).toBeVisible()
   })
 
+  test('os documentos abrem dentro da própria página', async ({ page }) => {
+    await page.goto('/')
+
+    // Semana 2 é a que tem personas, benchmarking e SWOT.
+    await page.locator('details[data-ciclo="s2"] > summary').click()
+
+    const swot = page.locator('#doc-s2-swot')
+    await expect(swot).toBeVisible()
+    await expect(swot).not.toHaveAttribute('open', '')
+
+    await swot.locator('summary').click()
+    await expect(swot).toHaveAttribute('open', '')
+
+    // O documento é conteúdo renderizado, não link para PDF nem aba nova.
+    for (const quadrante of ['Forças', 'Fraquezas', 'Oportunidades', 'Ameaças']) {
+      await expect(swot.getByText(quadrante, { exact: true })).toBeVisible()
+    }
+  })
+
+  test('nenhuma evidência manda o professor para fora ou para lugar nenhum', async ({ page }) => {
+    await page.goto('/')
+
+    const ancoras = page.locator('a[href^="#doc-"]')
+    const quantas = await ancoras.count()
+    expect(quantas).toBeGreaterThan(0)
+
+    // Toda âncora de documento precisa ter destino na página.
+    for (let i = 0; i < quantas; i++) {
+      const href = await ancoras.nth(i).getAttribute('href')
+      await expect(page.locator(href!), `âncora sem destino: ${href}`).toHaveCount(1)
+    }
+  })
+
   test('não entrega conteúdo de ciclo ainda não liberado', async ({ page }) => {
     await page.goto('/')
     const html = await page.content()
