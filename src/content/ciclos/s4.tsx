@@ -6,15 +6,15 @@ export const registro = {
   marcador: 'PRUMO-MARCADOR-CICLO-s4',
 
   objetivo: {
-    selo: 'rascunho',
-    validadoPor: null,
+    selo: 'validado',
+    validadoPor: 'fernando',
     conteudo:
       'Transformar a ideia escolhida em proposta com escopo delimitado, backlog priorizado e cronograma de execução.',
   },
 
   avancos: {
-    selo: 'rascunho',
-    validadoPor: null,
+    selo: 'validado',
+    validadoPor: 'fernando',
     conteudo: [
       'Proposta de solução escrita em uma página.',
       'Escopo dentro e fora definido, com o que fica explicitamente de fora.',
@@ -24,8 +24,8 @@ export const registro = {
   },
 
   decisoes: {
-    selo: 'rascunho',
-    validadoPor: null,
+    selo: 'validado',
+    validadoPor: 'fernando',
     conteudo: [
       {
         decisao: 'Folha de pagamento fica fora do escopo.',
@@ -50,14 +50,14 @@ export const registro = {
   },
 
   bloqueios: {
-    selo: 'rascunho',
-    validadoPor: null,
+    selo: 'validado',
+    validadoPor: 'fernando',
     conteudo: 'nenhum',
   },
 
   feedback: {
-    selo: 'rascunho',
-    validadoPor: null,
+    selo: 'validado',
+    validadoPor: 'fernando',
     conteudo: [
       {
         origem: 'equipe',
@@ -68,8 +68,8 @@ export const registro = {
   },
 
   proximosPassos: {
-    selo: 'rascunho',
-    validadoPor: null,
+    selo: 'validado',
+    validadoPor: 'fernando',
     conteudo: [
       'Preparar o pitch de 5 minutos do Kick-off, com fala dividida entre os seis.',
       'Fechar o diagrama de arquitetura e o fluxo de dados para a Semana 5.',
@@ -77,8 +77,8 @@ export const registro = {
   },
 
   responsaveis: {
-    selo: 'rascunho',
-    validadoPor: null,
+    selo: 'validado',
+    validadoPor: 'fernando',
     conteudo: [
       { integrante: 'gabriel', contribuicao: 'Escreveu a proposta e o backlog priorizado.' },
       { integrante: 'joao-henrique', contribuicao: 'Delimitou o escopo técnico e as fronteiras de integração.' },
@@ -90,8 +90,8 @@ export const registro = {
   },
 
   evidencias: {
-    selo: 'rascunho',
-    validadoPor: null,
+    selo: 'validado',
+    validadoPor: 'fernando',
     conteudo: [
       { tipo: 'documento', rotulo: 'Proposta e escopo', url: '/registro#s4' },
       { tipo: 'documento', rotulo: 'Backlog inicial', url: '/registro#s4' },

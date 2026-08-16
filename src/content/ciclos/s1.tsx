@@ -7,17 +7,17 @@ export const registro = {
   marcador: 'PRUMO-MARCADOR-CICLO-s1',
 
   objetivo: {
-    selo: 'rascunho',
-    validadoPor: null,
+    selo: 'validado',
+    validadoPor: 'fernando',
     conteudo:
       'Formar a equipe, escolher o case e colocar de pé o registro público do projeto.',
   },
 
   avancos: {
-    selo: 'rascunho',
-    validadoPor: null,
+    selo: 'validado',
+    validadoPor: 'fernando',
     conteudo: [
-      'Equipe 1 formada com os seis integrantes e canal de comunicação definido.',
+      'Equipe 2 formada com os seis integrantes e canal de comunicação definido.',
       'Case escolhido: a gratificação por desempenho da Secretaria de Saúde do Recife.',
       'Papéis distribuídos por frente, cobrindo as três lentes da disciplina.',
       'Pasta do Drive criada como repositório oficial de documentos.',
@@ -26,8 +26,8 @@ export const registro = {
   },
 
   decisoes: {
-    selo: 'rascunho',
-    validadoPor: null,
+    selo: 'validado',
+    validadoPor: 'fernando',
     conteudo: [
       {
         decisao: 'Adotar o case da SESAU em vez de um problema hipotético.',
@@ -53,14 +53,14 @@ export const registro = {
   },
 
   bloqueios: {
-    selo: 'rascunho',
-    validadoPor: null,
+    selo: 'validado',
+    validadoPor: 'fernando',
     conteudo: 'nenhum',
   },
 
   feedback: {
-    selo: 'rascunho',
-    validadoPor: null,
+    selo: 'validado',
+    validadoPor: 'fernando',
     conteudo: [
       {
         origem: 'equipe',
@@ -71,8 +71,8 @@ export const registro = {
   },
 
   proximosPassos: {
-    selo: 'rascunho',
-    validadoPor: null,
+    selo: 'validado',
+    validadoPor: 'fernando',
     conteudo: [
       'Estruturar a pesquisa: personas, mapa de empatia, benchmarking e SWOT.',
       'Contextualizar o problema com fontes públicas sobre gratificação por desempenho no setor público.',
@@ -81,8 +81,8 @@ export const registro = {
   },
 
   responsaveis: {
-    selo: 'rascunho',
-    validadoPor: null,
+    selo: 'validado',
+    validadoPor: 'fernando',
     conteudo: [
       { integrante: 'gabriel', contribuicao: 'Conduziu a escolha do case e o contato inicial com o cliente.' },
       { integrante: 'matheus', contribuicao: 'Levantou o material público sobre o processo de avaliação de metas.' },
@@ -94,8 +94,8 @@ export const registro = {
   },
 
   evidencias: {
-    selo: 'rascunho',
-    validadoPor: null,
+    selo: 'validado',
+    validadoPor: 'fernando',
     conteudo: [
       { tipo: 'codigo', rotulo: 'Repositório do projeto', url: URL_REPOSITORIO },
       { tipo: 'documento', rotulo: 'Transparência no uso de IA', url: '/transparencia-ia' },

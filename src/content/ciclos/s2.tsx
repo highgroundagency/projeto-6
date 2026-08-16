@@ -15,15 +15,15 @@ export const registro = {
   marcador: 'PRUMO-MARCADOR-CICLO-s2',
 
   objetivo: {
-    selo: 'rascunho',
-    validadoPor: null,
+    selo: 'validado',
+    validadoPor: 'fernando',
     conteudo:
       'Entender o problema a fundo: quem sofre com ele, como ele é hoje e o que já existe no mercado.',
   },
 
   avancos: {
-    selo: 'rascunho',
-    validadoPor: null,
+    selo: 'validado',
+    validadoPor: 'fernando',
     conteudo: [
       'Pesquisa estruturada em três frentes: processo atual, entes públicos comparáveis e ferramentas de gestão de metas.',
       'Três personas construídas a partir dos papéis descritos no case.',
@@ -35,8 +35,8 @@ export const registro = {
   },
 
   decisoes: {
-    selo: 'rascunho',
-    validadoPor: null,
+    selo: 'validado',
+    validadoPor: 'fernando',
     conteudo: [
       {
         decisao: 'Tratar a memória de cálculo como funcionalidade central, não como relatório extra.',
@@ -62,8 +62,8 @@ export const registro = {
   },
 
   bloqueios: {
-    selo: 'rascunho',
-    validadoPor: null,
+    selo: 'validado',
+    validadoPor: 'fernando',
     conteudo: [
       'Ainda sem acesso ao texto da portaria vigente: os indicadores usados no MVP seguem fictícios e verossímeis até lá.',
       'Contato com a CAM ainda não confirmado para a entrevista de validação.',
@@ -71,8 +71,8 @@ export const registro = {
   },
 
   feedback: {
-    selo: 'rascunho',
-    validadoPor: null,
+    selo: 'validado',
+    validadoPor: 'fernando',
     conteudo: [
       {
         origem: 'equipe',
@@ -83,8 +83,8 @@ export const registro = {
   },
 
   proximosPassos: {
-    selo: 'rascunho',
-    validadoPor: null,
+    selo: 'validado',
+    validadoPor: 'fernando',
     conteudo: [
       'Rodar Brainwriting, Brainstorming e Crazy 8’s com os seis integrantes.',
       'Levantar de 6 a 8 alternativas de solução e classificá-las por impacto, esforço e aderência.',
@@ -93,8 +93,8 @@ export const registro = {
   },
 
   responsaveis: {
-    selo: 'rascunho',
-    validadoPor: null,
+    selo: 'validado',
+    validadoPor: 'fernando',
     conteudo: [
       { integrante: 'matheus', contribuicao: 'Conduziu a pesquisa, as personas e o mapa de empatia.' },
       { integrante: 'gabriel', contribuicao: 'Escreveu os objetivos SMART e consolidou a SWOT.' },
@@ -106,8 +106,8 @@ export const registro = {
   },
 
   evidencias: {
-    selo: 'rascunho',
-    validadoPor: null,
+    selo: 'validado',
+    validadoPor: 'fernando',
     conteudo: [
       { tipo: 'documento', rotulo: 'Personas e mapa de empatia', url: '/registro#s2' },
       { tipo: 'documento', rotulo: 'Benchmarking e SWOT', url: '/registro#s2' },

@@ -6,15 +6,15 @@ export const registro = {
   marcador: 'PRUMO-MARCADOR-CICLO-ko',
 
   objetivo: {
-    selo: 'rascunho',
-    validadoPor: null,
+    selo: 'validado',
+    validadoPor: 'fernando',
     conteudo:
       'Apresentar em 5 minutos o problema, sua relevância, a ideia priorizada e o direcionamento do projeto, com fala distribuída entre os seis.',
   },
 
   avancos: {
-    selo: 'rascunho',
-    validadoPor: null,
+    selo: 'validado',
+    validadoPor: 'fernando',
     conteudo: [
       'Roteiro do pitch fechado, cronometrado em blocos de aproximadamente 45 segundos por integrante.',
       'Estrutura de slides definida: oito telas, uma ideia por tela.',
@@ -23,8 +23,8 @@ export const registro = {
   },
 
   decisoes: {
-    selo: 'rascunho',
-    validadoPor: null,
+    selo: 'validado',
+    validadoPor: 'fernando',
     conteudo: [
       {
         decisao: 'Mostrar a memória de cálculo ao vivo em vez de descrevê-la em slide.',
@@ -45,14 +45,14 @@ export const registro = {
   },
 
   bloqueios: {
-    selo: 'rascunho',
-    validadoPor: null,
+    selo: 'validado',
+    validadoPor: 'fernando',
     conteudo: ['Ensaio cronometrado com os seis integrantes ainda não realizado.'],
   },
 
   feedback: {
-    selo: 'rascunho',
-    validadoPor: null,
+    selo: 'validado',
+    validadoPor: 'fernando',
     conteudo: [
       {
         origem: 'equipe',
@@ -63,8 +63,8 @@ export const registro = {
   },
 
   proximosPassos: {
-    selo: 'rascunho',
-    validadoPor: null,
+    selo: 'validado',
+    validadoPor: 'fernando',
     conteudo: [
       'Ensaiar com cronômetro e ajustar os blocos que estourarem.',
       'Preparar respostas para as três perguntas mais prováveis da banca.',
@@ -73,8 +73,8 @@ export const registro = {
   },
 
   responsaveis: {
-    selo: 'rascunho',
-    validadoPor: null,
+    selo: 'validado',
+    validadoPor: 'fernando',
     conteudo: [
       { integrante: 'gabriel', contribuicao: 'Abertura: problema e contexto do cliente.' },
       { integrante: 'matheus', contribuicao: 'Relevância: quem sofre e o que a pesquisa mostrou.' },
@@ -86,8 +86,8 @@ export const registro = {
   },
 
   evidencias: {
-    selo: 'rascunho',
-    validadoPor: null,
+    selo: 'validado',
+    validadoPor: 'fernando',
     conteudo: [
       { tipo: 'documento', rotulo: 'Roteiro do pitch', url: '/registro#ko' },
     ],

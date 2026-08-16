@@ -15,7 +15,7 @@ export const INSTITUICAO = {
   escola: 'CESAR School',
   curso: 'Sistemas de Informação',
   periodo: '2026.2',
-  equipe: 'Equipe 1',
+  equipe: 'Equipe 2',
 } as const
 
 export const CLIENTE = {

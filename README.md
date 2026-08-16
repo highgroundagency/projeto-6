@@ -3,7 +3,7 @@
 Registro do projeto e MVP do sistema de cálculo da **gratificação por desempenho da
 Secretaria de Saúde do Recife (SESAU)**.
 
-CESAR School · Sistemas de Informação · 2026.2 · Projeto 6 · Equipe 1
+CESAR School · Sistemas de Informação · 2026.2 · Projeto 6 · Equipe 2
 
 ---
 
@@ -40,7 +40,8 @@ npm install
 npm run dev
 ```
 
-Abre em `http://localhost:3000`. O painel administrativo fica no ponto discreto do rodapé.
+Abre em `http://localhost:3000`. O painel administrativo fica em `/admin/entrar` — nenhuma
+página do site aponta para lá, ver ADR-015.
 
 ### Variáveis de ambiente
 
@@ -66,14 +67,14 @@ end-to-end fica em `npm run e2e`.
 
 O que está coberto:
 
-- **222 testes de unidade** — aritmética de data no fuso do projeto, motor de releases,
+- **236 testes de unidade** — aritmética de data no fuso do projeto, motor de releases,
   config store, sessão do admin, completude do registro, motor de cálculo e base sintética.
 - **23 verificações do schema guardado** — políticas de RLS por perfil e invariantes de
   gatilho, aplicando as migrações reais num PostgreSQL descartável (`npm run testar-rls`).
   Puladas automaticamente sem `DATABASE_URL_TESTE`.
-- **120 verificações de vazamento** — nenhum conteúdo de release futuro no HTML, no payload
+- **90 verificações de vazamento** — nenhum conteúdo de release futuro no HTML, no payload
   RSC ou no bundle do cliente; rota não liberada responde 404.
-- **42 testes end-to-end** — jornadas críticas em desktop e em 360px.
+- **52 testes end-to-end** — jornadas críticas em desktop e em 360px.
 - **Tipagem como portão** — um ciclo publicado sem responsáveis, com lista vazia ou com
   integrante inexistente **não compila**.
 

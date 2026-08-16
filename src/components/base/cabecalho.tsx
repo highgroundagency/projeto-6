@@ -18,7 +18,7 @@ export function Cabecalho() {
     <header className="sem-impressao sticky top-0 z-50 bg-fundo/80 backdrop-blur-md">
       <div className="mx-auto flex max-w-[1100px] items-center justify-between gap-4 px-6 py-3.5 sm:px-8">
         <Link href="/" aria-label="Início">
-          <MarcaPrumo tamanho="pequeno" />
+          <MarcaPrumo tamanho="pequeno" prefixo="website do" />
         </Link>
 
         <nav aria-label="Seções" className="flex items-center gap-5 text-xs lowercase">

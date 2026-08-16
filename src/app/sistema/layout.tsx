@@ -20,11 +20,24 @@ export default async function LayoutSistema({ children }: { children: React.Reac
 
       <div className="border-b border-linha bg-fundo">
         <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-5 py-3 sm:px-8">
-          <div className="flex items-baseline gap-3">
-            <Link href="/sistema">
-              <MarcaPrumo tamanho="pequeno" />
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+            {/* Saída explícita. O sistema é uma seção com cara própria: sem um
+                caminho de volta visível, quem entra fica preso a menos que use
+                o botão do navegador. */}
+            <Link
+              href="/"
+              className="inline-flex items-center gap-2 border border-linha px-2.5 py-1 text-xs lowercase transition-colors hover:border-acento hover:text-acento"
+            >
+              <span aria-hidden>←</span>
+              voltar para o site
             </Link>
-            <span className="rotulo">Sistema</span>
+            <span aria-hidden className="text-linha-alta">
+              ·
+            </span>
+            <Link href="/sistema" className="flex items-baseline gap-3">
+              <MarcaPrumo tamanho="pequeno" />
+              <span className="rotulo">Sistema</span>
+            </Link>
           </div>
 
           {/* Login simulado (§8.1): preferência de navegação, não autenticação.

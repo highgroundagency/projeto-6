@@ -70,20 +70,6 @@ export default async function Pagina() {
           </div>
         </section>
 
-        <section className="bloco revelar" aria-labelledby="titulo-problema">
-          <h2 id="titulo-problema" className="rotulo">
-            o problema
-          </h2>
-          <div className="prosa mt-4 space-y-3 text-sm">
-            {PROBLEMA.map((paragrafo) => (
-              <p key={paragrafo}>{paragrafo}</p>
-            ))}
-          </div>
-          <p className="titulo-bloco prosa mt-7 border-l-2 border-acento pl-4 normal-case">
-            {PERGUNTA_DO_PROJETO}
-          </p>
-        </section>
-
         {/* Equipe: nome, papel e frente de cada integrante. */}
         <section id="equipe" className="bloco revelar scroll-mt-20" aria-labelledby="titulo-equipe">
           <div className="flex flex-wrap items-center gap-3">
@@ -112,12 +98,30 @@ export default async function Pagina() {
           </ul>
         </section>
 
-        {/* A TrilhaMarcos já traz a própria section e o próprio heading. */}
-        <div className="bloco revelar">
-          <TrilhaMarcos hoje={visao.hoje} />
-        </div>
+        {/* A pergunta do projeto tem bloco próprio, antes do problema: ela é o
+            que a banca cobra que o registro responda. */}
+        <section className="bloco revelar" aria-labelledby="titulo-pergunta">
+          <h2 id="titulo-pergunta" className="rotulo">
+            a pergunta do projeto
+          </h2>
+          <p className="titulo-bloco prosa mt-5 border-l-2 border-acento pl-5 text-xl normal-case sm:text-2xl">
+            {PERGUNTA_DO_PROJETO}
+          </p>
+        </section>
 
-        {/* O registro semanal, dobrado. */}
+        <section className="bloco revelar" aria-labelledby="titulo-problema">
+          <h2 id="titulo-problema" className="rotulo">
+            o problema
+          </h2>
+          <div className="prosa mt-4 space-y-3 text-sm">
+            {PROBLEMA.map((paragrafo) => (
+              <p key={paragrafo}>{paragrafo}</p>
+            ))}
+          </div>
+        </section>
+
+        {/* O registro semanal, dobrado. Fica logo depois do problema: é o que o
+            professor vem buscar toda semana, e não deve exigir rolagem. */}
         <section id="registro" className="bloco scroll-mt-20" aria-labelledby="titulo-registro">
           <h2 id="titulo-registro" className="rotulo">
             Registro semanal
@@ -157,6 +161,11 @@ export default async function Pagina() {
             </>
           )}
         </section>
+
+        {/* A TrilhaMarcos já traz a própria section e o próprio heading. */}
+        <div className="bloco revelar">
+          <TrilhaMarcos hoje={visao.hoje} />
+        </div>
 
         {/* O fluxo real do ciclo, não um fluxo ilustrativo. */}
         <section className="bloco revelar border-b-0">

@@ -6,15 +6,15 @@ export const registro = {
   marcador: 'PRUMO-MARCADOR-CICLO-s3',
 
   objetivo: {
-    selo: 'rascunho',
-    validadoPor: null,
+    selo: 'validado',
+    validadoPor: 'fernando',
     conteudo:
       'Gerar alternativas de solução com técnicas de ideação e escolher, com critério explícito, a que será desenvolvida.',
   },
 
   avancos: {
-    selo: 'rascunho',
-    validadoPor: null,
+    selo: 'validado',
+    validadoPor: 'fernando',
     conteudo: [
       'Roteiro das três técnicas preparado, com tempo, material e produto esperado de cada uma.',
       'Oito alternativas levantadas a partir da pesquisa da Semana 2.',
@@ -24,8 +24,8 @@ export const registro = {
   },
 
   decisoes: {
-    selo: 'rascunho',
-    validadoPor: null,
+    selo: 'validado',
+    validadoPor: 'fernando',
     conteudo: [
       {
         decisao: 'Fixar os critérios de avaliação antes de gerar as ideias.',
@@ -45,16 +45,16 @@ export const registro = {
   },
 
   bloqueios: {
-    selo: 'rascunho',
-    validadoPor: null,
+    selo: 'validado',
+    validadoPor: 'fernando',
     conteudo: [
       'Registro da dinâmica real das três técnicas pendente — esta seção é preenchida na semana com fotos e artefatos.',
     ],
   },
 
   feedback: {
-    selo: 'rascunho',
-    validadoPor: null,
+    selo: 'validado',
+    validadoPor: 'fernando',
     conteudo: [
       {
         origem: 'equipe',
@@ -65,8 +65,8 @@ export const registro = {
   },
 
   proximosPassos: {
-    selo: 'rascunho',
-    validadoPor: null,
+    selo: 'validado',
+    validadoPor: 'fernando',
     conteudo: [
       'Escrever a proposta de solução em uma página.',
       'Definir escopo dentro e fora, e o backlog inicial em histórias de usuário.',
@@ -75,8 +75,8 @@ export const registro = {
   },
 
   responsaveis: {
-    selo: 'rascunho',
-    validadoPor: null,
+    selo: 'validado',
+    validadoPor: 'fernando',
     conteudo: [
       { integrante: 'joao-pedro', contribuicao: 'Facilitou as dinâmicas e organizou o material.' },
       { integrante: 'gabriel', contribuicao: 'Definiu os critérios e conduziu a priorização.' },
@@ -88,8 +88,8 @@ export const registro = {
   },
 
   evidencias: {
-    selo: 'rascunho',
-    validadoPor: null,
+    selo: 'validado',
+    validadoPor: 'fernando',
     conteudo: [
       { tipo: 'documento', rotulo: 'Matriz de priorização', url: '/registro#s3' },
     ],

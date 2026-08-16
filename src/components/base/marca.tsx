@@ -9,13 +9,28 @@ import { INSTITUICAO, PRODUTO } from '@/content/produto'
  */
 export function MarcaPrumo({
   tamanho = 'medio',
+  prefixo,
   className,
 }: {
   tamanho?: 'pequeno' | 'medio' | 'grande'
+  /** Texto antes do nome, em cinza. No cabeçalho: "website do". */
+  prefixo?: string
   className?: string
 }) {
   return (
     <span className={cn('fonte-display inline-flex items-baseline', className)}>
+      {prefixo ? (
+        <span
+          className={cn(
+            'mr-1.5 text-apagado',
+            tamanho === 'grande' && 'text-2xl sm:text-3xl',
+            tamanho === 'medio' && 'text-base',
+            tamanho === 'pequeno' && 'text-sm',
+          )}
+        >
+          {prefixo}
+        </span>
+      ) : null}
       <span
         className={cn(
           tamanho === 'grande' && 'text-4xl sm:text-5xl',

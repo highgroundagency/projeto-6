@@ -1,10 +1,10 @@
 /**
- * Equipe 1 — CESAR School, Sistemas de Informação, 2026.2.
+ * Equipe 2 — CESAR School, Sistemas de Informação, 2026.2.
  *
- * Os papéis abaixo são uma PROPOSTA (selo `rascunho`): cobrem as três lentes
- * da disciplina (Projeto, Machine Learning e Direito Digital) e as frentes
- * reais do produto. A equipe ajusta este arquivo e troca o selo para
- * `validado` — é o único lugar que precisa mudar.
+ * Os papéis abaixo cobrem as três lentes da disciplina (Projeto, Machine
+ * Learning e Direito Digital) e as frentes reais do produto. A equipe confirmou
+ * a distribuição, então `SELO_PAPEIS` é `validado` — este é o único lugar que
+ * precisa mudar se ela for revista.
  */
 
 export interface Integrante {
@@ -63,7 +63,7 @@ export const EQUIPE = [
 export type IntegranteId = (typeof EQUIPE)[number]['id']
 
 /** Selo dos papéis: vira 'validado' quando a equipe confirmar a distribuição. */
-export const SELO_PAPEIS = 'rascunho' as const
+export const SELO_PAPEIS = 'validado' as const
 
 export function integrantePorId(id: IntegranteId): Integrante {
   const integrante = EQUIPE.find((i) => i.id === id)

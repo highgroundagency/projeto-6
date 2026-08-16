@@ -4,7 +4,7 @@ Contexto para qualquer pessoa (ou agente) que for mexer neste repositório.
 
 ## O que é
 
-Site do Projeto 6 da CESAR School (2026.2, Equipe 1). Duas camadas:
+Site do Projeto 6 da CESAR School (2026.2, Equipe 2). Duas camadas:
 
 - **`/`** — a página. Problema, equipe, marcos e o diário de bordo semanal, cada semana numa
   sanfona `<details>`. É o artefato avaliado pelo professor e substitui o Google Site.
