@@ -14,7 +14,9 @@
     "semear": "tsx scripts/semear.ts",
     "testar-rls": "vitest run src/lib/supabase/rls.test.ts src/lib/dados/semeadura.test.ts",
     "verificar-vazamento": "tsx scripts/verificar-vazamento.ts",
-    "verificar": "npm run typecheck && npm run test && npm run build && npm run verificar-vazamento"
+    "dossie": "tsx --tsconfig scripts/tsconfig.dossie.json scripts/dossie.ts",
+    "conferir-dossie": "tsx --tsconfig scripts/tsconfig.dossie.json scripts/dossie.ts --conferir",
+    "verificar": "npm run typecheck && npm run test && npm run build && npm run verificar-vazamento && npm run conferir-dossie"
   },
   "dependencies": {
     "@radix-ui/react-accordion": "^1.2.20",

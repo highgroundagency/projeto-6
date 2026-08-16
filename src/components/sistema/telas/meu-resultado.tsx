@@ -27,6 +27,7 @@ export async function TelaMeuResultado({ ctx }: PropsTela) {
   return (
     <>
       <Painel
+        alvo="res-seletor"
         titulo="Gestor avaliado"
         descricao="Seletor simulado enquanto o login real não entra (F3)."
       >
@@ -90,15 +91,19 @@ export async function TelaMeuResultado({ ctx }: PropsTela) {
         </div>
       ) : (
         <>
-          <div className="mt-6">
+          <div id="alvo-res-score" className="mt-6">
             <CartaoScore avaliacao={avaliacao} />
           </div>
 
-          <div className="mt-4">
+          <div id="alvo-res-memoria" className="mt-4">
             <MemoriaDeCalculo avaliacao={avaliacao} />
           </div>
 
-          <Painel titulo="Evolução entre ciclos" descricao="Score por competência.">
+          <Painel
+            alvo="res-evolucao"
+            titulo="Evolução entre ciclos"
+            descricao="Score por competência."
+          >
             <ul className="space-y-2">
               {historico.map((item) => {
                 const largura = melhor > 0 ? (item.score / melhor) * 100 : 0
@@ -125,6 +130,7 @@ export async function TelaMeuResultado({ ctx }: PropsTela) {
           </Painel>
 
           <Painel
+            alvo="res-contestar"
             titulo="Discorda do resultado?"
             descricao="A contestação fica registrada, com resposta da comissão."
           >

@@ -452,3 +452,72 @@ tela fora do perfil aparece no HTML de `/sistema`.
 O custo é que uma requisição renderiza as oito telas, abertas ou não. Para um MVP com base
 sintética em memória isso não pesa; com banco de verdade, cada tela precisaria carregar sob
 demanda.
+
+---
+
+## ADR-024 · O tutorial passou a conduzir, e o seletor de perfil ganhou o primeiro JavaScript
+
+**Contexto.** O tutorial por papel da ADR-023 era uma lista numerada dentro de uma sanfona.
+Ensinava e não conduzia: a pessoa lia os nove passos e depois se virava sozinha, procurando na
+tela o botão que o texto descrevia. Quem usou pediu um tutorial que "leve a pessoa pelo
+sistema mesmo, conduzindo e mostrando os botões".
+
+Na mesma conversa veio outra queixa, menor e mais óbvia: trocar o papel no seletor exigia um
+segundo clique num botão "Trocar". Escolher um papel numa lista já é a ação; pedir confirmação
+para uma troca que não destrói nada é cerimônia sem função.
+
+**Decisão.** `?passo=N` põe `/sistema` em modo tutorial. Sai o sumário, saem os papéis, saem as
+outras sete telas. Fica a tela do passo, montada e aberta, com o elemento exato de que o texto
+fala contornado em laranja e etiquetado, e uma barra grudada no rodapé com progresso, o que
+fazer, o porquê dobrado e os botões de anterior, próximo e sair.
+
+O destaque é um `<style>` injetado que casa com `#alvo-<nome>`. As telas não sabem que existe
+tutorial: elas só declaram `alvo="cam-funil"` num `Painel`, que vira `id="alvo-cam-funil"`. O
+mesmo `id` serve de âncora, então o navegador para exatamente no elemento contornado. Um
+atributo, dois usos, nenhum nome duplicado, e um teste que falha se um passo apontar para alvo
+que não existe.
+
+**Tudo no servidor.** Cada passo tem URL própria, o botão "voltar" do navegador funciona, e dá
+para mandar "olha o passo 4" por mensagem. Um passeio em overlay faria mais efeito e
+dependeria de medir posições no cliente, que é frágil justamente no celular.
+
+**O seletor de perfil virou o primeiro componente cliente do projeto.** `onChange` envia o
+formulário; sem JavaScript, um `<noscript>` devolve o botão. É a primeira exceção à ADR-006, e
+ela é pequena de propósito: nada do sistema depende desse JavaScript para funcionar, é só
+conforto.
+
+**Consequência.** A barra do guia é `sticky bottom-0`, não `fixed`. Com `fixed` era preciso
+adivinhar um `padding-bottom` que compensasse a altura dela, e a altura muda com o texto e com
+a tela: no celular a primeira versão comeu dois terços da janela. Grudada, ela flutua enquanto
+se rola e entra no fluxo no fim da página, sem tapar nada.
+
+---
+
+## ADR-025 · A terceira lente era Nuvem, e o projeto estava chamando de Direito
+
+**Contexto.** Uma auditoria do repositório contra os dois PDFs da disciplina encontrou uma
+divergência que ninguém tinha visto. A Matriz Integrada nomeia as disciplinas-alvo no próprio
+título: **Segurança da Informação, Aprendizado de Máquina e Arquitetura Nativa na Nuvem**. O
+texto dos critérios pede infraestrutura em oito das treze semanas, com as palavras
+"componentes de infraestrutura", "integração entre componentes" e "infraestrutura de
+execução".
+
+O projeto vinha se descrevendo como cobrindo "Projeto, Machine Learning e Direito Digital". A
+palavra "Direito" não aparece na matriz; "LGPD" também não.
+
+**Decisão.** Entra a lente que faltava, sem tirar a que sobrava. `docs/nuvem.md` e dois
+documentos no registro, na Semana 5 (onde cada componente executa, pipeline ponta a ponta,
+doze fatores) e na Semana 12 (trade-offs, escala e o que falta para virar produção). A lente
+de Direito continua: um sistema que decide remuneração cai no art. 20 da LGPD, e a análise de
+privacidade sustenta metade dos critérios de Segurança da Informação.
+
+**Consequência.** A auditoria virou dado versionado em `src/content/auditoria.ts`: cada
+exigência do professor com o texto literal, o estado e o caminho no repositório onde ela está
+atendida. Vinte e três requisitos rastreados, dezoito atendidos, quatro parciais e um fora de
+escopo declarado. O dossiê renderiza essa tabela, então a auditoria envelhece junto com o
+código em vez de virar uma conversa perdida.
+
+**A ressalva mais importante ficou escrita na própria lente:** nenhuma métrica de produção foi
+medida. Os números de escala em `docs/nuvem.md` são raciocínio de capacidade, não benchmark, e
+dizer o contrário seria inventar evidência, que é exatamente o que este projeto passou o
+semestre inteiro recusando.

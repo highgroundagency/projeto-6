@@ -1,0 +1,7 @@
+{
+  "//": "O dossiê roda os componentes TSX fora do Next, com react-dom/server. O tsconfig da raiz usa `jsx: preserve`, que o Next transforma no build; aqui quem transpila é o esbuild do tsx, e ele precisa do runtime automático para não procurar um `React` global que ninguém importou.",
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "jsx": "react-jsx"
+  }
+}

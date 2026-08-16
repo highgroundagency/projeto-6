@@ -3,6 +3,7 @@ import { Num } from '@/components/base/num'
 import { Etiqueta } from '@/components/base/selo'
 import { ORDEM_ESTADOS, ROTULO_ESTADO, type EstadoCiclo } from '@/lib/calculo/tipos'
 import {
+  idDoAlvo,
   PARAMETROS_EFEMEROS,
   PARAMETROS_SISTEMA,
   type ParametroSistema,
@@ -11,9 +12,12 @@ import {
 import { cn } from '@/lib/utils'
 
 /** Etiqueta de estado, botão de exportar: a linha de ações no topo de uma tela. */
-export function AcoesDaTela({ children }: { children: ReactNode }) {
+export function AcoesDaTela({ children, alvo }: { children: ReactNode; alvo?: string }) {
   return (
-    <div className="mb-5 flex flex-wrap items-center gap-3 border-b border-linha pb-4">
+    <div
+      id={alvo ? idDoAlvo(alvo) : undefined}
+      className="mb-5 flex flex-wrap items-center gap-3 border-b border-linha pb-4"
+    >
       {children}
     </div>
   )
@@ -53,14 +57,25 @@ export function Painel({
   descricao,
   children,
   className,
+  alvo,
 }: {
   titulo: string
   descricao?: string
   children: ReactNode
   className?: string
+  /**
+   * Nome estável para o tutorial guiado apontar.
+   *
+   * É o que permite um passo do tutorial contornar ESTE painel sem que a tela
+   * precise saber que existe tutorial. Ver `src/components/sistema/tour.tsx`.
+   */
+  alvo?: string
 }) {
   return (
-    <section className={cn('mt-6 border border-linha bg-fundo first:mt-0', className)}>
+    <section
+      id={alvo ? idDoAlvo(alvo) : undefined}
+      className={cn('mt-6 border border-linha bg-fundo first:mt-0', className)}
+    >
       <header className="border-b border-linha px-4 py-3">
         <h2 className="fonte-display text-lg">{titulo}</h2>
         {descricao ? <p className="mt-0.5 text-sm text-apagado">{descricao}</p> : null}

@@ -109,9 +109,8 @@ test.describe('gate das funcionalidades', () => {
     // verdade, não ficar apagadas — ver `exigirPerfil` em src/lib/sistema.ts.
     await entrarNoPainel(page)
     await page.goto('/sistema')
+    // Escolher já troca: não existe mais botão de confirmar (ADR-024).
     await page.getByLabel('Estou usando como').selectOption('area_tecnica')
-    await page.getByRole('button', { name: 'Trocar', exact: true }).click()
-
     await expect(page.getByRole('link', { name: 'Lançamento' })).toBeVisible()
     for (const rotulo of ['Auditoria', 'Analytics', 'Painel da gestão']) {
       await expect(page.getByRole('link', { name: rotulo })).toHaveCount(0)
@@ -211,13 +210,51 @@ test.describe('o sistema, visto pelo admin', () => {
     await expect(page.getByRole('navigation', { name: 'Telas do sistema' })).toBeInViewport()
   })
 
-  test('o tutorial muda quando o perfil muda', async ({ page }) => {
+  test('trocar o papel na lista já troca o personagem, sem botão', async ({ page }) => {
     await page.goto('/sistema')
-    await expect(page.getByText('Tutorial: usando o sistema como CAM')).toBeVisible()
+    await expect(page.getByText('Tutorial guiado para CAM')).toBeVisible()
 
     await page.getByLabel('Estou usando como').selectOption('gestor')
-    await page.getByRole('button', { name: 'Trocar', exact: true }).click()
-    await expect(page.getByText('Tutorial: usando o sistema como Gestor avaliado')).toBeVisible()
+    await expect(page.getByText('Tutorial guiado para Gestor avaliado')).toBeVisible()
+    // E o tutorial encolhe junto: o gestor tem menos telas que a CAM.
+    await expect(page.getByText(/4 passos/)).toBeVisible()
+  })
+
+  /**
+   * O tutorial guiado (ADR-024).
+   *
+   * O que se mede aqui é o que a versão anterior não fazia: conduzir. Uma tela
+   * só no palco, o elemento certo contornado, e o passo seguinte a um clique.
+   */
+  test('o tutorial guiado abre uma tela por vez e marca o alvo do passo', async ({ page }) => {
+    await page.goto('/sistema')
+    await page.getByRole('link', { name: /começar o tutorial/ }).click()
+
+    await expect(page).toHaveURL(/passo=1/)
+    // Passo 01 da CAM é o catálogo de indicadores.
+    await expect(page.locator('#alvo-ind-catalogo')).toBeVisible()
+    await expect(page.getByText('confira a régua antes de abrir o ciclo')).toBeVisible()
+    // Uma tela só: o sumário e as outras sanfonas saem de cena.
+    await expect(page.locator('#tela-auditoria')).toHaveCount(0)
+    await expect(page.getByRole('navigation', { name: 'Telas do sistema' })).toHaveCount(0)
+
+    await page.getByRole('link', { name: /^próximo/ }).click()
+    await expect(page).toHaveURL(/passo=2#alvo-cam-funil$/)
+    await expect(page.locator('#alvo-cam-funil')).toBeInViewport()
+  })
+
+  test('sair do tutorial devolve o sistema inteiro', async ({ page }) => {
+    await page.goto('/sistema?passo=3')
+    await page.getByRole('link', { name: /sair/ }).click()
+
+    await expect(page).not.toHaveURL(/passo=/)
+    await expect(page.getByRole('navigation', { name: 'Telas do sistema' })).toBeVisible()
+  })
+
+  test('passo fora da faixa cai no último em vez de quebrar', async ({ page }) => {
+    await page.goto('/sistema?passo=999')
+    // A CAM tem 9 passos; o 999 digitado à mão vira o 09, não um 404.
+    await expect(page.getByText(/passo 09 de 09/)).toBeVisible()
   })
 
   test('a memória de cálculo explica de onde veio cada número', async ({ page }) => {

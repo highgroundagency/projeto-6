@@ -51,7 +51,11 @@ export async function TelaLancamento({ ctx }: PropsTela) {
         </div>
       ) : null}
 
-      <Painel titulo="Área" descricao="Cada área informa apenas os próprios indicadores.">
+      <Painel
+        alvo="lanc-area"
+        titulo="Área"
+        descricao="Cada área informa apenas os próprios indicadores."
+      >
         <form
           method="get"
           action={`/sistema${ancoraDaTela('lancamento')}`}
@@ -94,6 +98,7 @@ export async function TelaLancamento({ ctx }: PropsTela) {
       ) : null}
 
       <Painel
+        alvo="lanc-formularios"
         titulo={`Indicadores de ${area.nome}`}
         descricao="Valores já enviados aparecem preenchidos. Corrigir cria uma nova versão na trilha; o valor anterior não some."
       >

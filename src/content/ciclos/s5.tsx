@@ -1,4 +1,4 @@
-import { Lista, Tabela } from '@/components/conteudo'
+import { Lista, Nota, Secao, Tabela } from '@/components/conteudo'
 import { URL_REPOSITORIO } from '@/content/produto'
 import type { Documento, RegistroSemana } from '@/lib/registro/tipos'
 
@@ -91,12 +91,157 @@ export const registro = {
     conteudo: [
       { tipo: 'documento', rotulo: 'Arquitetura do MVP', url: '#doc-s5-arquitetura' },
       { tipo: 'documento', rotulo: 'Modelo de dados', url: '#doc-s5-modelo' },
+      {
+        tipo: 'documento',
+        rotulo: 'Nuvem: arquitetura nativa e fluxo de dados',
+        url: '#doc-s5-nuvem',
+      },
       { tipo: 'codigo', rotulo: 'Motor de cálculo no repositório', url: URL_REPOSITORIO },
     ],
   },
 } satisfies RegistroSemana
 
 export const documentos = [
+  {
+    id: 'nuvem',
+    titulo: 'Nuvem: arquitetura nativa e fluxo de dados',
+    resumo:
+      'onde cada componente roda, como eles se integram, e as decisões que a nuvem impôs ao produto.',
+    Conteudo: () => (
+      <>
+        <Secao
+          titulo="Onde cada componente executa"
+          descricao="A matriz pede componentes de infraestrutura e integração entre eles. Estes são os do MVP, e nenhum deles é servidor que a equipe administre."
+        >
+          <Tabela
+            colunas={['Componente', 'Onde roda', 'Por que ali']}
+            linhas={[
+              [
+                'Páginas e telas',
+                'Função serverless na Vercel, por requisição',
+                'O recorte de release depende do dia e da sessão, então não há como pré-renderizar: `force-dynamic` é consequência da regra, não preguiça',
+              ],
+              [
+                'Porta do painel',
+                'Middleware na borda, antes da função',
+                'Barrar antes de acordar a função é mais barato e mais seguro: quem não tem sessão nunca chega ao código do painel',
+              ],
+              [
+                'Assets e fontes',
+                'CDN, com hash imutável no nome do arquivo',
+                'Chunk com hash pode ter cache eterno, e a invalidação vira consequência do build',
+              ],
+              [
+                'Modelos de ML',
+                'Fora da nuvem: treinam offline e viram JSON versionado',
+                'Carregar scikit-learn por requisição custaria segundos de partida a frio para exibir número que só muda entre deploys (ADR-022)',
+              ],
+              [
+                'Dados do protótipo',
+                'Memória do processo, com semente fixa',
+                'Sem banco, `git clone && npm run dev` sobe sem credencial nenhuma. O schema de verdade está escrito e desligado (ADR-011)',
+              ],
+              [
+                'Persistência prevista',
+                'Postgres gerenciado, com RLS no banco',
+                'Autorização que mora no banco vale para qualquer caminho de escrita, inclusive um que ainda não existe',
+              ],
+            ]}
+          />
+        </Secao>
+
+        <Secao
+          titulo="O fluxo de dados, ponta a ponta"
+          descricao="O caminho de um número, do teclado da área técnica até a folha do gestor."
+        >
+          <Lista
+            itens={[
+              'A área técnica envia valor e evidência num POST comum de formulário; zod valida na entrada e recusa com motivo.',
+              'A camada de dados grava o lançamento e ESCREVE UM EVENTO na trilha, no mesmo passo. Não há caminho que grave sem registrar.',
+              'A CAM fecha a janela; o estado do ciclo avança um passo, e a transição também vira evento.',
+              'O motor puro recebe lançamentos, indicadores e a versão da regra vigente na competência, e devolve score, faixa e memória de cálculo.',
+              'A tela exibe a memória que saiu do mesmo cálculo, nunca uma recontagem paralela.',
+              'O painel da gestão agrega e exporta em CSV; a auditoria lê a trilha, e escreve nada.',
+            ]}
+          />
+          <Nota>
+            O pipeline é síncrono de propósito. Fila e processamento em lote resolveriam volume
+            que este caso não tem: são dezenas de indicadores por competência mensal, não
+            milhões de eventos por minuto. Escolher a arquitetura pelo volume que se sonha ter é
+            como comprar caminhão para carregar feira.
+          </Nota>
+        </Secao>
+
+        <Secao
+          titulo="O que a nuvem decidiu no produto"
+          descricao="Restrição de infraestrutura que virou decisão de desenho, não observação de rodapé."
+        >
+          <Tabela
+            colunas={['Restrição da nuvem', 'O que mudou no produto']}
+            linhas={[
+              [
+                'Função sem estado, e várias instâncias ao mesmo tempo',
+                'O contador do rate limit vive na memória de uma instância: é best-effort, e está declarado como tal em vez de fingir garantia',
+              ],
+              [
+                'Partida a frio cobra por dependência pesada',
+                'O treino de ML saiu do runtime; a tela lê um JSON com semente, commit e data do treino',
+              ],
+              [
+                'Sistema de arquivos efêmero',
+                'Config vai para env var e para o Git, nunca para arquivo gravado em execução',
+              ],
+              [
+                'Segredo não pode morar no repositório',
+                'A senha do painel e o segredo do cookie só existem em variável de ambiente; sem elas, o painel simplesmente não existe (responde 404)',
+              ],
+              [
+                'Deploy é um push',
+                'A vitrine foi versionada em código para abrir por commit, sem alguém abrir painel de provedor e colar valor à mão (ADR-021)',
+              ],
+            ]}
+          />
+        </Secao>
+
+        <Secao titulo="Doze fatores, conferidos">
+          <Tabela
+            colunas={['Fator', 'Como está aqui']}
+            linhas={[
+              [
+                'Base de código',
+                'Um repositório, muitos deploys: produção e prévia por branch',
+              ],
+              ['Dependências', 'Declaradas em package.json com lockfile; nada instalado à mão'],
+              ['Configuração', 'Em variáveis de ambiente, com `.env.example` versionado'],
+              ['Serviços de apoio', 'Banco tratado como recurso plugável: driver trocável'],
+              [
+                'Build, release, run',
+                'Separados: `next build` congela o artefato, o deploy o publica',
+              ],
+              [
+                'Processos',
+                'Sem estado; o que precisa durar vai para cookie assinado ou para o Git',
+              ],
+              [
+                'Concorrência',
+                'Escala horizontal por instância de função, sem sessão pegajosa',
+              ],
+              ['Descartabilidade', 'Partida rápida e desligamento sem ritual'],
+              [
+                'Paridade dev/prod',
+                'O mesmo build de produção é o que a verificação de vazamento sobe',
+              ],
+              ['Logs', 'Fluxo de eventos na saída padrão, coletado pela plataforma'],
+              [
+                'Processos administrativos',
+                'Semeadura e verificação como scripts do repositório',
+              ],
+            ]}
+          />
+        </Secao>
+      </>
+    ),
+  },
   {
     id: 'arquitetura',
     titulo: 'Arquitetura do MVP',

@@ -103,6 +103,7 @@ export async function TelaIndicadores() {
       </div>
 
       <Painel
+        alvo="ind-catalogo"
         titulo="Catálogo de indicadores"
         descricao={`${dados.indicadores.length} indicadores em ${dados.areas.length} áreas.`}
       >
@@ -156,6 +157,7 @@ export async function TelaIndicadores() {
       </Painel>
 
       <Painel
+        alvo="ind-regras"
         titulo="Regras de pontuação versionadas"
         descricao="Alterar uma regra cria uma nova versão. A vigente nunca é editada, sem isso, um ciclo homologado deixaria de reproduzir o próprio resultado."
       >
@@ -184,6 +186,7 @@ export async function TelaIndicadores() {
 
       {v1 && v2 ? (
         <Painel
+          alvo="ind-diff"
           titulo={`Diff: v${v1.versao} → v${v2.versao}`}
           descricao="O que exatamente mudou entre as versões da regra."
         >

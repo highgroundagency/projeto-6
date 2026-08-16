@@ -133,5 +133,6 @@ execução.
 ## Onde ler mais
 
 `docs/releases.md` explica como operar o que o professor vê. `docs/decisoes.md` guarda os
-porquês. `docs/seguranca.md` e `docs/privacidade.md` cobrem as análises exigidas pela
-disciplina.
+porquês. `docs/seguranca.md`, `docs/nuvem.md` e `docs/privacidade.md` cobrem as três lentes técnicas
+exigidas pela matriz (Segurança da Informação, Arquitetura Nativa na Nuvem e Aprendizado de
+Máquina, esta última em `ml/`), mais a de Direito que a equipe acrescentou.

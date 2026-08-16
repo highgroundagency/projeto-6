@@ -1,8 +1,10 @@
 /**
  * Equipe 2 — CESAR School, Sistemas de Informação, 2026.2.
  *
- * Os papéis abaixo cobrem as três lentes da disciplina (Projeto, Machine
- * Learning e Direito Digital) e as frentes reais do produto. A equipe confirmou
+ * Os papéis abaixo cobrem as disciplinas-alvo que a matriz nomeia (Segurança da
+ * Informação, Aprendizado de Máquina e Arquitetura Nativa na Nuvem), mais a
+ * lente de Direito, que a equipe acrescentou porque um sistema que decide
+ * remuneração cai no art. 20 da LGPD. A equipe confirmou
  * a distribuição, então `SELO_PAPEIS` é `validado` — este é o único lugar que
  * precisa mudar se ela for revista.
  */

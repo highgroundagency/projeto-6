@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { MarcaCesar } from '@/components/base/marca'
 import { INSTITUICAO } from '@/content/produto'
 import { cn } from '@/lib/utils'
 
@@ -19,9 +20,15 @@ export function Rodape({ className }: { className?: string }) {
         className,
       )}
     >
-      {/* A logo da CESAR fica no hero. Repetir a mesma imagem no rodapé da
-          mesma página era só barulho — aqui basta a linha institucional. */}
+      {/* A logo assina o rodapé de TODA página, não só o hero da inicial. Quem
+          chega direto no /sistema por link nunca passou pela home, e a marca da
+          instituição é o que diz de onde aquilo vem. Fica pequena e em linha,
+          para assinar sem competir com o conteúdo. */}
       <div className="flex flex-wrap items-center gap-x-3 gap-y-2 lowercase">
+        <MarcaCesar className="h-6" />
+        <span aria-hidden className="text-linha-alta">
+          ·
+        </span>
         <span>
           {INSTITUICAO.escola} · {INSTITUICAO.curso}
         </span>

@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import { MarcaCesar } from '@/components/base/marca'
 import { Num } from '@/components/base/num'
 import { Aviso } from '@/components/sistema/base'
 import { ICONE_DA_TELA } from '@/components/sistema/icones'
@@ -14,8 +15,8 @@ import { TelaIndicadores } from '@/components/sistema/telas/indicadores'
 import { TelaLancamento } from '@/components/sistema/telas/lancamento'
 import { TelaMeuResultado } from '@/components/sistema/telas/meu-resultado'
 import type { ContextoTela } from '@/components/sistema/telas/tipos'
+import { PalcoDoTutorial, passosDoTutorial } from '@/components/sistema/tour'
 import { Tutorial } from '@/components/sistema/tutorial'
-import { CLIENTE } from '@/content/produto'
 import { cicloPorId } from '@/lib/cronograma'
 import { formatarBR } from '@/lib/datas'
 import { PERFIS, type Feature, type FeatureId } from '@/lib/features'
@@ -125,25 +126,74 @@ export default async function SistemaCompleto({
     gestorId: identidade.gestorId,
   }
 
+  /** O corpo de cada tela, sem a casca. Serve à página e ao palco do tutorial. */
+  function corpoDaTela(id: FeatureId): React.ReactNode {
+    switch (id) {
+      case 'painel-cam':
+        return <TelaCam ctx={ctx} />
+      case 'indicadores':
+        return <TelaIndicadores />
+      case 'lancamento':
+        return <TelaLancamento ctx={ctx} />
+      case 'meu-resultado':
+        return <TelaMeuResultado ctx={ctx} />
+      case 'auditoria':
+        return <TelaAuditoria ctx={ctx} />
+      case 'painel-gestao':
+        return <TelaGestao ctx={ctx} />
+      case 'analytics':
+        return <TelaAnalytics />
+      case 'contestacao':
+        return <TelaContestacao ctx={ctx} />
+    }
+  }
+
   /** Monta a tela só se ela sobreviveu aos dois gates. */
-  function montar(id: FeatureId, corpo: (feature: Feature) => React.ReactNode) {
+  function montar(id: FeatureId) {
     const feature = doPerfil.find((f) => f.id === id)
     if (!feature) return null
     return (
       <Tela key={id} feature={feature} aberta={params.abrir === id}>
-        {corpo(feature)}
+        {corpoDaTela(id)}
       </Tela>
+    )
+  }
+
+  /**
+   * MODO TUTORIAL.
+   *
+   * `?passo=N` troca a página inteira: uma tela só no palco, o alvo do passo
+   * contornado e a barra do guia no rodapé. Sai antes de qualquer outra coisa
+   * ser montada, porque o ponto do passeio é justamente não ter distração.
+   *
+   * O passo é clampado em vez de devolver 404: `?passo=99` digitado à mão leva
+   * ao último passo, não a uma página de erro no meio de um tutorial.
+   */
+  const passos = passosDoTutorial(identidade.perfil, ctx.disponiveis)
+  const passoPedido = Number(params.passo)
+  if (params.passo && passos.length > 0 && Number.isFinite(passoPedido)) {
+    const indice = Math.min(Math.max(Math.trunc(passoPedido), 1), passos.length)
+    const passo = passos[indice - 1]
+
+    return (
+      <PalcoDoTutorial
+        perfil={identidade.perfil}
+        passos={passos}
+        indice={indice}
+        params={params}
+      >
+        {passo.tela ? corpoDaTela(passo.tela) : null}
+      </PalcoDoTutorial>
     )
   }
 
   return (
     <>
-      <header className="border-b border-linha pb-5">
+      <header className="flex flex-wrap items-center justify-between gap-4 border-b border-linha pb-5">
         <h1 className="fonte-display text-2xl sm:text-3xl">Gratificação por desempenho</h1>
-        <p className="mt-1.5 max-w-prose text-sm text-apagado">
-          MVP para a {CLIENTE.orgao}. Nenhum dado desta tela é real: a base é sintética, gerada
-          com semente fixa.
-        </p>
+        {/* A logo da instituição fecha o cabeçalho do MVP: quem abre esta tela
+            numa banca precisa saber de onde ela vem sem voltar para a home. */}
+        <MarcaCesar className="h-7 shrink-0" />
       </header>
 
       {liberadas.length === 0 ? (
@@ -206,30 +256,14 @@ export default async function SistemaCompleto({
                 </p>
 
                 <div className="mt-4">
-                  {montar('painel-cam', () => (
-                    <TelaCam ctx={ctx} />
-                  ))}
-                  {montar('indicadores', () => (
-                    <TelaIndicadores />
-                  ))}
-                  {montar('lancamento', () => (
-                    <TelaLancamento ctx={ctx} />
-                  ))}
-                  {montar('meu-resultado', () => (
-                    <TelaMeuResultado ctx={ctx} />
-                  ))}
-                  {montar('auditoria', () => (
-                    <TelaAuditoria ctx={ctx} />
-                  ))}
-                  {montar('painel-gestao', () => (
-                    <TelaGestao ctx={ctx} />
-                  ))}
-                  {montar('analytics', () => (
-                    <TelaAnalytics />
-                  ))}
-                  {montar('contestacao', () => (
-                    <TelaContestacao ctx={ctx} />
-                  ))}
+                  {montar('painel-cam')}
+                  {montar('indicadores')}
+                  {montar('lancamento')}
+                  {montar('meu-resultado')}
+                  {montar('auditoria')}
+                  {montar('painel-gestao')}
+                  {montar('analytics')}
+                  {montar('contestacao')}
                 </div>
               </section>
             )}

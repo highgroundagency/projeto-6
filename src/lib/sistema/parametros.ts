@@ -16,6 +16,12 @@ import type { FeatureId } from '@/lib/features'
 export const PARAMETROS_SISTEMA = [
   /** Qual sanfona abre. Vem do redirecionamento das rotas antigas e das APIs. */
   'abrir',
+  /**
+   * O passo do tutorial guiado, 1-based. Presente = o sistema entra em modo
+   * tutorial: uma tela só na página, o alvo do passo contornado, e a barra do
+   * guia no rodapé. Ausente = sistema normal.
+   */
+  'passo',
   /** De qual tela veio a mensagem: sem isso, a faixa apareceria em todas. */
   'de',
   'ok',
@@ -43,9 +49,58 @@ export type ParametrosSistema = Partial<Record<ParametroSistema, string>>
  */
 export const PARAMETROS_EFEMEROS: readonly ParametroSistema[] = ['abrir', 'de', 'ok', 'erro']
 
+/**
+ * `passo` NÃO é efêmero de propósito.
+ *
+ * Quem está no tutorial guiado e envia um formulário do passo (trocar de área,
+ * filtrar a auditoria, marcar o anônimo) precisa continuar no tutorial. Se ele
+ * fosse descartado como `abrir`, cada interação jogaria a pessoa para fora do
+ * passeio justamente quando ela fez o que o passo mandou.
+ */
+export function linkDoPasso(
+  params: ParametrosSistema,
+  passo: number,
+  /** Onde parar a rolagem. Por padrão o topo do palco; o passo passa o alvo. */
+  ancora = '#palco',
+): string {
+  const busca = new URLSearchParams()
+  for (const chave of PARAMETROS_SISTEMA) {
+    if (PARAMETROS_EFEMEROS.includes(chave) || chave === 'passo') continue
+    const valor = params[chave]
+    if (valor) busca.set(chave, valor)
+  }
+  busca.set('passo', String(passo))
+  return `/sistema?${busca.toString()}${ancora}`
+}
+
+/** Sai do tutorial guiado e volta ao sistema, sem carregar estado de passo. */
+export function linkDeSaida(params: ParametrosSistema, abrir?: FeatureId): string {
+  const busca = new URLSearchParams()
+  for (const chave of PARAMETROS_SISTEMA) {
+    if (PARAMETROS_EFEMEROS.includes(chave) || chave === 'passo') continue
+    const valor = params[chave]
+    if (valor) busca.set(chave, valor)
+  }
+  if (abrir) busca.set('abrir', abrir)
+  const consulta = busca.toString()
+  return `/sistema${consulta ? `?${consulta}` : ''}${abrir ? ancoraDaTela(abrir) : ''}`
+}
+
 /** O id do elemento `<details>` de uma tela, e o alvo de toda âncora que leva a ela. */
 export function idDaTela(feature: FeatureId): string {
   return `tela-${feature}`
+}
+
+/**
+ * O id de um elemento que o tutorial guiado sabe apontar.
+ *
+ * Um `id` só, servindo a dois propósitos: o navegador rola até ele pela âncora,
+ * e o CSS injetado pelo passo o contorna pelo mesmo seletor. Um `data-alvo`
+ * separado seria um segundo nome para a mesma coisa, e dois nomes saem de
+ * sincronia.
+ */
+export function idDoAlvo(alvo: string): string {
+  return `alvo-${alvo}`
 }
 
 export function ancoraDaTela(feature: FeatureId): string {
@@ -68,7 +123,8 @@ export function ancoraDaTela(feature: FeatureId): string {
 export function linkDaTela(params: ParametrosSistema, feature: FeatureId): string {
   const busca = new URLSearchParams()
   for (const chave of PARAMETROS_SISTEMA) {
-    if (PARAMETROS_EFEMEROS.includes(chave)) continue
+    // `passo` também sai: ir para uma tela pelo sumário é sair do tutorial.
+    if (PARAMETROS_EFEMEROS.includes(chave) || chave === 'passo') continue
     const valor = params[chave]
     if (valor) busca.set(chave, valor)
   }

@@ -31,7 +31,7 @@ export async function TelaGestao({ ctx }: PropsTela) {
 
   return (
     <>
-      <AcoesDaTela>
+      <AcoesDaTela alvo="gest-exportar">
         <Etiqueta tom="acento">competência {ciclo.competencia}</Etiqueta>
         {/* Âncora comum, não `next/link`: o CSV é um download, e o roteador do
             Next não tem o que fazer com uma resposta que não é uma página. */}
@@ -43,7 +43,7 @@ export async function TelaGestao({ ctx }: PropsTela) {
         </a>
       </AcoesDaTela>
 
-      <Painel titulo="Ciclo">
+      <Painel alvo="gest-ciclo" titulo="Ciclo">
         <form
           method="get"
           action={`/sistema${ancoraDaTela('painel-gestao')}`}
@@ -87,7 +87,7 @@ export async function TelaGestao({ ctx }: PropsTela) {
         </form>
       </Painel>
 
-      <section className="mt-6 grid gap-3 sm:grid-cols-3">
+      <section id="alvo-gest-numeros" className="mt-6 grid gap-3 sm:grid-cols-3">
         {[
           { rotulo: 'Score médio', valor: media.toFixed(2) },
           { rotulo: 'Gestores avaliados', valor: String(avaliacoes.length) },
@@ -101,6 +101,7 @@ export async function TelaGestao({ ctx }: PropsTela) {
       </section>
 
       <Painel
+        alvo="gest-ranking"
         titulo="Ranking por área"
         descricao={
           anonimizado

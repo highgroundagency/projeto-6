@@ -54,6 +54,7 @@ export async function TelaCam({ ctx }: PropsTela) {
       ) : null}
 
       <Painel
+        alvo="cam-estado"
         titulo={`Ciclo ${emAndamento.competencia}`}
         descricao={`Regra em uso: ${emAndamento.regraId}. Janela de lançamento até ${emAndamento.janelaLancamentoFim.slice(0, 10)}.`}
       >
@@ -102,6 +103,7 @@ export async function TelaCam({ ctx }: PropsTela) {
       </Painel>
 
       <Painel
+        alvo="cam-funil"
         titulo="Funil de lançamento por área"
         descricao="Quantos indicadores cada área já informou no ciclo em andamento."
       >
@@ -121,6 +123,7 @@ export async function TelaCam({ ctx }: PropsTela) {
       </Painel>
 
       <Painel
+        alvo="cam-pendencias"
         titulo="Pendências"
         descricao="Áreas que ainda não fecharam o lançamento do ciclo."
       >

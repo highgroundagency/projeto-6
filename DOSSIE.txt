@@ -1,0 +1,2500 @@
+============================================================================================
+PRUMO: DOSSIÊ COMPLETO DO PROJETO
+Gratificação por desempenho da SESAU Recife
+============================================================================================
+
+CESAR School, Sistemas de Informação, 2026.2, Equipe 2. Cliente do caso: Secretaria de
+Saúde do Recife (SESAU), Comissão de Avaliação de Metas (CAM).
+
+Este arquivo é GERADO por `npm run dossie` a partir do próprio código do site. Nada aqui
+foi digitado duas vezes: o cronograma vem do cronograma, os registros semanais vêm dos
+arquivos de ciclo, e os documentos de entrega são renderizados de verdade e convertidos em
+texto. Se o site mudar e este arquivo não for regerado, `npm run verificar` acusa.
+
+  - repositório: https://github.com/highgroundagency/projeto-6
+  - versão do pacote: 0.1.0
+  - nenhum dado real de pessoa ou da SESAU aparece aqui: a base é sintética.
+
+============================================================================================
+1.  O PROJETO
+============================================================================================
+
+
+--- A pergunta -----------------------------------------------------------------------------
+
+Como tornar o cálculo da gratificação confiável, transparente, sustentável e auditável?
+
+--- O problema -----------------------------------------------------------------------------
+
+Desde 2023 a SESAU paga gratificação variável a gestores, supervisores e coordenadores com
+base em indicadores definidos em portaria.
+
+São dezenas de indicadores, várias áreas responsáveis e múltiplas regras de cálculo,
+consolidados manualmente em planilhas pela CAM.
+
+O resultado é um processo frágil: inconsistências, baixa rastreabilidade, manutenção
+difícil e dependência do conhecimento de poucas pessoas.
+
+
+--- O nome ---------------------------------------------------------------------------------
+
+Fio de prumo: o instrumento simples que diz se algo está no lugar certo. É o que falta ao
+cálculo da gratificação hoje.
+
+--- A equipe -------------------------------------------------------------------------------
+
+  - Gabriel Tenório de Lima Teixeira (gabriel): Produto e PO
+  - Matheus Lustosa (matheus): Pesquisa e validação
+  - João Henrique Micucci (joao-henrique): Arquitetura e backend
+  - João Pedro Mamede (joao-pedro): Front-end e design system
+  - Rafael Serpa (rafael): Dados e machine learning
+  - Fernando Cavalcanti (fernando): Qualidade, documentação e governança
+
+============================================================================================
+2.  CRONOGRAMA: A FONTE ÚNICA DE VERDADE DAS DATAS
+============================================================================================
+
+Toda data do site sai de `src/lib/cronograma.ts`. O cabeçalho, o motor de releases, o
+registro semanal e o checklist derivam dela, e não existe segunda lista para manter em dia.
+O release público adianta 7 dias: uma semana entra no ar antes da própria data, para que a
+página nunca esteja atrasada em relação à aula.
+
+  ID    DATA         TIPO      RÓTULO
+  ----------------------------------------------------------------------------------------
+  s1    08/08/2026   semana    Semana 1: Partida
+  s2    15/08/2026   semana    Semana 2: Imersão
+  s3    22/08/2026   semana    Semana 3: Ideação
+  s4    29/08/2026   semana    Semana 4: Proposta
+  i1    05/09/2026   pausa     Imprensado
+  ko    12/09/2026   marco     Kick-off
+  s5    19/09/2026   semana    Semana 5: Arquitetura
+  s6    26/09/2026   semana    Semana 6: Pré-SR1
+  sr1   03/10/2026   marco     SR1
+  i2    10/10/2026   pausa     Imprensado
+  s7    17/10/2026   semana    Semana 7: Sprint 1
+  s8    24/10/2026   semana    Semana 8: Sprint 2
+  i3    31/10/2026   pausa     Imprensado
+  s9    07/11/2026   semana    Semana 9: Sprint 3
+  s10   14/11/2026   semana    Semana 10: Sprint 4
+  s11   21/11/2026   semana    Semana 11: Validação
+  s12   28/11/2026   semana    Semana 12: Pré-SR2
+  sr2   05/12/2026   marco     SR2: Final
+
+  - 18 ciclos no total.
+  - 3 marcos, 3 semanas imprensadas (sem registro próprio: as entregas são acumuladas na
+    semana seguinte).
+
+============================================================================================
+3.  REGISTRO SEMANAL, SEMANA A SEMANA
+============================================================================================
+
+Oito blocos fixos por semana, sempre na mesma ordem: objetivo, avanços, decisões,
+bloqueios, feedback, próximos passos, responsáveis e evidências. O selo de cada bloco diz
+se ele foi validado e por quem. "nenhum" é resposta legítima e aparece assim: inventar
+feedback de professor ou de cliente seria fabricar evidência.
+
+--- S1 · Semana 1: Partida · 08/08/2026 ----------------------------------------------------
+
+
+  Objetivo da semana  [validado, validado por fernando]
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  Formar a equipe, escolher o case e colocar de pé o registro público do projeto.
+
+  Avanços  [validado, validado por fernando]
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  - Equipe 2 formada com os seis integrantes e canal de comunicação definido.
+  - Case escolhido: a gratificação por desempenho da Secretaria de Saúde do Recife.
+  - Papéis distribuídos por frente, cobrindo as três lentes da disciplina.
+  - Pasta do Drive criada como repositório oficial de documentos.
+  - Registro do projeto publicado como site próprio, no lugar do Google Site.
+
+  Decisões  [validado, validado por fernando]
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  - Adotar o case da SESAU em vez de um problema hipotético.
+      por quê: Há cliente real, dor documentada desde 2023 e chance de validar com quem
+      opera o processo.
+  - Registrar o projeto em site próprio, versionado em Git.
+      por quê: O professor dispensou o Google Site, e o registro vira também evidência
+      técnica da disciplina.
+  - Nenhum dado real de pessoa ou da SESAU entra no repositório.
+      por quê: O MVP roda com dados sintéticos: elimina risco de LGPD antes que ele exista.
+  - Chamar o produto de Prumo.
+      por quê: O fio de prumo diz se algo está alinhado, é exatamente o que falta ao
+      cálculo hoje.
+
+  Bloqueios  [validado, validado por fernando]
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  - nenhum registro nesta semana.
+
+  Feedback recebido  [validado, validado por fernando]
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  - (equipe) O case só se sustenta se conseguirmos acesso à portaria e a alguém da CAM.
+    Combinado tentar o contato já na Semana 2.
+
+  Próximos passos  [validado, validado por fernando]
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  - Estruturar a pesquisa: personas, mapa de empatia, benchmarking e SWOT.
+  - Contextualizar o problema com fontes públicas sobre gratificação por desempenho no
+    setor público.
+  - Escrever objetivos SMART e o cronograma inicial.
+
+  Responsáveis  [validado, validado por fernando]
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  - Gabriel Tenório de Lima Teixeira: Conduziu a escolha do case e o contato inicial com o
+    cliente.
+  - Matheus Lustosa: Levantou o material público sobre o processo de avaliação de metas.
+  - João Henrique Micucci: Definiu a stack e abriu o repositório.
+  - João Pedro Mamede: Propôs a identidade visual e o nome do produto.
+  - Rafael Serpa: Mapeou onde o módulo de ML entra no problema.
+  - Fernando Cavalcanti: Montou a estrutura de documentação e o registro de uso de IA.
+
+  Evidências  [validado, validado por fernando]
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  - [codigo] Repositório do projeto -> https://github.com/highgroundagency/projeto-6
+  - [documento] Transparência no uso de IA -> /transparencia-ia
+
+  Documentos de entrega desta semana (2)
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  >>> POR QUE ESTE CASE
+      âncora no site: #doc-s1-escolha-do-case
+      os critérios que levaram a escolher a sesau.
+
+      - Cliente real e acessível: a Secretaria opera o processo hoje e sente a dor todo ciclo.
+       - Problema com regra explícita: existe portaria, existem indicadores, existe cálculo, dá para modelar de verdade.
+       - Espaço para as três lentes: sistema (Projeto), previsão e perfis (ML) e tratamento de dados de servidores (Direito).
+
+  >>> O QUE JÁ SABEMOS DO PROBLEMA
+      âncora no site: #doc-s1-o-que-sabemos
+      o que a portaria e o enunciado deixam claro.
+
+      A consolidação da gratificação é feita à mão, em planilhas, por uma comissão pequena. Uma tentativa anterior de automatizar foi abandonada por falta de recursos. O conhecimento do processo está concentrado em poucas pessoas.
+      Descrição do case, registrada na Semana 1
+
+--- S2 · Semana 2: Imersão · 15/08/2026 ----------------------------------------------------
+
+
+  Objetivo da semana  [validado, validado por fernando]
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  Entender o problema a fundo: quem sofre com ele, como ele é hoje e o que já existe no
+  mercado.
+
+  Avanços  [validado, validado por fernando]
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  - Pesquisa estruturada em três frentes: processo atual, entes públicos comparáveis e
+    ferramentas de gestão de metas.
+  - Três personas construídas a partir dos papéis descritos no case.
+  - Mapa de empatia da analista da CAM, que é quem opera a planilha hoje.
+  - Benchmarking com entes públicos e duas ferramentas de OKR, separando o que serve do que
+    não serve para órgão público.
+  - SWOT do projeto e objetivos SMART escritos.
+  - Cronograma inicial fechado nos 18 ciclos do semestre.
+
+  Decisões  [validado, validado por fernando]
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  - Tratar a memória de cálculo como funcionalidade central, não como relatório extra.
+      por quê: É o que responde "de onde veio este número?", a pergunta que a planilha não
+      responde.
+  - Indicadores e regras serão parametrizáveis pela interface, não escritos em código.
+      por quê: A portaria muda; se a regra virar código, cada mudança de portaria vira
+      release de software.
+  - Versionar regra de pontuação em vez de editá-la.
+      por quê: Um ciclo já homologado precisa continuar reproduzindo o mesmo resultado para
+      sempre.
+  - Escolher a analista da CAM como persona primária.
+      por quê: É quem carrega o processo hoje; se a solução não servir para ela, não serve
+      para ninguém.
+
+  Bloqueios  [validado, validado por fernando]
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  - Ainda sem acesso ao texto da portaria vigente: os indicadores usados no MVP seguem
+    fictícios e verossímeis até lá.
+  - Contato com a CAM ainda não confirmado para a entrevista de validação.
+
+  Feedback recebido  [validado, validado por fernando]
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  - (equipe) O benchmarking mostrou que ferramenta de OKR resolve acompanhamento, não
+    cálculo normativo com efeito financeiro. Isso reforça construir em vez de adotar.
+
+  Próximos passos  [validado, validado por fernando]
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  - Rodar Brainwriting, Brainstorming e Crazy 8’s com os seis integrantes.
+  - Levantar de 6 a 8 alternativas de solução e classificá-las por impacto, esforço e
+    aderência.
+  - Escolher a ideia a desenvolver e registrar a justificativa.
+
+  Responsáveis  [validado, validado por fernando]
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  - Matheus Lustosa: Conduziu a pesquisa, as personas e o mapa de empatia.
+  - Gabriel Tenório de Lima Teixeira: Escreveu os objetivos SMART e consolidou a SWOT.
+  - Fernando Cavalcanti: Fez o benchmarking e o recorte de LGPD do problema.
+  - João Henrique Micucci: Modelou o processo atual como fluxo, do lançamento à
+    homologação.
+  - João Pedro Mamede: Traduziu as personas em necessidades de interface.
+  - Rafael Serpa: Mapeou quais perguntas do problema são respondíveis por modelo.
+
+  Evidências  [validado, validado por fernando]
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  - [documento] Personas e mapa de empatia -> #doc-s2-personas
+  - [documento] Benchmarking -> #doc-s2-benchmarking
+  - [documento] Análise SWOT -> #doc-s2-swot
+
+  Documentos de entrega desta semana (5)
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  >>> O PROCESSO HOJE
+      âncora no site: #doc-s2-processo-hoje
+      como a gratificação é calculada antes do prumo existir.
+
+      Etapa | Quem faz | Como é hoje | Onde quebra
+
+       Coleta | Áreas técnicas | Cada área envia seus números por planilha ou e-mail | Formato livre, sem validação na origem
+       Consolidação | CAM | Cópia manual para uma planilha mestre | Erro de digitação e de fórmula passa despercebido
+       Cálculo | CAM | Fórmulas encadeadas na própria planilha | Regra da portaria fica implícita na célula
+       Conferência | CAM | Revisão por leitura, sem trilha | Não há como refazer o caminho de um número
+       Divulgação | CAM | Resultado enviado ao gestor avaliado | Contestação vira troca de e-mails
+
+  >>> PERSONAS E MAPA DE EMPATIA
+      âncora no site: #doc-s2-personas
+      três personagens fictícios e o mapa da analista que carrega o processo.
+
+      Personas
+      Personagens fictícios construídos a partir dos papéis descritos no case. Nenhum dado real de pessoa foi usado.
+
+      Analista da CAM
+      PrimáriaOpera a planilha mestre há três ciclos. Conhece as regras de cor e é procurada sempre que alguém contesta um resultado.
+      Precisa: fechar o ciclo sem medo de ter errado uma fórmula.
+      Teme: descobrir um erro depois do pagamento.
+
+      Gestor de área técnica
+      SecundáriaResponde por informar de 4 a 8 indicadores da própria área, sempre em cima do prazo, entre outras dez prioridades.
+      Precisa: saber exatamente o que informar e até quando.
+      Teme: ser cobrado por um dado que ele já enviou.
+
+      Coordenadora avaliada
+      SecundáriaRecebe a gratificação variável e vê apenas o resultado final, sem o caminho que levou até ele.
+      Precisa: entender por que o valor foi aquele.
+      Teme: ser avaliada por dado que ela não pôde conferir.
+
+      Mapa de empatia: analista da CAM
+      A pessoa que carrega o processo hoje.
+      Diz“Se mexer numa fórmula, tenho que conferir a planilha inteira de novo.”
+      PensaQue a responsabilidade por um erro vai recair sobre ela, mesmo quando o dado veio errado da origem.
+      FazConfere linha a linha, mantém cópias de segurança por versão e guarda e-mails como comprovação.
+      SenteInsegurança no fechamento e alívio quando o ciclo passa sem contestação.
+      DoresRetrabalho a cada mudança de regra, ausência de trilha e dependência de estar presente para o processo andar.
+      GanhosFechar o ciclo com o cálculo explicado sozinho e conseguir tirar férias sem travar a comissão.
+
+  >>> BENCHMARKING
+      âncora no site: #doc-s2-benchmarking
+      o que as referências resolvem e o que não serve para este caso.
+
+      Referência | O que serve | O que não serve
+
+       Painéis de indicadores de entes públicos | Transparência ativa, indicador com ficha técnica e série histórica | São vitrines de divulgação: não calculam efeito financeiro nem guardam trilha de decisão
+       Sistemas de monitoramento de metas do SUS | Indicador com fonte, periodicidade e meta pactuada, vocabulário que a SESAU já usa | Regra de cálculo fixa no sistema; nossa portaria muda e precisa ser parametrizável
+       Ferramenta de OKR (acompanhamento de objetivos) | Cadência de check-in, responsável por resultado e visualização de progresso | Não versiona regra normativa nem produz memória de cálculo auditável
+       Ferramenta de OKR (gestão por resultados corporativa) | Peso por objetivo e agregação de score, modelo matemático parecido com o nosso | Score é gerencial, não é ato administrativo com efeito em folha; e a licença por usuário não cabe no órgão
+       Planilha atual da CAM | Flexibilidade total e custo zero de adoção | Sem trilha, sem versionamento, sem controle de acesso e com o conhecimento preso em quem a escreveu
+
+      Conclusão do benchmarking: nenhuma ferramenta pronta cobre a combinação “regra normativa versionada + memória de cálculo + trilha de auditoria”. Ela é o núcleo do problema: e é por isso que a decisão foi construir.
+
+  >>> ANÁLISE SWOT
+      âncora no site: #doc-s2-swot
+      forças, fraquezas, oportunidades e ameaças do projeto.
+
+      Forças
+
+       - Cliente real, com processo documentado em portaria
+       - Equipe de seis com frentes bem separadas
+       - Problema com regra explícita: dá para modelar e testar
+
+      Fraquezas
+
+       - Sem acesso à portaria vigente no início do projeto
+       - Nenhum integrante conhece o processo por dentro
+       - Janela de um semestre para um domínio com regra complexa
+
+      Oportunidades
+
+       - Uma tentativa anterior de automatizar foi abandonada: há demanda represada
+       - Transparência do cálculo é ganho direto para o gestor avaliado
+       - Dados de indicadores viabilizam a lente de ML no mesmo case
+
+      Ameaças
+
+       - Agenda da CAM pode inviabilizar a validação com o cliente
+       - Mudança de portaria durante o semestre
+       - Escopo crescer para folha de pagamento, que está fora do projeto
+
+  >>> OBJETIVOS SMART
+      âncora no site: #doc-s2-objetivos
+      cinco metas com prazo e critério de verificação.
+
+      - Entregar, até o SR1 (03/10), um protótipo navegável com as telas de lançamento, cálculo e memória de cálculo, validado internamente pelos seis integrantes.
+       - Ter o motor de cálculo coberto por testes automatizados nos casos-limite (faixas de fronteira, arredondamento, indicador sem lançamento e troca de versão de regra) até a Semana 6.
+       - Demonstrar, até a Semana 9, o ciclo completo de lançamento a homologação com trilha de auditoria imutável, usando exclusivamente dados sintéticos.
+       - Coletar, na Semana 11, feedback estruturado de pelo menos um integrante da CAM por entrevista semiestruturada e questionário, e registrar os ajustes decorrentes.
+       - Chegar ao SR2 (05/12) com documentação técnica, análise de segurança e de privacidade publicadas junto ao MVP.
+
+--- S3 · Semana 3: Ideação · 22/08/2026 ----------------------------------------------------
+
+
+  Objetivo da semana  [validado, validado por fernando]
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  Gerar alternativas de solução com técnicas de ideação e escolher, com critério explícito,
+  a que será desenvolvida.
+
+  Avanços  [validado, validado por fernando]
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  - Roteiro das três técnicas preparado, com tempo, material e produto esperado de cada
+    uma.
+  - Oito alternativas levantadas a partir da pesquisa da Semana 2.
+  - Matriz de impacto × esforço × aderência montada para comparar as alternativas.
+  - Critérios de decisão acordados antes da votação, para evitar escolha por preferência
+    pessoal.
+
+  Decisões  [validado, validado por fernando]
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  - Fixar os critérios de avaliação antes de gerar as ideias.
+      por quê: Critério definido depois tende a justificar a ideia de quem fala mais alto.
+  - Aderência ao órgão público entra como critério com peso próprio.
+      por quê: Solução tecnicamente boa que não sobrevive a pregão, portaria ou
+      rotatividade de equipe não serve.
+  - Ideia escolhida: sistema com regra parametrizável e memória de cálculo auditável.
+      por quê: Ataca a causa (regra implícita na planilha) e não o sintoma (planilha
+      bonita), e cabe no semestre.
+
+  Bloqueios  [validado, validado por fernando]
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  - Registro da dinâmica real das três técnicas pendente, esta seção é preenchida na semana
+    com fotos e artefatos.
+
+  Feedback recebido  [validado, validado por fernando]
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  - (equipe) A alternativa de “só melhorar a planilha” foi mantida na matriz de propósito:
+    serve de linha de base para comparar ganho real.
+
+  Próximos passos  [validado, validado por fernando]
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  - Escrever a proposta de solução em uma página.
+  - Definir escopo dentro e fora, e o backlog inicial em histórias de usuário.
+  - Fechar o cronograma de execução até o SR1.
+
+  Responsáveis  [validado, validado por fernando]
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  - João Pedro Mamede: Facilitou as dinâmicas e organizou o material.
+  - Gabriel Tenório de Lima Teixeira: Definiu os critérios e conduziu a priorização.
+  - Matheus Lustosa: Trouxe as dores da pesquisa como insumo das ideias.
+  - João Henrique Micucci: Estimou esforço técnico de cada alternativa.
+  - Rafael Serpa: Avaliou quais alternativas geram dado aproveitável por modelo.
+  - Fernando Cavalcanti: Registrou a dinâmica e consolidou a justificativa da escolha.
+
+  Evidências  [validado, validado por fernando]
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  - [documento] Matriz de priorização -> /registro#s3
+
+  Documentos de entrega desta semana (3)
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  >>> ROTEIRO DAS TRÊS TÉCNICAS
+      âncora no site: #doc-s3-tecnicas-ideacao
+      brainwriting, brainstorming e crazy 8’s, com tempo e produto de cada.
+
+      Brainwriting
+      20 minCada integrante escreve três ideias em silêncio, sem discutir, e passa a folha adiante. Quem recebe amplia a ideia do colega em vez de criticá-la.
+      Produto: 18 ideias escritas, sem viés de quem fala primeiro.
+
+      Brainstorming
+      25 minDiscussão aberta a partir das folhas do brainwriting, agrupando ideias parecidas e nomeando os grupos.
+      Produto: de 6 a 8 alternativas distintas, já agrupadas.
+
+      Crazy 8’s
+      8 minOito esboços de tela em oito minutos, individualmente, para as duas alternativas mais votadas.
+      Produto: primeiras telas em papel, insumo do protótipo.
+
+  >>> ALTERNATIVAS LEVANTADAS
+      âncora no site: #doc-s3-alternativas
+      as oito ideias e a matriz de impacto × esforço × aderência.
+
+      Alternativa | Impacto | Esforço | Aderência | Situação
+
+       Planilha padronizada com validação e trava de fórmula | 2 | 1 | 4 | Linha de base
+       Formulário de coleta + planilha de consolidação | 2 | 2 | 4 | Descartada
+       Sistema web com regra parametrizável e memória de cálculo | 5 | 4 | 5 | Escolhida
+       Painel de indicadores sem cálculo de gratificação | 2 | 3 | 3 | Descartada
+       Robô que lê as planilhas e consolida sozinho | 3 | 4 | 2 | Descartada
+       Módulo dentro de um ERP público existente | 4 | 5 | 2 | Descartada
+       Aplicativo mobile para o gestor avaliado | 2 | 3 | 2 | Adiada
+       Modelo preditivo de risco de não-atingimento | 3 | 3 | 4 | Incorporada
+
+  >>> JUSTIFICATIVA DA ESCOLHA
+      âncora no site: #doc-s3-justificativa
+      por que a alternativa escolhida venceu as outras.
+
+      - Impacto: ataca a causa do problema, a regra da portaria hoje só existe dentro de fórmulas de planilha.
+       - Aderência: parametrizar indicadores e regras pela interface permite que mudança de portaria não vire mudança de software.
+       - Esforço: alto, mas fatiável: lançamento, cálculo e memória cabem até o SR1; auditoria e gestão vêm nas sprints.
+       - Sinergia: o modelo preditivo não virou produto separado; entrou como funcionalidade da mesma base de dados.
+      A alternativa “melhorar a planilha” continua na matriz de propósito: ela é a régua contra a qual o ganho do sistema é medido na validação da Semana 11.
+
+--- S4 · Semana 4: Proposta · 29/08/2026 ---------------------------------------------------
+
+
+  Objetivo da semana  [validado, validado por fernando]
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  Transformar a ideia escolhida em proposta com escopo delimitado, backlog priorizado e
+  cronograma de execução.
+
+  Avanços  [validado, validado por fernando]
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  - Proposta de solução escrita em uma página.
+  - Escopo dentro e fora definido, com o que fica explicitamente de fora.
+  - Backlog inicial em épicos e histórias de usuário, classificado por MoSCoW.
+  - Papéis confirmados e cronograma de execução amarrado aos marcos do semestre.
+
+  Decisões  [validado, validado por fernando]
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  - Folha de pagamento fica fora do escopo.
+      por quê: O sistema calcula e publica o resultado; integrar com folha exige acesso e
+      homologação que o semestre não comporta.
+  - Quatro perfis de acesso desde o protótipo: CAM, área técnica, gestor avaliado e
+    auditoria.
+      por quê: O controle de acesso é parte do problema de confiabilidade, não um enfeite
+      para depois.
+  - Auditoria é append-only: nada se apaga.
+      por quê: Trilha que pode ser editada não serve de prova, e é isso que a planilha já
+      não oferece.
+  - Priorização por MoSCoW com o corte do SR1 nos "Must".
+      por quê: Deixa explícito o que é entrega mínima e o que é desejável.
+
+  Bloqueios  [validado, validado por fernando]
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  - nenhum registro nesta semana.
+
+  Feedback recebido  [validado, validado por fernando]
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  - (equipe) O backlog nasceu grande demais para um semestre. O corte foi feito na revisão:
+    25 histórias, com os "Must" cabendo até o SR1.
+
+  Próximos passos  [validado, validado por fernando]
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  - Preparar o pitch de 5 minutos do Kick-off, com fala dividida entre os seis.
+  - Fechar o diagrama de arquitetura e o fluxo de dados para a Semana 5.
+
+  Responsáveis  [validado, validado por fernando]
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  - Gabriel Tenório de Lima Teixeira: Escreveu a proposta e o backlog priorizado.
+  - João Henrique Micucci: Delimitou o escopo técnico e as fronteiras de integração.
+  - João Pedro Mamede: Converteu as histórias em fluxo de telas.
+  - Matheus Lustosa: Amarrou cada história a uma dor levantada na pesquisa.
+  - Rafael Serpa: Especificou as histórias da frente de dados e ML.
+  - Fernando Cavalcanti: Revisou o escopo sob a ótica de segurança e privacidade.
+
+  Evidências  [validado, validado por fernando]
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  - [documento] Proposta e escopo -> /registro#s4
+  - [documento] Backlog inicial -> /registro#s4
+
+  Documentos de entrega desta semana (3)
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  >>> PROPOSTA EM UMA PÁGINA
+      âncora no site: #doc-s4-proposta
+      o produto, o recorte e a aposta central.
+
+      - O quê: um sistema web que substitui a planilha de consolidação da gratificação por desempenho.
+       - Para quem: CAM, áreas técnicas que informam dados, gestores avaliados e auditoria.
+       - Como: indicadores e regras cadastrados pela interface; regra versionada; cálculo por função pura; memória de cálculo exibida junto de cada resultado; trilha de auditoria imutável.
+       - Por que agora: o processo depende de poucas pessoas e não tem rastreabilidade, um erro só aparece depois do pagamento.
+       - Como saberemos que deu certo: qualquer número do resultado responde “de onde veio?” em um clique, e o mesmo ciclo recalculado devolve o mesmo valor.
+
+  >>> ESCOPO
+      âncora no site: #doc-s4-escopo
+      o que entra e o que fica de fora do semestre.
+
+      Dentro
+
+       - Cadastro de ciclos, áreas, indicadores e regras de pontuação versionadas
+       - Lançamento de valores pelas áreas técnicas, com validação e evidência
+       - Motor de cálculo com memória de cálculo por indicador
+       - Estados do ciclo, da abertura à publicação, com trilha de auditoria
+       - Consulta do próprio resultado pelo gestor e abertura de contestação
+       - Painel agregado por área e exportação em CSV
+       - Analytics com os resultados dos modelos e o método declarado
+
+      Fora
+
+       - Integração com folha de pagamento
+       - Autenticação corporativa da prefeitura
+       - Migração de dados históricos reais
+       - Aplicativo mobile nativo
+       - Cálculo de outras verbas que não a gratificação por desempenho
+
+  >>> BACKLOG INICIAL
+      âncora no site: #doc-s4-backlog
+      os itens priorizados com estimativa e critério de pronto.
+
+      Épico | História | MoSCoW
+
+       Ciclo | Como CAM, quero abrir um ciclo de avaliação para que as áreas possam lançar dados | M
+       Ciclo | Como CAM, quero definir a janela de lançamento para controlar o prazo | M
+       Ciclo | Como CAM, quero avançar o estado do ciclo para refletir a etapa real do processo | M
+       Ciclo | Como CAM, quero homologar o ciclo para congelar os resultados | M
+       Ciclo | Como CAM, quero publicar o ciclo para que os gestores vejam seus resultados | S
+       Indicadores | Como CAM, quero cadastrar indicadores com meta, peso e direção para refletir a portaria | M
+       Indicadores | Como CAM, quero definir se o indicador é maior-melhor ou menor-melhor para calcular corretamente | M
+       Indicadores | Como CAM, quero criar uma nova versão da regra para não alterar ciclos já fechados | M
+       Indicadores | Como CAM, quero ver o diff entre versões da regra para saber o que mudou | S
+       Indicadores | Como CAM, quero definir a vigência da regra para que cada ciclo use a versão certa | M
+       Lançamento | Como área técnica, quero lançar o valor do meu indicador para cumprir minha parte | M
+       Lançamento | Como área técnica, quero anexar a evidência do dado para sustentar o que informei | M
+       Lançamento | Como área técnica, quero editar meu lançamento dentro do prazo para corrigir engano | M
+       Lançamento | Como área técnica, quero ver o histórico da minha área para acompanhar o que já enviei | S
+       Lançamento | Como área técnica, quero ser avisada de valor fora do padrão para conferir antes de enviar | C
+       Resultado | Como gestor avaliado, quero ver meu score e minha faixa para saber meu resultado | M
+       Resultado | Como gestor avaliado, quero abrir a memória de cálculo para entender de onde veio o número | M
+       Resultado | Como gestor avaliado, quero comparar meus ciclos para acompanhar minha evolução | S
+       Resultado | Como gestor avaliado, quero abrir contestação para questionar um resultado | S
+       Resultado | Como CAM, quero responder a contestação para encerrar o questionamento com registro | S
+       Governança | Como auditoria, quero ver a linha do tempo de tudo que aconteceu para fiscalizar | M
+       Governança | Como auditoria, quero que nada possa ser apagado para que a trilha sirva de prova | M
+       Governança | Como CAM, quero ver agregados por área para enxergar o funil do ciclo | S
+       Governança | Como CAM, quero exportar os resultados em CSV para usar em outros relatórios | C
+       Governança | Como CAM, quero ver o risco de não-atingimento no próximo ciclo para agir antes | C
+
+--- KO · Kick-off · 12/09/2026 -------------------------------------------------------------
+
+
+  Objetivo da semana  [validado, validado por fernando]
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  Apresentar em 5 minutos o problema, sua relevância, a ideia priorizada e o direcionamento
+  do projeto, com fala distribuída entre os seis.
+
+  Avanços  [validado, validado por fernando]
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  - Roteiro do pitch fechado, cronometrado em blocos de aproximadamente 45 segundos por
+    integrante.
+  - Estrutura de slides definida: oito telas, uma ideia por tela.
+  - Demonstração ao vivo da memória de cálculo escolhida como momento central da
+    apresentação.
+
+  Decisões  [validado, validado por fernando]
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  - Mostrar a memória de cálculo ao vivo em vez de descrevê-la em slide.
+      por quê: É o argumento do projeto contra a planilha; ver o número se explicar sozinho
+      vale mais que ouvir sobre isso.
+  - Cada integrante fala de uma parte que ele mesmo construiu.
+      por quê: A diretriz pede fala distribuída, e o domínio real do assunto aparece na
+      hora das perguntas.
+  - Abrir pelo problema, não pela solução.
+      por quê: A relevância do case é o que sustenta o projeto; a tecnologia é
+      consequência.
+
+  Bloqueios  [validado, validado por fernando]
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  - Ensaio cronometrado com os seis integrantes ainda não realizado.
+
+  Feedback recebido  [validado, validado por fernando]
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  - (equipe) Primeira versão do roteiro passava de 7 minutos. O corte foi tirar arquitetura
+    do pitch e deixá-la para a arguição.
+
+  Próximos passos  [validado, validado por fernando]
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  - Ensaiar com cronômetro e ajustar os blocos que estourarem.
+  - Preparar respostas para as três perguntas mais prováveis da banca.
+  - Entrar na Semana 5 com o diagrama de arquitetura e o fluxo de dados prontos.
+
+  Responsáveis  [validado, validado por fernando]
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  - Gabriel Tenório de Lima Teixeira: Abertura: problema e contexto do cliente.
+  - Matheus Lustosa: Relevância: quem sofre e o que a pesquisa mostrou.
+  - João Henrique Micucci: Causa raiz: por que a planilha não escala.
+  - João Pedro Mamede: Demonstração da ideia priorizada e da memória de cálculo.
+  - Rafael Serpa: Onde entram os modelos e o que eles respondem.
+  - Fernando Cavalcanti: Governança, privacidade e direcionamento até o SR1.
+
+  Evidências  [validado, validado por fernando]
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  - [documento] Roteiro do pitch -> /registro#ko
+
+  Documentos de entrega desta semana (3)
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  >>> ROTEIRO DO PITCH: 5 MINUTOS
+      âncora no site: #doc-ko-roteiro-pitch
+      os cinco minutos minuto a minuto, com o que dizer em cada um.
+
+      Tempo | Quem | O que diz | Slide
+
+       0:00–0:45 | Gabriel | A SESAU paga gratificação variável desde 2023 com base em indicadores de portaria. A consolidação é manual, em planilha, feita por uma comissão pequena. | 1–2
+       0:45–1:30 | Matheus | Quem sofre: a analista que fecha o ciclo com medo de ter errado, a área que não sabe o que informar, o gestor que recebe um número sem explicação. | 3
+       1:30–2:15 | João Henrique | A causa não é a planilha ser ruim: é a regra da portaria existir apenas dentro de fórmulas. Mudou a portaria, muda tudo à mão. | 4
+       2:15–3:15 | João Pedro | A ideia priorizada, ao vivo: lançamento validado, cálculo e a memória mostrando de onde veio cada número. | 5–6
+       3:15–4:00 | Rafael | Com o histórico de indicadores dá para prever risco de não-atingimento e sinalizar erro provável de digitação. Sinaliza, não bloqueia: a decisão continua humana. | 7
+       4:00–4:45 | Fernando | Trilha de auditoria imutável, dados sintéticos no MVP e base legal mapeada. Direcionamento até o SR1. | 8
+
+  >>> ESTRUTURA DE SLIDES
+      âncora no site: #doc-ko-slides
+      a sequência de telas do pitch.
+
+      - Slide 1: Prumo, uma linha: o cálculo da gratificação que se explica sozinho.
+       - Slide 2: O processo hoje, em cinco etapas, com o ponto de quebra marcado.
+       - Slide 3: As três pessoas afetadas, com uma frase de cada.
+       - Slide 4: A causa raiz: a regra vive dentro da fórmula.
+       - Slide 5: A ideia: regra como dado, versionada.
+       - Slide 6: Demonstração ao vivo da memória de cálculo.
+       - Slide 7: O que os modelos respondem, com a métrica ao lado.
+       - Slide 8: Direcionamento até o SR1 e o que estará pronto lá.
+
+  >>> PERGUNTAS PROVÁVEIS DA BANCA
+      âncora no site: #doc-ko-perguntas
+      o que esperamos ouvir e a resposta preparada.
+
+      - “Por que não usar uma ferramenta pronta?”, Nenhuma versiona regra normativa nem produz memória de cálculo; a resposta está no benchmarking da Semana 2.
+       - “E se a portaria mudar?”: Regra é dado, não código: cria-se uma nova versão, e os ciclos já homologados continuam reproduzindo o resultado antigo.
+       - “Vocês usam dados reais de servidores?”, Não. O MVP roda com dados sintéticos gerados por script com semente fixa, e isso está documentado.
+      O Kick-off tem peso formativo na matriz: a nota não vem daqui, mas o direcionamento que sai da arguição orienta tudo até o SR1.
+
+--- S5 · Semana 5: Arquitetura · 19/09/2026 ------------------------------------------------
+
+
+  Objetivo da semana  [rascunho]
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  Fechar a arquitetura do MVP e ter o motor de cálculo rodando de ponta a ponta sobre a
+  base sintética.
+
+  Avanços  [rascunho]
+  ~~~~~~~~~~~~~~~~~~~
+  - Modelo de dados fechado: áreas, indicadores, regras versionadas, ciclos, lançamentos e
+    trilha de auditoria.
+  - Motor de cálculo implementado como função pura, com a memória de cálculo saindo do
+    mesmo cálculo que a interface exibe.
+  - Diagramas C4 de contexto e de contêiner publicados em docs/arquitetura.md.
+  - Base sintética com semente fixa gerando as dez áreas e os trinta indicadores.
+
+  Decisões  [rascunho]
+  ~~~~~~~~~~~~~~~~~~~~
+  - Regra de pontuação é dado versionado, não código.
+      por quê: A portaria muda. Com a regra em `if`, cada mudança vira release e o ciclo
+      antigo deixa de reproduzir o próprio resultado.
+  - O motor de cálculo não faz I/O, não lê relógio e não sorteia nada.
+      por quê: É o que permite testar fronteira de faixa e arredondamento sem subir
+      infraestrutura, e garante o mesmo número para o mesmo insumo.
+
+  Bloqueios  [rascunho]
+  ~~~~~~~~~~~~~~~~~~~~~
+  - Sem acesso à portaria vigente, os pesos dos indicadores da base são arbitrados pela
+    equipe e precisam de conferência com a CAM.
+
+  Feedback recebido  [rascunho]
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  - nenhum registro nesta semana.
+
+  Próximos passos  [rascunho]
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  - Ligar as telas de lançamento e de resultado ao motor.
+  - Cobrir os casos-limite do cálculo com teste antes do Pré-SR1.
+  - Levantar as perguntas de arquitetura que a banca provavelmente fará.
+
+  Responsáveis  [rascunho]
+  ~~~~~~~~~~~~~~~~~~~~~~~~
+  - João Henrique Micucci: Modelo de dados e motor de cálculo.
+  - Rafael Serpa: Gerador da base sintética com semente fixa.
+  - Fernando Cavalcanti: Testes dos casos-limite e documentação técnica.
+
+  Evidências  [rascunho]
+  ~~~~~~~~~~~~~~~~~~~~~~
+  - [documento] Arquitetura do MVP -> #doc-s5-arquitetura
+  - [documento] Modelo de dados -> #doc-s5-modelo
+  - [documento] Nuvem: arquitetura nativa e fluxo de dados -> #doc-s5-nuvem
+  - [codigo] Motor de cálculo no repositório ->
+    https://github.com/highgroundagency/projeto-6
+
+  Documentos de entrega desta semana (3)
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  >>> NUVEM: ARQUITETURA NATIVA E FLUXO DE DADOS
+      âncora no site: #doc-s5-nuvem
+      onde cada componente roda, como eles se integram, e as decisões que a nuvem impôs ao
+      produto.
+
+      Onde cada componente executa
+      A matriz pede componentes de infraestrutura e integração entre eles. Estes são os do MVP, e nenhum deles é servidor que a equipe administre.
+
+       Componente | Onde roda | Por que ali
+
+       Páginas e telas | Função serverless na Vercel, por requisição | O recorte de release depende do dia e da sessão, então não há como pré-renderizar: `force-dynamic` é consequência da regra, não preguiça
+       Porta do painel | Middleware na borda, antes da função | Barrar antes de acordar a função é mais barato e mais seguro: quem não tem sessão nunca chega ao código do painel
+       Assets e fontes | CDN, com hash imutável no nome do arquivo | Chunk com hash pode ter cache eterno, e a invalidação vira consequência do build
+       Modelos de ML | Fora da nuvem: treinam offline e viram JSON versionado | Carregar scikit-learn por requisição custaria segundos de partida a frio para exibir número que só muda entre deploys (ADR-022)
+       Dados do protótipo | Memória do processo, com semente fixa | Sem banco, `git clone && npm run dev` sobe sem credencial nenhuma. O schema de verdade está escrito e desligado (ADR-011)
+       Persistência prevista | Postgres gerenciado, com RLS no banco | Autorização que mora no banco vale para qualquer caminho de escrita, inclusive um que ainda não existe
+
+      O fluxo de dados, ponta a ponta
+      O caminho de um número, do teclado da área técnica até a folha do gestor.
+
+       - A área técnica envia valor e evidência num POST comum de formulário; zod valida na entrada e recusa com motivo.
+       - A camada de dados grava o lançamento e ESCREVE UM EVENTO na trilha, no mesmo passo. Não há caminho que grave sem registrar.
+       - A CAM fecha a janela; o estado do ciclo avança um passo, e a transição também vira evento.
+       - O motor puro recebe lançamentos, indicadores e a versão da regra vigente na competência, e devolve score, faixa e memória de cálculo.
+       - A tela exibe a memória que saiu do mesmo cálculo, nunca uma recontagem paralela.
+       - O painel da gestão agrega e exporta em CSV; a auditoria lê a trilha, e escreve nada.
+      O pipeline é síncrono de propósito. Fila e processamento em lote resolveriam volume que este caso não tem: são dezenas de indicadores por competência mensal, não milhões de eventos por minuto. Escolher a arquitetura pelo volume que se sonha ter é como comprar caminhão para carregar feira.
+
+      O que a nuvem decidiu no produto
+      Restrição de infraestrutura que virou decisão de desenho, não observação de rodapé.
+
+       Restrição da nuvem | O que mudou no produto
+
+       Função sem estado, e várias instâncias ao mesmo tempo | O contador do rate limit vive na memória de uma instância: é best-effort, e está declarado como tal em vez de fingir garantia
+       Partida a frio cobra por dependência pesada | O treino de ML saiu do runtime; a tela lê um JSON com semente, commit e data do treino
+       Sistema de arquivos efêmero | Config vai para env var e para o Git, nunca para arquivo gravado em execução
+       Segredo não pode morar no repositório | A senha do painel e o segredo do cookie só existem em variável de ambiente; sem elas, o painel simplesmente não existe (responde 404)
+       Deploy é um push | A vitrine foi versionada em código para abrir por commit, sem alguém abrir painel de provedor e colar valor à mão (ADR-021)
+
+      Doze fatores, conferidos
+
+       Fator | Como está aqui
+
+       Base de código | Um repositório, muitos deploys: produção e prévia por branch
+       Dependências | Declaradas em package.json com lockfile; nada instalado à mão
+       Configuração | Em variáveis de ambiente, com `.env.example` versionado
+       Serviços de apoio | Banco tratado como recurso plugável: driver trocável
+       Build, release, run | Separados: `next build` congela o artefato, o deploy o publica
+       Processos | Sem estado; o que precisa durar vai para cookie assinado ou para o Git
+       Concorrência | Escala horizontal por instância de função, sem sessão pegajosa
+       Descartabilidade | Partida rápida e desligamento sem ritual
+       Paridade dev/prod | O mesmo build de produção é o que a verificação de vazamento sobe
+       Logs | Fluxo de eventos na saída padrão, coletado pela plataforma
+       Processos administrativos | Semeadura e verificação como scripts do repositório
+
+  >>> ARQUITETURA DO MVP
+      âncora no site: #doc-s5-arquitetura
+      as camadas, o que cada uma resolve e por que o motor fica isolado.
+
+      Camada | O que resolve | Por que separada
+
+       Conteúdo (content/) | Registro semanal e documentos, versionados em TSX | Entra no Git com histórico; o painel decide quando aparece, não o que diz
+       Regra (lib/calculo/) | Score, faixa e memória de cálculo | Função pura: testável nos casos-limite sem subir nada
+       Dados (lib/dados/) | De onde vêm áreas, indicadores e lançamentos | Isola as telas da fonte: trocar seed por banco não reescreve tela
+       Release (lib/releases.ts) | O que está visível hoje | Cálculo puro sobre o cronograma, com o "hoje" injetado de fora
+
+       - Nenhuma camada acima chama a de baixo pulando a do meio: a tela fala com dados, dados falam com a fonte.
+       - O motor de cálculo não conhece nem tela nem banco, recebe números e devolve números com a conta aberta.
+
+  >>> MODELO DE DADOS
+      âncora no site: #doc-s5-modelo
+      as sete entidades do MVP e o que cada uma guarda.
+
+      Entidade | Guarda | Observação
+
+       Área | Sigla e nome da unidade responsável | Dez áreas na base sintética
+       Indicador | Meta, unidade, peso e área dona | Trinta indicadores; o peso é o que entra na conta
+       Regra | Faixas de pontuação, vigência e versão | Alterar cria versão nova; a vigente é escolhida pela competência
+       Ciclo | Competência, estado e janela de lançamento | Máquina de estados: só avança um passo por vez
+       Lançamento | Valor informado, evidência, autor e data | Correção entra como novo lançamento, não sobrescreve
+       Avaliação | Score, faixa e memória de cálculo do gestor no ciclo | Reproduzível: recalcular o ciclo antigo dá o mesmo número
+       Evento de auditoria | Quem, quando, o quê, antes e depois | Append-only: a trilha não é editada, só recebe
+
+--- S6 · Semana 6: Pré-SR1 · 26/09/2026 ----------------------------------------------------
+
+
+  Objetivo da semana  [rascunho]
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  Chegar ao SR1 com o protótipo navegável, o pacote de entrega fechado e o pitch ensaiado
+  dentro do tempo.
+
+  Avanços  [rascunho]
+  ~~~~~~~~~~~~~~~~~~~
+  - Telas de lançamento, resultado e memória de cálculo navegáveis com dados sintéticos.
+  - Pacote do SR1 conferido item a item contra a matriz de evidências.
+  - Ensaio cronometrado do pitch, com corte do que não cabe em cinco minutos.
+  - Análise de segurança e de privacidade em primeira versão.
+
+  Decisões  [rascunho]
+  ~~~~~~~~~~~~~~~~~~~~
+  - O pitch abre pela memória de cálculo, não pela arquitetura.
+      por quê: É o que distingue o produto de uma planilha melhorada. Arquitetura entra se
+      a banca perguntar.
+  - Nada de slide com código.
+      por quê: Em cinco minutos, código na tela consome atenção e não prova nada que a demo
+      não prove.
+
+  Bloqueios  [rascunho]
+  ~~~~~~~~~~~~~~~~~~~~~
+  - nenhum registro nesta semana.
+
+  Feedback recebido  [rascunho]
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  - nenhum registro nesta semana.
+
+  Próximos passos  [rascunho]
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  - Apresentar o SR1.
+  - Registrar o retorno da banca no ciclo do SR1, com origem declarada.
+  - Repriorizar o backlog das sprints a partir do que a banca apontar.
+
+  Responsáveis  [rascunho]
+  ~~~~~~~~~~~~~~~~~~~~~~~~
+  - Gabriel Tenório de Lima Teixeira: Roteiro do pitch e conferência do pacote.
+  - João Pedro Mamede: Telas navegáveis e acessibilidade.
+  - Fernando Cavalcanti: Análises de segurança e privacidade.
+
+  Evidências  [rascunho]
+  ~~~~~~~~~~~~~~~~~~~~~~
+  - [documento] Checklist do SR1 -> #doc-s6-checklist
+  - [documento] Roteiro do pitch -> #doc-s6-pitch
+  - [prototipo] Protótipo navegável -> /sistema
+
+  Documentos de entrega desta semana (2)
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  >>> CHECKLIST DO SR1
+      âncora no site: #doc-s6-checklist
+      o que precisa estar pronto, e o critério de pronto de cada item.
+
+      Item | Critério de pronto
+
+       Problema e pergunta | Publicados na página, com o cliente nomeado
+       Pesquisa consolidada | Personas, mapa de empatia, benchmarking e SWOT no site
+       Protótipo navegável | Lançamento → cálculo → memória de cálculo, sem tela morta
+       Registro semanal | Todas as semanas vencidas publicadas e validadas
+       Análises da disciplina | Segurança e privacidade em primeira versão
+       Pitch | Cronometrado em cinco minutos, com ensaio feito
+
+  >>> ROTEIRO DO PITCH: SR1
+      âncora no site: #doc-s6-pitch
+      os cinco minutos divididos, com o que provar em cada trecho.
+
+      Tempo | O quê | O que precisa ficar claro
+
+       0:00–0:40 | O problema | Dinheiro público calculado à mão, sem rastro
+       0:40–1:30 | A pergunta e o recorte | O que está dentro e o que ficou fora
+       1:30–3:30 | Demonstração | Um lançamento vira score, e o score abre até a origem
+       3:30–4:20 | Como sabemos que está certo | Regra versionada e teste de caso-limite
+       4:20–5:00 | O que vem até o SR2 | Sprints, validação com a CAM e as duas lentes
+
+       - Quem demonstra não é quem narra: a troca evita depender de uma pessoa só.
+       - A demo roda com dados sintéticos, e isso é dito em voz alta na abertura.
+
+--- SR1 · SR1 · 03/10/2026 -----------------------------------------------------------------
+
+
+  Objetivo da semana  [rascunho]
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  Apresentar problema, pesquisa e protótipo navegável, e sair com o retorno da banca
+  registrado e priorizado.
+
+  Avanços  [rascunho]
+  ~~~~~~~~~~~~~~~~~~~
+  - Pitch de cinco minutos apresentado.
+  - Demonstração ao vivo do caminho lançamento → cálculo → memória de cálculo.
+  - Pacote de entrega do SR1 submetido conforme a matriz de evidências.
+
+  Decisões  [rascunho]
+  ~~~~~~~~~~~~~~~~~~~~
+  - Demonstrar ao vivo, sem vídeo gravado.
+      por quê: Gravação esconde travamento e não prova que roda. Se cair, cai na frente de
+      todo mundo, e isso também é informação.
+
+  Bloqueios  [rascunho]
+  ~~~~~~~~~~~~~~~~~~~~~
+  - nenhum registro nesta semana.
+
+  Feedback recebido  [rascunho]
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  - nenhum registro nesta semana.
+
+  Próximos passos  [rascunho]
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  - Transcrever o retorno da banca neste bloco de feedback, com origem.
+  - Repriorizar o backlog das quatro sprints a partir do que foi apontado.
+  - Marcar a conversa de validação com a CAM para a Semana 11.
+
+  Responsáveis  [rascunho]
+  ~~~~~~~~~~~~~~~~~~~~~~~~
+  - Gabriel Tenório de Lima Teixeira: Narração do pitch e resposta às perguntas.
+  - João Pedro Mamede: Demonstração ao vivo do protótipo.
+  - Matheus Lustosa: Apresentação da pesquisa e das personas.
+
+  Evidências  [rascunho]
+  ~~~~~~~~~~~~~~~~~~~~~~
+  - [documento] Pacote de entrega do SR1 -> #doc-sr1-pacote
+  - [documento] Direito: base legal e dados pessoais -> #doc-sr1-direito-base-legal
+  - [prototipo] Protótipo apresentado -> /sistema
+
+  Documentos de entrega desta semana (2)
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  >>> DIREITO: BASE LEGAL E DADOS PESSOAIS
+      âncora no site: #doc-sr1-direito-base-legal
+      que dado o sistema trataria, de quem, e sob qual artigo da lgpd.
+
+      Base legal do tratamento
+      Art. 7º, III da LGPD: execução de política pública prevista em lei e regulamento.
+
+       - A gratificação é instituída por portaria: o tratamento é indispensável para executá-la.
+       - Não se pede consentimento, e nem se deveria, numa relação funcional assimétrica ele seria frágil, e a recusa não poderia ser honrada sem inviabilizar a política.
+       - Controladora: Secretaria de Saúde do Recife. Encarregado designado pela Prefeitura; o sistema apenas expõe o canal.
+
+      Mapeamento dos dados
+      O que entraria em produção, por titular e por finalidade.
+
+       Categoria | Titular | Necessário para
+
+       Identificação funcional (nome, matrícula, cargo, lotação) | Servidor avaliado | Vincular o resultado à pessoa certa
+       Vínculo organizacional (área, período de exercício) | Servidor avaliado | Saber quais indicadores se aplicam
+       Desempenho (score, faixa, memória de cálculo, histórico) | Servidor avaliado | Calcular e justificar a gratificação
+       Autoria de lançamento (quem informou, quando) | Servidor da área técnica | Rastreabilidade e responsabilização
+       Contestação (motivo, resposta da comissão) | Servidor avaliado | Devido processo
+
+      Não são tratados: dados sensíveis do art. 5º, II, dados de pacientes, dados bancários ou valores de folha. O sistema calcula o percentual devido; a folha é outro sistema, e está declaradamente fora do escopo.
+
+      No MVP, nada disso existe
+
+       - A base é 100% sintética, com semente fixa, nenhum servidor real está no repositório.
+       - Há teste automatizado que falha se CPF, e-mail, telefone ou matrícula aparecerem na base.
+       - O mapeamento acima descreve o que existiria em produção, para que a análise jurídica não dependa de esperar o dado real chegar.
+
+  >>> PACOTE DE ENTREGA DO SR1
+      âncora no site: #doc-sr1-pacote
+      o que foi submetido e onde cada peça está no site.
+
+      Peça | Onde está
+
+       Problema, pergunta e cliente | Página inicial
+       Personas e mapa de empatia | Registro, Semana 2
+       Benchmarking e SWOT | Registro, Semana 2
+       Proposta, escopo e backlog | Registro, Semana 4
+       Arquitetura e modelo de dados | Registro, Semana 5
+       Protótipo navegável | Sistema
+       Registro semanal | Página inicial, seção Registro semanal
+       Uso de IA | Transparência no uso de IA
+
+       - Nenhuma peça é PDF: tudo é conteúdo do site, versionado no Git.
+       - O que ainda não foi validado carrega selo de rascunho na própria página.
+
+--- S7 · Semana 7: Sprint 1 · 17/10/2026 ---------------------------------------------------
+
+
+  Objetivo da semana  [rascunho]
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  Fechar o ciclo de lançamento: área técnica informa, a CAM enxerga o funil e o estado
+  avança com trilha.
+
+  Avanços  [rascunho]
+  ~~~~~~~~~~~~~~~~~~~
+  - Tela de lançamento validando valor, unidade e janela do ciclo antes de aceitar.
+  - Dashboard da CAM com funil por área e pendências do ciclo em andamento.
+  - Transição de estado do ciclo gravando antes e depois na trilha de auditoria.
+  - Correção de lançamento entrando como evento novo, sem sobrescrever o anterior.
+
+  Decisões  [rascunho]
+  ~~~~~~~~~~~~~~~~~~~~
+  - Correção não sobrescreve: entra como lançamento novo.
+      por quê: Sobrescrever apaga o rastro. Quem contesta precisa ver o valor antigo, quem
+      corrigiu e quando.
+  - A janela de lançamento é conferida na camada de escrita, não só na tela.
+      por quê: Validação de interface é conveniência; a regra tem que valer para qualquer
+      caminho de escrita.
+
+  Bloqueios  [rascunho]
+  ~~~~~~~~~~~~~~~~~~~~~
+  - nenhum registro nesta semana.
+
+  Feedback recebido  [rascunho]
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  - nenhum registro nesta semana.
+
+  Próximos passos  [rascunho]
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  - Ligar a apuração ao motor de cálculo na Sprint 2.
+  - Cobrir a transição de estado com teste de caso-limite.
+
+  Responsáveis  [rascunho]
+  ~~~~~~~~~~~~~~~~~~~~~~~~
+  - João Henrique Micucci: Camada de escrita e trilha de auditoria.
+  - João Pedro Mamede: Telas de lançamento e dashboard da CAM.
+  - Fernando Cavalcanti: Testes da janela e da transição.
+
+  Evidências  [rascunho]
+  ~~~~~~~~~~~~~~~~~~~~~~
+  - [prototipo] Tela de lançamento -> /sistema/lancamento
+  - [prototipo] Dashboard da CAM -> /sistema/cam
+  - [documento] Fluxo do ciclo -> #doc-s7-fluxo
+
+  Documentos de entrega desta semana (1)
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  >>> FLUXO DO CICLO
+      âncora no site: #doc-s7-fluxo
+      os cinco estados, quem move cada um e o que fica na trilha.
+
+      Estado | Quem move | O que acontece
+
+       rascunho | CAM | Ciclo montado, ainda sem janela aberta
+       lançamento aberto | Área técnica | Valores informados com evidência, dentro do prazo
+       em validação | CAM | Conferência dos lançamentos e apuração
+       homologado | CAM | Resultado fechado; gestor consulta e pode contestar
+       publicado | CAM | Ciclo encerrado; nada mais entra
+
+--- S8 · Semana 8: Sprint 2 · 24/10/2026 ---------------------------------------------------
+
+
+  Objetivo da semana  [rascunho]
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  Ligar a apuração ao motor: do lançamento ao score, com a memória de cálculo aberta até a
+  origem.
+
+  Avanços  [rascunho]
+  ~~~~~~~~~~~~~~~~~~~
+  - Apuração do ciclo produzindo score, faixa e memória de cálculo por gestor.
+  - Tela "meu resultado" com a conta aberta passo a passo e a evolução entre ciclos.
+  - Regra versionada escolhida pela competência do ciclo, não pela data de hoje.
+  - Testes de fronteira de faixa, arredondamento e indicador sem lançamento.
+
+  Decisões  [rascunho]
+  ~~~~~~~~~~~~~~~~~~~~
+  - A memória de cálculo sai do mesmo cálculo que a interface exibe.
+      por quê: Recalcular para mostrar abriria espaço para a explicação divergir do número
+      pago.
+  - Peso normalizado só na divisão final.
+      por quê: Normalizar peso a peso antes de somar dava 99,9 para desempenho perfeito.
+
+  Bloqueios  [rascunho]
+  ~~~~~~~~~~~~~~~~~~~~~
+  - nenhum registro nesta semana.
+
+  Feedback recebido  [rascunho]
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  - nenhum registro nesta semana.
+
+  Próximos passos  [rascunho]
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  - Abrir a auditoria e o painel da gestão na Sprint 3.
+  - Preparar o roteiro da validação com a CAM.
+
+  Responsáveis  [rascunho]
+  ~~~~~~~~~~~~~~~~~~~~~~~~
+  - João Henrique Micucci: Apuração e escolha da regra vigente.
+  - João Pedro Mamede: Memória de cálculo na interface.
+  - Fernando Cavalcanti: Testes de caso-limite do motor.
+
+  Evidências  [rascunho]
+  ~~~~~~~~~~~~~~~~~~~~~~
+  - [prototipo] Meu resultado -> /sistema/meu-resultado
+  - [testes] Casos-limite do motor -> #doc-s8-casos
+  - [documento] Como o score é calculado -> #doc-s8-calculo
+
+  Documentos de entrega desta semana (2)
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  >>> CASOS-LIMITE DO MOTOR
+      âncora no site: #doc-s8-casos
+      o que precisa ser testado antes de confiar num número que vira dinheiro.
+
+      Caso | Por que importa | Comportamento esperado
+
+       Valor exatamente na fronteira da faixa | É onde uma comparação com > em vez de >= muda o pagamento | A faixa é escolhida pelo critério declarado na regra, sem ambiguidade
+       Desempenho perfeito em todos os indicadores | Normalizar peso a peso antes de somar dava 99,9 em vez de 100 | Score fecha em 100,00 exatos
+       Indicador sem lançamento no ciclo | Tratar como zero e tratar como ausente dão resultados diferentes | Entra como zero pontos, e a memória de cálculo diz que não houve lançamento
+       Ciclo apurado com regra de outra versão | A portaria muda no meio do ano | Vale a regra vigente na competência do ciclo, não a de hoje
+       Recálculo de ciclo já homologado | Se o número mudar depois de pago, o produto perdeu a razão de existir | Reproduz exatamente o mesmo score
+       Soma dos pesos diferente de 100 | O briefing traz pesos que somam 115 | A normalização acontece na divisão final; a memória continua fechando
+
+  >>> COMO O SCORE É CALCULADO
+      âncora no site: #doc-s8-calculo
+      a fórmula, o que entra nela e por que cada escolha.
+
+      Etapa | O que é
+
+       Pontos do indicador | A regra vigente converte o valor informado em pontos, pela faixa
+       Peso | Cada indicador tem peso próprio, definido em portaria
+       Soma ponderada | Σ (pontos × peso): o numerador
+       Teto | Σ (peso × pontuação máxima): o denominador
+       Score | (soma ponderada ÷ teto) × 100, de 0 a 100
+       Faixa | O score cai numa faixa da regra, que define o percentual pago
+
+--- S9 · Semana 9: Sprint 3 · 07/11/2026 ---------------------------------------------------
+
+
+  Objetivo da semana  [rascunho]
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  Fechar auditoria e visão de gestão: o ciclo inteiro rastreável e os agregados por área.
+
+  Avanços  [rascunho]
+  ~~~~~~~~~~~~~~~~~~~
+  - Linha do tempo imutável com autor, momento, antes e depois de cada evento.
+  - Painel da gestão com agregados por área, ranking anonimizável e exportação em CSV.
+  - Ciclo completo demonstrado de ponta a ponta, de lançamento a homologação.
+  - Perfil de auditoria que lê tudo e não escreve nada.
+
+  Decisões  [rascunho]
+  ~~~~~~~~~~~~~~~~~~~~
+  - A trilha é append-only, e isso é garantido fora da aplicação.
+      por quê: No schema guardado é gatilho de banco: vale até para a chave mais
+      privilegiada, não só para quem passa pela tela.
+  - O ranking tem modo anônimo.
+      por quê: Comparar pessoas nominalmente num painel aberto cria constrangimento que o
+      produto não precisa causar.
+
+  Bloqueios  [rascunho]
+  ~~~~~~~~~~~~~~~~~~~~~
+  - nenhum registro nesta semana.
+
+  Feedback recebido  [rascunho]
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  - nenhum registro nesta semana.
+
+  Próximos passos  [rascunho]
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  - Preparar os instrumentos da validação com a CAM.
+  - Fechar a tela de analytics com os modelos da lente de ML.
+
+  Responsáveis  [rascunho]
+  ~~~~~~~~~~~~~~~~~~~~~~~~
+  - João Henrique Micucci: Trilha append-only e agregados.
+  - João Pedro Mamede: Painel da gestão e exportação.
+  - Fernando Cavalcanti: Perfil de auditoria e conferência de permissões.
+
+  Evidências  [rascunho]
+  ~~~~~~~~~~~~~~~~~~~~~~
+  - [prototipo] Auditoria -> /sistema/auditoria
+  - [dashboard] Painel da gestão -> /sistema/gestao
+  - [documento] O que a trilha registra -> #doc-s9-trilha
+
+  Documentos de entrega desta semana (1)
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  >>> O QUE A TRILHA REGISTRA
+      âncora no site: #doc-s9-trilha
+      os campos de cada evento e por que nenhum é opcional.
+
+      Campo | Para quê
+
+       quem | Autor da ação, para que ninguém possa negar depois
+       quando | Momento exato, para ordenar e para conferir prazo
+       o quê | Tipo do evento: lançamento, correção, transição, homologação
+       entidade | A que o evento se refere: qual ciclo, qual indicador
+       antes | Estado anterior: nulo só quando o registro está nascendo
+       depois | Estado novo, que é o que passa a valer
+
+--- S10 · Semana 10: Sprint 4 · 14/11/2026 -------------------------------------------------
+
+
+  Objetivo da semana  [rascunho]
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  Entregar a lente de machine learning como funcionalidade do produto, com o método
+  declarado ao lado do número.
+
+  Avanços  [rascunho]
+  ~~~~~~~~~~~~~~~~~~~
+  - Tela de analytics com os resultados dos modelos e a metodologia visível.
+  - Modelos treinados exclusivamente sobre a base sintética, sem nenhum dado real.
+  - Métricas de desempenho publicadas junto do resultado, não escondidas.
+  - Limitações do modelo escritas na própria tela, em linguagem de quem vai ler.
+
+  Decisões  [rascunho]
+  ~~~~~~~~~~~~~~~~~~~~
+  - O método fica ao lado do número, sempre.
+      por quê: Previsão sem método declarado é opinião com aparência de dado. Num cálculo
+      de gratificação, isso é grave.
+  - O modelo não decide nada: informa.
+      por quê: Nenhuma saída de ML entra na conta da gratificação. A regra é a portaria, e
+      ela é determinística.
+
+  Bloqueios  [rascunho]
+  ~~~~~~~~~~~~~~~~~~~~~
+  - nenhum registro nesta semana.
+
+  Feedback recebido  [rascunho]
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  - nenhum registro nesta semana.
+
+  Próximos passos  [rascunho]
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  - Validar com a CAM na Semana 11.
+  - Consolidar as três lentes no pacote do SR2.
+
+  Responsáveis  [rascunho]
+  ~~~~~~~~~~~~~~~~~~~~~~~~
+  - Rafael Serpa: Gerador de dados, notebooks e modelos.
+  - João Pedro Mamede: Tela de analytics e apresentação das métricas.
+  - Fernando Cavalcanti: Revisão das limitações declaradas.
+
+  Evidências  [rascunho]
+  ~~~~~~~~~~~~~~~~~~~~~~
+  - [dashboard] Analytics -> /sistema/analytics
+  - [documento] Método e limitações -> #doc-s10-metodo
+  - [documento] Os seis cadernos -> #doc-s10-cadernos
+  - [codigo] Notebooks e modelos -> https://github.com/highgroundagency/projeto-6
+
+  Documentos de entrega desta semana (2)
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  >>> OS SEIS CADERNOS E O RESULTADO NEGATIVO
+      âncora no site: #doc-s10-cadernos
+      o que cada notebook faz, e por que um dos modelos fica publicado como fracasso.
+
+      Caderno | O que faz
+
+       01: EDA | Distribuição do atingimento por área. É aqui que aparece o achado que muda o projeto: quase nada bate a meta
+       02: Pré-processamento | Atributos com shift(1) e separação treino/teste temporal, para o modelo nunca ver o futuro
+       03: Classificação | Duas perguntas: "vai bater a meta?" (fracassa) e "vai melhorar?" (funciona)
+       04: Regressão | Atingimento esperado, com importância dos atributos
+       05: Clustering | Agrupamento de ÁREAS: nunca de pessoas: com a silhueta publicada ao lado
+       06: Conclusões | Comparação entre os quatro modelos e o limite que não se negocia
+
+      O classificador de “vai bater a meta” NÃO supera o palpite de chutar a classe majoritária, e fica publicado assim na tela de analytics. O caderno 01 já explicava o porquê: com pouquíssimos positivos, o alvo não tem sinal. Não é o modelo que é ruim: é a pergunta que é mal posta nesta base. Esconder o que falhou e mostrar só o que deu certo seria escolher a métrica depois de ver o resultado.
+
+  >>> MÉTODO E LIMITAÇÕES
+      âncora no site: #doc-s10-metodo
+      o que o modelo faz, sobre o que foi treinado e onde ele erra.
+
+      Aspecto | O que vale
+
+       Base | Exclusivamente sintética, com semente fixa: nenhum dado real de pessoa ou da SESAU
+       Escopo | Apoia a leitura de tendência por área; não entra no cálculo da gratificação
+       Métricas | Publicadas na própria tela, junto do resultado
+       Limitação principal | Base sintética reproduz a regra que a gerou: desempenho em dado real seria outro
+       O que não faz | Não classifica pessoa, não recomenda pagamento, não substitui a portaria
+
+--- S11 · Semana 11: Validação · 21/11/2026 ------------------------------------------------
+
+
+  Objetivo da semana  [rascunho]
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  Validar o MVP com quem opera o processo hoje, e registrar o que precisa mudar antes do
+  SR2.
+
+  Avanços  [rascunho]
+  ~~~~~~~~~~~~~~~~~~~
+  - Entrevista semiestruturada com pelo menos um integrante da CAM, sobre o fluxo real.
+  - Teste de usabilidade com tarefa cronometrada: lançar um indicador e explicar o próprio
+    score.
+  - Questionário pós-teste sobre clareza da memória de cálculo e confiança no resultado.
+  - Ajustes decorrentes registrados com origem e prioridade.
+
+  Decisões  [rascunho]
+  ~~~~~~~~~~~~~~~~~~~~
+  - A validação usa tarefa cronometrada, não demonstração narrada.
+      por quê: Demonstração guiada mede a nossa explicação, não a clareza da tela. A pessoa
+      precisa tentar sozinha.
+  - Nenhum dado real da SESAU entra no ambiente de teste.
+      por quê: A validação é do fluxo e da clareza, não dos números. Base sintética
+      resolve, e evita tratar dado de servidor sem base legal.
+
+  Bloqueios  [rascunho]
+  ~~~~~~~~~~~~~~~~~~~~~
+  - A validação depende da agenda da CAM, que não está sob controle da equipe; marcar com
+    antecedência é o único mitigador.
+
+  Feedback recebido  [rascunho]
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  - nenhum registro nesta semana.
+
+  Próximos passos  [rascunho]
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  - Transcrever o retorno da CAM neste bloco de feedback, com origem declarada.
+  - Aplicar os ajustes de prioridade alta antes do Pré-SR2.
+  - Registrar o que foi apontado e conscientemente não será feito, com o motivo.
+
+  Responsáveis  [rascunho]
+  ~~~~~~~~~~~~~~~~~~~~~~~~
+  - Matheus Lustosa: Condução da entrevista e do teste de usabilidade.
+  - Gabriel Tenório de Lima Teixeira: Interlocução com a CAM e priorização dos ajustes.
+  - João Pedro Mamede: Ajustes de interface decorrentes.
+
+  Evidências  [rascunho]
+  ~~~~~~~~~~~~~~~~~~~~~~
+  - [documento] Roteiro da entrevista -> #doc-s11-roteiro
+  - [documento] Tarefas do teste de usabilidade -> #doc-s11-tarefas
+
+  Documentos de entrega desta semana (2)
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  >>> ROTEIRO DA ENTREVISTA
+      âncora no site: #doc-s11-roteiro
+      as perguntas abertas, na ordem, e o que cada uma quer descobrir.
+
+      Pergunta | O que se quer descobrir
+
+       Conte como foi o último fechamento de ciclo, do começo ao fim. | O fluxo real, não o fluxo descrito na portaria
+       O que costuma dar errado? | Os pontos de quebra, na ordem de quem sente a dor
+       Como você confere se um número está certo hoje? | Se existe conferência, e quanto ela custa
+       Já teve alguém contestando um resultado? Como foi? | O caminho da contestação e o que faltou para respondê-la
+       O que você faria se tivesse mais tempo no fechamento? | A prioridade real, dita sem a pressão de escolher
+
+       - Perguntas abertas, sem sugerir a resposta, nada de "não seria melhor se…".
+       - Quem conduz não defende o produto: se a pessoa criticar, a resposta é "me conta mais".
+       - Nenhum dado real de servidor é solicitado ou anotado.
+
+  >>> TAREFAS DO TESTE DE USABILIDADE
+      âncora no site: #doc-s11-tarefas
+      o que a pessoa tenta fazer sozinha, e o critério de sucesso de cada tarefa.
+
+      Tarefa | Sucesso é | O que se mede
+
+       Lançar o valor de um indicador da sua área | Concluir sem pedir ajuda | Se a janela e a evidência ficam claras sem explicação
+       Descobrir por que o score de um gestor deu o que deu | Chegar à memória de cálculo e apontar um indicador | Se a conta abre até a origem sem treinamento
+       Encontrar quem informou determinado valor e quando | Chegar à trilha de auditoria | Se a rastreabilidade é achável, não só existente
+       Contestar um resultado | Abrir a contestação e saber o prazo | Se o caminho de discordar é visível para quem é avaliado
+
+--- S12 · Semana 12: Pré-SR2 · 28/11/2026 --------------------------------------------------
+
+
+  Objetivo da semana  [rascunho]
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  Fechar o pacote do SR2: aplicar os ajustes da validação, consolidar as três lentes e
+  comparar planejado com realizado.
+
+  Avanços  [rascunho]
+  ~~~~~~~~~~~~~~~~~~~
+  - Ajustes de prioridade alta da validação com a CAM aplicados.
+  - Documentação técnica, análise de segurança e análise de privacidade em versão final.
+  - Comparativo planejado × realizado do semestre, com os desvios explicados.
+  - Ensaio do pitch final, cronometrado.
+
+  Decisões  [rascunho]
+  ~~~~~~~~~~~~~~~~~~~~
+  - O comparativo planejado × realizado mostra o que não foi feito, com o motivo.
+      por quê: Relatório que só lista acerto não é relatório. O que ficou de fora e por quê
+      é o que mostra que houve priorização.
+  - Congelar funcionalidade nova a partir desta semana.
+      por quê: Feature entrando na véspera é feature sem teste e sem ensaio. O que não está
+      pronto agora vira trabalho futuro declarado.
+
+  Bloqueios  [rascunho]
+  ~~~~~~~~~~~~~~~~~~~~~
+  - nenhum registro nesta semana.
+
+  Feedback recebido  [rascunho]
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  - nenhum registro nesta semana.
+
+  Próximos passos  [rascunho]
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  - Apresentar o SR2.
+  - Publicar o comparativo planejado × realizado junto do pacote final.
+
+  Responsáveis  [rascunho]
+  ~~~~~~~~~~~~~~~~~~~~~~~~
+  - Gabriel Tenório de Lima Teixeira: Pacote do SR2 e comparativo planejado × realizado.
+  - Fernando Cavalcanti: Documentação técnica, segurança e privacidade.
+  - João Pedro Mamede: Ajustes de interface da validação.
+
+  Evidências  [rascunho]
+  ~~~~~~~~~~~~~~~~~~~~~~
+  - [documento] Planejado × realizado -> #doc-s12-planejado
+  - [documento] Trabalho futuro declarado -> #doc-s12-futuro
+  - [documento] Nuvem: trade-offs de infraestrutura e evolução -> #doc-s12-nuvem
+  - [documento] Direito: Privacy by Design e direitos dos titulares ->
+    #doc-s12-direito-titulares
+
+  Documentos de entrega desta semana (4)
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  >>> NUVEM: TRADE-OFFS DE INFRAESTRUTURA E EVOLUÇÃO
+      âncora no site: #doc-s12-nuvem
+      o que foi escolhido, o que foi recusado, e o que a arquitetura aguenta antes de
+      precisar mudar.
+
+      As escolhas, com a alternativa recusada ao lado
+      Trade-off sem a alternativa nomeada não é trade-off: é justificativa.
+
+       Escolhido | Recusado | Por quê
+
+       Funções serverless | Contêiner sempre ligado | A carga é sazonal: pico no fechamento da competência, silêncio no resto do mês. Máquina ligada 30 dias para trabalhar 3 é custo sem serviço
+       Postgres gerenciado com RLS | Banco em máquina própria | Autorização no banco vale para todo caminho de escrita, e ninguém da equipe precisa aplicar correção de segurança de madrugada
+       Renderização no servidor a cada requisição | Site estático regerado por webhook | O que o visitante pode ver depende do dia E da sessão dele. Estático exigiria uma versão por combinação, ou vazaria conteúdo futuro no HTML
+       Treino de ML offline, resultado em JSON | Inferência sob demanda numa função | Partida a frio com scikit-learn custa segundos para exibir número que muda entre deploys. E o JSON versionado é auditável (ADR-022)
+       Deploy por push no Git | Pipeline própria com aprovação manual | Uma equipe de seis, num semestre, gasta mais mantendo a esteira do que ganha com ela
+       Config em variável de ambiente e no Git | Painel de administração escrevendo em banco | Conteúdo versionado deixa histórico de quem mudou o quê. Formulário não deixa (§7.3)
+
+      Até onde isto aguenta
+      Número honesto: a SESAU tem dezenas de indicadores e centenas de avaliados, não milhões.
+
+       Dimensão | Hoje no protótipo | O que aguentaria em produção
+
+       Áreas técnicas | 10 sintéticas | Dezenas: o custo é linear e trivial
+       Indicadores | 30 sintéticos | Centenas, sem mudança de arquitetura
+       Gestores avaliados | Dezenas na base sintética | Milhares: o cálculo é por gestor e paraleliza sozinho
+       Competências | Mensal | Mensal continua sendo o pico; o resto do mês é leitura
+       Trilha de auditoria | Centenas de eventos em memória | Cresce para sempre por desenho. Em produção pede índice por ciclo e arquivamento por competência antiga, e isso está declarado como pendência
+
+      O gargalo real não é técnico: é a janela de lançamento. Todas as áreas informam nos mesmos dois dias do mês, e é ali que a função escala. Serverless resolve exatamente esse formato de carga, e é a razão principal da escolha.
+
+      O que falta para virar produção
+
+       - Ligar o schema de `supabase/migrations/` ao runtime: ele está escrito, testado contra um Postgres real, e desligado (ADR-011).
+       - Autenticação institucional de verdade no lugar do seletor de perfil simulado, com as políticas de RLS já escritas assumindo o controle.
+       - Rate limit persistente: o contador atual vive na memória de uma instância, e em serverless isso é best-effort declarado.
+       - CSP com nonce por requisição no lugar do unsafe-inline herdado do bootstrap do framework.
+       - Observabilidade além do health check: hoje há `/api/status`, e falta série temporal de erro e latência.
+       - Rotina de backup e teste de restauração do banco, que num sistema que paga gratificação não é opcional.
+
+  >>> DIREITO: PRIVACY BY DESIGN E DIREITOS DOS TITULARES
+      âncora no site: #doc-s12-direito-titulares
+      onde a privacidade está no código, e como cada direito do art. 18 é atendido.
+
+      Privacy by Design, apontando o código
+      Princípio que não aponta para um arquivo é declaração de intenção.
+
+       Princípio | Onde está no código
+
+       Minimização | A base sintética não tem CPF, e-mail nem telefone, e há teste que falha se aparecerem
+       Finalidade | O sistema calcula o percentual devido; folha de pagamento está fora do escopo desde a proposta
+       Transparência | A memória de cálculo abre cada passo até a origem, para o próprio avaliado
+       Segurança | Trilha append-only, regra versionada e políticas de RLS escritas em supabase/migrations/
+       Prestação de contas | Cada evento guarda quem, quando, antes e depois
+
+      Direitos do titular (art. 18)
+      Cada direito, e a tela que o atende.
+
+       Direito | Como o sistema atende
+
+       Confirmação e acesso | Tela "meu resultado": score, faixa, histórico e memória de cálculo do próprio avaliado
+       Correção | Contestação com resposta da comissão; correção de lançamento gera evento novo sem apagar o anterior
+       Anonimização | Ranking anonimizável no painel da gestão
+       Portabilidade | Exportação em CSV
+       Informação sobre compartilhamento | Não há compartilhamento com terceiros
+       Revisão de decisão automatizada (art. 20) | O cálculo é determinístico e a memória mostra cada passo; o ML sinaliza e nunca bloqueia
+
+      O art. 20 é o centro deste projeto
+
+       - Decisão automatizada que afeta interesse do titular exige direito a revisão, e gratificação afeta remuneração.
+       - Por isso o cálculo não é caixa-preta: a regra é dado versionado e a memória de cálculo mostra a conta inteira.
+       - Por isso, também, nenhuma saída dos modelos de machine learning entra na conta. Eles informam onde olhar; quem decide é a comissão, e a decisão é contestável.
+      Esta é a razão pela qual a lente de Direito não é um anexo do projeto. Ela determinou uma decisão de arquitetura: o motor de cálculo ser função pura e auditável, e o ML ficar fora dele.
+
+  >>> PLANEJADO × REALIZADO
+      âncora no site: #doc-s12-planejado
+      o que foi prometido em cada marco, o que saiu, e o desvio explicado.
+
+      Marco | Planejado | Realizado | Desvio
+
+       Kick-off | Problema, pergunta e recorte | a preencher | A preencher no SR2
+       SR1 | Pesquisa e protótipo navegável | a preencher | A preencher no SR2
+       Sprints 1–4 | Ciclo completo, auditoria, gestão e analytics | a preencher | A preencher no SR2
+       Semana 11 | Validação com a CAM | a preencher | A preencher no SR2
+
+       - A coluna "realizado" é preenchida no fim, com o que aconteceu, não antes.
+       - Desvio sem explicação não conta: cada linha diz por que mudou.
+
+  >>> TRABALHO FUTURO DECLARADO
+      âncora no site: #doc-s12-futuro
+      o que o semestre não cobre, dito na cara em vez de escondido.
+
+      Item | Por que ficou de fora
+
+       Persistência em banco no runtime | O schema com RLS está escrito e testado, mas o app roda no seed, ver ADR-011
+       Autenticação real por perfil | O seletor é simulado; as políticas que resolveriam isso existem no schema guardado
+       Integração com a folha de pagamento | Fora do escopo desde a proposta: o produto calcula e audita, não paga
+       Rate limit persistente no painel | O contador vive na memória do processo; em serverless isso é best-effort e está declarado
+       CSP com nonce por requisição | A política atual usa unsafe-inline, herdado do bootstrap do framework
+
+--- SR2 · SR2: Final · 05/12/2026 ----------------------------------------------------------
+
+
+  Objetivo da semana  [rascunho]
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  Apresentar o MVP funcionando, a trajetória do semestre e as três lentes da disciplina
+  consolidadas.
+
+  Avanços  [rascunho]
+  ~~~~~~~~~~~~~~~~~~~
+  - Demonstração do ciclo completo: lançamento, apuração, memória de cálculo, auditoria e
+    contestação.
+  - Pacote final submetido conforme a matriz de evidências.
+  - Comparativo planejado × realizado publicado, com os desvios explicados.
+  - Registro semanal completo das doze semanas, validado.
+
+  Decisões  [rascunho]
+  ~~~~~~~~~~~~~~~~~~~~
+  - A apresentação final mostra também o que não foi feito.
+      por quê: Trabalho futuro declarado é sinal de que houve priorização consciente;
+      esconder lacuna é o contrário disso.
+
+  Bloqueios  [rascunho]
+  ~~~~~~~~~~~~~~~~~~~~~
+  - nenhum registro nesta semana.
+
+  Feedback recebido  [rascunho]
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  - nenhum registro nesta semana.
+
+  Próximos passos  [rascunho]
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  - Transcrever o retorno final da banca neste bloco de feedback, com origem.
+  - Arquivar o repositório com a documentação em versão final.
+
+  Responsáveis  [rascunho]
+  ~~~~~~~~~~~~~~~~~~~~~~~~
+  - Gabriel Tenório de Lima Teixeira: Narração e fechamento do pacote final.
+  - João Pedro Mamede: Demonstração do ciclo completo.
+  - Rafael Serpa: Apresentação da lente de machine learning.
+  - Fernando Cavalcanti: Lente de direito digital e documentação final.
+
+  Evidências  [rascunho]
+  ~~~~~~~~~~~~~~~~~~~~~~
+  - [documento] Pacote final do SR2 -> #doc-sr2-pacote
+  - [documento] As três lentes -> #doc-sr2-lentes
+  - [prototipo] Sistema funcionando -> /sistema
+
+  Documentos de entrega desta semana (2)
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  >>> PACOTE FINAL DO SR2
+      âncora no site: #doc-sr2-pacote
+      tudo o que foi entregue e onde está no site.
+
+      Peça | Onde está
+
+       MVP funcionando | Sistema: oito telas com dados sintéticos
+       Registro das doze semanas | Página inicial, seção Registro semanal
+       Documentos de pesquisa e proposta | Dentro de cada semana, em sanfona
+       Arquitetura e modelo de dados | Registro, Semana 5, e docs/arquitetura.md
+       Análise de segurança | docs/seguranca.md: STRIDE e OWASP Top 10
+       Análise de privacidade | docs/privacidade.md: LGPD e Privacy by Design
+       Decisões de arquitetura | docs/decisoes.md: ADRs com o que se perdeu em troca
+       Uso de IA | Transparência no uso de IA
+       Planejado × realizado | Registro, Semana 12
+
+       - Nenhuma peça é PDF: tudo é conteúdo do site, versionado no Git.
+       - Nenhum dado real de pessoa ou da SESAU em nenhuma delas.
+
+  >>> AS TRÊS LENTES
+      âncora no site: #doc-sr2-lentes
+      o que projeto, machine learning e direito digital entregaram neste produto.
+
+      Lente | O que entregou | Onde se vê
+
+       Projeto | Problema real recortado, pesquisa com o cliente, MVP funcionando e registro semanal | Página inicial e sistema
+       Machine learning | Gerador sintético, modelos treinados e a tela de analytics com método declarado | Sistema → Analytics
+       Direito digital | Base legal do tratamento, Privacy by Design apontando o código, direitos dos titulares | docs/privacidade.md
+
+       - As três lentes atravessam o mesmo produto, não são três trabalhos costurados.
+       - A lente de ML não decide pagamento: a regra da portaria é determinística e continua sendo.
+
+============================================================================================
+4.  O SISTEMA: AS OITO TELAS DO MVP
+============================================================================================
+
+As oito telas vivem numa página só, `/sistema`, cada uma numa sanfona. Duas portas guardam
+cada uma delas, nesta ordem: o gate de release (a tela já existe hoje?) e o gate de perfil
+(ela é de quem está aqui?). Quem não passa recebe 404, nunca 403: da porta, "ainda não
+liberado" e "não é seu" precisam ser indistinguíveis.
+
+
+  Dashboard da CAM
+  ~~~~~~~~~~~~~~~~
+  Funil por área, pendências e avanço de estado do ciclo.
+  - id interno: painel-cam
+  - rota histórica: /sistema/cam (hoje redireciona para /sistema#tela-painel-cam)
+  - liberada em: Semana 5: Arquitetura, 19/09/2026
+  - perfis que enxergam: CAM, Auditoria
+
+  Indicadores e regras
+  ~~~~~~~~~~~~~~~~~~~~
+  Cadastro de indicadores e regras de pontuação versionadas.
+  - id interno: indicadores
+  - rota histórica: /sistema/indicadores (hoje redireciona para /sistema#tela-indicadores)
+  - liberada em: Semana 5: Arquitetura, 19/09/2026
+  - perfis que enxergam: CAM, Auditoria
+
+  Lançamento
+  ~~~~~~~~~~
+  Área técnica informa os valores dos indicadores no prazo.
+  - id interno: lancamento
+  - rota histórica: /sistema/lancamento (hoje redireciona para /sistema#tela-lancamento)
+  - liberada em: Semana 5: Arquitetura, 19/09/2026
+  - perfis que enxergam: Área técnica, CAM, Auditoria
+
+  Meu resultado
+  ~~~~~~~~~~~~~
+  Score, faixa, evolução e memória de cálculo do gestor avaliado.
+  - id interno: meu-resultado
+  - rota histórica: /sistema/meu-resultado (hoje redireciona para
+    /sistema#tela-meu-resultado)
+  - liberada em: Semana 6: Pré-SR1, 26/09/2026
+  - perfis que enxergam: Gestor avaliado, CAM, Auditoria
+
+  Auditoria
+  ~~~~~~~~~
+  Linha do tempo imutável de tudo que aconteceu no ciclo.
+  - id interno: auditoria
+  - rota histórica: /sistema/auditoria (hoje redireciona para /sistema#tela-auditoria)
+  - liberada em: Semana 7: Sprint 1, 17/10/2026
+  - perfis que enxergam: Auditoria, CAM
+
+  Painel da gestão
+  ~~~~~~~~~~~~~~~~
+  Agregados por área, ranking anonimizável e exportação em CSV.
+  - id interno: painel-gestao
+  - rota histórica: /sistema/gestao (hoje redireciona para /sistema#tela-painel-gestao)
+  - liberada em: Semana 9: Sprint 3, 07/11/2026
+  - perfis que enxergam: CAM, Auditoria
+
+  Analytics
+  ~~~~~~~~~
+  Resultados dos modelos de ML com o método declarado ao lado.
+  - id interno: analytics
+  - rota histórica: /sistema/analytics (hoje redireciona para /sistema#tela-analytics)
+  - liberada em: Semana 10: Sprint 4, 14/11/2026
+  - perfis que enxergam: CAM, Auditoria
+
+  Contestação
+  ~~~~~~~~~~~
+  Gestor avaliado abre e acompanha contestação do resultado.
+  - id interno: contestacao
+  - rota histórica: /sistema/contestacao (hoje redireciona para /sistema#tela-contestacao)
+  - liberada em: Semana 11: Validação, 21/11/2026
+  - perfis que enxergam: Gestor avaliado, CAM, Auditoria
+
+============================================================================================
+5.  OS QUATRO PAPÉIS DO PROCESSO
+============================================================================================
+
+
+  CAM (cam)
+  ~~~~~~~~~
+  Comissão de Avaliação de Metas: o colegiado que conduz o ciclo do começo ao fim, do
+  cadastro da regra à publicação do resultado.
+
+  O QUE FAZ
+  - Cadastra indicadores com meta, peso, unidade e fonte, e publica a regra que transforma
+    atingimento em pontos.
+  - Abre e fecha a janela de lançamento, e acompanha o funil de quais áreas já informaram.
+  - Apura o ciclo, homologa e publica o resultado.
+  - Recebe as contestações e responde por escrito.
+
+  O QUE O PROCESSO IMPEDE
+  - Editar uma regra já usada num ciclo homologado. Alterar cria versão nova, senão o ciclo
+    antigo deixaria de reproduzir o próprio número.
+  - Pular estado do ciclo. A máquina anda um passo por vez, e cada passagem entra na
+    trilha.
+  - Apagar evento da auditoria. A trilha só recebe, nunca perde.
+
+  TELAS QUE ENXERGA
+  - Dashboard da CAM
+  - Indicadores e regras
+  - Lançamento
+  - Meu resultado
+  - Auditoria
+  - Painel da gestão
+  - Analytics
+  - Contestação
+
+  Área técnica (area_tecnica)
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  A unidade que produz o dado: a diretoria ou coordenação dona daquele indicador, quem tem
+  o número na mão.
+
+  O QUE FAZ
+  - Informa o valor de cada indicador da própria área dentro da janela do ciclo.
+  - Declara a evidência que sustenta o número, de onde ele veio.
+  - Corrige um valor errado antes do fechamento, e a correção entra como versão nova.
+
+  O QUE O PROCESSO IMPEDE
+  - Lançar fora da janela. Passado o prazo, o campo fecha e a tentativa fica registrada.
+  - Alterar meta ou peso. Quem informa o resultado não define a régua.
+  - Ver o score de gestor nenhum. A área entrega insumo, não recebe avaliação.
+
+  TELAS QUE ENXERGA
+  - Lançamento
+
+  Gestor avaliado (gestor)
+  ~~~~~~~~~~~~~~~~~~~~~~~~
+  O servidor cuja gratificação depende do desempenho apurado. É por ele que este sistema
+  existe.
+
+  O QUE FAZ
+  - Consulta o próprio score, a faixa alcançada e a evolução entre ciclos.
+  - Abre a memória de cálculo e segue cada número até o lançamento que o gerou.
+  - Contesta o resultado no prazo, e recebe resposta escrita da comissão.
+
+  O QUE O PROCESSO IMPEDE
+  - Alterar lançamento. Discordar é um caminho formal, não uma edição.
+  - Ver o ranking nominal dos colegas. O painel da gestão é da gestão.
+  - Ter o resultado decidido por modelo. O cálculo é determinístico e a conta fica aberta
+    (art. 20 da LGPD).
+
+  TELAS QUE ENXERGA
+  - Meu resultado
+  - Contestação
+
+  Auditoria (auditoria)
+  ~~~~~~~~~~~~~~~~~~~~~
+  Controle interno, ou qualquer pessoa que precise conferir o processo sem participar dele.
+
+  O QUE FAZ
+  - Percorre a trilha append-only e vê quem informou o quê, quando, e qual era o valor
+    anterior.
+  - Refaz o cálculo de um ciclo homologado e confere se dá o mesmo número.
+  - Cruza o resultado publicado com a regra vigente na competência.
+
+  O QUE O PROCESSO IMPEDE
+  - Escrever coisa alguma. Nenhuma tela oferece ação a este perfil, por desenho.
+  - Ser impedida de ver. É o único papel que enxerga as oito telas.
+
+  TELAS QUE ENXERGA
+  - Dashboard da CAM
+  - Indicadores e regras
+  - Lançamento
+  - Meu resultado
+  - Auditoria
+  - Painel da gestão
+  - Analytics
+  - Contestação
+
+============================================================================================
+6.  TUTORIAL GUIADO, UM POR PAPEL
+============================================================================================
+
+Com `?passo=N` o sistema entra em modo tutorial: uma tela só na página, o elemento de que o
+passo fala contornado em laranja, e uma barra no rodapé conduzindo. Cada passo tem URL
+própria. Passos que apontam para tela ainda não liberada são descartados.
+
+--- Tutorial de CAM (9 passos) -------------------------------------------------------------
+
+  Você conduz o ciclo inteiro. O percurso abaixo é a ordem em que as coisas acontecem numa
+  competência real, do cadastro à publicação.
+
+  01. Confira a régua antes de abrir o ciclo
+      o que fazer: Abra "indicadores e regras" e leia o catálogo: meta, peso, unidade e
+      fonte de cada indicador. Desça até o diff entre versões da regra.
+      por quê: A régua precisa estar acertada antes de alguém informar valor. Mudar peso no
+      meio do ciclo é o que produz a desconfiança que este projeto ataca.
+      tela: indicadores · alvo: ind-catalogo
+
+  02. Acompanhe quem já informou
+      o que fazer: No dashboard, olhe o funil por área e a lista de pendências. Cada barra
+      é a fração de indicadores já lançados por aquela área.
+      por quê: É a informação que hoje só existe cobrando por e-mail. Ver a pendência em
+      tela substitui a pergunta "vocês já mandaram?".
+      tela: painel-cam · alvo: cam-funil
+
+  03. Cubra a área que não conseguir lançar
+      o que fazer: Em "lançamento", escolha a área pendente e informe valor e evidência em
+      nome dela.
+      por quê: A CAM pode lançar por terceiros para o ciclo não travar, e o autor do
+      lançamento fica registrado assim mesmo. Cobrir não é apagar de quem era a
+      responsabilidade.
+      tela: lancamento · alvo: lanc-formularios
+
+  04. Feche a janela e apure
+      o que fazer: Ainda no dashboard, use o trilho de estados para avançar o ciclo. A
+      transição pede confirmação e entra na trilha com o estado anterior.
+      por quê: A máquina anda um passo por vez, de propósito. Sem estado explícito, ninguém
+      sabe se um número ainda pode mudar.
+      tela: painel-cam · alvo: cam-estado
+
+  05. Confira uma conta antes de publicar
+      o que fazer: Em "meu resultado", escolha um gestor e abra a memória de cálculo linha
+      a linha.
+      por quê: É a mesma tela que o avaliado vai abrir. Ver o resultado pelos olhos dele
+      antes de publicar é o que evita a pergunta que ninguém sabe responder na reunião.
+      tela: meu-resultado · alvo: res-memoria
+
+  06. Publique e olhe o agregado
+      o que fazer: No painel da gestão, escolha a competência, ligue a anonimização e
+      exporte o CSV.
+      por quê: O agregado é o que vai para a reunião. A anonimização existe para que a
+      comparação entre áreas possa ser projetada sem expor pessoas.
+      tela: painel-gestao · alvo: gest-ranking
+
+  07. Descubra onde olhar no próximo ciclo
+      o que fazer: Em analytics, veja as áreas com menor atingimento médio e os lançamentos
+      marcados como possível erro de digitação.
+      por quê: Nenhum número daqui entra na conta da gratificação, e isso é regra, não
+      limitação. Analytics serve para priorizar apoio, não para pontuar ninguém.
+      tela: analytics · alvo: ana-risco
+
+  08. Responda quem discordou
+      o que fazer: Abra a contestação e leia o motivo registrado, com o ciclo e o
+      indicador.
+      por quê: Contestação sem resposta escrita é ouvidoria de fachada. O registro é o que
+      permite auditar depois se a comissão respondeu.
+      tela: contestacao · alvo: cont-lista
+
+  09. Prove o que aconteceu
+      o que fazer: Na auditoria, filtre por tipo de evento e confira o antes e o depois de
+      cada mudança.
+      por quê: É a diferença entre afirmar que o processo foi correto e conseguir
+      demonstrar isso.
+      tela: auditoria · alvo: aud-linha
+
+
+--- Tutorial de Área técnica (4 passos) ----------------------------------------------------
+
+  Seu papel é curto e é o mais importante do ciclo: informar o número certo, com a
+  evidência que o sustenta, dentro do prazo.
+
+  01. Escolha a sua área
+      o que fazer: Em "lançamento", use o seletor de área. A lista abaixo passa a mostrar
+      só os indicadores daquela unidade.
+      por quê: Cada área responde pelo que produz. Lançar indicador alheio é como assinar
+      relatório de outro setor.
+      tela: lancamento · alvo: lanc-area
+
+  02. Informe valor e evidência juntos
+      o que fazer: Preencha o valor e, ao lado, de onde ele veio: sistema de origem,
+      relatório, competência. Os dois campos são obrigatórios.
+      por quê: Número sem procedência é opinião. A evidência é o que torna a conferência
+      possível meses depois, quando ninguém lembra.
+      tela: lancamento · alvo: lanc-formularios
+
+  03. Repare no aviso de valor estranho
+      o que fazer: Se o valor ficar muito longe da meta, aparece um alerta laranja embaixo
+      do campo. Ele não impede o envio.
+      por quê: A vírgula no lugar errado é o erro mais comum e o mais caro. O sistema
+      sinaliza e deixa a decisão com quem tem o dado na mão.
+      tela: lancamento · alvo: lanc-formularios
+
+  04. Corrigiu? Não some com o anterior
+      o que fazer: Reenvie o formulário com o valor certo. O campo já vem preenchido com o
+      atual.
+      por quê: A correção entra como versão nova e o valor antigo continua na trilha. É o
+      que separa corrigir de encobrir.
+      tela: lancamento · alvo: lanc-formularios
+
+
+--- Tutorial de Gestor avaliado (4 passos) -------------------------------------------------
+
+  Você é quem a avaliação afeta. O sistema foi desenhado para que você consiga refazer a
+  própria conta, e discordar dela por escrito.
+
+  01. Veja o número e a faixa
+      o que fazer: Em "meu resultado", escolha o ciclo. O cartão do topo traz o score e a
+      faixa de gratificação alcançada.
+      por quê: Hoje esse número chega pronto, sem contexto. Aqui ele vem com a faixa e com
+      a régua que a produziu.
+      tela: meu-resultado · alvo: res-score
+
+  02. Abra a memória de cálculo
+      o que fazer: Clique em "memória de cálculo". Cada linha mostra indicador, valor
+      informado, meta, atingimento, pontos, peso e contribuição, e ao pé a fórmula.
+      por quê: É a resposta para "por que deu isso?". A conta inteira fica aberta, item por
+      item, e fecha na soma que você vê no cartão.
+      tela: meu-resultado · alvo: res-memoria
+
+  03. Compare com os seus ciclos anteriores
+      o que fazer: Desça até "evolução entre ciclos" e veja o score por competência.
+      por quê: Um número sozinho não informa. A série mostra tendência, que é o que serve
+      para conversar sobre desempenho.
+      tela: meu-resultado · alvo: res-evolucao
+
+  04. Discorde formalmente, se for o caso
+      o que fazer: Use "abrir contestação", aponte o indicador (ou o resultado inteiro) e
+      descreva o motivo.
+      por quê: Discordar deixa de ser telefonema e vira registro com prazo e resposta. É o
+      direito de revisão do art. 20 da LGPD funcionando na prática.
+      tela: contestacao · alvo: cont-abrir
+
+
+--- Tutorial de Auditoria (8 passos) -------------------------------------------------------
+
+  Você enxerga as oito telas e não escreve em nenhuma. O percurso abaixo é o de conferir um
+  ciclo do fim para o começo, que é como auditoria se faz.
+
+  01. Comece pelo resultado publicado
+      o que fazer: No painel da gestão, escolha a competência fechada e observe o ranking.
+      por quê: É o que foi divulgado. Toda conferência parte da afirmação que se quer
+      testar.
+      tela: painel-gestao · alvo: gest-ranking
+
+  02. Refaça a conta de um avaliado
+      o que fazer: Em "meu resultado", selecione o gestor e abra a memória de cálculo.
+      por quê: O motor é determinístico: o mesmo insumo com a mesma regra dá o mesmo
+      número, sempre. Se não der, existe defeito.
+      tela: meu-resultado · alvo: res-memoria
+
+  03. Confira a régua vigente na competência
+      o que fazer: Em "indicadores e regras", veja a vigência de cada versão e o diff entre
+      elas.
+      por quê: Ciclo antigo tem de ser apurado com a regra da época. Regra editada no lugar
+      apagaria essa possibilidade.
+      tela: indicadores · alvo: ind-regras
+
+  04. Volte aos insumos que geraram o número
+      o que fazer: Em "lançamento", escolha a área e compare o valor informado com a
+      evidência declarada ao lado.
+      por quê: O score só é bom se o insumo for. A evidência é o que permite conferir a
+      origem sem pedir favor a ninguém.
+      tela: lancamento · alvo: lanc-formularios
+
+  05. Cheque a condução do ciclo
+      o que fazer: No dashboard da CAM, veja em que estado o ciclo está e quais áreas
+      ficaram pendentes.
+      por quê: Ciclo apurado com área faltando é achado de auditoria, e o funil mostra isso
+      sem depender do relato de ninguém.
+      tela: painel-cam · alvo: cam-funil
+
+  06. Veja se quem discordou foi respondido
+      o que fazer: Na contestação, percorra os registros e confira se cada um tem resposta
+      da comissão.
+      por quê: Contestação aberta sem resposta é o achado mais comum em processo de
+      avaliação, e aqui ela fica visível em vez de arquivada.
+      tela: contestacao · alvo: cont-lista
+
+  07. Percorra a trilha do começo ao fim
+      o que fazer: Na auditoria, filtre pelo ciclo e leia os eventos em ordem: quem
+      informou, quando, e qual era o valor anterior.
+      por quê: A trilha é append-only. É a única peça do sistema que serve de prova,
+      justamente porque ninguém a edita.
+      tela: auditoria · alvo: aud-linha
+
+  08. Verifique o que o modelo NÃO fez
+      o que fazer: Em analytics, confira que cada modelo publica método, métrica e linha de
+      base, e leia a limitação declarada.
+      por quê: Nenhuma saída de modelo entra no cálculo. Analytics aponta onde olhar; quem
+      decide é a comissão, e a decisão é contestável.
+      tela: analytics · alvo: ana-modelos
+
+
+============================================================================================
+7.  LENTE DE MACHINE LEARNING
+============================================================================================
+
+Nenhum resultado desta lista entra no cálculo da gratificação.
+
+  - base: sintética, gerada por ml/gerador.py com semente fixa
+  - gerado em: 2026-08-16
+  - semente: 20262
+  - scikit-learn: 1.9.0
+  - commit: 5fab13e
+
+  classificacao
+  ~~~~~~~~~~~~~
+  pergunta: Este indicador vai bater a meta na próxima competência?
+  método: Random Forest com 400 árvores e classes reequilibradas, sobre atingimento
+  anterior, média móvel, peso e direção. Separação treino/teste temporal.
+  - métricas: acuracia=0.667 · precisao=0.143 · revocacao=0.2 · f1=0.167 ·
+    amostras_teste=30 · positivos_no_teste=5 · supera_referencia=false
+  - linha de base: chutar sempre a classe majoritária (acurácia 0.833)
+  - ESTE MODELO NÃO SUPERA A LINHA DE BASE, e fica publicado dizendo isso.
+  limitação declarada: Classe positiva é minoria: acurácia isolada engana, e por isso a
+  referência vai ao lado. Treinado sobre base sintética — o modelo aprende a regra que
+  gerou os dados, não a rede real.
+
+  classificacao_tendencia
+  ~~~~~~~~~~~~~~~~~~~~~~~
+  pergunta: Este indicador vai melhorar em relação à competência anterior?
+  método: Random Forest com 400 árvores e classes reequilibradas. Mesmo conjunto de
+  atributos e mesma separação temporal do modelo anterior — só o alvo muda.
+  - métricas: acuracia=0.767 · precisao=0.737 · revocacao=0.875 · f1=0.8 ·
+    amostras_teste=30 · positivos_no_teste=16 · supera_referencia=true
+  - linha de base: chutar sempre a classe majoritária (acurácia 0.533)
+  limitação declarada: Alvo equilibrado, mas a série tem seis competências. O resultado
+  sustenta priorização de atenção, não decisão sobre pagamento — que segue determinística
+  pela portaria.
+
+  regressao
+  ~~~~~~~~~
+  pergunta: Qual atingimento esperar na próxima competência?
+  método: Random Forest com 300 árvores sobre os mesmos atributos. Separação treino/teste
+  temporal.
+  - métricas: mae=0.1051 · r2=0.239 · amostras_teste=30
+  - linha de base: média do treino (mae 0.1179)
+  limitação declarada: Seis competências é série curta. O R² aqui mede consistência do
+  gerador, não capacidade de prever a rede real.
+
+  clustering
+  ~~~~~~~~~~
+  pergunta: Quais áreas se comportam de forma parecida?
+  método: K-Means com k=3 sobre atingimento médio, volatilidade e taxa de meta, com
+  atributos padronizados.
+  - métricas: silhueta=0.357 · k=3
+  - linha de base: silhueta de referência
+  limitação declarada: Agrupa ÁREAS, nunca pessoas. Dez áreas é amostra pequena: o k foi
+  escolhido pela silhueta, e mudaria com mais dados.
+
+============================================================================================
+8.  CHECKLIST DAS EVIDÊNCIAS DA MATRIZ
+============================================================================================
+
+Uma linha por evidência exigida pela matriz de avaliação, com o estado dela e quem
+respondeu. O status é conteúdo versionado, não campo de formulário: mudar aqui deixa
+histórico de quem mudou o quê e quando, que é exatamente o que o projeto defende.
+
+
+  S1 · Semana 1: Partida · 08/08/2026
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  - [feito] Equipe formada (Gabriel Tenório de Lima Teixeira)
+  - [validado] Papéis definidos (Gabriel Tenório de Lima Teixeira)
+  - [feito] Case escolhido (Gabriel Tenório de Lima Teixeira)
+  - [feito] Registro do projeto criado (Fernando Cavalcanti) -> /registro
+
+  S2 · Semana 2: Imersão · 15/08/2026
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  - [feito] Pesquisa estruturada (Matheus Lustosa)
+  - [feito] Problema contextualizado (Matheus Lustosa)
+  - [feito] Personas e stakeholders (Matheus Lustosa) -> /registro#ciclo-s2
+  - [feito] Mapa de empatia (Matheus Lustosa) -> /registro#ciclo-s2
+  - [feito] Benchmarking (Fernando Cavalcanti)
+  - [feito] SWOT (Gabriel Tenório de Lima Teixeira)
+  - [feito] Objetivos (Gabriel Tenório de Lima Teixeira)
+  - [validado] Cronograma inicial (João Henrique Micucci)
+
+  S3 · Semana 3: Ideação · 22/08/2026
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  - [feito] Brainwriting, Brainstorming e Crazy 8's registrados (João Pedro Mamede)
+  - [feito] Alternativas levantadas (João Pedro Mamede)
+  - [feito] Critérios de decisão (Gabriel Tenório de Lima Teixeira)
+  - [feito] Ideia escolhida com justificativa (Gabriel Tenório de Lima Teixeira)
+
+  S4 · Semana 4: Proposta · 29/08/2026
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  - [feito] Proposta de solução (Gabriel Tenório de Lima Teixeira)
+  - [feito] Escopo preliminar (João Henrique Micucci)
+  - [feito] Backlog inicial (Gabriel Tenório de Lima Teixeira)
+
+  KO · Kick-off · 12/09/2026
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~
+  - [em andamento] Pitch de 5 min: problema, relevância, ideia priorizada, direcionamento
+    (Gabriel Tenório de Lima Teixeira)
+  - [em andamento] Fala distribuída entre os 6 integrantes (João Pedro Mamede)
+
+
+  Totais
+  ~~~~~~
+  - feito: 17
+  - validado: 2
+  - em andamento: 2
+  - total de evidências acompanhadas: 21
+
+============================================================================================
+9.  FUNCIONALIDADES DO SITE, UMA A UMA
+============================================================================================
+
+
+  Página única
+  ~~~~~~~~~~~~
+  A raiz contém o site inteiro: problema, pergunta, equipe, os quatro papéis, o registro
+  semanal em sanfonas, a trilha de marcos e o ciclo de trabalho. `/registro` continua
+  existindo como redirecionamento para a seção.
+
+  Motor de releases
+  ~~~~~~~~~~~~~~~~~
+  O que o visitante vê é calculado, não configurado: o release atual é o último ciclo com
+  data menor ou igual a hoje mais 7 dias. Travas por ciclo e um override manual existem no
+  painel para os casos em que o calendário e a realidade discordam.
+
+  Prova de não-vazamento
+  ~~~~~~~~~~~~~~~~~~~~~~
+  `npm run verificar-vazamento` sobe o build de produção e confere que nenhum marcador de
+  ciclo futuro aparece no HTML, no payload RSC ou nos chunks de `.next/static`, e que rota
+  de funcionalidade não liberada responde 404.
+
+  Painel administrativo
+  ~~~~~~~~~~~~~~~~~~~~~
+  Em `/admin`, atrás de senha conferida só no servidor e cookie assinado com HMAC-SHA256.
+  Nenhuma página do site linka para ele. Controla release, travas, data simulada e o modo
+  "ver como visitante".
+
+  Vitrine com prazo
+  ~~~~~~~~~~~~~~~~~
+  Uma janela versionada em `src/content/vitrine.ts` abre o site inteiro por um período e
+  fecha sozinha. Pode simular outra data civil, para demonstrar o semestre já concluído.
+
+  Documentos de entrega em TSX
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  SWOT, personas, mapa de empatia, backlog, análises de segurança e privacidade: tudo
+  renderizado dentro da página, em sanfona. Nenhum PDF, nenhuma aba nova, nenhum link que
+  expira. Há teste que falha se uma evidência apontar para âncora inexistente.
+
+  Motor de cálculo puro
+  ~~~~~~~~~~~~~~~~~~~~~
+  Sem I/O, sem relógio, sem aleatoriedade. score = (Σ pontos × peso) ÷ (Σ peso × pontuação
+  máxima) × 100. A memória de cálculo exibida na tela sai do mesmo cálculo, item a item.
+
+  Regra versionada
+  ~~~~~~~~~~~~~~~~
+  Alterar uma regra cria versão nova; a vigente nunca é editada. Sem isso, um ciclo
+  homologado deixaria de reproduzir o próprio resultado.
+
+  Trilha append-only
+  ~~~~~~~~~~~~~~~~~~
+  Cada evento guarda quem, quando, o quê, o valor anterior e o novo. Correção entra como
+  evento novo. Trilha que pode ser editada não serve de prova.
+
+  Perfis de acesso
+  ~~~~~~~~~~~~~~~~
+  As oito telas conferem o perfil no servidor antes de montar qualquer coisa, e respondem
+  404 para quem não tem direito. Teste percorre as 8 telas contra os 4 perfis.
+
+  Tutorial guiado
+  ~~~~~~~~~~~~~~~
+  Um passeio por dentro do sistema, por papel, com o elemento de cada passo contornado.
+  Servidor puro: cada passo tem URL, funciona sem JavaScript.
+
+  Exportação em CSV
+  ~~~~~~~~~~~~~~~~~
+  O painel da gestão exporta o ranking do ciclo, com ou sem anonimização.
+
+  Schema PostgreSQL guardado
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~
+  `supabase/migrations/` tem schema completo com gatilhos de invariante e políticas de RLS,
+  testado contra um Postgres real e DESLIGADO da aplicação. O app roda em memória.
+
+  Transparência no uso de IA
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~
+  `/transparencia-ia` lista o que foi feito com auxílio de IA, onde, e quem validou.
+
+  Health check
+  ~~~~~~~~~~~~
+  `/api/status` responde com o estado do cronograma e do release.
+
+============================================================================================
+10.  AUDITORIA: O QUE O PROFESSOR PEDIU, E ONDE ESTÁ
+============================================================================================
+
+Cada linha cita o pedido do briefing do case ou da Matriz Integrada e aponta onde ele está
+atendido no repositório. As ressalvas não são desculpa: são o que falta, dito antes que a
+banca pergunte. Auditoria que só encontra acerto não auditou nada.
+
+--- Do briefing do case da SESAU -----------------------------------------------------------
+
+
+  [atendido] plataforma-web
+  ~~~~~~~~~~~~~~~~~~~~~~~~~
+  pedido: "Uma plataforma web que automatize todo o processo de avaliação de desempenho e
+  cálculo da gratificação."
+
+  onde está:
+    - src/app/sistema/page.tsx: as oito telas do MVP numa página
+    - src/lib/calculo/motor.ts: o cálculo, como função pura
+
+  [atendido] area-informa
+  ~~~~~~~~~~~~~~~~~~~~~~~
+  pedido: "Permitindo que cada área técnica informe seus indicadores diretamente no
+  sistema."
+
+  onde está:
+    - src/components/sistema/telas/lancamento.tsx: um formulário por indicador da área
+    - src/app/api/sistema/lancamento/route.ts: a escrita, com o autor registrado
+
+  [atendido] regras-validacao
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  pedido: "Com regras de validação."
+
+  onde está:
+    - src/app/api/sistema/lancamento/route.ts: zod valida tipo, faixa e tamanho antes de
+      qualquer escrita
+    - src/lib/dados/consultas.ts: `pareceErroDeDigitacao` sinaliza valor absurdo sem
+      bloquear
+    - A janela de prazo fecha o lançamento fora do período, e a tentativa fica na trilha
+
+  [parcial] perfis-acesso
+  ~~~~~~~~~~~~~~~~~~~~~~~
+  pedido: "Com perfis de acesso."
+
+  onde está:
+    - src/lib/sistema.ts: `exigirPerfil` fecha cada tela no servidor e responde 404
+    - src/lib/sistema.test.ts: as 8 telas contra os 4 perfis, sem amostragem
+    - supabase/migrations/: as políticas de RLS que fariam isso valer de verdade
+
+  RESSALVA: O perfil vem de um seletor simulado, não de autenticação. O recorte é real e
+  roda no servidor, mas quem escolhe o papel é o próprio visitante. O RBAC de verdade está
+  escrito e testado no schema, e desligado do app (ADR-011).
+
+  [parcial] regras-da-portaria
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  pedido: "E aplicação automática das regras previstas na portaria."
+
+  onde está:
+    - src/lib/calculo/motor.ts: a regra é aplicada automaticamente sobre os lançamentos
+    - src/components/sistema/telas/indicadores.tsx: a regra é dado versionado, com diff
+      entre versões
+
+  RESSALVA: A equipe não teve acesso à portaria vigente. Os pesos e as faixas da base são
+  arbitrados e precisam de conferência com a CAM: está declarado como bloqueio no registro
+  da Semana 5.
+
+  [atendido] rastreabilidade
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~
+  pedido: "A solução deve oferecer rastreabilidade."
+
+  onde está:
+    - src/components/sistema/telas/auditoria.tsx: linha do tempo append-only com antes e
+      depois
+    - Toda escrita gera evento no mesmo passo: não existe caminho que grave sem registrar
+
+  [atendido] historico
+  ~~~~~~~~~~~~~~~~~~~~
+  pedido: "Histórico das avaliações."
+
+  onde está:
+    - src/components/sistema/telas/meu-resultado.tsx: score por competência, ciclo a ciclo
+    - Regra versionada: recalcular um ciclo antigo reproduz o mesmo número
+
+  [atendido] transparencia
+  ~~~~~~~~~~~~~~~~~~~~~~~~
+  pedido: "Transparência dos cálculos."
+
+  onde está:
+    - src/components/sistema/memoria.tsx: a memória de cálculo abre indicador, valor, meta,
+      atingimento, pontos, peso e contribuição, com a fórmula ao pé
+    - A memória sai do MESMO cálculo que produz o score, nunca de uma recontagem paralela
+
+  [atendido] paineis-gestao
+  ~~~~~~~~~~~~~~~~~~~~~~~~~
+  pedido: "E painéis de acompanhamento para a gestão."
+
+  onde está:
+    - src/components/sistema/telas/cam.tsx: funil por área e pendências do ciclo corrente
+    - src/components/sistema/telas/gestao.tsx: agregados, ranking anonimizável e exportação
+      em CSV
+
+  [fora de escopo] folha-pagamento
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  pedido: "Integração com folha de pagamento."
+
+  onde está:
+    - src/content/ciclos/s4.tsx: o escopo declara isso desde a proposta
+
+  RESSALVA: O produto calcula o percentual devido e audita o caminho até ele. Pagar é outro
+  sistema, e prometer isso num semestre seria promessa vazia.
+
+--- Da Matriz Integrada --------------------------------------------------------------------
+
+
+  [atendido] lente-seguranca
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~
+  pedido: "Disciplina-alvo: Segurança da Informação. Mecanismos de segurança, controles,
+  proteção."
+
+  onde está:
+    - docs/seguranca.md: STRIDE por ameaça, OWASP Top 10 com estado, e as limitações
+      declaradas
+    - src/lib/admin/: senha só no servidor, cookie HMAC-SHA256, comparação em tempo
+      constante, rate limit
+    - supabase/migrations/: políticas de RLS testadas contra um Postgres real
+
+  [atendido] lente-ml
+  ~~~~~~~~~~~~~~~~~~~
+  pedido: "Disciplina-alvo: Aprendizado de Máquina. Possibilidades de aplicação de ML,
+  funcionalidades inteligentes, evolução dos modelos."
+
+  onde está:
+    - ml/: gerador, modelos e exportador; separação treino/teste temporal, nunca aleatória
+    - src/components/sistema/telas/analytics.tsx: cada modelo com método, métrica E linha
+      de base
+    - Um modelo publicado como resultado NEGATIVO, porque não supera a referência
+
+  [atendido] lente-nuvem
+  ~~~~~~~~~~~~~~~~~~~~~~
+  pedido: "Disciplina-alvo: Arquitetura Nativa na Nuvem. Componentes de infraestrutura,
+  integração entre componentes, infraestrutura de execução."
+
+  onde está:
+    - docs/nuvem.md: onde cada componente executa, pipeline ponta a ponta, doze fatores,
+      escala e trade-offs
+    - Documento no registro da Semana 5, âncora #doc-s5-nuvem
+    - Documento no registro da Semana 12, âncora #doc-s12-nuvem
+
+  RESSALVA: ESTA LENTE FOI A ÚLTIMA A ENTRAR. A auditoria de 16/08 encontrou o projeto
+  nomeando "Projeto, Machine Learning e Direito Digital" como suas três lentes, quando a
+  matriz nomeia "Segurança da Informação, Aprendizado de Máquina e Arquitetura Nativa na
+  Nuvem". Nenhuma métrica de produção foi medida: os números de escala são raciocínio de
+  capacidade, não benchmark.
+
+  [atendido] registro-semanal
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  pedido: "Evidência esperada em toda semana: registro do grupo com entregas, responsáveis
+  e evidências."
+
+  onde está:
+    - src/content/ciclos/: um arquivo por ciclo, com os oito blocos fixos
+    - A página inicial traz as 18 semanas em sanfona, com selo e validador por bloco
+
+  [atendido] imersao
+  ~~~~~~~~~~~~~~~~~~
+  pedido: "Semana 2: personas, mapa de empatia, benchmarking, SWOT, objetivos e cronograma
+  inicial."
+
+  onde está:
+    - src/content/ciclos/s2.tsx: cinco documentos renderizados dentro do site, sem PDF
+
+  [atendido] ideacao
+  ~~~~~~~~~~~~~~~~~~
+  pedido: "Semana 3: Brainwriting, Brainstorming e Crazy 8’s; alternativas, critérios e
+  justificativa."
+
+  onde está:
+    - src/content/ciclos/s3.tsx: roteiro das três técnicas, alternativas e justificativa
+
+  [atendido] proposta
+  ~~~~~~~~~~~~~~~~~~~
+  pedido: "Semana 4: proposta de solução, escopo preliminar, backlog inicial, papéis e
+  cronograma."
+
+  onde está:
+    - src/content/ciclos/s4.tsx: proposta em uma página, escopo e backlog inicial
+
+  [atendido] arquitetura
+  ~~~~~~~~~~~~~~~~~~~~~~
+  pedido: "Semana 5: diagrama da arquitetura, fluxo de dados, primeiras telas, pipeline."
+
+  onde está:
+    - docs/arquitetura.md: diagramas C4 de contexto e de contêiner
+    - src/content/ciclos/s5.tsx: arquitetura, modelo de dados e a lente de nuvem
+
+  [parcial] validacao-cliente
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  pedido: "Semana 11: entrevistas e questionários com o cliente; ajustes no MVP com base no
+  feedback."
+
+  onde está:
+    - src/content/ciclos/s11.tsx: roteiro da entrevista e tarefas do teste de usabilidade,
+      cronometrado
+
+  RESSALVA: Os INSTRUMENTOS estão prontos; o resultado não existe porque a semana não
+  chegou. O bloco de feedback está em "nenhum" de propósito: inventar fala de cliente seria
+  fabricar evidência (ADR-020).
+
+  [parcial] planejado-realizado
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  pedido: "SR2: comparação planejado x realizado; limitações, trade-offs e próximos
+  passos."
+
+  onde está:
+    - src/content/ciclos/s12.tsx: a tabela planejado × realizado e o trabalho futuro
+      declarado
+
+  RESSALVA: A coluna "realizado" fica "a preencher" até o semestre terminar, pela mesma
+  razão do item acima.
+
+  [atendido] documentacao-tecnica
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  pedido: "SR2: documentação técnica; evidências técnicas consolidadas."
+
+  onde está:
+    - docs/: arquitetura, decisões, segurança, nuvem, privacidade, banco, releases e
+      validação
+    - DOSSIE.txt: o projeto inteiro em texto, gerado do próprio código
+
+  [atendido] testes
+  ~~~~~~~~~~~~~~~~~
+  pedido: "Evidências de testes; registros de testes e evolução do backlog."
+
+  onde está:
+    - 420 testes de unidade em Vitest, 72 end-to-end em Playwright
+    - scripts/verificar-vazamento.ts: 98 checagens contra o build de produção
+
+  [atendido] google-site
+  ~~~~~~~~~~~~~~~~~~~~~~
+  pedido: "Semana 1: Google Site do grupo criado."
+
+  onde está:
+    - A página inicial deste repositório substitui o Google Site, e é o artefato avaliado
+
+  RESSALVA: A ferramenta é outra, a evidência é a mesma: registro semanal público, com
+  histórico versionado em vez de edição anônima.
+
+--- Placar da auditoria --------------------------------------------------------------------
+
+  - atendido: 18
+  - parcial: 4
+  - fora de escopo: 1
+  - total de requisitos rastreados: 23
+
+============================================================================================
+11.  AS REGRAS QUE NÃO SE NEGOCIAM
+============================================================================================
+
+
+
+  1. **Nenhum dado real** de pessoa ou da SESAU entra no repositório, no seed ou em prompt de
+     IA. Tudo sintético. Há teste que falha se um CPF, e-mail ou telefone aparecer na base.
+  2. **Datas só mudam em `src/lib/cronograma.ts`.** É a fonte única de verdade; header,
+     releases, registro e checklist derivam dela.
+  3. **Arquivos de `src/content/ciclos/` nunca contêm `'use client'`.** Um componente cliente
+     ali geraria chunk próprio em `.next/static`, e conteúdo de release futuro vazaria. Se
+     precisar de interatividade, use um componente compartilhado de `src/components/`.
+  4. **Conteúdo vive no Git, não em formulário.** O painel administrativo decide *quando* o
+     que já existe fica visível; ele não edita texto.
+  5. **Documento de entrega é TSX, nunca PDF.** SWOT, personas, mapa de empatia, backlog —
+     tudo entra em `documentos` no arquivo do ciclo e é renderizado dentro da página. Quem
+     avalia clica no título e lê ali; não baixa arquivo, não troca de aba, não depende de link
+     que expira. Evidência que aponta para documento usa a âncora `#doc-<ciclo>-<id>`, e há
+     teste que falha se a âncora não tiver destino.
+  6. **Data nunca é `Date`.** Sempre `YYYY-MM-DD` em string, comparada lexicograficamente. O
+     "hoje" é injetado nas funções de regra, nunca lido dentro delas.
+  7. **Motor de cálculo é função pura.** Sem I/O, sem relógio, sem aleatoriedade.
+  8. **Nada de travessão na copy.** Em texto que aparece na tela, use dois-pontos quando for
+     rótulo e explicação (`semana 5: arquitetura`) e vírgula ou ponto quando for prosa. Em
+     comentário de código o travessão continua livre: comentário não é copy.
+  9. **Tela do sistema passa por dois portões, nessa ordem.** Release (`exigirFeature`) e
+     perfil (`exigirPerfil`), sempre antes de montar o componente. Sanfona fechada não esconde
+     nada do HTML, então a ordem é a proteção. Quem não tem direito recebe 404, nunca 403: da
+     porta, "ainda não liberado" e "não é seu" precisam ser indistinguíveis. Há teste que
+     percorre as 8 telas contra os 4 perfis.
+  10. **Um acento só.** `--color-acento` é o laranja da CESAR e aparece em no máximo três
+     lugares por tela: número grande, chamada sólida e pílula/ícone do fluxo. Se precisar de
+     mais uma cor para diferenciar alguma coisa, use hairline e caixa alta, não cor.
+
+
+============================================================================================
+12.  DECISÕES DE ARQUITETURA (ADRS)
+============================================================================================
+
+Os porquês completos estão em `docs/decisoes.md`. Os títulos, aqui:
+
+  - ADR-001 · Regra de pontuação é dado versionado, não código
+  - ADR-002 · Motor de cálculo é função pura
+  - ADR-003 · Peso normalizado só na divisão final
+  - ADR-004 · Configuração global vem de env var em produção até a F3
+  - ADR-005 · Conteúdo de ciclo nunca é Client Component
+  - ADR-006 · Formulários HTML puros em vez de estado no cliente
+  - ADR-007 · Datas civis em string, nunca `Date`
+  - ADR-008 · Checklist da matriz vive no Git, não em formulário
+  - ADR-009 · Botão primário usa tinta sobre laranja, não branco
+  - ADR-010 · Camada de escrita da F2 é em memória, e isso é declarado
+  - ADR-011 · O schema de banco existe, mas o app não depende dele
+  - ADR-012 · Critério da decisão: requisito do professor × escolha de stack
+  - ADR-013 · As políticas de RLS foram testadas contra um PostgreSQL real
+  - ADR-014 · Invariantes de negócio são gatilho, não política
+  - ADR-015 · Avançar fase exige sessão de admin, e o controle some para os demais
+  - ADR-016 · Identidade "folha de especificação": escuro, monoespaçado, um acento
+  - ADR-017 · Reveal no scroll sem JavaScript
+  - ADR-018 · O site é uma página só, e por isso a raiz deixou de ser estática
+  - ADR-019 · Documento de entrega é TSX renderizado, não PDF anexado
+  - ADR-020 · Semanas futuras são planejamento declarado, não relato
+  - ADR-021 · A vitrine abre com prazo, não com interruptor
+  - ADR-022 · Modelos treinam offline; o site lê o resultado versionado
+  - ADR-023 · O sistema é uma página só, e o perfil deixa de ser decoração
+  - ADR-024 · O tutorial passou a conduzir, e o seletor de perfil ganhou o primeiro
+    JavaScript
+  - ADR-025 · A terceira lente era Nuvem, e o projeto estava chamando de Direito
+
+============================================================================================
+13.  COMO RODAR E COMO CONFERIR
+============================================================================================
+
+  npm run dev                    next dev
+  npm run build                  next build
+  npm run start                  next start
+  npm run lint                   eslint
+  npm run typecheck              tsc --noEmit
+  npm run test                   vitest run
+  npm run test:watch             vitest
+  npm run e2e                    playwright test
+  npm run semear                 tsx scripts/semear.ts
+  npm run testar-rls             vitest run src/lib/supabase/rls.test.ts src/lib/dados/semeadura.test.ts
+  npm run verificar-vazamento    tsx scripts/verificar-vazamento.ts
+  npm run dossie                 tsx --tsconfig scripts/tsconfig.dossie.json scripts/dossie.ts
+  npm run conferir-dossie        tsx --tsconfig scripts/tsconfig.dossie.json scripts/dossie.ts --conferir
+  npm run verificar              npm run typecheck && npm run test && npm run build && npm run verificar-vazamento && npm run conferir-dossie
+
+
+--- Estado da vitrine no momento em que este dossiê foi gerado -----------------------------
+
+  - fecha em: 2026-08-17T18:00:00Z
+  - data simulada: 2027-01-15
+
+============================================================================================
+FIM DO DOSSIÊ
+============================================================================================

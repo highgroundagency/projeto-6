@@ -50,6 +50,7 @@ export async function TelaContestacao({ ctx }: PropsTela) {
       ) : null}
 
       <Painel
+        alvo="cont-abrir"
         titulo="Abrir contestação"
         descricao="A contestação não altera o resultado por si só: ela abre uma análise, que fica registrada na trilha."
       >
@@ -142,6 +143,7 @@ export async function TelaContestacao({ ctx }: PropsTela) {
       </Painel>
 
       <Painel
+        alvo="cont-lista"
         titulo={`Contestações de ${gestor.nome}`}
         descricao={`${minhas.length} de ${todas.length} registradas no sistema.`}
       >

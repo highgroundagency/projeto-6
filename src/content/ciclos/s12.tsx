@@ -78,6 +78,11 @@ export const registro = {
       { tipo: 'documento', rotulo: 'Trabalho futuro declarado', url: '#doc-s12-futuro' },
       {
         tipo: 'documento',
+        rotulo: 'Nuvem: trade-offs de infraestrutura e evolução',
+        url: '#doc-s12-nuvem',
+      },
+      {
+        tipo: 'documento',
         rotulo: 'Direito: Privacy by Design e direitos dos titulares',
         url: '#doc-s12-direito-titulares',
       },
@@ -86,6 +91,102 @@ export const registro = {
 } satisfies RegistroSemana
 
 export const documentos = [
+  {
+    id: 'nuvem',
+    titulo: 'Nuvem: trade-offs de infraestrutura e evolução',
+    resumo:
+      'o que foi escolhido, o que foi recusado, e o que a arquitetura aguenta antes de precisar mudar.',
+    Conteudo: () => (
+      <>
+        <Secao
+          titulo="As escolhas, com a alternativa recusada ao lado"
+          descricao="Trade-off sem a alternativa nomeada não é trade-off: é justificativa."
+        >
+          <Tabela
+            colunas={['Escolhido', 'Recusado', 'Por quê']}
+            linhas={[
+              [
+                'Funções serverless',
+                'Contêiner sempre ligado',
+                'A carga é sazonal: pico no fechamento da competência, silêncio no resto do mês. Máquina ligada 30 dias para trabalhar 3 é custo sem serviço',
+              ],
+              [
+                'Postgres gerenciado com RLS',
+                'Banco em máquina própria',
+                'Autorização no banco vale para todo caminho de escrita, e ninguém da equipe precisa aplicar correção de segurança de madrugada',
+              ],
+              [
+                'Renderização no servidor a cada requisição',
+                'Site estático regerado por webhook',
+                'O que o visitante pode ver depende do dia E da sessão dele. Estático exigiria uma versão por combinação, ou vazaria conteúdo futuro no HTML',
+              ],
+              [
+                'Treino de ML offline, resultado em JSON',
+                'Inferência sob demanda numa função',
+                'Partida a frio com scikit-learn custa segundos para exibir número que muda entre deploys. E o JSON versionado é auditável (ADR-022)',
+              ],
+              [
+                'Deploy por push no Git',
+                'Pipeline própria com aprovação manual',
+                'Uma equipe de seis, num semestre, gasta mais mantendo a esteira do que ganha com ela',
+              ],
+              [
+                'Config em variável de ambiente e no Git',
+                'Painel de administração escrevendo em banco',
+                'Conteúdo versionado deixa histórico de quem mudou o quê. Formulário não deixa (§7.3)',
+              ],
+            ]}
+          />
+        </Secao>
+
+        <Secao
+          titulo="Até onde isto aguenta"
+          descricao="Número honesto: a SESAU tem dezenas de indicadores e centenas de avaliados, não milhões."
+        >
+          <Tabela
+            colunas={['Dimensão', 'Hoje no protótipo', 'O que aguentaria em produção']}
+            linhas={[
+              ['Áreas técnicas', '10 sintéticas', 'Dezenas: o custo é linear e trivial'],
+              ['Indicadores', '30 sintéticos', 'Centenas, sem mudança de arquitetura'],
+              [
+                'Gestores avaliados',
+                'Dezenas na base sintética',
+                'Milhares: o cálculo é por gestor e paraleliza sozinho',
+              ],
+              [
+                'Competências',
+                'Mensal',
+                'Mensal continua sendo o pico; o resto do mês é leitura',
+              ],
+              [
+                'Trilha de auditoria',
+                'Centenas de eventos em memória',
+                'Cresce para sempre por desenho. Em produção pede índice por ciclo e arquivamento por competência antiga, e isso está declarado como pendência',
+              ],
+            ]}
+          />
+          <Nota>
+            O gargalo real não é técnico: é a janela de lançamento. Todas as áreas informam nos
+            mesmos dois dias do mês, e é ali que a função escala. Serverless resolve exatamente
+            esse formato de carga, e é a razão principal da escolha.
+          </Nota>
+        </Secao>
+
+        <Secao titulo="O que falta para virar produção">
+          <Lista
+            itens={[
+              'Ligar o schema de `supabase/migrations/` ao runtime: ele está escrito, testado contra um Postgres real, e desligado (ADR-011).',
+              'Autenticação institucional de verdade no lugar do seletor de perfil simulado, com as políticas de RLS já escritas assumindo o controle.',
+              'Rate limit persistente: o contador atual vive na memória de uma instância, e em serverless isso é best-effort declarado.',
+              'CSP com nonce por requisição no lugar do unsafe-inline herdado do bootstrap do framework.',
+              'Observabilidade além do health check: hoje há `/api/status`, e falta série temporal de erro e latência.',
+              'Rotina de backup e teste de restauração do banco, que num sistema que paga gratificação não é opcional.',
+            ]}
+          />
+        </Secao>
+      </>
+    ),
+  },
   {
     id: 'direito-titulares',
     titulo: 'Direito: Privacy by Design e direitos dos titulares',

@@ -75,7 +75,7 @@ export async function TelaAuditoria({ ctx }: PropsTela) {
         </Aviso>
       </div>
 
-      <Painel titulo="Filtros">
+      <Painel alvo="aud-filtros" titulo="Filtros">
         <form
           method="get"
           action={`/sistema${ancoraDaTela('auditoria')}`}
@@ -129,6 +129,7 @@ export async function TelaAuditoria({ ctx }: PropsTela) {
       </Painel>
 
       <Painel
+        alvo="aud-linha"
         titulo="Linha do tempo"
         descricao={`${filtrados.length} eventos de ${todos.length}. Exibindo os ${Math.min(LIMITE, filtrados.length)} mais recentes.`}
       >
@@ -157,7 +158,7 @@ export async function TelaAuditoria({ ctx }: PropsTela) {
         ) : null}
       </Painel>
 
-      <Painel titulo="Resumo" descricao="Contagem por tipo de evento.">
+      <Painel alvo="aud-resumo" titulo="Resumo" descricao="Contagem por tipo de evento.">
         <ul className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
           {Object.entries(ROTULO_TIPO).map(([valor, rotulo]) => {
             const quantidade = todos.filter((e) => e.tipo === valor).length

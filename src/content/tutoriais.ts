@@ -3,9 +3,9 @@ import type { FeatureId, PerfilId } from '@/lib/features'
 /**
  * O aprendizado guiado, um por papel.
  *
- * Não é um tour de overlay: é uma lista numerada em que cada passo aponta para
- * a sanfona da tela correspondente. Sem JavaScript, sem biblioteca, e continua
- * funcionando quando a pessoa imprime a página.
+ * Cada passo é uma parada de um passeio DENTRO do sistema: com `?passo=N` a
+ * página monta a tela do passo sozinha no palco e contorna o elemento que o
+ * texto está descrevendo. Ver `src/components/sistema/tour.tsx`.
  *
  * CADA PASSO PRECISA DE UMA TELA EXISTENTE. A interface descarta os passos cujo
  * `tela` ainda não foi liberada ou não pertence ao perfil: um tutorial que
@@ -20,6 +20,14 @@ export interface PassoTutorial {
   readonly porque: string
   /** `null` = passo de contexto, sem tela para abrir. */
   readonly tela: FeatureId | null
+  /**
+   * O `data-alvo` do elemento que o passo está descrevendo.
+   *
+   * É o que faz o passeio APONTAR em vez de só narrar. O nome tem de existir na
+   * tela correspondente, e há teste que falha se não existir: um passo que
+   * contorna o vazio é pior que um passo sem contorno.
+   */
+  readonly alvo: string | null
 }
 
 export interface Tutorial {
@@ -39,6 +47,7 @@ export const TUTORIAIS: Record<PerfilId, Tutorial> = {
         porque:
           'A régua precisa estar acertada antes de alguém informar valor. Mudar peso no meio do ciclo é o que produz a desconfiança que este projeto ataca.',
         tela: 'indicadores',
+        alvo: 'ind-catalogo',
       },
       {
         titulo: 'Acompanhe quem já informou',
@@ -47,6 +56,7 @@ export const TUTORIAIS: Record<PerfilId, Tutorial> = {
         porque:
           'É a informação que hoje só existe cobrando por e-mail. Ver a pendência em tela substitui a pergunta "vocês já mandaram?".',
         tela: 'painel-cam',
+        alvo: 'cam-funil',
       },
       {
         titulo: 'Cubra a área que não conseguir lançar',
@@ -55,6 +65,7 @@ export const TUTORIAIS: Record<PerfilId, Tutorial> = {
         porque:
           'A CAM pode lançar por terceiros para o ciclo não travar, e o autor do lançamento fica registrado assim mesmo. Cobrir não é apagar de quem era a responsabilidade.',
         tela: 'lancamento',
+        alvo: 'lanc-formularios',
       },
       {
         titulo: 'Feche a janela e apure',
@@ -63,6 +74,7 @@ export const TUTORIAIS: Record<PerfilId, Tutorial> = {
         porque:
           'A máquina anda um passo por vez, de propósito. Sem estado explícito, ninguém sabe se um número ainda pode mudar.',
         tela: 'painel-cam',
+        alvo: 'cam-estado',
       },
       {
         titulo: 'Confira uma conta antes de publicar',
@@ -71,6 +83,7 @@ export const TUTORIAIS: Record<PerfilId, Tutorial> = {
         porque:
           'É a mesma tela que o avaliado vai abrir. Ver o resultado pelos olhos dele antes de publicar é o que evita a pergunta que ninguém sabe responder na reunião.',
         tela: 'meu-resultado',
+        alvo: 'res-memoria',
       },
       {
         titulo: 'Publique e olhe o agregado',
@@ -79,6 +92,7 @@ export const TUTORIAIS: Record<PerfilId, Tutorial> = {
         porque:
           'O agregado é o que vai para a reunião. A anonimização existe para que a comparação entre áreas possa ser projetada sem expor pessoas.',
         tela: 'painel-gestao',
+        alvo: 'gest-ranking',
       },
       {
         titulo: 'Descubra onde olhar no próximo ciclo',
@@ -87,6 +101,7 @@ export const TUTORIAIS: Record<PerfilId, Tutorial> = {
         porque:
           'Nenhum número daqui entra na conta da gratificação, e isso é regra, não limitação. Analytics serve para priorizar apoio, não para pontuar ninguém.',
         tela: 'analytics',
+        alvo: 'ana-risco',
       },
       {
         titulo: 'Responda quem discordou',
@@ -94,6 +109,7 @@ export const TUTORIAIS: Record<PerfilId, Tutorial> = {
         porque:
           'Contestação sem resposta escrita é ouvidoria de fachada. O registro é o que permite auditar depois se a comissão respondeu.',
         tela: 'contestacao',
+        alvo: 'cont-lista',
       },
       {
         titulo: 'Prove o que aconteceu',
@@ -102,6 +118,7 @@ export const TUTORIAIS: Record<PerfilId, Tutorial> = {
         porque:
           'É a diferença entre afirmar que o processo foi correto e conseguir demonstrar isso.',
         tela: 'auditoria',
+        alvo: 'aud-linha',
       },
     ],
   },
@@ -117,6 +134,7 @@ export const TUTORIAIS: Record<PerfilId, Tutorial> = {
         porque:
           'Cada área responde pelo que produz. Lançar indicador alheio é como assinar relatório de outro setor.',
         tela: 'lancamento',
+        alvo: 'lanc-area',
       },
       {
         titulo: 'Informe valor e evidência juntos',
@@ -125,6 +143,7 @@ export const TUTORIAIS: Record<PerfilId, Tutorial> = {
         porque:
           'Número sem procedência é opinião. A evidência é o que torna a conferência possível meses depois, quando ninguém lembra.',
         tela: 'lancamento',
+        alvo: 'lanc-formularios',
       },
       {
         titulo: 'Repare no aviso de valor estranho',
@@ -133,6 +152,7 @@ export const TUTORIAIS: Record<PerfilId, Tutorial> = {
         porque:
           'A vírgula no lugar errado é o erro mais comum e o mais caro. O sistema sinaliza e deixa a decisão com quem tem o dado na mão.',
         tela: 'lancamento',
+        alvo: 'lanc-formularios',
       },
       {
         titulo: 'Corrigiu? Não some com o anterior',
@@ -141,6 +161,7 @@ export const TUTORIAIS: Record<PerfilId, Tutorial> = {
         porque:
           'A correção entra como versão nova e o valor antigo continua na trilha. É o que separa corrigir de encobrir.',
         tela: 'lancamento',
+        alvo: 'lanc-formularios',
       },
     ],
   },
@@ -156,6 +177,7 @@ export const TUTORIAIS: Record<PerfilId, Tutorial> = {
         porque:
           'Hoje esse número chega pronto, sem contexto. Aqui ele vem com a faixa e com a régua que a produziu.',
         tela: 'meu-resultado',
+        alvo: 'res-score',
       },
       {
         titulo: 'Abra a memória de cálculo',
@@ -164,6 +186,7 @@ export const TUTORIAIS: Record<PerfilId, Tutorial> = {
         porque:
           'É a resposta para "por que deu isso?". A conta inteira fica aberta, item por item, e fecha na soma que você vê no cartão.',
         tela: 'meu-resultado',
+        alvo: 'res-memoria',
       },
       {
         titulo: 'Compare com os seus ciclos anteriores',
@@ -171,6 +194,7 @@ export const TUTORIAIS: Record<PerfilId, Tutorial> = {
         porque:
           'Um número sozinho não informa. A série mostra tendência, que é o que serve para conversar sobre desempenho.',
         tela: 'meu-resultado',
+        alvo: 'res-evolucao',
       },
       {
         titulo: 'Discorde formalmente, se for o caso',
@@ -179,6 +203,7 @@ export const TUTORIAIS: Record<PerfilId, Tutorial> = {
         porque:
           'Discordar deixa de ser telefonema e vira registro com prazo e resposta. É o direito de revisão do art. 20 da LGPD funcionando na prática.',
         tela: 'contestacao',
+        alvo: 'cont-abrir',
       },
     ],
   },
@@ -193,6 +218,7 @@ export const TUTORIAIS: Record<PerfilId, Tutorial> = {
         porque:
           'É o que foi divulgado. Toda conferência parte da afirmação que se quer testar.',
         tela: 'painel-gestao',
+        alvo: 'gest-ranking',
       },
       {
         titulo: 'Refaça a conta de um avaliado',
@@ -200,6 +226,7 @@ export const TUTORIAIS: Record<PerfilId, Tutorial> = {
         porque:
           'O motor é determinístico: o mesmo insumo com a mesma regra dá o mesmo número, sempre. Se não der, existe defeito.',
         tela: 'meu-resultado',
+        alvo: 'res-memoria',
       },
       {
         titulo: 'Confira a régua vigente na competência',
@@ -208,6 +235,7 @@ export const TUTORIAIS: Record<PerfilId, Tutorial> = {
         porque:
           'Ciclo antigo tem de ser apurado com a regra da época. Regra editada no lugar apagaria essa possibilidade.',
         tela: 'indicadores',
+        alvo: 'ind-regras',
       },
       {
         titulo: 'Volte aos insumos que geraram o número',
@@ -216,6 +244,7 @@ export const TUTORIAIS: Record<PerfilId, Tutorial> = {
         porque:
           'O score só é bom se o insumo for. A evidência é o que permite conferir a origem sem pedir favor a ninguém.',
         tela: 'lancamento',
+        alvo: 'lanc-formularios',
       },
       {
         titulo: 'Cheque a condução do ciclo',
@@ -224,6 +253,7 @@ export const TUTORIAIS: Record<PerfilId, Tutorial> = {
         porque:
           'Ciclo apurado com área faltando é achado de auditoria, e o funil mostra isso sem depender do relato de ninguém.',
         tela: 'painel-cam',
+        alvo: 'cam-funil',
       },
       {
         titulo: 'Veja se quem discordou foi respondido',
@@ -232,6 +262,7 @@ export const TUTORIAIS: Record<PerfilId, Tutorial> = {
         porque:
           'Contestação aberta sem resposta é o achado mais comum em processo de avaliação, e aqui ela fica visível em vez de arquivada.',
         tela: 'contestacao',
+        alvo: 'cont-lista',
       },
       {
         titulo: 'Percorra a trilha do começo ao fim',
@@ -240,6 +271,7 @@ export const TUTORIAIS: Record<PerfilId, Tutorial> = {
         porque:
           'A trilha é append-only. É a única peça do sistema que serve de prova, justamente porque ninguém a edita.',
         tela: 'auditoria',
+        alvo: 'aud-linha',
       },
       {
         titulo: 'Verifique o que o modelo NÃO fez',
@@ -248,6 +280,7 @@ export const TUTORIAIS: Record<PerfilId, Tutorial> = {
         porque:
           'Nenhuma saída de modelo entra no cálculo. Analytics aponta onde olhar; quem decide é a comissão, e a decisão é contestável.',
         tela: 'analytics',
+        alvo: 'ana-modelos',
       },
     ],
   },
