@@ -226,3 +226,29 @@ o bloco anima conforme o scroll; onde não houver, ele já nasce visível.
 dobra fica em `opacity: 0` até ser rolado — o que confunde captura de tela de página inteira
 e exigiria cuidado se algum dia houver impressão. `prefers-reduced-motion` desliga tudo e
 força opacidade cheia.
+
+---
+
+## ADR-018 · O site é uma página só, e por isso a raiz deixou de ser estática
+
+**Contexto.** O registro morava em `/registro` e a raiz era uma bifurcação: o professor tinha
+que escolher por onde entrar antes de saber o que havia de cada lado. Duas páginas para um
+site que cabe numa.
+
+**Decisão.** A raiz passa a conter tudo — problema, equipe, marcos e o registro semanal, cada
+semana num `<details>` que abre com a setinha. A mais recente já vem aberta. `/registro` vira
+redirecionamento para `/#registro`, para não quebrar link já compartilhado. O único caminho
+que sai da página é o sistema.
+
+**Consequência.** A raiz **deixou de ser estática**: o gate de release lê cookie e depende do
+calendário, então HTML assado no build congelaria o release ou vazaria semana futura. Ganhou
+`force-dynamic` e uma renderização por requisição — o preço de ter o registro ali.
+
+Duas armadilhas ficaram documentadas no código. A primeira: `<details>` fechado **continua no
+DOM**, então a sanfona não é mecanismo de ocultação; semana não liberada não pode ser
+renderizada, dobrada ou não, e o gate segue acontecendo antes do carregador. A segunda: as
+checagens de vazamento caíram de 120 para 90 porque `/registro` saiu da lista de rotas
+conferidas — não é cobertura perdida, é a mesma rota deixando de ser conferida duas vezes.
+
+O acordeão é `<details>` nativo, não Radix: zero JavaScript, teclado de graça, e nenhum
+componente cliente perto de conteúdo de ciclo (ADR-005 e ADR-006).

@@ -6,8 +6,9 @@ Contexto para qualquer pessoa (ou agente) que for mexer neste repositório.
 
 Site do Projeto 6 da CESAR School (2026.2, Equipe 1). Duas camadas:
 
-- **`/registro`** — o diário de bordo semanal. É o artefato avaliado pelo professor; ele
-  substitui o Google Site.
+- **`/`** — a página. Problema, equipe, marcos e o diário de bordo semanal, cada semana numa
+  sanfona `<details>`. É o artefato avaliado pelo professor e substitui o Google Site.
+  `/registro` continua existindo como redirecionamento para `/#registro`.
 - **`/sistema`** — MVP do cálculo da gratificação por desempenho da SESAU Recife.
 
 ## Regras que não se negociam

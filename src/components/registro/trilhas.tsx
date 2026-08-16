@@ -17,12 +17,12 @@ const TEXTO_ESTADO: Record<EstadoMarco, string> = {
  */
 export function TrilhaMarcos({ hoje }: { hoje: DataISO }) {
   return (
-    <section className="mt-10" aria-labelledby="titulo-marcos">
+    <section aria-labelledby="titulo-marcos">
       <h2 id="titulo-marcos" className="rotulo">
         Evolução do projeto
       </h2>
 
-      <ol className="mt-3 grid gap-px border border-linha bg-linha sm:grid-cols-3">
+      <ol className="mt-5 grid gap-px border border-linha bg-linha sm:grid-cols-3">
         {MARCOS.map((marco) => {
           const estado = estadoDoMarco(marco, hoje)
           return (

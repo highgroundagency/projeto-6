@@ -21,12 +21,13 @@ pessoas.
 A resposta do produto: **regra de pontuação como dado versionado** e **memória de cálculo
 auditável** — qualquer número exibido responde "de onde veio?" em um clique.
 
-## As duas portas
+## As rotas
 
 | Rota | O que é |
 | --- | --- |
-| `/registro` | O diário de bordo semanal da equipe — o artefato avaliado |
+| `/` | A página: problema, equipe, marcos e o registro semanal em sanfona — o artefato avaliado |
 | `/sistema` | O MVP funcionando, com dados 100% sintéticos |
+| `/registro` | Redirecionamento para `/#registro`, para não quebrar link já compartilhado |
 
 O site tem duas realidades: a **pública** (o recorte visível hoje) e a **completa** (tudo
 que a equipe já construiu). O recorte avança sozinho conforme o cronograma, uma semana à

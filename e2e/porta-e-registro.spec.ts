@@ -1,17 +1,12 @@
 import { expect, test } from '@playwright/test'
 
-test.describe('porta de entrada', () => {
-  test('mostra as duas escolhas e a chamada acima da dobra', async ({ page }) => {
+test.describe('página inicial', () => {
+  test('a chamada e o hero cabem acima da dobra', async ({ page }) => {
     await page.goto('/')
 
-    await expect(page.getByRole('link', { name: /registro do projeto/ })).toBeVisible()
-    await expect(page.getByRole('link', { name: /^02/ })).toBeVisible()
-
-    // A porta virou folha de especificação e rola de propósito — mas o hero e a
-    // chamada têm que caber sem rolagem, senão a primeira tela não diz nada.
-    const chamada = page.getByRole('link', { name: /ver o registro/ })
-    await expect(chamada).toBeInViewport()
+    // A página rola de propósito, mas a primeira tela precisa dizer o que é.
     await expect(page.getByRole('heading', { level: 1 })).toBeInViewport()
+    await expect(page.getByRole('link', { name: /ver o sistema/ }).first()).toBeInViewport()
   })
 
   test('não estoura a largura da tela', async ({ page }) => {
@@ -23,14 +18,27 @@ test.describe('porta de entrada', () => {
     expect(estoura).toBe(false)
   })
 
-  test('leva ao registro e ao sistema', async ({ page }) => {
+  test('traz o site inteiro: equipe, marcos, registro e o caminho do sistema', async ({ page }) => {
     await page.goto('/')
-    await page.getByRole('link', { name: /registro do projeto/ }).click()
-    await expect(page).toHaveURL(/\/registro$/)
 
-    await page.goto('/')
-    await page.getByRole('link', { name: /^02/ }).click()
+    await expect(page.getByRole('heading', { name: 'Equipe' })).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'Evolução do projeto' })).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'Registro semanal' })).toBeVisible()
+
+    // Os seis integrantes, com nome.
+    for (const nome of ['Gabriel', 'Matheus', 'João Henrique', 'João Pedro', 'Rafael', 'Fernando']) {
+      await expect(page.getByText(nome, { exact: false }).first()).toBeVisible()
+    }
+
+    await page.getByRole('link', { name: /ver o sistema/ }).first().click()
     await expect(page).toHaveURL(/\/sistema$/)
+  })
+
+  test('/registro continua funcionando e cai na seção', async ({ page }) => {
+    // A rota virou redirecionamento: link já compartilhado não pode quebrar.
+    await page.goto('/registro')
+    await expect(page).toHaveURL(/\/#registro$/)
+    await expect(page.getByRole('heading', { name: 'Registro semanal' })).toBeVisible()
   })
 
   test('tem foco de teclado visível no primeiro elemento navegável', async ({ page }) => {
@@ -43,7 +51,7 @@ test.describe('porta de entrada', () => {
 
 test.describe('registro do projeto', () => {
   test('cumpre os blocos exigidos pela diretriz', async ({ page }) => {
-    await page.goto('/registro')
+    await page.goto('/')
 
     await expect(page.getByRole('heading', { name: 'Registro semanal' })).toBeVisible()
 
@@ -62,7 +70,7 @@ test.describe('registro do projeto', () => {
   })
 
   test('mostra a equipe, a pergunta do projeto e a trilha de marcos', async ({ page }) => {
-    await page.goto('/registro')
+    await page.goto('/')
 
     await expect(page.getByRole('heading', { name: 'Equipe' })).toBeVisible()
     await expect(page.getByText(/confiável, transparente, sustentável e auditável/)).toBeVisible()
@@ -73,17 +81,37 @@ test.describe('registro do projeto', () => {
     }
   })
 
+  test('a semana mais recente abre sozinha e as outras dobram', async ({ page }) => {
+    await page.goto('/')
+
+    const semanas = page.locator('details[data-ciclo]')
+    const quantas = await semanas.count()
+    expect(quantas).toBeGreaterThan(1)
+
+    // A primeira já vem aberta: quem chega quer a semana atual.
+    await expect(semanas.first()).toHaveAttribute('open', '')
+    await expect(semanas.nth(1)).not.toHaveAttribute('open', '')
+
+    // A setinha abre as entregas daquela semana — sem JavaScript nosso.
+    const dobrada = semanas.nth(1)
+    await dobrada.getByRole('heading').click()
+    await expect(dobrada).toHaveAttribute('open', '')
+    await expect(dobrada.getByRole('heading', { name: 'Objetivo da semana' })).toBeVisible()
+  })
+
   test('não entrega conteúdo de ciclo ainda não liberado', async ({ page }) => {
-    await page.goto('/registro')
+    await page.goto('/')
     const html = await page.content()
 
+    // `<details>` fechado continua no DOM: por isso semana não liberada não pode
+    // sequer ser renderizada, dobrada ou não.
     expect(html).toContain('PRUMO-MARCADOR-CICLO-s1')
     expect(html).not.toContain('PRUMO-MARCADOR-CICLO-s4')
     expect(html).not.toContain('PRUMO-MARCADOR-CICLO-ko')
   })
 
   test('transparência no uso de IA está publicada', async ({ page }) => {
-    await page.goto('/registro')
+    await page.goto('/')
     // O registro tem dois caminhos para a página: o cartão de evidência da s1 e
     // o link do rodapé. Aqui exercitamos o do rodapé.
     await page.getByRole('link', { name: 'transparência no uso de ia', exact: true }).click()

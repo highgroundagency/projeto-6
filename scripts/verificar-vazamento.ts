@@ -84,7 +84,9 @@ async function main() {
     await esperarServidor(servidor)
 
     // ---- 1 e 2: HTML e payload RSC das páginas públicas ----
-    for (const rota of ['/', '/registro', '/transparencia-ia']) {
+    // `/registro` saiu da lista: virou redirecionamento para `/#registro`, e o
+    // registro semanal agora é uma seção da raiz. Conferir a raiz é conferir ele.
+    for (const rota of ['/', '/transparencia-ia']) {
       const html = await (await fetch(`${BASE}${rota}`)).text()
       const flight = await (await fetch(`${BASE}${rota}`, { headers: { RSC: '1' } })).text()
 
@@ -130,9 +132,9 @@ async function main() {
     // Sem esta checagem, um gate quebrado que escondesse tudo passaria batido.
     const token = await criarTokenSessao(SEGREDO)
     const comoAdmin = await (
-      await fetch(`${BASE}/registro`, { headers: { cookie: `${NOME_COOKIE_SESSAO}=${token}` } })
+      await fetch(`${BASE}/`, { headers: { cookie: `${NOME_COOKIE_SESSAO}=${token}` } })
     ).text()
-    const comoVisitante = await (await fetch(`${BASE}/registro`)).text()
+    const comoVisitante = await (await fetch(`${BASE}/`)).text()
 
     const vistosPeloAdmin = IDS_CICLOS.filter((id) => comoAdmin.includes(marcador(id)))
     const vistosPeloVisitante = IDS_CICLOS.filter((id) => comoVisitante.includes(marcador(id)))

@@ -1,23 +1,34 @@
-import Link from 'next/link'
 import { ClipboardCheck, ScrollText, Scale } from 'lucide-react'
 import { Chamada } from '@/components/base/botao'
 import { Cabecalho } from '@/components/base/cabecalho'
+import { FaixaAdmin } from '@/components/base/faixa-admin'
 import { AcaoDoFluxo, Conector, EstadoDoFluxo, Fluxo } from '@/components/base/fluxo'
+import { MarcaCesar } from '@/components/base/marca'
+import { Num } from '@/components/base/num'
 import { Rodape } from '@/components/base/rodape'
-import { INSTITUICAO } from '@/content/produto'
+import { Selo } from '@/components/base/selo'
+import { CicloSemRegistro, RegistroSemana } from '@/components/registro/registro-semana'
+import { TrilhaMarcos } from '@/components/registro/trilhas'
+import { carregarCiclos, temRegistro } from '@/content/ciclos/registro'
+import { EQUIPE, SELO_PAPEIS } from '@/content/equipe'
+import { INSTITUICAO, PERGUNTA_DO_PROJETO, PROBLEMA } from '@/content/produto'
+import { cicloPorId } from '@/lib/cronograma'
+import { formatarBR } from '@/lib/datas'
 import { BASE } from '@/lib/seed'
+import { obterVisao } from '@/lib/visao'
 
 /**
- * Porta de entrada.
+ * A página. Não uma porta de entrada para outras páginas: o site inteiro.
  *
- * Uma folha de especificação: o que a coisa faz, em números e em fluxo, sem
- * parágrafo de venda. A bifurcação continua sendo o centro — o professor
- * escolhe entrar pelo registro ou pelo sistema —, agora ancorada no que o
- * sistema é.
+ * O professor abre e tem tudo — o problema, a equipe, os marcos e cada semana
+ * do registro, dobrada numa sanfona. O único link que sai daqui é o sistema.
  *
- * É a única rota estática do site: não lê cookie nem data, então serve HTML
- * pronto do CDN e mantém o LCP baixo.
+ * ELA DEIXOU DE SER ESTÁTICA. Antes servia HTML pronto do CDN porque não lia
+ * nada; agora precisa do gate de release, que depende de cookie e do calendário.
+ * HTML assado no build congelaria o release ou vazaria semana futura — e o §6.3
+ * não admite nenhum dos dois. O custo é uma renderização por requisição.
  */
+export const dynamic = 'force-dynamic'
 
 const NUMEROS = [
   { valor: BASE.indicadores.length, legenda: 'indicadores na base sintética' },
@@ -25,54 +36,33 @@ const NUMEROS = [
   { valor: BASE.regras.length, legenda: 'versões da mesma regra' },
 ] as const
 
-function Porta({
-  href,
-  ordem,
-  rotulo,
-  descricao,
-  className,
-}: {
-  href: string
-  ordem: string
-  rotulo: string
-  descricao: string
-  className?: string
-}) {
-  return (
-    <Link
-      href={href}
-      className={`group flex min-h-52 flex-col justify-between gap-8 border border-linha p-8 transition-colors hover:bg-superficie focus-visible:bg-superficie sm:p-10 ${className ?? ''}`}
-    >
-      <span className="ordinal numero transition-colors group-hover:text-acento">{ordem}</span>
-      <span>
-        <span className="titulo-bloco block text-2xl sm:text-3xl">{rotulo}</span>
-        <span className="mt-2 flex items-center gap-2 text-sm lowercase">
-          {descricao}
-          <span aria-hidden className="text-acento transition-transform group-hover:translate-x-1">
-            →
-          </span>
-        </span>
-      </span>
-    </Link>
-  )
-}
+export default async function Pagina() {
+  const visao = await obterVisao()
 
-export default function PortaDeEntrada() {
+  // O GATE ACONTECE AQUI: só os ciclos aprovados chegam ao carregador. Passar a
+  // lista completa anularia a proteção do §6.3 — e não adianta dobrar a semana
+  // numa sanfona, porque `<details>` fechado continua no DOM.
+  const idsVisiveisComRegistro = visao.visiveis.filter((id) => temRegistro(id))
+  const carregados = await carregarCiclos(idsVisiveisComRegistro)
+
+  // Do mais recente para o mais antigo: quem abre a página quer a semana atual.
+  const emOrdemInversa = [...carregados].reverse()
+  const semRegistro = visao.visiveis.filter((id) => !temRegistro(id)).reverse()
+
   return (
     <>
+      <FaixaAdmin visao={visao} />
       <Cabecalho />
 
-      {/* Sangria total no mobile: em 360px cada pixel de padding lateral tira
-          tamanho da headline, e o bloco encostado na borda reforça a leitura
-          de tabela. Do sm para cima o conteúdo volta a respirar. */}
-      <main id="conteudo" className="mx-auto max-w-[1100px] px-0 pt-16 sm:px-8">
+      <main id="conteudo" className="mx-auto max-w-[1100px] px-0 sm:px-8">
         {/* Hero — o único lugar da página com imagem. */}
-        <section className="grao bloco border-x-0 border-t-0 pt-20 sm:pt-28">
-          {/* O período fica de fora: já está no rodapé, e a pílula com os três
-              precisava quebrar em duas linhas em 360px. */}
-          <span className="pilula numero">
-            {INSTITUICAO.escola} · {INSTITUICAO.equipe}
-          </span>
+        <section className="grao bloco border-x-0 border-t-0 pt-16 sm:pt-24">
+          <div className="flex flex-wrap items-center gap-x-5 gap-y-3">
+            <MarcaCesar className="h-10" />
+            <span className="pilula numero">
+              {INSTITUICAO.curso} · {INSTITUICAO.equipe}
+            </span>
+          </div>
 
           <h1 className="hero cursor mt-8">gratificação fora da planilha</h1>
 
@@ -82,7 +72,7 @@ export default function PortaDeEntrada() {
           </p>
 
           <div className="mt-9">
-            <Chamada href="/registro">ver o registro →</Chamada>
+            <Chamada href="/sistema">ver o sistema →</Chamada>
           </div>
         </section>
 
@@ -96,20 +86,90 @@ export default function PortaDeEntrada() {
           ))}
         </section>
 
-        <nav aria-label="Escolha por onde entrar" className="grade-blocos grade-2">
-          <Porta
-            href="/registro"
-            ordem="01"
-            rotulo="registro do projeto"
-            descricao="a trajetória da equipe, semana a semana"
-          />
-          <Porta
-            href="/sistema"
-            ordem="02"
-            rotulo="sistema"
-            descricao="o mvp funcionando"
-          />
-        </nav>
+        <section className="bloco revelar" aria-labelledby="titulo-problema">
+          <h2 id="titulo-problema" className="rotulo">
+            o problema
+          </h2>
+          <div className="prosa mt-4 space-y-3 text-sm">
+            {PROBLEMA.map((paragrafo) => (
+              <p key={paragrafo}>{paragrafo}</p>
+            ))}
+          </div>
+          <p className="titulo-bloco prosa mt-7 border-l-2 border-acento pl-4 normal-case">
+            {PERGUNTA_DO_PROJETO}
+          </p>
+        </section>
+
+        {/* Equipe: nome, papel e frente de cada integrante. */}
+        <section id="equipe" className="bloco revelar scroll-mt-20" aria-labelledby="titulo-equipe">
+          <div className="flex flex-wrap items-center gap-3">
+            <h2 id="titulo-equipe" className="rotulo">
+              equipe
+            </h2>
+            <Selo selo={SELO_PAPEIS} />
+          </div>
+
+          <ul className="mt-6 grid gap-x-8 gap-y-7 sm:grid-cols-2 lg:grid-cols-3">
+            {EQUIPE.map((integrante) => (
+              <li key={integrante.id} className="flex gap-3">
+                <span
+                  aria-hidden
+                  className="numero flex size-9 shrink-0 items-center justify-center border border-linha-alta text-xs"
+                >
+                  {integrante.iniciais}
+                </span>
+                <div className="min-w-0">
+                  <p className="fonte-display text-sm leading-tight">{integrante.nome}</p>
+                  <p className="rotulo mt-1 text-acento">{integrante.papel}</p>
+                  <p className="mt-1.5 text-xs leading-relaxed">{integrante.frente}</p>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        {/* A TrilhaMarcos já traz a própria section e o próprio heading. */}
+        <div className="bloco revelar">
+          <TrilhaMarcos hoje={visao.hoje} />
+        </div>
+
+        {/* O registro semanal, dobrado. */}
+        <section id="registro" className="bloco scroll-mt-20" aria-labelledby="titulo-registro">
+          <h2 id="titulo-registro" className="rotulo">
+            Registro semanal
+          </h2>
+          <p className="prosa mt-2 text-sm lowercase">
+            uma semana por linha. a setinha abre as entregas daquela semana.
+          </p>
+
+          {emOrdemInversa.length === 0 ? (
+            <p className="mt-6 border border-dashed border-linha px-4 py-6 text-sm">
+              O semestre ainda não começou. O primeiro registro é publicado em{' '}
+              <Num>{formatarBR(cicloPorId('s1').data)}</Num>.
+            </p>
+          ) : (
+            <>
+              <div className="mt-6">
+                {emOrdemInversa.map(({ id, modulo }, indice) => (
+                  <RegistroSemana
+                    key={id}
+                    registro={modulo.registro}
+                    detalhes={modulo.Detalhes ? <modulo.Detalhes /> : undefined}
+                    aberta={indice === 0}
+                  />
+                ))}
+              </div>
+
+              {semRegistro.length > 0 ? (
+                <div className="mt-6 space-y-2">
+                  {semRegistro.map((id) => (
+                    <CicloSemRegistro key={id} ciclo={id} />
+                  ))}
+                </div>
+              ) : null}
+            </>
+          )}
+        </section>
 
         {/* O fluxo real do ciclo, não um fluxo ilustrativo. */}
         <section className="bloco revelar">
@@ -122,7 +182,10 @@ export default function PortaDeEntrada() {
             <Fluxo>
               <EstadoDoFluxo>lançamento aberto</EstadoDoFluxo>
               <Conector />
-              <AcaoDoFluxo icone={<ClipboardCheck size={24} strokeWidth={1.5} />} titulo="área técnica informa">
+              <AcaoDoFluxo
+                icone={<ClipboardCheck size={24} strokeWidth={1.5} />}
+                titulo="área técnica informa"
+              >
                 valor e evidência de cada indicador, dentro da janela do ciclo.
               </AcaoDoFluxo>
               <Conector />
@@ -148,9 +211,14 @@ export default function PortaDeEntrada() {
           <p className="prosa mt-2 text-sm lowercase">
             planilha manual sai. cada valor fica rastreável até a origem.
           </p>
-          <p className="numero mt-6 text-sm text-apagado">
+          <p className="numero mt-6 text-sm">
             score = (Σ pontos × peso) ÷ (Σ peso × pontuação máxima) × 100
           </p>
+          <div className="mt-8">
+            <Chamada href="/sistema" variante="secundario">
+              ver o sistema →
+            </Chamada>
+          </div>
         </section>
 
         <Rodape className="px-6 pb-8 sm:px-0" />

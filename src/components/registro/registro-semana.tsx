@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react'
+import { ChevronDown } from 'lucide-react'
 import { Num } from '@/components/base/num'
 import { Etiqueta, Selo } from '@/components/base/selo'
 import { integrantePorId } from '@/content/equipe'
@@ -51,36 +52,61 @@ function Itens({ itens }: { itens: readonly string[] }) {
   )
 }
 
+/**
+ * Uma semana, dobrada.
+ *
+ * `<details>` nativo: a setinha abre e fecha sem uma linha de JavaScript, é
+ * navegável por teclado de graça e continua funcionando com JS desligado
+ * (ADR-006). Radix Accordion faria o mesmo com um componente cliente — e
+ * componente cliente perto de conteúdo de ciclo é justamente o que a ADR-005
+ * proíbe.
+ *
+ * ATENÇÃO: o conteúdo de um `<details>` fechado continua no DOM. Isto NÃO é um
+ * mecanismo de ocultação — semana não liberada não chega aqui, porque o gate de
+ * release filtra antes de carregar o módulo. Ver §6.3.
+ */
 export function RegistroSemana({
   registro,
   detalhes,
+  aberta = false,
 }: {
   registro: TipoRegistro
   detalhes?: ReactNode
+  /** A semana mais recente abre sozinha; as anteriores ficam dobradas. */
+  aberta?: boolean
 }) {
   const ciclo = cicloPorId(registro.ciclo)
   const bloqueios = registro.bloqueios.conteudo
   const feedback = registro.feedback.conteudo
 
   return (
-    <article
+    <details
       id={`ciclo-${ciclo.id}`}
       data-marcador={registro.marcador}
       data-ciclo={ciclo.id}
-      className="scroll-mt-4 border border-linha bg-fundo"
+      open={aberta}
+      className="group scroll-mt-20 border border-linha bg-fundo [&+&]:mt-[-1px]"
     >
-      <header className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-2 border-b-2 border-acento px-4 py-3 sm:px-5">
-        <div className="flex items-baseline gap-3">
+      <summary className="flex cursor-pointer list-none flex-wrap items-baseline justify-between gap-x-4 gap-y-2 px-4 py-4 transition-colors hover:bg-superficie sm:px-5 [&::-webkit-details-marker]:hidden">
+        {/* O título fica como heading de verdade dentro do summary: é assim que
+            quem navega por leitor de tela pula de semana em semana. */}
+        <span className="flex items-baseline gap-3">
           <Num className="text-xs text-apagado">{ciclo.id.toUpperCase()}</Num>
           <h3 className="fonte-display text-xl">{ciclo.rotulo}</h3>
-        </div>
-        <div className="flex items-center gap-2">
+        </span>
+        <span className="flex items-center gap-3">
           {ciclo.tipo === 'marco' ? <Etiqueta tom="acento">marco</Etiqueta> : null}
           <Num className="text-sm">{formatarBR(ciclo.data)}</Num>
-        </div>
-      </header>
+          <ChevronDown
+            aria-hidden
+            size={18}
+            strokeWidth={1.5}
+            className="text-acento transition-transform group-open:rotate-180"
+          />
+        </span>
+      </summary>
 
-      <div className="px-4 py-2 sm:px-5">
+      <div className="border-t-2 border-acento px-4 py-2 sm:px-5">
         <Bloco rotulo="Objetivo da semana" bloco={registro.objetivo}>
           <p className="fonte-display text-base leading-snug">{registro.objetivo.conteudo}</p>
         </Bloco>
@@ -179,7 +205,7 @@ export function RegistroSemana({
           {detalhes}
         </div>
       ) : null}
-    </article>
+    </details>
   )
 }
 
