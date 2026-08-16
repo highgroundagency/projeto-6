@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { Num } from '@/components/base/num'
+
 import { Etiqueta } from '@/components/base/selo'
 import { Rodape } from '@/components/base/rodape'
 import { coletarStatus } from '@/lib/status'
