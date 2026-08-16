@@ -51,7 +51,7 @@ export const registro = {
     selo: 'rascunho',
     validadoPor: null,
     conteudo: [
-      'A validação depende da agenda da CAM, que não está sob controle da equipe, marcar com antecedência é o único mitigador.',
+      'A validação depende da agenda da CAM, que não está sob controle da equipe; marcar com antecedência é o único mitigador.',
     ],
   },
 

@@ -343,6 +343,18 @@ dias" e o SR2 aparecia como "a realizar". `RELEASE_DATA_SIMULADA` move o calend�
 inteiro, e só funciona com a janela aberta — quando o prazo vence, a data volta junto com a
 visibilidade, sem ninguém precisar lembrar.
 
+**A vitrine é versionada, e a env var só a corrige.** `src/content/vitrine.ts` carrega o
+prazo e a data simulada no próprio código, então abrir a vitrine é um `git push`, e não uma
+visita ao painel da Vercel para colar dois valores e pedir redeploy. `RELEASE_ABERTO_ATE` e
+`RELEASE_DATA_SIMULADA` continuam existindo e vencem o valor versionado, para quem opera
+conseguir consertar uma data errada às pressas sem abrir o editor.
+
+Consequência que precisou de conserto em três lugares: com a vitrine aberta por padrão,
+`verificar-vazamento` e o Playwright passariam a medir a exceção em vez do comportamento
+normal, e a garantia do §6.3 ficaria sem prova justamente nos dias em que ela mais importa.
+Os dois fecham a janela explicitamente por env var, e os testes de unidade recebem a vitrine
+por parâmetro em vez de ler a global.
+
 **A simulação achou um bug.** Com o site em janeiro de 2027, a pílula "esta semana" grudou no
 SR2. `cicloCorrente` devolve o último ciclo já vencido, o que está certo para "qual foi o
 último" e errado para "qual é esta semana" — e a diferença só aparece depois do fim do

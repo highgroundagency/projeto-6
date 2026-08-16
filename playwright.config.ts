@@ -55,6 +55,10 @@ export default defineConfig({
     env: {
       ADMIN_COOKIE_SECRET: 'segredo-de-teste-e2e-com-tamanho-suficiente',
       ADMIN_SENHA: '0321',
+      // Vitrine fechada: a suíte exercita o comportamento normal do site. Com a
+      // vitrine aberta, todo ciclo fica visível e metade das asserções de gate
+      // deixaria de medir qualquer coisa. Ver ADR-021.
+      RELEASE_ABERTO_ATE: '2020-01-01T00:00:00Z',
     },
   },
 })

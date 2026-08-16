@@ -15,6 +15,10 @@ import {
 } from './releases'
 import { CRONOGRAMA, cicloPorId } from './cronograma'
 
+// Vitrine fechada injetada: os casos abaixo medem a REGRA, não o valor que
+// `src/content/vitrine.ts` estiver carregando hoje.
+const FECHADA = { ate: null, dataSimulada: null }
+
 describe('calcularReleaseAtual', () => {
   it('usa uma semana de adiantamento por padrão', () => {
     expect(ADIANTAMENTO_PADRAO).toBe(7)
@@ -177,51 +181,51 @@ describe('janela de vitrine com prazo', () => {
   const agora = new Date('2026-08-16T18:00:00Z')
 
   it('fica fechada sem a variável', () => {
-    expect(janelaAberta({}, agora)).toBe(false)
+    expect(janelaAberta({}, agora, FECHADA)).toBe(false)
   })
 
   it('fica fechada com valor vazio ou só espaço', () => {
-    expect(janelaAberta({ RELEASE_ABERTO_ATE: '' }, agora)).toBe(false)
-    expect(janelaAberta({ RELEASE_ABERTO_ATE: '   ' }, agora)).toBe(false)
+    expect(janelaAberta({ RELEASE_ABERTO_ATE: '' }, agora, FECHADA)).toBe(false)
+    expect(janelaAberta({ RELEASE_ABERTO_ATE: '   ' }, agora, FECHADA)).toBe(false)
   })
 
   it('abre enquanto o prazo não venceu', () => {
-    expect(janelaAberta({ RELEASE_ABERTO_ATE: '2026-08-17T06:00:00Z' }, agora)).toBe(true)
+    expect(janelaAberta({ RELEASE_ABERTO_ATE: '2026-08-17T06:00:00Z' }, agora, FECHADA)).toBe(true)
   })
 
   it('fecha sozinha quando o prazo vence', () => {
     const depois = new Date('2026-08-17T06:00:01Z')
-    expect(janelaAberta({ RELEASE_ABERTO_ATE: '2026-08-17T06:00:00Z' }, depois)).toBe(false)
+    expect(janelaAberta({ RELEASE_ABERTO_ATE: '2026-08-17T06:00:00Z' }, depois, FECHADA)).toBe(false)
   })
 
   it('fecha no instante exato do prazo, sem empate a favor', () => {
     const exato = new Date('2026-08-17T06:00:00Z')
-    expect(janelaAberta({ RELEASE_ABERTO_ATE: '2026-08-17T06:00:00Z' }, exato)).toBe(false)
+    expect(janelaAberta({ RELEASE_ABERTO_ATE: '2026-08-17T06:00:00Z' }, exato, FECHADA)).toBe(false)
   })
 
   it('trata valor malformado como fechada, em vez de lançar', () => {
     // Uma env var digitada errada não pode derrubar o site — e muito menos
     // abri-lo por acidente.
-    expect(janelaAberta({ RELEASE_ABERTO_ATE: 'amanhã de manhã' }, agora)).toBe(false)
-    expect(janelaAberta({ RELEASE_ABERTO_ATE: '17/08/2026' }, agora)).toBe(false)
+    expect(janelaAberta({ RELEASE_ABERTO_ATE: 'amanhã de manhã' }, agora, FECHADA)).toBe(false)
+    expect(janelaAberta({ RELEASE_ABERTO_ATE: '17/08/2026' }, agora, FECHADA)).toBe(false)
   })
 })
 
 describe('data simulada da janela', () => {
   it('devolve null sem a variável', () => {
-    expect(dataSimuladaDaJanela({})).toBeNull()
+    expect(dataSimuladaDaJanela({}, FECHADA)).toBeNull()
   })
 
   it('aceita uma data ISO válida', () => {
-    expect(dataSimuladaDaJanela({ RELEASE_DATA_SIMULADA: '2027-01-15' })).toBe('2027-01-15')
+    expect(dataSimuladaDaJanela({ RELEASE_DATA_SIMULADA: '2027-01-15' }, FECHADA)).toBe('2027-01-15')
   })
 
   it('recusa formato que não seja YYYY-MM-DD', () => {
     // Nada de `new Date('15/01/2027')`: data neste projeto é string comparada
     // lexicograficamente, e formato errado não pode virar data silenciosamente.
-    expect(dataSimuladaDaJanela({ RELEASE_DATA_SIMULADA: '15/01/2027' })).toBeNull()
-    expect(dataSimuladaDaJanela({ RELEASE_DATA_SIMULADA: '2027-13-99' })).toBeNull()
-    expect(dataSimuladaDaJanela({ RELEASE_DATA_SIMULADA: 'ano que vem' })).toBeNull()
+    expect(dataSimuladaDaJanela({ RELEASE_DATA_SIMULADA: '15/01/2027' }, FECHADA)).toBeNull()
+    expect(dataSimuladaDaJanela({ RELEASE_DATA_SIMULADA: '2027-13-99' }, FECHADA)).toBeNull()
+    expect(dataSimuladaDaJanela({ RELEASE_DATA_SIMULADA: 'ano que vem' }, FECHADA)).toBeNull()
   })
 
   it('numa data depois do fim do cronograma, todos os marcos estão feitos', () => {

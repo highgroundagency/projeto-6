@@ -9,6 +9,7 @@
  * Quem faz I/O é `src/lib/config` e `src/lib/visao.ts`.
  */
 
+import { VITRINE, type Vitrine } from '@/content/vitrine'
 import type { Ambiente } from './ambiente'
 import { CRONOGRAMA, type Ciclo, type CicloId } from './cronograma'
 import { ehDataISO, somarDias, type DataISO } from './datas'
@@ -188,8 +189,14 @@ export function resumirRelease({
  * Valor ausente, vazio ou malformado = janela fechada. Nunca lança: uma env var
  * digitada errada não pode derrubar o site nem, pior, abri-lo por acidente.
  */
-export function janelaAberta(env: Ambiente = process.env, agora: Date = new Date()): boolean {
-  const bruto = env.RELEASE_ABERTO_ATE?.trim()
+export function janelaAberta(
+  env: Ambiente = process.env,
+  agora: Date = new Date(),
+  vitrine: Vitrine = VITRINE,
+): boolean {
+  // Env var vence o valor versionado: quem opera pelo painel da Vercel precisa
+  // conseguir corrigir uma data errada sem abrir o editor.
+  const bruto = env.RELEASE_ABERTO_ATE?.trim() || vitrine.ate?.trim()
   if (!bruto) return false
 
   const limite = Date.parse(bruto)
@@ -214,8 +221,11 @@ export function janelaAberta(env: Ambiente = process.env, agora: Date = new Date
  * Formato `YYYY-MM-DD`, como toda data do projeto (ADR-007). Valor ausente ou
  * malformado devolve `null`, e o chamador usa a data real.
  */
-export function dataSimuladaDaJanela(env: Ambiente = process.env): DataISO | null {
-  const bruto = env.RELEASE_DATA_SIMULADA?.trim()
+export function dataSimuladaDaJanela(
+  env: Ambiente = process.env,
+  vitrine: Vitrine = VITRINE,
+): DataISO | null {
+  const bruto = env.RELEASE_DATA_SIMULADA?.trim() || vitrine.dataSimulada?.trim()
   if (!bruto || !ehDataISO(bruto)) return null
   return bruto
 }

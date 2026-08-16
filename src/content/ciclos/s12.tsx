@@ -155,7 +155,7 @@ export const documentos = [
             ]}
           />
           <Nota>
-            Esta é a razão pela qual a lente de Direito não é um anexo do projeto: ela
+            Esta é a razão pela qual a lente de Direito não é um anexo do projeto. Ela
             determinou uma decisão de arquitetura: o motor de cálculo ser função pura e
             auditável, e o ML ficar fora dele.
           </Nota>
@@ -172,15 +172,15 @@ export const documentos = [
         <Tabela
           colunas={['Marco', 'Planejado', 'Realizado', 'Desvio']}
           linhas={[
-            ['Kick-off', 'Problema, pergunta e recorte', ', ', 'A preencher no SR2'],
-            ['SR1', 'Pesquisa e protótipo navegável', ', ', 'A preencher no SR2'],
+            ['Kick-off', 'Problema, pergunta e recorte', 'a preencher', 'A preencher no SR2'],
+            ['SR1', 'Pesquisa e protótipo navegável', 'a preencher', 'A preencher no SR2'],
             [
               'Sprints 1–4',
               'Ciclo completo, auditoria, gestão e analytics',
-              ', ',
+              'a preencher',
               'A preencher no SR2',
             ],
-            ['Semana 11', 'Validação com a CAM', ', ', 'A preencher no SR2'],
+            ['Semana 11', 'Validação com a CAM', 'a preencher', 'A preencher no SR2'],
           ]}
         />
         <Lista

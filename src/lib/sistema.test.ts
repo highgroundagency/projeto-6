@@ -51,11 +51,16 @@ async function definirOverlay(overlay: Overlay): Promise<void> {
  * em 12/09/2026, quando a s5 entra no ar pelo adiantamento de 7 dias.
  */
 beforeAll(() => {
+  // A vitrine versionada em `src/content/vitrine.ts` pode estar aberta, e aberta
+  // ela libera tudo para todo mundo. Estes casos medem o GATE DE RELEASE, então
+  // a env var fecha a janela: ela vence o valor versionado.
+  process.env.RELEASE_ABERTO_ATE = '2020-01-01T00:00:00Z'
   vi.useFakeTimers()
   vi.setSystemTime(new Date('2026-08-15T15:00:00Z'))
 })
 
 afterAll(() => {
+  delete process.env.RELEASE_ABERTO_ATE
   vi.useRealTimers()
 })
 

@@ -74,7 +74,17 @@ async function main() {
 
   console.log('Subindo o servidor de produção…')
   const servidor = spawn('npx', ['next', 'start', '-p', String(PORTA)], {
-    env: { ...process.env, ADMIN_COOKIE_SECRET: SEGREDO, NODE_ENV: 'production' },
+    env: {
+      ...process.env,
+      ADMIN_COOKIE_SECRET: SEGREDO,
+      NODE_ENV: 'production',
+      // A VITRINE FICA FECHADA AQUI, SEMPRE. Ela existe para abrir o site numa
+      // demonstração, e aberta faz conteúdo futuro chegar ao visitante de
+      // propósito (ADR-021). Este script prova o comportamento NORMAL: se ele
+      // herdasse a vitrine, passaria a medir a exceção e a garantia do §6.3
+      // ficaria sem prova justamente nos dias em que ela mais importa.
+      RELEASE_ABERTO_ATE: '2020-01-01T00:00:00Z',
+    },
     // 'ignore' e não 'pipe': ninguém lê essa saída, e um pipe cheio trava o
     // servidor no meio da verificação.
     stdio: 'ignore',
