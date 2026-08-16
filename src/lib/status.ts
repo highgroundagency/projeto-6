@@ -4,7 +4,7 @@ import { CRONOGRAMA } from '@/lib/cronograma'
 import { hojeEmRecife } from '@/lib/datas'
 import { FEATURES } from '@/lib/features'
 import { repositorio } from '@/lib/dados'
-import { calcularReleaseAtual, janelaAberta } from '@/lib/releases'
+import { calcularReleaseAtual, dataSimuladaDaJanela, janelaAberta } from '@/lib/releases'
 
 export interface Status {
   produto: string
@@ -19,6 +19,8 @@ export interface Status {
   releasePublico: string
   /** Janela de vitrine aberta: todo visitante vê o semestre inteiro. */
   vitrineAberta: boolean
+  /** Data que o site está simulando enquanto a vitrine estiver aberta. */
+  dataSimulada: string | null
   ciclosNoCronograma: number
   funcionalidades: number
   registros: { areas: number; indicadores: number; ciclos: number; lancamentos: number }
@@ -54,6 +56,7 @@ export async function coletarStatus(): Promise<Status> {
     hojeRecife: hoje,
     releasePublico: release ?? '—',
     vitrineAberta: janelaAberta(),
+    dataSimulada: janelaAberta() ? dataSimuladaDaJanela() : null,
     ciclosNoCronograma: CRONOGRAMA.length,
     funcionalidades: FEATURES.length,
     registros: {

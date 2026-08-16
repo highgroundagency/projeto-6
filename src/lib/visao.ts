@@ -14,6 +14,7 @@ import {
 } from './admin/sessao'
 import {
   ciclosVisiveis,
+  dataSimuladaDaJanela,
   janelaAberta,
   resumirRelease,
   type ResumoRelease,
@@ -115,9 +116,24 @@ export async function obterVisao(agora: Date = new Date()): Promise<Visao> {
   const verComoVisitante = Boolean(admin && overlay?.verComoVisitante)
   const modoCompleto = admin && !verComoVisitante
 
-  const dataSimulada =
+  // A janela abre para todo mundo, não só para quem tem sessão.
+  const aberta = janelaAberta(process.env, agora)
+
+  // Duas fontes de data simulada, com precedências diferentes:
+  //
+  //  - a da JANELA vale para todo visitante e move o calendário do site inteiro;
+  //  - a do OVERLAY é preferência da sessão do admin e só age em "ver como
+  //    visitante".
+  //
+  // A da janela vem primeiro porque é um estado do ambiente: se o site está
+  // sendo mostrado como se fosse dezembro, o admin também precisa ver dezembro,
+  // senão ele confere uma coisa e o professor vê outra.
+  const dataDaJanela = aberta ? dataSimuladaDaJanela() : null
+  const dataDoOverlay =
     overlay?.dataSimulada && ehDataISO(overlay.dataSimulada) ? overlay.dataSimulada : null
-  const hoje = verComoVisitante && dataSimulada ? dataSimulada : hojeReal
+
+  const dataSimulada = dataDaJanela ?? dataDoOverlay
+  const hoje = dataDaJanela ?? (verComoVisitante && dataDoOverlay ? dataDoOverlay : hojeReal)
 
   const adiantamentoDias = overlay?.adiantamentoDias ?? configGlobal.adiantamentoDias
   const override =
@@ -127,11 +143,6 @@ export async function obterVisao(agora: Date = new Date()): Promise<Visao> {
   const travas: Travas = overlay?.travas ?? configGlobal.travas
 
   const release = resumirRelease({ hoje, adiantamentoDias, override, travas })
-
-  // A janela abre para todo mundo, não só para quem tem sessão. Fica DEPOIS do
-  // cálculo do release de propósito: o resumo continua mostrando qual seria o
-  // recorte normal, para o painel não mentir sobre a data.
-  const aberta = janelaAberta(process.env, agora)
 
   return {
     admin,

@@ -11,7 +11,7 @@
 
 import type { Ambiente } from './ambiente'
 import { CRONOGRAMA, type Ciclo, type CicloId } from './cronograma'
-import { somarDias, type DataISO } from './datas'
+import { ehDataISO, somarDias, type DataISO } from './datas'
 
 /**
  * Estado de liberação de um ciclo específico.
@@ -196,4 +196,50 @@ export function janelaAberta(env: Ambiente = process.env, agora: Date = new Date
   if (Number.isNaN(limite)) return false
 
   return agora.getTime() < limite
+}
+
+/**
+ * Data civil simulada para a janela de vitrine.
+ *
+ * `RELEASE_ABERTO_ATE` decide o que está VISÍVEL; esta decide QUE DIA o site
+ * pensa que é. São coisas diferentes, e a primeira sozinha não basta: com todos
+ * os ciclos liberados mas o relógio em agosto, o topo continua dizendo "próximo
+ * marco: Kick-off, faltam 27 dias" e o SR2 aparece como "a realizar". Para
+ * mostrar o semestre como concluído, a data também precisa andar.
+ *
+ * Só tem efeito enquanto a janela estiver aberta — sozinha, não faz nada. Isso
+ * evita que alguém deixe o site preso numa data por esquecimento: quando o
+ * prazo vence, o calendário volta junto com a visibilidade.
+ *
+ * Formato `YYYY-MM-DD`, como toda data do projeto (ADR-007). Valor ausente ou
+ * malformado devolve `null`, e o chamador usa a data real.
+ */
+export function dataSimuladaDaJanela(env: Ambiente = process.env): DataISO | null {
+  const bruto = env.RELEASE_DATA_SIMULADA?.trim()
+  if (!bruto || !ehDataISO(bruto)) return null
+  return bruto
+}
+
+/** Quantos dias uma semana do cronograma cobre. */
+const DIAS_DA_SEMANA = 7
+
+/**
+ * `hoje` cai DENTRO da semana deste ciclo?
+ *
+ * Diferente de `cicloCorrente`, que devolve o último ciclo já vencido e por isso
+ * nunca é nulo depois do primeiro. A distinção só aparece quando a data passa do
+ * fim do cronograma: em janeiro de 2027, `cicloCorrente` ainda diz "sr2" — o que
+ * está certo para "qual foi o último" e errado para "qual é esta semana".
+ *
+ * O bug apareceu ao simular 2027 na vitrine: a pílula "esta semana" ficou colada
+ * no SR2, três semanas depois de ele ter acontecido.
+ */
+export function ehSemanaCorrente(
+  hoje: DataISO,
+  ciclo: CicloId,
+  ciclos: readonly Ciclo[] = CRONOGRAMA,
+): boolean {
+  const alvo = ciclos.find((c) => c.id === ciclo)
+  if (!alvo) return false
+  return hoje >= alvo.data && hoje < somarDias(alvo.data, DIAS_DA_SEMANA)
 }

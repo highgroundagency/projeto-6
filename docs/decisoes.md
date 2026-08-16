@@ -336,6 +336,19 @@ Valor ausente, vazio ou malformado fecha a janela. Uma env var digitada errada n
 derrubar o site e, muito menos, abri-lo por acidente: `'amanhã de manhã'` resulta em fechada,
 com teste que prova.
 
+**Visibilidade e calendário são coisas separadas, e as duas precisam andar.** A primeira
+versão desta janela só liberava o que estava visível — e não bastava: com todos os ciclos no
+ar mas o relógio em agosto, o topo continuava dizendo "próximo marco: Kick-off, faltam 27
+dias" e o SR2 aparecia como "a realizar". `RELEASE_DATA_SIMULADA` move o calendário do site
+inteiro, e só funciona com a janela aberta — quando o prazo vence, a data volta junto com a
+visibilidade, sem ninguém precisar lembrar.
+
+**A simulação achou um bug.** Com o site em janeiro de 2027, a pílula "esta semana" grudou no
+SR2. `cicloCorrente` devolve o último ciclo já vencido, o que está certo para "qual foi o
+último" e errado para "qual é esta semana" — e a diferença só aparece depois do fim do
+cronograma. Nasceu daí `ehSemanaCorrente`, que exige que o dia caia dentro dos sete dias do
+ciclo, com teste que fixa exatamente esse caso.
+
 ---
 
 ## ADR-022 · Modelos treinam offline; o site lê o resultado versionado

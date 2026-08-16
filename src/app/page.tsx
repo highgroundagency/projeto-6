@@ -14,6 +14,7 @@ import { EQUIPE, SELO_PAPEIS } from '@/content/equipe'
 import { INSTITUICAO, PERGUNTA_DO_PROJETO, PROBLEMA } from '@/content/produto'
 import { cicloPorId } from '@/lib/cronograma'
 import { formatarBR } from '@/lib/datas'
+import { ehSemanaCorrente } from '@/lib/releases'
 import { obterVisao } from '@/lib/visao'
 
 /**
@@ -154,7 +155,7 @@ export default async function Pagina() {
                     registro={modulo.registro}
                     documentos={modulo.documentos}
                     detalhes={modulo.Detalhes ? <modulo.Detalhes /> : undefined}
-                    atual={id === visao.release.cicloCorrente}
+                    atual={ehSemanaCorrente(visao.hoje, id)}
                   />
                 ))}
               </div>

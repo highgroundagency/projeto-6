@@ -4,6 +4,8 @@ import {
   calcularReleaseAtual,
   cicloCorrente,
   cicloVisivel,
+  dataSimuladaDaJanela,
+  ehSemanaCorrente,
   ciclosVisiveis,
   estadoDoMarco,
   janelaAberta,
@@ -206,5 +208,50 @@ describe('janela de vitrine com prazo', () => {
     // abri-lo por acidente.
     expect(janelaAberta({ RELEASE_ABERTO_ATE: 'amanhã de manhã' }, agora)).toBe(false)
     expect(janelaAberta({ RELEASE_ABERTO_ATE: '17/08/2026' }, agora)).toBe(false)
+  })
+})
+
+describe('data simulada da janela', () => {
+  it('devolve null sem a variável', () => {
+    expect(dataSimuladaDaJanela({})).toBeNull()
+  })
+
+  it('aceita uma data ISO válida', () => {
+    expect(dataSimuladaDaJanela({ RELEASE_DATA_SIMULADA: '2027-01-15' })).toBe('2027-01-15')
+  })
+
+  it('recusa formato que não seja YYYY-MM-DD', () => {
+    // Nada de `new Date('15/01/2027')`: data neste projeto é string comparada
+    // lexicograficamente, e formato errado não pode virar data silenciosamente.
+    expect(dataSimuladaDaJanela({ RELEASE_DATA_SIMULADA: '15/01/2027' })).toBeNull()
+    expect(dataSimuladaDaJanela({ RELEASE_DATA_SIMULADA: '2027-13-99' })).toBeNull()
+    expect(dataSimuladaDaJanela({ RELEASE_DATA_SIMULADA: 'ano que vem' })).toBeNull()
+  })
+
+  it('numa data depois do fim do cronograma, todos os marcos estão feitos', () => {
+    const depoisDoSemestre = '2027-01-15'
+    expect(proximoMarco(depoisDoSemestre)).toBeNull()
+    for (const marco of CRONOGRAMA.filter((c) => c.tipo === 'marco')) {
+      expect(estadoDoMarco(marco, depoisDoSemestre)).toBe('feito')
+    }
+  })
+})
+
+describe('ehSemanaCorrente', () => {
+  it('é verdade no dia do ciclo e nos seis dias seguintes', () => {
+    expect(ehSemanaCorrente('2026-08-15', 's2')).toBe(true)
+    expect(ehSemanaCorrente('2026-08-21', 's2')).toBe(true)
+  })
+
+  it('é falso antes do ciclo e a partir do sétimo dia', () => {
+    expect(ehSemanaCorrente('2026-08-14', 's2')).toBe(false)
+    expect(ehSemanaCorrente('2026-08-22', 's2')).toBe(false)
+  })
+
+  it('não gruda no último ciclo depois que o semestre acaba', () => {
+    // O bug que a simulação de 2027 encontrou: `cicloCorrente` devolve sr2 para
+    // qualquer data depois de 05/12, e a pílula "esta semana" ficava lá presa.
+    expect(cicloCorrente('2027-01-15')).toBe('sr2')
+    expect(ehSemanaCorrente('2027-01-15', 'sr2')).toBe(false)
   })
 })

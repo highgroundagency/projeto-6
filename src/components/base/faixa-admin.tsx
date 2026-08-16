@@ -16,10 +16,21 @@ export function FaixaAdmin({ visao }: { visao: Visao }) {
   if (visao.janelaAberta) {
     return (
       <div className="sem-impressao flex flex-wrap items-center justify-between gap-x-4 gap-y-1 bg-acento px-4 py-1.5 text-xs text-ink sm:px-8">
-        <span className="rotulo text-inherit">Vitrine aberta — o semestre inteiro visível</span>
+        <span className="rotulo text-inherit">
+          Vitrine aberta{visao.dataSimulada ? ' — o site está simulando outra data' : ' — o semestre inteiro visível'}
+        </span>
         <span className="lowercase">
-          fora desta janela, o site mostra só até{' '}
-          <Num>{visao.release.releaseAtual ?? '—'}</Num>
+          {visao.dataSimulada ? (
+            <>
+              simulando <Num>{formatarBR(visao.dataSimulada)}</Num> · hoje é de fato{' '}
+              <Num>{formatarBR(visao.hojeReal)}</Num>
+            </>
+          ) : (
+            <>
+              fora desta janela, o site mostra só até{' '}
+              <Num>{visao.release.releaseAtual ?? '—'}</Num>
+            </>
+          )}
         </span>
       </div>
     )
