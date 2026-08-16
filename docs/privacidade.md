@@ -59,7 +59,7 @@ inviabilizar a política. O fundamento correto é a execução da política púb
 | Princípio | Onde |
 | --- | --- |
 | Minimização | `src/lib/calculo/tipos.ts` — a entidade `Gestor` tem nome, cargo e área; não tem CPF, matrícula, endereço ou data de nascimento |
-| Anonimização por padrão onde é possível | `src/app/sistema/gestao/page.tsx` — ranking com modo anônimo; `src/app/api/sistema/exportar/route.ts` propaga a anonimização para o CSV |
+| Anonimização por padrão onde é possível | `src/components/sistema/telas/gestao.tsx` — ranking com modo anônimo; `src/app/api/sistema/exportar/route.ts` propaga a anonimização para o CSV |
 | Acesso do titular embutido, não anexado | `src/components/sistema/memoria.tsx` — o titular vê a memória completa na própria tela, sem pedir |
 | Segurança desde a origem | `src/middleware.ts` + `src/lib/admin/guard.ts` — proteção em duas camadas |
 | Integridade verificável | `src/lib/sistema/estado.ts` — toda escrita gera evento com antes e depois |

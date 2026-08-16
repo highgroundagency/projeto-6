@@ -3,7 +3,17 @@ import { z } from 'zod'
 import { repositorio } from '@/lib/dados'
 import { carregarDados } from '@/lib/dados/consultas'
 import { comParametros, redirecionar } from '@/lib/http'
-import { exigirFeature, identidadeAtual } from '@/lib/sistema'
+import { exigirPerfil, identidadeAtual } from '@/lib/sistema'
+import { ancoraDaTela } from '@/lib/sistema/parametros'
+
+/** Volta para a sanfona de lançamento, já aberta e com a área preservada. */
+function deVolta(area: string, resultado: { ok?: string; erro?: string }): string {
+  return comParametros(
+    '/sistema',
+    { abrir: 'lancamento', de: 'lancamento', lanc_area: area, ...resultado },
+    ancoraDaTela('lancamento'),
+  )
+}
 
 /**
  * Registro de lançamento (§8.4, tela 3).
@@ -23,7 +33,7 @@ const corpoSchema = z.object({
 })
 
 export async function POST(requisicao: NextRequest) {
-  await exigirFeature('lancamento')
+  await exigirPerfil('lancamento')
 
   const formulario = await requisicao.formData()
   const analisado = corpoSchema.safeParse({
@@ -37,8 +47,7 @@ export async function POST(requisicao: NextRequest) {
   if (!analisado.success) {
     const primeiro = analisado.error.issues[0]
     return redirecionar(
-      comParametros('/sistema/lancamento', {
-        area: String(formulario.get('area') ?? ''),
+      deVolta(String(formulario.get('area') ?? ''), {
         erro: `Lançamento recusado em ${primeiro.path.join('.')}: ${primeiro.message}.`,
       }),
     )
@@ -48,23 +57,13 @@ export async function POST(requisicao: NextRequest) {
   const identidade = await identidadeAtual()
 
   if (identidade.perfil !== 'area_tecnica' && identidade.perfil !== 'cam') {
-    return redirecionar(
-      comParametros('/sistema/lancamento', {
-        area: dados.area,
-        erro: 'Este perfil não lança indicadores.',
-      }),
-    )
+    return redirecionar(deVolta(dados.area, { erro: 'Este perfil não lança indicadores.' }))
   }
 
   const panorama = await carregarDados()
   const indicador = panorama.indicadorPorId(dados.indicadorId)
   if (!indicador) {
-    return redirecionar(
-      comParametros('/sistema/lancamento', {
-        area: dados.area,
-        erro: 'Indicador desconhecido.',
-      }),
-    )
+    return redirecionar(deVolta(dados.area, { erro: 'Indicador desconhecido.' }))
   }
 
   const agora = new Date().toISOString()
@@ -81,9 +80,6 @@ export async function POST(requisicao: NextRequest) {
   )
 
   return redirecionar(
-    comParametros('/sistema/lancamento', {
-      area: dados.area,
-      [resultado.ok ? 'ok' : 'erro']: resultado.mensagem,
-    }),
+    deVolta(dados.area, { [resultado.ok ? 'ok' : 'erro']: resultado.mensagem }),
   )
 }

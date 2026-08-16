@@ -1,11 +1,26 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { Num } from '@/components/base/num'
-import { CLIENTE, PERGUNTA_DO_PROJETO } from '@/content/produto'
+import { Aviso } from '@/components/sistema/base'
+import { ICONE_DA_TELA } from '@/components/sistema/icones'
+import { ExplicacaoDosPerfis } from '@/components/sistema/perfis'
+import { Tela } from '@/components/sistema/tela'
+import { TelaAnalytics } from '@/components/sistema/telas/analytics'
+import { TelaAuditoria } from '@/components/sistema/telas/auditoria'
+import { TelaCam } from '@/components/sistema/telas/cam'
+import { TelaContestacao } from '@/components/sistema/telas/contestacao'
+import { TelaGestao } from '@/components/sistema/telas/gestao'
+import { TelaIndicadores } from '@/components/sistema/telas/indicadores'
+import { TelaLancamento } from '@/components/sistema/telas/lancamento'
+import { TelaMeuResultado } from '@/components/sistema/telas/meu-resultado'
+import type { ContextoTela } from '@/components/sistema/telas/tipos'
+import { Tutorial } from '@/components/sistema/tutorial'
+import { CLIENTE } from '@/content/produto'
 import { cicloPorId } from '@/lib/cronograma'
 import { formatarBR } from '@/lib/datas'
-import { PERFIS } from '@/lib/features'
-import { featuresLiberadas, perfilAtual } from '@/lib/sistema'
+import { PERFIS, type Feature, type FeatureId } from '@/lib/features'
+import { featuresDoPerfilAtual, featuresLiberadas, identidadeAtual } from '@/lib/sistema'
+import { lerParametros, linkDaTela, type ParametrosSistema } from '@/lib/sistema/parametros'
 import { obterVisao } from '@/lib/visao'
 
 export const metadata: Metadata = {
@@ -18,21 +33,116 @@ export const dynamic = 'force-dynamic'
 /** Primeiro ciclo que libera alguma funcionalidade — usado na mensagem de espera. */
 const PRIMEIRO_CICLO_COM_FUNCIONALIDADE = 's5'
 
-export default async function CascaDoSistema() {
+/**
+ * O sumário, grudado no topo enquanto se rola.
+ *
+ * Cada item é um botão de verdade: borda, ícone e rótulo. A barra antiga eram
+ * links soltos que ninguém identificava como clicáveis, repetindo uma grade de
+ * cartões logo abaixo — duas navegações para o mesmo lugar. Ficou uma.
+ *
+ * SÓ AS TELAS DO PERFIL. Nada em cinza, nada de "indisponível": o que não é
+ * seu não aparece.
+ *
+ * `overflow-x-auto` com `whitespace-nowrap` é o que segura 360px — em tela
+ * estreita a fila rola na horizontal em vez de estourar a largura do corpo.
+ */
+function Sumario({
+  telas,
+  params,
+  ativa,
+}: {
+  telas: readonly Feature[]
+  params: ParametrosSistema
+  ativa?: string
+}) {
+  return (
+    <nav
+      id="sumario"
+      aria-label="Telas do sistema"
+      className="sticky top-0 z-30 -mx-5 border-y border-linha bg-fundo/95 px-5 py-2.5 backdrop-blur sm:-mx-8 sm:px-8"
+    >
+      {/* Rola na horizontal enquanto a tela é estreita; a partir de sm as
+          pílulas quebram em linha, para nenhuma ficar cortada na borda. */}
+      <ul className="flex gap-2 overflow-x-auto sm:flex-wrap sm:overflow-x-visible">
+        {telas.map((feature) => {
+          const Icone = ICONE_DA_TELA[feature.id as FeatureId]
+          const atual = feature.id === ativa
+          return (
+            <li key={feature.id} className="shrink-0">
+              <a
+                href={linkDaTela(params, feature.id as FeatureId)}
+                aria-current={atual ? 'true' : undefined}
+                className={`inline-flex items-center gap-2 border px-3 py-1.5 text-xs whitespace-nowrap transition-colors hover:border-acento hover:text-acento ${
+                  atual ? 'border-acento text-acento' : 'border-linha'
+                }`}
+              >
+                <Icone aria-hidden size={15} strokeWidth={1.5} />
+                {feature.rotulo}
+              </a>
+            </li>
+          )
+        })}
+      </ul>
+    </nav>
+  )
+}
+
+/**
+ * O sistema inteiro, numa página só (ADR-023).
+ *
+ * Antes cada funcionalidade era uma rota: clicar levava embora, e de lá não
+ * existia caminho de volta a não ser o botão do navegador. Agora o sumário fica
+ * grudado no topo e cada tela abre logo abaixo, na mesma página.
+ *
+ * A ORDEM DOS GATES IMPORTA e é esta:
+ *
+ *   1. release — a tela existe hoje?
+ *   2. perfil  — ela é de quem está aqui?
+ *   3. só então o componente é montado.
+ *
+ * Sanfona fechada NÃO esconde HTML (ADR-018): quem não passou pelos dois gates
+ * não chega a ser renderizado. Inverter isso derrubaria o §6.2 sem que nada
+ * aparentemente quebrasse, que é o pior tipo de regressão.
+ */
+export default async function SistemaCompleto({
+  searchParams,
+}: {
+  searchParams: Promise<Record<string, string | string[] | undefined>>
+}) {
   const visao = await obterVisao()
-  const perfil = await perfilAtual()
+  const identidade = await identidadeAtual()
+  const params = lerParametros(await searchParams)
+
   const liberadas = featuresLiberadas(visao)
+  const doPerfil = featuresDoPerfilAtual(visao, identidade.perfil)
   const abertura = cicloPorId(PRIMEIRO_CICLO_COM_FUNCIONALIDADE)
+
+  const ctx: ContextoTela = {
+    params,
+    perfil: identidade.perfil,
+    admin: visao.admin && !visao.verComoVisitante,
+    disponiveis: doPerfil.map((f) => f.id as FeatureId),
+    gestorId: identidade.gestorId,
+  }
+
+  /** Monta a tela só se ela sobreviveu aos dois gates. */
+  function montar(id: FeatureId, corpo: (feature: Feature) => React.ReactNode) {
+    const feature = doPerfil.find((f) => f.id === id)
+    if (!feature) return null
+    return (
+      <Tela key={id} feature={feature} aberta={params.abrir === id}>
+        {corpo(feature)}
+      </Tela>
+    )
+  }
 
   return (
     <>
       <header className="border-b border-linha pb-5">
-        <h1 className="fonte-display text-3xl">Gratificação por desempenho</h1>
-        <p className="mt-1 max-w-prose text-sm text-apagado">
-          MVP para a {CLIENTE.orgao}. Todos os dados exibidos são sintéticos.
-        </p>
-        <p className="mt-3 max-w-prose border-l-2 border-acento pl-3 text-sm">
-          {PERGUNTA_DO_PROJETO}
+        <h1 className="fonte-display text-2xl sm:text-3xl">Gratificação por desempenho</h1>
+        <p className="mt-1.5 max-w-prose text-sm text-apagado">
+          MVP para a {CLIENTE.orgao}. Nenhum dado desta tela é real: a base é sintética, gerada
+          com semente fixa.
         </p>
       </header>
 
@@ -54,35 +164,90 @@ export default async function CascaDoSistema() {
           </p>
         </section>
       ) : (
-        <section className="mt-8">
-          <h2 className="rotulo">Telas disponíveis para o perfil {PERFIS[perfil].rotulo}</h2>
-          <p className="mt-1 text-sm text-apagado">{PERFIS[perfil].descricao}</p>
+        <>
+          <section className="mt-7" aria-labelledby="titulo-perfil">
+            <h2 id="titulo-perfil" className="rotulo">
+              Você está usando como {PERFIS[identidade.perfil].rotulo}
+            </h2>
+            <p className="mt-1 max-w-prose text-sm text-apagado">
+              {PERFIS[identidade.perfil].quemE}
+            </p>
 
-          <ul className="mt-3 grid gap-px border border-linha bg-linha sm:grid-cols-2">
-            {liberadas.map((feature) => {
-              const doPerfil = feature.perfis.includes(perfil)
-              return (
-                <li key={feature.id} className="bg-fundo">
-                  {doPerfil ? (
-                    <Link href={feature.rota} className="block h-full p-4 hover:bg-superficie">
-                      <span className="fonte-display block text-base">{feature.rotulo}</span>
-                      <span className="mt-1 block text-sm text-apagado">
-                        {feature.descricao}
-                      </span>
-                    </Link>
-                  ) : (
-                    <div className="h-full p-4 opacity-50">
-                      <span className="fonte-display block text-base">{feature.rotulo}</span>
-                      <span className="mt-1 block text-sm text-apagado">
-                        Não faz parte das atribuições deste perfil.
-                      </span>
-                    </div>
-                  )}
-                </li>
-              )
-            })}
-          </ul>
-        </section>
+            <div className="mt-4">
+              <Tutorial
+                perfil={identidade.perfil}
+                disponiveis={ctx.disponiveis}
+                params={params}
+              />
+            </div>
+          </section>
+
+          {/* SUMÁRIO, TELAS E PAPÉIS DIVIDEM ESTE CONTÊINER de propósito:
+              `position: sticky` só gruda enquanto o PAI está em tela. Num
+              invólucro só dele, o sumário rolaria para fora na primeira
+              passada, que é exatamente o oposto de ficar fixo no topo. */}
+          <div className="mt-6">
+            {doPerfil.length > 0 ? (
+              <Sumario telas={doPerfil} params={params} ativa={params.abrir} />
+            ) : null}
+
+            {doPerfil.length === 0 ? (
+              <Aviso>
+                Nenhuma das telas já liberadas pertence a este perfil. Troque o papel no seletor
+                acima para ver o sistema pelos olhos de quem o usa nesta etapa.
+              </Aviso>
+            ) : (
+              <section className="mt-5" aria-labelledby="titulo-telas">
+                <h2 id="titulo-telas" className="sr-only">
+                  Telas
+                </h2>
+                <p className="text-sm lowercase text-apagado">
+                  clique num título e a tela abre aqui mesmo. nada abre em outra página.
+                </p>
+
+                <div className="mt-4">
+                  {montar('painel-cam', () => (
+                    <TelaCam ctx={ctx} />
+                  ))}
+                  {montar('indicadores', () => (
+                    <TelaIndicadores />
+                  ))}
+                  {montar('lancamento', () => (
+                    <TelaLancamento ctx={ctx} />
+                  ))}
+                  {montar('meu-resultado', () => (
+                    <TelaMeuResultado ctx={ctx} />
+                  ))}
+                  {montar('auditoria', () => (
+                    <TelaAuditoria ctx={ctx} />
+                  ))}
+                  {montar('painel-gestao', () => (
+                    <TelaGestao ctx={ctx} />
+                  ))}
+                  {montar('analytics', () => (
+                    <TelaAnalytics />
+                  ))}
+                  {montar('contestacao', () => (
+                    <TelaContestacao ctx={ctx} />
+                  ))}
+                </div>
+              </section>
+            )}
+
+            <section className="mt-10" aria-labelledby="titulo-papeis">
+              <h2 id="titulo-papeis" className="rotulo">
+                Os quatro papéis do processo
+              </h2>
+              <p className="mt-1 max-w-prose text-sm text-apagado">
+                Quem é cada pessoa na SESAU, o que ela faz e o que o processo impede que ela
+                faça. É esta divisão que o seletor lá em cima simula.
+              </p>
+              <div className="mt-4">
+                <ExplicacaoDosPerfis telas={liberadas} destacar={identidade.perfil} />
+              </div>
+            </section>
+          </div>
+        </>
       )}
     </>
   )

@@ -1,6 +1,13 @@
 import 'server-only'
 import { notFound } from 'next/navigation'
-import { FEATURES, featurePorId, type Feature, type FeatureId, type PerfilId } from './features'
+import {
+  FEATURES,
+  featurePorId,
+  featuresDoPerfil,
+  type Feature,
+  type FeatureId,
+  type PerfilId,
+} from './features'
 import { identidadeAtual, type Identidade } from './sistema/identidade'
 import { obterVisao, type Visao } from './visao'
 
@@ -20,6 +27,11 @@ export async function perfilAtual(): Promise<PerfilId> {
 /** Funcionalidades que o release atual liberou para esta visão. */
 export function featuresLiberadas(visao: Visao): Feature[] {
   return FEATURES.filter((feature) => visao.visiveis.includes(feature.ciclo))
+}
+
+/** Liberadas pelo release E dentro das atribuições do perfil: o que a pessoa usa. */
+export function featuresDoPerfilAtual(visao: Visao, perfil: PerfilId): readonly Feature[] {
+  return featuresDoPerfil(featuresLiberadas(visao), perfil)
 }
 
 export interface ContextoSistema {
@@ -62,4 +74,25 @@ export async function exigirFeature(id: FeatureId): Promise<ContextoSistema> {
     feature,
     admin: visao.admin && !visao.verComoVisitante,
   }
+}
+
+/**
+ * O gate de release MAIS o gate de perfil.
+ *
+ * Até aqui o perfil era enfeite: ele sumia do menu e a tela continuava
+ * respondendo 200 para quem digitasse a rota. O briefing pede perfis de acesso,
+ * e acesso que a URL contorna não é acesso — é ordenação de menu.
+ *
+ * Também devolve 404, pela mesma razão do gate de release: um 403 confirmaria a
+ * existência da tela para quem não deveria conhecê-la. Da porta, "não liberado
+ * ainda" e "não é seu" são indistinguíveis, e é assim que deve ser.
+ *
+ * O seletor de perfil continua simulado (ADR-011): isto organiza a demonstração
+ * de forma coerente, não substitui autenticação. O controle real está nas
+ * políticas de RLS de `supabase/migrations/`.
+ */
+export async function exigirPerfil(id: FeatureId): Promise<ContextoSistema> {
+  const contexto = await exigirFeature(id)
+  if (!contexto.feature.perfis.includes(contexto.perfil)) notFound()
+  return contexto
 }

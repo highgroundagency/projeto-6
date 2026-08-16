@@ -9,12 +9,14 @@ import { Rodape } from '@/components/base/rodape'
 import { Selo } from '@/components/base/selo'
 import { CicloSemRegistro, RegistroSemana } from '@/components/registro/registro-semana'
 import { TrilhaMarcos } from '@/components/registro/trilhas'
+import { ExplicacaoDosPerfis } from '@/components/sistema/perfis'
 import { carregarCiclos, temRegistro } from '@/content/ciclos/registro'
 import { EQUIPE, SELO_PAPEIS } from '@/content/equipe'
 import { INSTITUICAO, PERGUNTA_DO_PROJETO, PROBLEMA } from '@/content/produto'
 import { cicloPorId } from '@/lib/cronograma'
 import { formatarBR } from '@/lib/datas'
 import { ehSemanaCorrente } from '@/lib/releases'
+import { featuresLiberadas } from '@/lib/sistema'
 import { obterVisao } from '@/lib/visao'
 
 /**
@@ -129,6 +131,24 @@ export default async function Pagina() {
             {PROBLEMA.map((paragrafo) => (
               <p key={paragrafo}>{paragrafo}</p>
             ))}
+          </div>
+        </section>
+
+        {/* Quem é quem. O problema acima fala de um processo com quatro atores,
+            e sem saber quem eles são o resto do site fica abstrato. Aparece
+            também dentro do /sistema, ao lado do seletor de perfil.
+
+            As telas passadas são as JÁ LIBERADAS, não as oito: descrever o que
+            ainda não saiu entregaria o roteiro que o §6.2 manda guardar. */}
+        <section className="bloco revelar" aria-labelledby="titulo-papeis">
+          <h2 id="titulo-papeis" className="rotulo">
+            quem usa o sistema
+          </h2>
+          <p className="prosa mt-2 text-sm lowercase">
+            quatro papéis, e o que cada um pode e não pode fazer no ciclo.
+          </p>
+          <div className="mt-6">
+            <ExplicacaoDosPerfis telas={featuresLiberadas(visao)} />
           </div>
         </section>
 

@@ -128,14 +128,45 @@ async function main() {
     }
 
     // ---- 4: rotas de funcionalidade não liberadas devolvem 404 ----
+    // Desde a ADR-023 as oito rotas são redirecionamentos para `/sistema#tela-x`.
+    // O gate roda ANTES do redirecionamento, então o contrato continua o mesmo:
+    // não liberada é 404, liberada é 3xx apontando para a sanfona certa.
     for (const feature of FEATURES) {
       const liberada = visiveis.includes(feature.ciclo)
-      const status = (await fetch(`${BASE}${feature.rota}`, { redirect: 'manual' })).status
-      if (liberada) {
-        conferir(status === 200, `${feature.rota} liberada (${feature.ciclo}) responde 200 — recebeu ${status}`)
+      const doPerfilPadrao = (feature.perfis as readonly string[]).includes('cam')
+      const resposta = await fetch(`${BASE}${feature.rota}`, { redirect: 'manual' })
+      const status = resposta.status
+
+      if (liberada && doPerfilPadrao) {
+        const destino = resposta.headers.get('location') ?? ''
+        conferir(
+          status >= 300 && status < 400,
+          `${feature.rota} liberada (${feature.ciclo}) redireciona — recebeu ${status}`,
+        )
+        conferir(
+          destino.includes(`/sistema`) && destino.includes(`tela-${feature.id}`),
+          `${feature.rota} aponta para a sanfona de ${feature.id} — recebeu "${destino}"`,
+        )
       } else {
-        conferir(status === 404, `${feature.rota} não liberada (${feature.ciclo}) responde 404 — recebeu ${status}`)
+        conferir(
+          status === 404,
+          `${feature.rota} ${liberada ? 'fora do perfil padrão' : `não liberada (${feature.ciclo})`} responde 404 — recebeu ${status}`,
+        )
       }
+    }
+
+    // ---- 4b: o sistema não anuncia tela que o perfil não tem ----
+    // O visitante chega como CAM (PERFIL_PADRAO). Nenhuma tela exclusiva de
+    // outro perfil pode aparecer no sumário, nem no HTML da página.
+    const paginaDoSistema = await (await fetch(`${BASE}/sistema`)).text()
+    for (const feature of FEATURES) {
+      const deveAparecer =
+        visiveis.includes(feature.ciclo) && (feature.perfis as readonly string[]).includes('cam')
+      if (deveAparecer) continue
+      conferir(
+        !paginaDoSistema.includes(`tela-${feature.id}`),
+        `/sistema não monta a sanfona de ${feature.id} para quem não tem direito a ela`,
+      )
     }
 
     // ---- 5: o admin continua vendo tudo ----

@@ -2,8 +2,8 @@ import Link from 'next/link'
 import { FaixaAdmin } from '@/components/base/faixa-admin'
 import { MarcaPrumo } from '@/components/base/marca'
 import { Rodape } from '@/components/base/rodape'
-import { PERFIS } from '@/lib/features'
-import { featuresLiberadas, identidadeAtual } from '@/lib/sistema'
+import { ORDEM_PERFIS, PERFIS } from '@/lib/features'
+import { identidadeAtual } from '@/lib/sistema'
 import { obterVisao } from '@/lib/visao'
 
 export const dynamic = 'force-dynamic'
@@ -11,19 +11,16 @@ export const dynamic = 'force-dynamic'
 export default async function LayoutSistema({ children }: { children: React.ReactNode }) {
   const visao = await obterVisao()
   const identidade = await identidadeAtual()
-  const liberadas = featuresLiberadas(visao)
-  const doPerfil = liberadas.filter((f) => f.perfis.includes(identidade.perfil))
 
   return (
     <>
       <FaixaAdmin visao={visao} />
 
+      {/* Identidade e seletor: rolam junto com a página. O que fica grudado é o
+          sumário, logo abaixo, porque é ele que se usa o tempo todo. */}
       <div className="border-b border-linha bg-fundo">
         <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-5 py-3 sm:px-8">
           <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
-            {/* Saída explícita. O sistema é uma seção com cara própria: sem um
-                caminho de volta visível, quem entra fica preso a menos que use
-                o botão do navegador. */}
             <Link
               href="/"
               className="inline-flex items-center gap-2 border border-linha px-2.5 py-1 text-xs lowercase transition-colors hover:border-acento hover:text-acento"
@@ -49,7 +46,7 @@ export default async function LayoutSistema({ children }: { children: React.Reac
             className="flex flex-wrap items-center gap-2"
           >
             <label htmlFor="perfil" className="rotulo">
-              Perfil simulado
+              Estou usando como
             </label>
             <select
               id="perfil"
@@ -57,9 +54,9 @@ export default async function LayoutSistema({ children }: { children: React.Reac
               defaultValue={identidade.perfil}
               className="border border-linha px-2 py-1 text-sm"
             >
-              {Object.entries(PERFIS).map(([id, dados]) => (
+              {ORDEM_PERFIS.map((id) => (
                 <option key={id} value={id}>
-                  {dados.rotulo}
+                  {PERFIS[id].rotulo}
                 </option>
               ))}
             </select>
@@ -71,21 +68,11 @@ export default async function LayoutSistema({ children }: { children: React.Reac
             </button>
           </form>
         </div>
-
-        {doPerfil.length > 0 ? (
-          <nav aria-label="Telas do sistema" className="mx-auto max-w-6xl px-5 pb-2 sm:px-8">
-            <ul className="flex flex-wrap gap-x-4 gap-y-1 text-sm">
-              {doPerfil.map((feature) => (
-                <li key={feature.id}>
-                  <Link href={feature.rota} className="hover:text-acento">
-                    {feature.rotulo}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </nav>
-        ) : null}
       </div>
+
+      {/* O SUMÁRIO NÃO MORA AQUI. Ele precisa da query string para preservar o
+          estado das outras telas ao pular de uma para outra, e layout do App
+          Router não recebe `searchParams`. Ver `Sumario` em page.tsx. */}
 
       <main id="conteudo" className="mx-auto max-w-6xl px-5 py-7 sm:px-8">
         {children}

@@ -20,13 +20,14 @@ usada para o resto — esconder isso seria pior do que ter o risco.
 | **D**enial of service — sobrecarga da aplicação | Toda a aplicação | Limites da plataforma (Vercel); páginas leves e sem consulta pesada | Delegado à plataforma |
 | **E**levation of privilege — acessar `/admin` sem sessão | `/admin/*`, `/api/admin/*` | Middleware **e** revalidação da sessão dentro de cada page e route handler | Implementado |
 | **E**levation of privilege — agir fora do próprio perfil | APIs do sistema | Cada route handler confere o perfil antes de agir e recusa com motivo | Implementado (sobre login simulado) |
+| **E**levation of privilege — abrir tela de outro perfil pela URL | As 8 telas do sistema | `exigirPerfil` roda antes de qualquer renderização e devolve 404, não 403. Vale também para as rotas antigas, que só redirecionam depois do gate. Teste percorre 8 telas × 4 perfis (ADR-023) | Implementado (sobre login simulado) |
 | **T**ampering — adulterar a demonstração alheia | `/api/sistema/ciclo` | O estado do ciclo é compartilhado por todos os visitantes da instância e a transição não volta. Exige sessão de admin (`exigirAdmin`), e o controle não é renderizado para quem não a tem | Implementado |
 
 ## OWASP Top 10 (2021) — estado
 
 | Risco | Estado | Observação |
 | --- | --- | --- |
-| A01 Quebra de controle de acesso | **Parcial** | Painel protegido em duas camadas, e o avanço de ciclo passou a exigir a mesma sessão. No resto do sistema o RBAC roda sobre seletor simulado; as políticas de RLS existem e estão testadas, mas não estão ligadas ao app |
+| A01 Quebra de controle de acesso | **Parcial** | Painel protegido em duas camadas, e o avanço de ciclo passou a exigir a mesma sessão. As oito telas passaram a conferir o perfil no servidor, com 404 para quem não tem direito (ADR-023) — mas o perfil ainda vem de seletor simulado, então isto organiza, não protege. As políticas de RLS existem e estão testadas, e não estão ligadas ao app |
 | A02 Falhas criptográficas | **Coberto** | HMAC-SHA256 via Web Crypto; segredo só em env; nenhuma senha persistida |
 | A03 Injeção | **Coberto** | O app não emite SQL; toda entrada validada por zod; JSX escapa saída por padrão. O script de semeadura usa consultas parametrizadas |
 | A04 Design inseguro | **Coberto** | Regra versionada e auditoria append-only são decisões de design contra adulteração |

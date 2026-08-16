@@ -33,7 +33,12 @@ Site do Projeto 6 da CESAR School (2026.2, Equipe 2). Duas camadas:
 8. **Nada de travessão na copy.** Em texto que aparece na tela, use dois-pontos quando for
    rótulo e explicação (`semana 5: arquitetura`) e vírgula ou ponto quando for prosa. Em
    comentário de código o travessão continua livre: comentário não é copy.
-9. **Um acento só.** `--color-acento` é o laranja da CESAR e aparece em no máximo três
+9. **Tela do sistema passa por dois portões, nessa ordem.** Release (`exigirFeature`) e
+   perfil (`exigirPerfil`), sempre antes de montar o componente. Sanfona fechada não esconde
+   nada do HTML, então a ordem é a proteção. Quem não tem direito recebe 404, nunca 403: da
+   porta, "ainda não liberado" e "não é seu" precisam ser indistinguíveis. Há teste que
+   percorre as 8 telas contra os 4 perfis.
+10. **Um acento só.** `--color-acento` é o laranja da CESAR e aparece em no máximo três
    lugares por tela: número grande, chamada sólida e pílula/ícone do fluxo. Se precisar de
    mais uma cor para diferenciar alguma coisa, use hairline e caixa alta, não cor.
 
@@ -59,26 +64,28 @@ src/
 ├── components/
 │   ├── base/            botão, selo, marca, rodapé, cabeçalho, fluxo, faixa do admin
 │   ├── registro/        topo, trilhas, cartão do registro semanal
-│   ├── sistema/         memória de cálculo, painéis
+│   ├── sistema/         primitivos, ícones, sanfona da tela, tutorial, perfis
+│   │   └── telas/       o corpo das 8 telas, sem gate por dentro (ADR-023)
 │   └── conteudo.tsx     primitivos usados pelo conteúdo dos ciclos
 ├── content/
 │   ├── ciclos/          um arquivo por ciclo + registry server-only
 │   ├── equipe.ts        os 6 integrantes e seus papéis
 │   ├── checklist.ts     status das evidências da matriz
+│   ├── tutoriais.ts     o aprendizado guiado de cada perfil
 │   └── produto.ts       nome, problema, pergunta do projeto
 └── lib/
     ├── cronograma.ts    FONTE ÚNICA DE VERDADE das datas
     ├── datas.ts         aritmética civil em America/Recife
     ├── releases.ts      motor de releases (puro)
     ├── visao.ts         resolve admin, data simulada e ciclos visíveis
-    ├── features.ts      tela → ciclo que a libera
+    ├── features.ts      tela → ciclo que a libera, e quais perfis a enxergam
     ├── admin/           sessão, senha, rate limit, guard
     ├── calculo/         motor da gratificação (puro) e tipos
     ├── config/          config store com drivers
     ├── dados/           repositório (driver único: seed) e mapeadores
     ├── seed/            base sintética com semente fixa
     ├── supabase/        testes das políticas de RLS do schema guardado
-    └── sistema/         identidade simulada e camada de escrita do protótipo
+    └── sistema/         identidade simulada, parâmetros da URL, escrita do protótipo
 
 supabase/
 ├── migrations/          schema, gatilhos e políticas de RLS — versionado, NÃO ligado ao app

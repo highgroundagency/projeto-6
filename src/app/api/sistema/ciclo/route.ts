@@ -3,7 +3,17 @@ import { z } from 'zod'
 import { exigirAdmin } from '@/lib/admin/guard'
 import { repositorio } from '@/lib/dados'
 import { comParametros, redirecionar } from '@/lib/http'
-import { exigirFeature, perfilAtual } from '@/lib/sistema'
+import { exigirPerfil, perfilAtual } from '@/lib/sistema'
+import { ancoraDaTela } from '@/lib/sistema/parametros'
+
+/** Volta para a sanfona da CAM, já aberta e com a faixa endereçada a ela. */
+function deVolta(resultado: { ok?: string; erro?: string }): string {
+  return comParametros(
+    '/sistema',
+    { abrir: 'painel-cam', de: 'painel-cam', ...resultado },
+    ancoraDaTela('painel-cam'),
+  )
+}
 
 const corpoSchema = z.object({
   cicloId: z.string().min(1).max(60),
@@ -25,12 +35,10 @@ const corpoSchema = z.object({
  */
 export async function POST(requisicao: NextRequest) {
   await exigirAdmin()
-  await exigirFeature('painel-cam')
+  await exigirPerfil('painel-cam')
 
   if ((await perfilAtual()) !== 'cam') {
-    return redirecionar(
-      comParametros('/sistema/cam', { erro: 'Somente o perfil CAM pode avançar o ciclo.' }),
-    )
+    return redirecionar(deVolta({ erro: 'Somente o perfil CAM pode avançar o ciclo.' }))
   }
 
   const formulario = await requisicao.formData()
@@ -40,9 +48,7 @@ export async function POST(requisicao: NextRequest) {
   })
 
   if (!analisado.success) {
-    return redirecionar(
-      comParametros('/sistema/cam', { erro: 'Confirme a transição antes de avançar.' }),
-    )
+    return redirecionar(deVolta({ erro: 'Confirme a transição antes de avançar.' }))
   }
 
   const resultado = await repositorio().avancarCiclo(
@@ -51,7 +57,5 @@ export async function POST(requisicao: NextRequest) {
     new Date().toISOString(),
   )
 
-  return redirecionar(
-    comParametros('/sistema/cam', { [resultado.ok ? 'ok' : 'erro']: resultado.mensagem }),
-  )
+  return redirecionar(deVolta({ [resultado.ok ? 'ok' : 'erro']: resultado.mensagem }))
 }

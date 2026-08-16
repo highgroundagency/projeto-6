@@ -15,17 +15,23 @@ export function redirecionar(caminho: string, status: 303 | 307 | 308 = 303): Ne
   return new NextResponse(null, { status, headers: { Location: caminho } })
 }
 
-/** Monta `?chave=valor` já com escape, ignorando valores vazios. */
+/**
+ * Monta `?chave=valor` já com escape, ignorando valores vazios.
+ *
+ * A âncora vem separada porque ela é obrigatoriamente o ÚLTIMO pedaço da URL:
+ * colada no caminho, `?` entraria dentro do fragmento e a query sumiria.
+ */
 export function comParametros(
   caminho: string,
   parametros: Record<string, string | undefined>,
+  ancora?: string,
 ): string {
   const busca = new URLSearchParams()
   for (const [chave, valor] of Object.entries(parametros)) {
     if (valor) busca.set(chave, valor)
   }
   const consulta = busca.toString()
-  return consulta ? `${caminho}?${consulta}` : caminho
+  return `${caminho}${consulta ? `?${consulta}` : ''}${ancora ?? ''}`
 }
 
 /**

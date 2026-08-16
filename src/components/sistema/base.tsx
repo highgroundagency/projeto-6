@@ -2,25 +2,49 @@ import type { ReactNode } from 'react'
 import { Num } from '@/components/base/num'
 import { Etiqueta } from '@/components/base/selo'
 import { ORDEM_ESTADOS, ROTULO_ESTADO, type EstadoCiclo } from '@/lib/calculo/tipos'
+import {
+  PARAMETROS_EFEMEROS,
+  PARAMETROS_SISTEMA,
+  type ParametroSistema,
+  type ParametrosSistema,
+} from '@/lib/sistema/parametros'
 import { cn } from '@/lib/utils'
 
-export function CabecalhoTela({
-  titulo,
-  descricao,
-  acao,
-}: {
-  titulo: string
-  descricao: string
-  acao?: ReactNode
-}) {
+/** Etiqueta de estado, botão de exportar: a linha de ações no topo de uma tela. */
+export function AcoesDaTela({ children }: { children: ReactNode }) {
   return (
-    <header className="flex flex-wrap items-end justify-between gap-4 border-b border-linha pb-5">
-      <div>
-        <h1 className="fonte-display text-2xl sm:text-3xl">{titulo}</h1>
-        <p className="mt-1 max-w-prose text-sm text-apagado">{descricao}</p>
-      </div>
-      {acao}
-    </header>
+    <div className="mb-5 flex flex-wrap items-center gap-3 border-b border-linha pb-4">
+      {children}
+    </div>
+  )
+}
+
+/**
+ * Carrega o estado das outras telas num formulário GET.
+ *
+ * As oito telas dividem uma query string só (ADR-023), e um `<form method=get>`
+ * SUBSTITUI a query inteira ao ser enviado. Sem estes campos ocultos, filtrar a
+ * auditoria zeraria o gestor escolhido em "meu resultado" três seções abaixo.
+ *
+ * Os efêmeros ficam de fora de propósito: faixa de sucesso é de uma leitura só.
+ */
+export function Preservar({
+  params,
+  exceto,
+}: {
+  params: ParametrosSistema
+  /** Os campos que ESTE formulário já envia. Repetir viraria valor duplicado. */
+  exceto: readonly ParametroSistema[]
+}) {
+  const descartar = [...PARAMETROS_EFEMEROS, ...exceto]
+  return (
+    <>
+      {PARAMETROS_SISTEMA.filter((chave) => !descartar.includes(chave))
+        .filter((chave) => params[chave])
+        .map((chave) => (
+          <input key={chave} type="hidden" name={chave} value={params[chave]} />
+        ))}
+    </>
   )
 }
 
@@ -36,7 +60,7 @@ export function Painel({
   className?: string
 }) {
   return (
-    <section className={cn('mt-6 border border-linha bg-fundo', className)}>
+    <section className={cn('mt-6 border border-linha bg-fundo first:mt-0', className)}>
       <header className="border-b border-linha px-4 py-3">
         <h2 className="fonte-display text-lg">{titulo}</h2>
         {descricao ? <p className="mt-0.5 text-sm text-apagado">{descricao}</p> : null}

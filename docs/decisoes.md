@@ -396,3 +396,59 @@ resultado.
 cálculo da gratificação. O art. 20 da LGPD dá ao titular direito a revisão de decisão
 automatizada, e gratificação afeta remuneração — por isso o motor de cálculo é determinístico
 e auditável, e o ML fica fora dele, sinalizando onde olhar sem decidir nada.
+
+---
+
+## ADR-023 · O sistema é uma página só, e o perfil deixa de ser decoração
+
+**Contexto.** Cada uma das oito funcionalidades era uma rota (`/sistema/cam`,
+`/sistema/auditoria`, e assim por diante). Clicar num item do menu levava embora, e de lá não
+havia caminho de volta a não ser o botão do navegador. A barra do topo eram links de texto
+sem forma de botão, repetindo uma grade de cartões logo abaixo: duas navegações para o mesmo
+lugar, e nenhuma delas parecendo clicável. Quem usou descreveu como "completamente
+desorganizado", e estava certo.
+
+Havia um problema mais sério embaixo desse. **Cinco das oito telas não olhavam o perfil.**
+`indicadores`, `meu-resultado`, `auditoria`, `painel-gestao` e `analytics` renderizavam
+inteiras para qualquer um: o filtro existia só na montagem do menu, então quem digitasse a
+URL entrava. O briefing pede perfis de acesso; o que existia era ordenação de menu com outro
+nome.
+
+**Decisão.** Três mudanças que só fazem sentido juntas.
+
+1. **`/sistema` monta tudo.** O corpo de cada tela virou componente em
+   `src/components/sistema/telas/`, sem gate por dentro, e a página os empilha em `<details>`,
+   o mesmo padrão do registro semanal (ADR-006). As oito rotas antigas continuam existindo e
+   redirecionam para `/sistema?abrir=<id>#tela-<id>`.
+
+2. **`exigirPerfil` ao lado de `exigirFeature`.** Além do gate de release, a tela confere se a
+   funcionalidade pertence ao perfil ativo, e responde **404**, não 403, pela mesma razão de
+   `/admin`: da porta, "ainda não liberado" e "não é seu" precisam ser indistinguíveis. O
+   redirecionamento das rotas antigas vem depois do gate, nunca antes. Um teste percorre as
+   oito telas contra os quatro perfis, sem amostragem.
+
+3. **Sumário grudado no topo, com ícone e borda.** Só as telas do perfil. Nada em cinza, nada
+   de "indisponível": o que não é seu não aparece. Os cartões duplicados sumiram.
+
+**Por que `abrir=` e não a âncora sozinha.** Existe uma regra nova de HTML que manda expandir
+um `<details>` quando a navegação aponta para dentro dele. Ela funciona ao carregar a página
+com fragmento, e não em todo caminho de clique nem em todo navegador — medimos. Um item de
+sumário que rola até um bloco fechado é pior do que um que não rola. Com `abrir=` quem decide
+é o servidor, e o resultado é igual em qualquer navegador, com ou sem JavaScript.
+
+**A query string ganhou espaço de nomes.** Oito telas dividindo uma URL fariam `ciclo`
+significar quatro coisas ao mesmo tempo, e um lançamento bem-sucedido pintaria a faixa verde
+também no dashboard da CAM, que não fez nada. Cada tela leva um prefixo (`aud_ciclo`,
+`gest_ciclo`, `res_ciclo`), a faixa de resultado carrega `de=<tela>`, e os formulários levam
+campos ocultos que preservam o estado das vizinhas. É feio na barra de endereço e é a única
+forma de o estado de uma tela não vazar para a outra.
+
+**Consequência.** A armadilha da ADR-018 vale aqui em dobro: **sanfona fechada não esconde
+HTML.** O que protege é a ordem dos gates em `page.tsx` — release, depois perfil, e só então o
+componente é montado. Inverter isso derrubaria o §6.2 sem que nada aparentasse quebrar. A
+verificação de vazamento ganhou uma checagem para exatamente esse caso: nenhuma sanfona de
+tela fora do perfil aparece no HTML de `/sistema`.
+
+O custo é que uma requisição renderiza as oito telas, abertas ou não. Para um MVP com base
+sintética em memória isso não pesa; com banco de verdade, cada tela precisaria carregar sob
+demanda.

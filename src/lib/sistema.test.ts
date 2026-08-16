@@ -6,6 +6,8 @@ import {
   NOME_COOKIE_VISAO,
   obterSegredo,
 } from './admin/sessao'
+import { FEATURES, ORDEM_PERFIS, type FeatureId } from './features'
+import { NOME_COOKIE_PERFIL } from './sistema/identidade'
 import type { Overlay } from './visao'
 
 /**
@@ -33,7 +35,7 @@ vi.mock('next/navigation', () => ({
   },
 }))
 
-const { exigirFeature } = await import('./sistema')
+const { exigirFeature, exigirPerfil } = await import('./sistema')
 
 const SEGREDO = obterSegredo()
 
@@ -99,11 +101,64 @@ describe('exigirFeature — quem pode operar', () => {
   it('o perfil do seletor não concede nada', async () => {
     await entrarComoAdmin()
     await definirOverlay({ verComoVisitante: true, dataSimulada: '2026-09-19' })
-    potes.set('prumo_perfil', 'cam')
+    potes.set(NOME_COOKIE_PERFIL, 'cam')
 
     const contexto = await exigirFeature('painel-cam')
 
     expect(contexto.perfil).toBe('cam')
     expect(contexto.admin).toBe(false)
+  })
+})
+
+/**
+ * As oito telas contra os quatro perfis — a matriz inteira, sem amostragem.
+ *
+ * Este é o teste que faltava. Até a ADR-023, `indicadores`, `meu-resultado`,
+ * `auditoria`, `painel-gestao` e `analytics` não olhavam o perfil uma única vez:
+ * o filtro existia só na navegação, e quem digitasse a rota entrava. O briefing
+ * pede perfis de ACESSO, e acesso que a barra de endereço contorna é ordenação
+ * de menu com outro nome.
+ *
+ * A verdade é `FEATURES[].perfis`. Se alguém mexer lá e esquecer a tela, ou
+ * mexer na tela e esquecer o dado, um destes 32 casos cai.
+ */
+describe('exigirPerfil — a matriz de 8 telas × 4 perfis', () => {
+  beforeEach(async () => {
+    // Sessão de admin em todos os casos: o modo completo libera as oito telas,
+    // e assim o que sobra medindo é exclusivamente o gate de PERFIL.
+    await entrarComoAdmin()
+  })
+
+  for (const feature of FEATURES) {
+    for (const perfil of ORDEM_PERFIS) {
+      const permitido = (feature.perfis as readonly string[]).includes(perfil)
+
+      it(`${feature.id} × ${perfil}: ${permitido ? 'abre' : '404'}`, async () => {
+        potes.set(NOME_COOKIE_PERFIL, perfil)
+        const chamada = exigirPerfil(feature.id as FeatureId)
+
+        if (permitido) {
+          expect((await chamada).perfil).toBe(perfil)
+        } else {
+          await expect(chamada).rejects.toThrow('NEXT_NOT_FOUND')
+        }
+      })
+    }
+  }
+
+  it('nenhuma tela é aberta para os quatro perfis ao mesmo tempo', () => {
+    // Uma tela visível para todo mundo é uma tela sem recorte, e um seletor de
+    // perfil que não muda nada. Se um dia isso for proposital, o teste avisa.
+    const irrestritas = FEATURES.filter(
+      (f) => (f.perfis as readonly string[]).length === ORDEM_PERFIS.length,
+    )
+    expect(irrestritas.map((f) => f.id)).toEqual([])
+  })
+
+  it('todo perfil tem ao menos uma tela, senão o seletor teria opção morta', () => {
+    for (const perfil of ORDEM_PERFIS) {
+      const suas = FEATURES.filter((f) => (f.perfis as readonly string[]).includes(perfil))
+      expect(suas.length, `${perfil} ficou sem nenhuma tela`).toBeGreaterThan(0)
+    }
   })
 })

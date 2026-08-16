@@ -1,10 +1,10 @@
 import { type NextRequest } from 'next/server'
 import { avaliacoesDoCiclo, carregarDados } from '@/lib/dados/consultas'
-import { exigirFeature } from '@/lib/sistema'
+import { exigirPerfil } from '@/lib/sistema'
 
 /** Exportação dos resultados de um ciclo em CSV (§8.4, tela 5). */
 export async function GET(requisicao: NextRequest) {
-  await exigirFeature('painel-gestao')
+  await exigirPerfil('painel-gestao')
 
   const cicloId = requisicao.nextUrl.searchParams.get('ciclo') ?? ''
   const anonimo = requisicao.nextUrl.searchParams.get('anonimo') === '1'

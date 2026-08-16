@@ -102,6 +102,27 @@ test.describe('gate das funcionalidades', () => {
     await page.goto('/sistema')
     await expect(page.getByText('O sistema ainda não entrou em operação')).toBeVisible()
   })
+
+  test('tela de outro perfil não existe, mesmo já liberada', async ({ page }) => {
+    // Entra como admin (modo completo: as oito telas liberadas) e troca para
+    // Área técnica, que só lança indicadores. As outras sete devem sumir de
+    // verdade, não ficar apagadas — ver `exigirPerfil` em src/lib/sistema.ts.
+    await entrarNoPainel(page)
+    await page.goto('/sistema')
+    await page.getByLabel('Estou usando como').selectOption('area_tecnica')
+    await page.getByRole('button', { name: 'Trocar', exact: true }).click()
+
+    await expect(page.getByRole('link', { name: 'Lançamento' })).toBeVisible()
+    for (const rotulo of ['Auditoria', 'Analytics', 'Painel da gestão']) {
+      await expect(page.getByRole('link', { name: rotulo })).toHaveCount(0)
+    }
+
+    // E a URL direta também não abre: o filtro não é só de menu.
+    for (const rota of ['/sistema/auditoria', '/sistema/analytics', '/sistema/gestao']) {
+      const resposta = await page.request.get(rota, { headers: await comSessao(page) })
+      expect(resposta.status(), `${rota} deveria ser 404 para a área técnica`).toBe(404)
+    }
+  })
 })
 
 /**
@@ -126,6 +147,7 @@ test.describe('avanço de ciclo', () => {
     await entrarNoPainel(page)
 
     await page.goto('/sistema/cam')
+    await expect(page).toHaveURL(/\/sistema\?abrir=painel-cam#tela-painel-cam$/)
     await expect(page.getByRole('button', { name: CONTROLE })).toBeVisible()
 
     await page.goto('/admin')
@@ -147,12 +169,63 @@ test.describe('o sistema, visto pelo admin', () => {
     await entrarNoPainel(page)
   })
 
+  test('as telas abrem na própria página, sem sair de /sistema', async ({ page }) => {
+    await page.goto('/sistema')
+
+    // Fechadas por padrão: quem chega escolhe o que abrir.
+    const auditoria = page.locator('#tela-auditoria')
+    await expect(auditoria).toHaveJSProperty('open', false)
+
+    await page.getByRole('navigation', { name: 'Telas do sistema' })
+      .getByRole('link', { name: 'Auditoria' })
+      .click()
+
+    // Continua em /sistema: a queixa original era justamente ser levado embora.
+    await expect(page).toHaveURL(/\/sistema\?[^#]*abrir=auditoria[^#]*#tela-auditoria$/)
+    await expect(auditoria).toHaveJSProperty('open', true)
+    await expect(page.getByRole('heading', { name: 'Linha do tempo' })).toBeVisible()
+    // E as vizinhas continuam fechadas: abriu uma, não abriu tudo.
+    await expect(page.locator('#tela-analytics')).toHaveJSProperty('open', false)
+  })
+
+  test('pular de uma tela para outra não descarta o que já foi escolhido', async ({ page }) => {
+    await page.goto('/sistema?abrir=painel-gestao')
+    await page.getByLabel('Anonimizar o ranking').check()
+    await page.getByRole('button', { name: 'Aplicar' }).click()
+    await expect(page).toHaveURL(/gest_anonimo=1/)
+
+    await page.getByRole('navigation', { name: 'Telas do sistema' })
+      .getByRole('link', { name: 'Auditoria' })
+      .click()
+
+    // O `gest_anonimo` sobrevive à navegação: as oito telas dividem uma query
+    // string só, e o estado de uma não pode ser zerado pela vizinha.
+    await expect(page).toHaveURL(/gest_anonimo=1/)
+  })
+
+  test('o sumário fica visível enquanto se rola uma tela longa', async ({ page }) => {
+    // Com a auditoria aberta a página fica bem mais alta que a janela; é
+    // justamente aí que o sumário grudado prova o seu valor.
+    await page.goto('/sistema?abrir=auditoria')
+    await page.mouse.wheel(0, 2500)
+    await expect(page.getByRole('navigation', { name: 'Telas do sistema' })).toBeInViewport()
+  })
+
+  test('o tutorial muda quando o perfil muda', async ({ page }) => {
+    await page.goto('/sistema')
+    await expect(page.getByText('Tutorial: usando o sistema como CAM')).toBeVisible()
+
+    await page.getByLabel('Estou usando como').selectOption('gestor')
+    await page.getByRole('button', { name: 'Trocar', exact: true }).click()
+    await expect(page.getByText('Tutorial: usando o sistema como Gestor avaliado')).toBeVisible()
+  })
+
   test('a memória de cálculo explica de onde veio cada número', async ({ page }) => {
-    await page.goto('/sistema/meu-resultado')
+    await page.goto('/sistema?abrir=meu-resultado')
 
-    await expect(page.getByText('Score do ciclo')).toBeVisible()
+    await expect(page.getByText('Score do ciclo', { exact: true })).toBeVisible()
 
-    const memoria = page.getByText('Memória de cálculo')
+    const memoria = page.getByText('Memória de cálculo', { exact: true })
     await expect(memoria).toBeVisible()
     await memoria.click()
 
@@ -163,14 +236,14 @@ test.describe('o sistema, visto pelo admin', () => {
   })
 
   test('a auditoria mostra a trilha com antes e depois', async ({ page }) => {
-    await page.goto('/sistema/auditoria')
+    await page.goto('/sistema?abrir=auditoria')
     await expect(page.getByRole('heading', { name: 'Linha do tempo' })).toBeVisible()
     await expect(page.getByText(/antes:/).first()).toBeVisible()
     await expect(page.getByText(/depois:/).first()).toBeVisible()
   })
 
   test('as regras versionadas mostram o diff entre versões', async ({ page }) => {
-    await page.goto('/sistema/indicadores')
+    await page.goto('/sistema?abrir=indicadores')
     await expect(page.getByRole('heading', { name: /Diff: v1 → v2/ })).toBeVisible()
     // A v2 redesenhou as faixas: nenhuma sobreviveu igual, então o diff é todo
     // de faixas removidas e adicionadas.
@@ -179,7 +252,7 @@ test.describe('o sistema, visto pelo admin', () => {
   })
 
   test('o lançamento recusa entrada inválida', async ({ page }) => {
-    await page.goto('/sistema/lancamento')
+    await page.goto('/sistema?abrir=lancamento')
 
     const resposta = await page.request.post('/api/sistema/lancamento', {
       headers: await comSessao(page),
@@ -197,7 +270,7 @@ test.describe('o sistema, visto pelo admin', () => {
   })
 
   test('o painel da gestão anonimiza e exporta', async ({ page }) => {
-    await page.goto('/sistema/gestao')
+    await page.goto('/sistema?abrir=painel-gestao')
     await expect(page.getByRole('heading', { name: 'Ranking por área' })).toBeVisible()
 
     await page.getByLabel('Anonimizar o ranking').check()
