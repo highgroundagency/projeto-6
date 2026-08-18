@@ -76,7 +76,7 @@ export async function TelaGestao({ ctx }: PropsTela) {
               name="gest_anonimo"
               value="1"
               defaultChecked={anonimizado}
-              className="size-4 accent-[color:var(--color-laranja)]"
+              className="size-4 accent-[color:var(--color-acento)]"
             />
             Esconder os nomes
           </label>

@@ -102,7 +102,7 @@ export async function TelaCam({ ctx }: PropsTela) {
                 name="confirmo"
                 required
                 disabled={!podeAgir}
-                className="mt-0.5 size-4 accent-[color:var(--color-laranja)]"
+                className="mt-0.5 size-4 accent-[color:var(--color-acento)]"
               />
               <span>
                 Confirmo o avanço. Ele fica gravado no histórico, com a etapa anterior e a nova,

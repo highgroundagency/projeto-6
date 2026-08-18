@@ -18,6 +18,7 @@ import { cicloPorId } from '@/lib/cronograma'
 import { formatarBR } from '@/lib/datas'
 import { ehSemanaCorrente } from '@/lib/releases'
 import { featuresLiberadas } from '@/lib/sistema'
+import { temaAtual } from '@/lib/tema'
 import { obterVisao } from '@/lib/visao'
 
 /**
@@ -35,6 +36,7 @@ export const dynamic = 'force-dynamic'
 
 export default async function Pagina() {
   const visao = await obterVisao()
+  const tema = await temaAtual()
 
   // O GATE ACONTECE AQUI: só os ciclos aprovados chegam ao carregador. Passar a
   // lista completa anularia a proteção do §6.3 — e não adianta dobrar a semana
@@ -49,7 +51,7 @@ export default async function Pagina() {
   return (
     <>
       <FaixaAdmin visao={visao} />
-      <Cabecalho />
+      <Cabecalho tema={tema} />
 
       <main id="conteudo" className="mx-auto max-w-[1100px] px-0 sm:px-8">
         {/* Hero — o único lugar da página com imagem. */}

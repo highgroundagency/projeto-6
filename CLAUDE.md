@@ -38,13 +38,17 @@ Site do Projeto 6 da CESAR School (2026.2, Equipe 2). Duas camadas:
    nada do HTML, então a ordem é a proteção. Quem não tem direito recebe 404, nunca 403: da
    porta, "ainda não liberado" e "não é seu" precisam ser indistinguíveis. Há teste que
    percorre as 8 telas contra os 4 perfis.
-10. **Um acento só.** `--color-acento` é o laranja da CESAR e aparece em no máximo três
+10. **Dois temas, um desenho.** Escuro e claro mudam onze tokens de cor e mais nada: nenhum
+   layout, nenhuma classe condicional de tema em componente. Cor nova entra nos DOIS blocos
+   de `globals.css`, e há teste que falha se o claro esquecer um token. Cor literal em CSS
+   (um `#hex` fora do `@theme`) é sempre um bug: ela não acompanha o tema.
+11. **Um acento só.** `--color-acento` é o laranja da CESAR e aparece em no máximo três
    lugares por tela: número grande, chamada sólida e pílula/ícone do fluxo. Se precisar de
    mais uma cor para diferenciar alguma coisa, use hairline e caixa alta, não cor.
 
 ## A identidade em uma linha
 
-Folha de especificação em modo escuro: tudo monoespaçado e minúsculo, blocos delimitados por
+Folha de especificação, no escuro por padrão e no papel a um clique: tudo monoespaçado e minúsculo, blocos delimitados por
 hairline de 1px que se encostam como tabela (`.bloco`, com `margin-top: -1px`), raio zero
 exceto em pílulas, e o gradiente granulado como única imagem do site. Caixa alta só em rótulo
 de estado ou etapa. Os detalhes e os contrastes conferidos estão na ADR-016.

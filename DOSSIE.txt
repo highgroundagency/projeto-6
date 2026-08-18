@@ -2374,6 +2374,23 @@ banca pergunte. Auditoria que só encontra acerto não auditou nada.
     - 420 testes de unidade em Vitest, 72 end-to-end em Playwright
     - scripts/verificar-vazamento.ts: 98 checagens contra o build de produção
 
+  [parcial] acessibilidade
+  ~~~~~~~~~~~~~~~~~~~~~~~~
+  pedido: "Qualidade da solução e adequação às necessidades dos usuários (critério de
+  validação do SR2)."
+
+  onde está:
+    - src/lib/contraste.test.ts: 19 checagens de contraste AA, nos dois temas, lidas do
+      próprio globals.css
+    - Modo claro e escuro com botão, tema no cookie e aplicado pelo servidor (ADR-027)
+    - Navegação por teclado: sanfonas nativas, foco visível com anel de acento, link de
+      pular para o conteúdo
+    - e2e roda em 1280px e em 360px, e falha se a página estourar a largura
+
+  RESSALVA: Não houve teste com leitor de tela real nem com pessoas com deficiência. O que
+  existe é conformidade verificada de contraste, foco e semântica, que é um piso, não uma
+  validação de uso.
+
   [atendido] google-site
   ~~~~~~~~~~~~~~~~~~~~~~
   pedido: "Semana 1: Google Site do grupo criado."
@@ -2387,9 +2404,9 @@ banca pergunte. Auditoria que só encontra acerto não auditou nada.
 --- Placar da auditoria --------------------------------------------------------------------
 
   - atendido: 18
-  - parcial: 4
+  - parcial: 5
   - fora de escopo: 1
-  - total de requisitos rastreados: 23
+  - total de requisitos rastreados: 24
 
 ============================================================================================
 11.  AS REGRAS QUE NÃO SE NEGOCIAM
@@ -2422,7 +2439,11 @@ banca pergunte. Auditoria que só encontra acerto não auditou nada.
      nada do HTML, então a ordem é a proteção. Quem não tem direito recebe 404, nunca 403: da
      porta, "ainda não liberado" e "não é seu" precisam ser indistinguíveis. Há teste que
      percorre as 8 telas contra os 4 perfis.
-  10. **Um acento só.** `--color-acento` é o laranja da CESAR e aparece em no máximo três
+  10. **Dois temas, um desenho.** Escuro e claro mudam onze tokens de cor e mais nada: nenhum
+     layout, nenhuma classe condicional de tema em componente. Cor nova entra nos DOIS blocos
+     de `globals.css`, e há teste que falha se o claro esquecer um token. Cor literal em CSS
+     (um `#hex` fora do `@theme`) é sempre um bug: ela não acompanha o tema.
+  11. **Um acento só.** `--color-acento` é o laranja da CESAR e aparece em no máximo três
      lugares por tela: número grande, chamada sólida e pílula/ícone do fluxo. Se precisar de
      mais uma cor para diferenciar alguma coisa, use hairline e caixa alta, não cor.
 
@@ -2460,6 +2481,7 @@ Os porquês completos estão em `docs/decisoes.md`. Os títulos, aqui:
     JavaScript
   - ADR-025 · A terceira lente era Nuvem, e o projeto estava chamando de Direito
   - ADR-026 · A copy fala com quem não é da área, e o selo de rascunho saiu de cena
+  - ADR-027 · Modo claro por cookie, pintado no servidor
 
 ============================================================================================
 13.  COMO RODAR E COMO CONFERIR

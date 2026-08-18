@@ -29,6 +29,10 @@
 
   /* Acento — laranja CESAR. 5,97:1 sobre o fundo: passa AA em corpo de texto */
   --color-acento: #f7580b;
+  /* O laranja da marca, cru, sem ajuste de contraste. Serve a `accent-color` de
+     caixa de seleção e a qualquer lugar que precise da cor exata da logo, não
+     de uma versão legível como texto. */
+  --color-laranja: #f7580b;
   /* O mesmo laranja a 12% sobre o fundo. Preenchimento de pílula: o acento
      escrito por cima dá 5,47:1 */
   --color-acento-fraco: #1f140a;
@@ -39,9 +43,57 @@
   --color-ok: #7ea06a;
   --color-alerta: #d2694f;
 
+  /* Os dois passos do gradiente do hero, a única imagem do site. Ficam em
+     token porque o modo claro precisa de um brilho de papel, não de um
+     buraco escuro no meio da página. */
+  --color-grao-1: #2a1408;
+  --color-grao-2: #120c07;
+
   --font-display: var(--fonte-display), ui-monospace, monospace;
   --font-mono: var(--fonte-mono), ui-monospace, 'SFMono-Regular', monospace;
   --font-sans: var(--fonte-mono), ui-monospace, 'SFMono-Regular', monospace;
+}
+
+/* ---------------------------------------------------------------------------
+   MODO CLARO (ADR-027)
+
+   A mesma folha de especificação, no papel em vez da tela: fundo de papel
+   levemente quente, hairline bege, e o mesmo desenho de bloco. Nada de layout
+   muda aqui — só os onze tokens de cor.
+
+   O ACENTO PRECISA MUDAR DE VALOR, e isso é decisão, não descuido. O laranja
+   da CESAR (#F7580B) dá 5,97:1 sobre o fundo escuro e só 3,2:1 sobre papel:
+   reprovaria em AA como texto. No claro ele vira #A83C05, o mesmo laranja com
+   menos luz, que devolve exatamente os mesmos 5,97:1. A cor crua da marca
+   continua disponível em `--color-laranja` para preenchimento e para a logo.
+
+   `--color-ink` inverte junto: no escuro é o texto ESCURO sobre laranja claro;
+   no claro é o texto BRANCO sobre laranja escuro.
+
+   O tema vem de um cookie e é aplicado pelo servidor no atributo `data-tema`
+   do <html>. Por isso não existe piscada de tema errado no carregamento: o
+   HTML já chega pintado. Ver `src/lib/tema.ts`.
+--------------------------------------------------------------------------- */
+
+[data-tema='claro'] {
+  --color-fundo: #faf8f4;
+  --color-superficie: #efece4;
+
+  --color-linha: #ddd8cc;
+  --color-linha-alta: #a8a294;
+
+  --color-texto: #12140f;
+  --color-apagado: #54574d;
+
+  --color-acento: #a83c05;
+  --color-acento-fraco: #fbe7d9;
+  --color-ink: #ffffff;
+
+  --color-ok: #3f6b2c;
+  --color-alerta: #a23c22;
+
+  --color-grao-1: #f6ddc9;
+  --color-grao-2: #fbeee2;
 }
 
 /* ---------------------------------------------------------------------------
@@ -221,8 +273,12 @@ body {
 .grao {
   position: relative;
   isolation: isolate;
-  background:
-    radial-gradient(120% 90% at 50% 0%, #2a1408 0%, #120c07 45%, var(--color-fundo) 100%);
+  background: radial-gradient(
+    120% 90% at 50% 0%,
+    var(--color-grao-1) 0%,
+    var(--color-grao-2) 45%,
+    var(--color-fundo) 100%
+  );
 }
 
 .grao::after {
@@ -234,6 +290,13 @@ body {
   opacity: 0.38;
   mix-blend-mode: overlay;
   pointer-events: none;
+}
+
+/* No papel, `overlay` a 38% vira sujeira cinza. `multiply` bem mais fraco
+   mantém a mesma textura de grão sem encardir o fundo. */
+[data-tema='claro'] .grao::after {
+  opacity: 0.12;
+  mix-blend-mode: multiply;
 }
 
 /* ---------------------------------------------------------------------------

@@ -2,8 +2,10 @@ import Link from 'next/link'
 import { FaixaAdmin } from '@/components/base/faixa-admin'
 import { MarcaPrumo } from '@/components/base/marca'
 import { Rodape } from '@/components/base/rodape'
+import { BotaoTema } from '@/components/base/botao-tema'
 import { SeletorDePerfil } from '@/components/sistema/seletor-perfil'
 import { identidadeAtual } from '@/lib/sistema'
+import { temaAtual } from '@/lib/tema'
 import { obterVisao } from '@/lib/visao'
 
 export const dynamic = 'force-dynamic'
@@ -11,6 +13,7 @@ export const dynamic = 'force-dynamic'
 export default async function LayoutSistema({ children }: { children: React.ReactNode }) {
   const visao = await obterVisao()
   const identidade = await identidadeAtual()
+  const tema = await temaAtual()
 
   return (
     <>
@@ -40,7 +43,10 @@ export default async function LayoutSistema({ children }: { children: React.Reac
           {/* Login simulado (§8.1): preferência de navegação, não autenticação.
               O RBAC real está em supabase/migrations/ como políticas de RLS —
               escrito e testado, mas não ligado ao app (ADR-011). */}
-          <SeletorDePerfil perfil={identidade.perfil} />
+          <div className="flex flex-wrap items-center gap-3">
+            <SeletorDePerfil perfil={identidade.perfil} />
+            <BotaoTema tema={tema} voltarPara="/sistema" />
+          </div>
         </div>
       </div>
 

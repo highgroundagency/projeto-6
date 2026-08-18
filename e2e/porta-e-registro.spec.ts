@@ -18,7 +18,9 @@ test.describe('página inicial', () => {
     expect(estoura).toBe(false)
   })
 
-  test('traz o site inteiro: equipe, marcos, registro e o caminho do sistema', async ({ page }) => {
+  test('traz o site inteiro: equipe, marcos, registro e o caminho do sistema', async ({
+    page,
+  }) => {
     await page.goto('/')
 
     await expect(page.getByRole('heading', { name: 'Equipe' })).toBeVisible()
@@ -26,11 +28,21 @@ test.describe('página inicial', () => {
     await expect(page.getByRole('heading', { name: 'Registro semanal' })).toBeVisible()
 
     // Os seis integrantes, com nome.
-    for (const nome of ['Gabriel', 'Matheus', 'João Henrique', 'João Pedro', 'Rafael', 'Fernando']) {
+    for (const nome of [
+      'Gabriel',
+      'Matheus',
+      'João Henrique',
+      'João Pedro',
+      'Rafael',
+      'Fernando',
+    ]) {
       await expect(page.getByText(nome, { exact: false }).first()).toBeVisible()
     }
 
-    await page.getByRole('link', { name: /ver o sistema/ }).first().click()
+    await page
+      .getByRole('link', { name: /ver o sistema/ })
+      .first()
+      .click()
     await expect(page).toHaveURL(/\/sistema$/)
   })
 
@@ -68,7 +80,9 @@ test.describe('registro do projeto', () => {
       'Responsáveis',
       'Evidências',
     ]) {
-      await expect(page.getByRole('heading', { name: bloco, exact: true }).first()).toBeVisible()
+      await expect(
+        page.getByRole('heading', { name: bloco, exact: true }).first(),
+      ).toBeVisible()
     }
   })
 
@@ -76,7 +90,9 @@ test.describe('registro do projeto', () => {
     await page.goto('/')
 
     await expect(page.getByRole('heading', { name: 'Equipe' })).toBeVisible()
-    await expect(page.getByText(/confiável, transparente, sustentável e auditável/)).toBeVisible()
+    await expect(
+      page.getByText(/confiável, transparente, sustentável e auditável/),
+    ).toBeVisible()
     await expect(page.getByRole('heading', { name: 'Evolução do projeto' })).toBeVisible()
 
     for (const marco of ['Kick-off', 'SR1', 'SR2: Final']) {
@@ -125,7 +141,9 @@ test.describe('registro do projeto', () => {
     }
   })
 
-  test('nenhuma evidência manda o professor para fora ou para lugar nenhum', async ({ page }) => {
+  test('nenhuma evidência manda o professor para fora ou para lugar nenhum', async ({
+    page,
+  }) => {
     await page.goto('/')
 
     const ancoras = page.locator('a[href^="#doc-"]')
@@ -159,5 +177,53 @@ test.describe('registro do projeto', () => {
     // A frase aparece no cabeçalho da página e de novo no documento renderizado.
     await expect(page.getByText(/gerado ≠ entregue/).first()).toBeVisible()
     await expect(page.getByRole('table').first()).toBeVisible()
+  })
+})
+
+/**
+ * Modo claro (ADR-027).
+ *
+ * O que se mede aqui é o que a implementação por cookie promete e a por
+ * localStorage não entrega: o HTML já chega pintado do servidor, então não há
+ * quadro nenhum com o tema errado, e a escolha atravessa as páginas.
+ */
+test.describe('tema claro e escuro', () => {
+  test('o botão troca o tema, e a escolha sobrevive à navegação', async ({ page }) => {
+    await page.goto('/')
+    await expect(page.locator('html')).toHaveAttribute('data-tema', 'escuro')
+
+    await page.getByRole('button', { name: /modo claro/i }).click()
+    await expect(page.locator('html')).toHaveAttribute('data-tema', 'claro')
+
+    // Atravessa páginas: o cookie vale para o site inteiro, não só para a home.
+    await page.goto('/sistema')
+    await expect(page.locator('html')).toHaveAttribute('data-tema', 'claro')
+
+    await page.getByRole('button', { name: /modo escuro/i }).click()
+    await expect(page.locator('html')).toHaveAttribute('data-tema', 'escuro')
+  })
+
+  test('o tema já vem pintado no HTML do servidor, sem piscada', async ({ page }) => {
+    await page.goto('/')
+    await page.getByRole('button', { name: /modo claro/i }).click()
+
+    // Busca o HTML cru, antes de qualquer JavaScript rodar: se o atributo só
+    // fosse aplicado no cliente, ele não estaria aqui e haveria piscada.
+    const cru = await (await page.request.get('/')).text()
+    expect(cru).toContain('data-tema="claro"')
+  })
+
+  test('o modo claro repinta de verdade, não só troca um atributo', async ({ page }) => {
+    await page.goto('/')
+    const escuro = await page.evaluate(() => getComputedStyle(document.body).backgroundColor)
+
+    await page.getByRole('button', { name: /modo claro/i }).click()
+    const claro = await page.evaluate(() => getComputedStyle(document.body).backgroundColor)
+
+    expect(claro).not.toBe(escuro)
+    // Papel é claro: a soma dos canais tem de subir muito.
+    const soma = (cor: string) =>
+      (cor.match(/\d+/g) ?? []).slice(0, 3).reduce((s, n) => s + Number(n), 0)
+    expect(soma(claro)).toBeGreaterThan(soma(escuro) + 300)
   })
 })

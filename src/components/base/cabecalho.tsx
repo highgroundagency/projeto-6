@@ -1,5 +1,7 @@
 import Link from 'next/link'
+import { BotaoTema } from './botao-tema'
 import { MarcaPrumo } from './marca'
+import type { Tema } from '@/lib/tema'
 
 /**
  * Cabeçalho do site.
@@ -13,7 +15,7 @@ import { MarcaPrumo } from './marca'
  * para revelar quatro links — e exigiria JavaScript numa página que não usa
  * nenhum. Os links ficam à mostra e somem no mobile, onde o espaço não dá.
  */
-export function Cabecalho() {
+export function Cabecalho({ tema }: { tema: Tema }) {
   return (
     <header className="sem-impressao sticky top-0 z-50 bg-fundo/80 backdrop-blur-md">
       <div className="mx-auto flex max-w-[1100px] items-center justify-between gap-4 px-6 py-3.5 sm:px-8">
@@ -31,6 +33,7 @@ export function Cabecalho() {
           <Link href="/sistema" className="transition-colors hover:text-acento">
             sistema
           </Link>
+          <BotaoTema tema={tema} voltarPara="/" />
         </nav>
       </div>
       <div aria-hidden className="h-px bg-linha" />

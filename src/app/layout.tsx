@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next'
 import { JetBrains_Mono, Martian_Mono } from 'next/font/google'
 import { PRODUTO } from '@/content/produto'
+import { temaAtual } from '@/lib/tema'
 import './globals.css'
 
 /**
@@ -34,16 +35,39 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 }
 
-export const viewport: Viewport = {
-  themeColor: '#0A0B0A',
-  colorScheme: 'dark',
-  width: 'device-width',
-  initialScale: 1,
+/**
+ * A cor da barra do navegador acompanha o tema.
+ *
+ * Precisa ser `generateViewport` e não a constante `viewport`: o valor depende
+ * do cookie, e constante é avaliada uma vez no build.
+ */
+export async function generateViewport(): Promise<Viewport> {
+  const tema = await temaAtual()
+  return {
+    themeColor: tema === 'claro' ? '#faf8f4' : '#0a0b0a',
+    colorScheme: tema === 'claro' ? 'light' : 'dark',
+    width: 'device-width',
+    initialScale: 1,
+  }
 }
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+/**
+ * O tema sai do cookie e vira atributo do `<html>` (ADR-027).
+ *
+ * Ler cookie aqui torna toda rota dinâmica, e isso é aceito de olhos abertos: o
+ * site já era `force-dynamic` nas páginas que importam, e em troca não existe
+ * piscada de tema errado no carregamento.
+ */
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const tema = await temaAtual()
+
   return (
-    <html lang="pt-BR" className={`${display.variable} ${mono.variable}`}>
+    <html
+      lang="pt-BR"
+      data-tema={tema}
+      style={{ colorScheme: tema === 'claro' ? 'light' : 'dark' }}
+      className={`${display.variable} ${mono.variable}`}
+    >
       <body className="min-h-dvh bg-fundo text-apagado antialiased">
         <a href="#conteudo" className="pular-para-conteudo">
           Pular para o conteúdo

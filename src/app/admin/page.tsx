@@ -150,7 +150,7 @@ export default async function PainelAdmin({
               type="checkbox"
               name="verComoVisitante"
               defaultChecked={visao.verComoVisitante}
-              className="size-4 accent-[color:var(--color-laranja)]"
+              className="size-4 accent-[color:var(--color-acento)]"
             />
             Ver como visitante
           </label>
@@ -293,7 +293,7 @@ export default async function PainelAdmin({
                               value={opcao}
                               defaultChecked={atual === opcao}
                               aria-label={`${ciclo.rotulo}: ${opcao}`}
-                              className="size-4 accent-[color:var(--color-laranja)]"
+                              className="size-4 accent-[color:var(--color-acento)]"
                             />
                           </td>
                         ),

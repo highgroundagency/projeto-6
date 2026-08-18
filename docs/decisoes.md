@@ -562,3 +562,45 @@ tela é sempre descrita pelo que a pessoa VÊ ("cada barra mostra", "o cartão d
 pelo que o sistema é. O custo declarado: a copy ficou menos densa em vocabulário de auditoria,
 que era parte da identidade "folha de especificação". A identidade visual fica; o vocabulário
 passa a servir o leitor, não o contrário.
+
+---
+
+## ADR-027 · Modo claro por cookie, pintado no servidor
+
+**Contexto.** A identidade nasceu como "folha de especificação em modo escuro" (ADR-016), e
+modo escuro sozinho é uma escolha estética imposta a quem lê. Num sistema que vai ser aberto
+em sala, projetado em reunião e usado em telas ruins de repartição, ter só o escuro é
+limitação, não posição.
+
+**Decisão.** Dois temas, com o mesmo desenho. Nada de layout muda entre eles: mudam onze
+tokens de cor. O escuro segue no `@theme`; o claro vive em `[data-tema='claro']`.
+
+**A escolha vive num cookie e é aplicada PELO SERVIDOR**, no atributo `data-tema` do `<html>`.
+O caminho comum (ler `localStorage` no cliente) pinta a página no tema errado por um quadro
+antes de corrigir, e o remendo habitual para isso é um script inline bloqueante no `<head>`.
+Aqui o HTML já chega pintado, e há teste que busca o HTML cru e exige `data-tema="claro"`
+dentro dele. O botão é um `<form>` que dá POST e volta, como o seletor de perfil: funciona sem
+JavaScript.
+
+**O acento muda de valor no claro, e isso é decisão.** O laranja da CESAR (#F7580B) dá 5,97:1
+sobre o fundo escuro e apenas 3,2:1 sobre papel: reprovaria em AA como texto. No claro ele vira
+#A83C05, o mesmo laranja com menos luz, que devolve exatamente os mesmos 5,97:1. A cor crua da
+marca continua disponível em `--color-laranja`, para preenchimento e para a logo, onde
+contraste de texto não se aplica. `--color-ink` inverte junto: no escuro é texto escuro sobre
+laranja claro, no claro é texto branco sobre laranja escuro.
+
+**Consequência declarada: ler cookie no layout raiz torna toda rota dinâmica.** O site já era
+`force-dynamic` nas páginas que importam por causa do gate de release; o que se perde são as
+duas últimas páginas pré-renderizadas, `/registro` e `/transparencia-ia`. Trocar a estática
+delas por ausência de piscada é o negócio que este ADR aceita.
+
+**O teste de contraste dobrou de tamanho e ganhou uma trava nova:** ele agora percorre os oito
+pares nos dois temas (19 casos), e falha se o tema claro esquecer de redefinir qualquer token
+de cor do escuro. Token esquecido herdaria o valor do escuro em silêncio, e o resultado seria
+texto branco sobre papel branco.
+
+**Um defeito antigo apareceu no caminho.** Quatro caixas de seleção usavam
+`accent-[color:var(--color-laranja)]`, e `--color-laranja` nunca existiu: o valor resolvia
+para inválido e o navegador caía no azul do sistema. Ou seja, nenhuma caixa de seleção do
+projeto jamais foi laranja. O token passou a existir de fato, e as caixas apontam para
+`--color-acento`, que acompanha o tema.

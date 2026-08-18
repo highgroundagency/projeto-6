@@ -270,6 +270,22 @@ export const REQUISITOS: readonly Requisito[] = [
     ],
   },
 
+  {
+    id: 'acessibilidade',
+    fonte: 'matriz',
+    pedido:
+      'Qualidade da solução e adequação às necessidades dos usuários (critério de validação do SR2).',
+    estado: 'parcial',
+    onde: [
+      'src/lib/contraste.test.ts: 19 checagens de contraste AA, nos dois temas, lidas do próprio globals.css',
+      'Modo claro e escuro com botão, tema no cookie e aplicado pelo servidor (ADR-027)',
+      'Navegação por teclado: sanfonas nativas, foco visível com anel de acento, link de pular para o conteúdo',
+      'e2e roda em 1280px e em 360px, e falha se a página estourar a largura',
+    ],
+    ressalva:
+      'Não houve teste com leitor de tela real nem com pessoas com deficiência. O que existe é conformidade verificada de contraste, foco e semântica, que é um piso, não uma validação de uso.',
+  },
+
   // ---- Fora de escopo, dito na cara --------------------------------------
   {
     id: 'folha-pagamento',
