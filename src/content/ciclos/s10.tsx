@@ -11,17 +11,19 @@ export const registro = {
     selo: 'rascunho',
     validadoPor: null,
     conteudo:
-      'Entregar a lente de machine learning como funcionalidade do produto, com o método declarado ao lado do número.',
+      'Fechar a Sprint 4: aplicar as correções apontadas no SR1 e entregar a lente de machine learning como funcionalidade do produto, com o método declarado ao lado do número.',
   },
 
   avancos: {
     selo: 'rascunho',
     validadoPor: null,
     conteudo: [
+      'Correções do feedback do SR1 implementadas, cada uma ligada ao apontamento que a originou.',
       'Tela de analytics com os resultados dos modelos e a metodologia visível.',
       'Modelos treinados exclusivamente sobre a base sintética, sem nenhum dado real.',
       'Métricas de desempenho publicadas junto do resultado, não escondidas.',
       'Limitações do modelo escritas na própria tela, em linguagem de quem vai ler.',
+      'Backlog repriorizado depois das correções: o que sobrou vai para a validação ou vira trabalho futuro declarado.',
     ],
   },
 
@@ -50,6 +52,7 @@ export const registro = {
     validadoPor: null,
     conteudo: [
       'Validar com a CAM na Semana 11.',
+      'Levar o backlog atualizado para a validação: o que a CAM apontar entra na frente do que sobrou.',
       'Consolidar as três lentes no pacote do SR2.',
     ],
   },
