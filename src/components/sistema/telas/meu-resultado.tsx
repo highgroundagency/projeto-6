@@ -29,7 +29,7 @@ export async function TelaMeuResultado({ ctx }: PropsTela) {
       <Painel
         alvo="res-seletor"
         titulo="Gestor avaliado"
-        descricao="Seletor simulado enquanto o login real não entra (F3)."
+        descricao="Neste protótipo você escolhe um gestor de exemplo. Na versão final, cada pessoa entraria com o próprio login e veria só a si."
       >
         <form
           method="get"
@@ -59,7 +59,7 @@ export async function TelaMeuResultado({ ctx }: PropsTela) {
 
           <div>
             <label htmlFor="res_ciclo" className="rotulo">
-              Ciclo
+              Mês
             </label>
             <select
               id="res_ciclo"
@@ -84,9 +84,8 @@ export async function TelaMeuResultado({ ctx }: PropsTela) {
       {!avaliacao ? (
         <div className="mt-6">
           <Aviso>
-            Ainda não há resultado publicado para este gestor. Ciclos em lançamento não produzem
-            avaliação: inventar um número aqui seria exatamente o oposto do que este sistema
-            defende.
+            Ainda não há nota publicada para este gestor. Mês que ainda está recebendo números
+            não tem nota: inventar um número aqui seria o oposto do que este sistema defende.
           </Aviso>
         </div>
       ) : (
@@ -101,8 +100,8 @@ export async function TelaMeuResultado({ ctx }: PropsTela) {
 
           <Painel
             alvo="res-evolucao"
-            titulo="Evolução entre ciclos"
-            descricao="Score por competência."
+            titulo="Evolução mês a mês"
+            descricao="A nota mês a mês. A barra laranja é o mês escolhido."
           >
             <ul className="space-y-2">
               {historico.map((item) => {
@@ -131,8 +130,8 @@ export async function TelaMeuResultado({ ctx }: PropsTela) {
 
           <Painel
             alvo="res-contestar"
-            titulo="Discorda do resultado?"
-            descricao="A contestação fica registrada, com resposta da comissão."
+            titulo="Discorda da nota?"
+            descricao="O pedido de revisão fica registrado e recebe resposta da comissão por escrito."
           >
             {podeContestar ? (
               /* Âncora de verdade, não `next/link`: uma navegação completa
@@ -146,7 +145,7 @@ export async function TelaMeuResultado({ ctx }: PropsTela) {
               </a>
             ) : (
               <p className="text-sm text-apagado">
-                O fluxo de contestação entra numa etapa posterior do projeto.
+                O pedido de revisão entra numa etapa mais adiante do projeto.
               </p>
             )}
           </Painel>

@@ -5,21 +5,20 @@ import type { Selo as TipoSelo } from '@/lib/registro/tipos'
 /**
  * Selo de validação do bloco.
  *
- * SÓ APARECE EM RASCUNHO. Validado é o estado normal — carimbar "validado" em
- * tudo não informa nada e ainda enche a tela de pílula. O selo existe para
- * avisar do que ainda NÃO foi revisado; quando não há aviso, não há selo.
+ * NÃO RENDERIZA NADA, e isso é decisão, não preguiça (ADR-026). O selo já
+ * apareceu de duas formas: carimbando "validado" em tudo (ruído) e carimbando
+ * "rascunho" nas semanas futuras (parecia defeito para quem lê, porque a
+ * palavra fala do processo interno da equipe, não do conteúdo). O dado
+ * continua existindo em `content/ciclos/` e o teste continua exigindo
+ * validador em bloco validado; só a pílula saiu da frente do visitante.
+ *
+ * O componente fica de pé para o dia em que o selo voltar a ter leitor certo,
+ * por exemplo num modo de revisão interna.
  */
 export function Selo({ selo, className }: { selo: TipoSelo; className?: string }) {
-  if (selo === 'validado') return null
-
-  return (
-    <span
-      className={cn('pilula text-apagado', className)}
-      title="Bloco em rascunho, ainda não validado pela equipe"
-    >
-      {selo}
-    </span>
-  )
+  void selo
+  void className
+  return null
 }
 
 export function Etiqueta({

@@ -17,7 +17,7 @@ export async function TelaGestao({ ctx }: PropsTela) {
   const anonimizado = anonimo === '1'
 
   if (!ciclo) {
-    return <Aviso>Nenhum ciclo homologado ainda: não há resultado para agregar.</Aviso>
+    return <Aviso>Nenhum mês fechado ainda: não há resultado para somar.</Aviso>
   }
 
   const avaliacoes = await avaliacoesDoCiclo(ciclo.id)
@@ -32,7 +32,7 @@ export async function TelaGestao({ ctx }: PropsTela) {
   return (
     <>
       <AcoesDaTela alvo="gest-exportar">
-        <Etiqueta tom="acento">competência {ciclo.competencia}</Etiqueta>
+        <Etiqueta tom="acento">mês {ciclo.competencia}</Etiqueta>
         {/* Âncora comum, não `next/link`: o CSV é um download, e o roteador do
             Next não tem o que fazer com uma resposta que não é uma página. */}
         <a
@@ -54,7 +54,7 @@ export async function TelaGestao({ ctx }: PropsTela) {
 
           <div>
             <label htmlFor="gest_ciclo" className="rotulo">
-              Competência
+              Mês
             </label>
             <select
               id="gest_ciclo"
@@ -78,7 +78,7 @@ export async function TelaGestao({ ctx }: PropsTela) {
               defaultChecked={anonimizado}
               className="size-4 accent-[color:var(--color-laranja)]"
             />
-            Anonimizar o ranking
+            Esconder os nomes
           </label>
 
           <Botao type="submit" variante="contorno">
@@ -89,7 +89,7 @@ export async function TelaGestao({ ctx }: PropsTela) {
 
       <section id="alvo-gest-numeros" className="mt-6 grid gap-3 sm:grid-cols-3">
         {[
-          { rotulo: 'Score médio', valor: media.toFixed(2) },
+          { rotulo: 'Nota média', valor: media.toFixed(2) },
           { rotulo: 'Gestores avaliados', valor: String(avaliacoes.length) },
           { rotulo: 'Avaliações com aviso', valor: String(comAviso) },
         ].map((item) => (
@@ -105,8 +105,8 @@ export async function TelaGestao({ ctx }: PropsTela) {
         titulo="Ranking por área"
         descricao={
           anonimizado
-            ? 'Identificação oculta: a comparação continua possível sem expor quem é quem.'
-            : 'Ordenado pelo score do ciclo.'
+            ? 'Nomes escondidos: dá para comparar as áreas sem expor quem é quem.'
+            : 'Da maior nota para a menor, no mês escolhido.'
         }
       >
         <div className="overflow-x-auto border border-linha">
@@ -166,9 +166,8 @@ export async function TelaGestao({ ctx }: PropsTela) {
 
         <div className="mt-3">
           <Aviso>
-            O ranking é uma ferramenta de gestão, não de exposição. A anonimização existe para
-            que a comparação entre áreas possa ser discutida sem constranger pessoas, e para que
-            o painel possa ser projetado numa reunião.
+            O ranking serve para a gestão enxergar o conjunto, não para expor pessoas. Esconder
+            os nomes deixa projetar este painel numa reunião sem constranger ninguém.
           </Aviso>
         </div>
       </Painel>

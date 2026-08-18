@@ -200,9 +200,9 @@ export default async function SistemaCompleto({
         <section className="mt-8 border border-dashed border-linha px-5 py-8">
           <h2 className="fonte-display text-xl">O sistema ainda não entrou em operação</h2>
           <p className="mt-2 max-w-prose text-sm leading-relaxed">
-            As telas do MVP são liberadas a partir da <strong>{abertura?.rotulo}</strong>, em{' '}
-            <Num>{abertura ? formatarBR(abertura.data) : 'data a definir'}</Num>. Até lá, a
-            trajetória do projeto está no{' '}
+            As telas do sistema entram no ar a partir da <strong>{abertura?.rotulo}</strong>, em{' '}
+            <Num>{abertura ? formatarBR(abertura.data) : 'data a definir'}</Num>. Até lá, o
+            andamento do projeto está no{' '}
             <Link href="/registro" className="underline underline-offset-4">
               registro
             </Link>
@@ -273,8 +273,8 @@ export default async function SistemaCompleto({
                 Os quatro papéis do processo
               </h2>
               <p className="mt-1 max-w-prose text-sm text-apagado">
-                Quem é cada pessoa na SESAU, o que ela faz e o que o processo impede que ela
-                faça. É esta divisão que o seletor lá em cima simula.
+                Quem é cada pessoa, o que ela faz e o que ela não pode fazer. É entre esses
+                papéis que o seletor lá em cima troca.
               </p>
               <div className="mt-4">
                 <ExplicacaoDosPerfis telas={liberadas} destacar={identidade.perfil} />

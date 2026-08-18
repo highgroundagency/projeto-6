@@ -32,6 +32,21 @@ export const ROTULO_ESTADO: Record<EstadoCiclo, string> = {
   publicado: 'Publicado',
 }
 
+/**
+ * A explicação de cada etapa, em linguagem de balcão.
+ *
+ * Os nomes das etapas vêm do processo real e não dá para trocá-los sem perder a
+ * ligação com a portaria. O que dá para fazer é explicar cada um em uma frase
+ * curta, sem palavra de sistema, e mostrar essa frase SEMPRE ao lado do nome.
+ */
+export const EXPLICACAO_ESTADO: Record<EstadoCiclo, string> = {
+  rascunho: 'O mês ainda está sendo preparado. Ninguém informa nada por enquanto.',
+  lancamento_aberto: 'O prazo está aberto: cada área entra e informa os números do mês.',
+  em_validacao: 'O prazo acabou. A comissão confere os números antes de fazer a conta.',
+  homologado: 'A conta foi feita e a comissão aprovou o resultado.',
+  publicado: 'O resultado está no ar. Cada gestor pode ver a própria nota.',
+}
+
 export interface CicloAvaliacao {
   readonly id: string
   /** Competência no formato `YYYY-MM`. */

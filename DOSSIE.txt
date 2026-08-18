@@ -26,20 +26,20 @@ Como tornar o cálculo da gratificação confiável, transparente, sustentável 
 
 --- O problema -----------------------------------------------------------------------------
 
-Desde 2023 a SESAU paga gratificação variável a gestores, supervisores e coordenadores com
-base em indicadores definidos em portaria.
+Desde 2023, a Secretaria de Saúde do Recife paga um extra no salário de gestores quando as
+metas da saúde são atingidas. As metas estão num documento oficial, a portaria.
 
-São dezenas de indicadores, várias áreas responsáveis e múltiplas regras de cálculo,
-consolidados manualmente em planilhas pela CAM.
+Todo mês, dezenas de números vindos de várias áreas precisam virar uma nota para cada
+gestor. Hoje essa conta é feita à mão, em planilhas.
 
-O resultado é um processo frágil: inconsistências, baixa rastreabilidade, manutenção
-difícil e dependência do conhecimento de poucas pessoas.
+O resultado: erros difíceis de achar, contas difíceis de conferir, e um processo que
+depende da memória de poucas pessoas.
 
 
 --- O nome ---------------------------------------------------------------------------------
 
-Fio de prumo: o instrumento simples que diz se algo está no lugar certo. É o que falta ao
-cálculo da gratificação hoje.
+Prumo é aquele peso na ponta de um fio que o pedreiro usa para ver se a parede está reta. É
+isso que o projeto quer ser para essa conta: o jeito simples de ver se está tudo no lugar.
 
 --- A equipe -------------------------------------------------------------------------------
 
@@ -1590,7 +1590,7 @@ liberado" e "não é seu" precisam ser indistinguíveis.
 
   Dashboard da CAM
   ~~~~~~~~~~~~~~~~
-  Funil por área, pendências e avanço de estado do ciclo.
+  Quem já mandou os números do mês, quem falta, e o botão de avançar a etapa.
   - id interno: painel-cam
   - rota histórica: /sistema/cam (hoje redireciona para /sistema#tela-painel-cam)
   - liberada em: Semana 5: Arquitetura, 19/09/2026
@@ -1598,7 +1598,7 @@ liberado" e "não é seu" precisam ser indistinguíveis.
 
   Indicadores e regras
   ~~~~~~~~~~~~~~~~~~~~
-  Cadastro de indicadores e regras de pontuação versionadas.
+  A lista do que é medido, com a meta e o peso de cada item, e a tabela de pontos.
   - id interno: indicadores
   - rota histórica: /sistema/indicadores (hoje redireciona para /sistema#tela-indicadores)
   - liberada em: Semana 5: Arquitetura, 19/09/2026
@@ -1606,7 +1606,7 @@ liberado" e "não é seu" precisam ser indistinguíveis.
 
   Lançamento
   ~~~~~~~~~~
-  Área técnica informa os valores dos indicadores no prazo.
+  Onde cada área digita os números do mês e diz de onde cada um veio.
   - id interno: lancamento
   - rota histórica: /sistema/lancamento (hoje redireciona para /sistema#tela-lancamento)
   - liberada em: Semana 5: Arquitetura, 19/09/2026
@@ -1614,7 +1614,7 @@ liberado" e "não é seu" precisam ser indistinguíveis.
 
   Meu resultado
   ~~~~~~~~~~~~~
-  Score, faixa, evolução e memória de cálculo do gestor avaliado.
+  A nota do gestor, a conta inteira aberta e a comparação com os meses anteriores.
   - id interno: meu-resultado
   - rota histórica: /sistema/meu-resultado (hoje redireciona para
     /sistema#tela-meu-resultado)
@@ -1623,7 +1623,7 @@ liberado" e "não é seu" precisam ser indistinguíveis.
 
   Auditoria
   ~~~~~~~~~
-  Linha do tempo imutável de tudo que aconteceu no ciclo.
+  O histórico de tudo: quem fez o quê, quando, e como estava antes.
   - id interno: auditoria
   - rota histórica: /sistema/auditoria (hoje redireciona para /sistema#tela-auditoria)
   - liberada em: Semana 7: Sprint 1, 17/10/2026
@@ -1631,7 +1631,7 @@ liberado" e "não é seu" precisam ser indistinguíveis.
 
   Painel da gestão
   ~~~~~~~~~~~~~~~~
-  Agregados por área, ranking anonimizável e exportação em CSV.
+  O resumo geral: média, ranking das áreas e o botão de baixar a planilha.
   - id interno: painel-gestao
   - rota histórica: /sistema/gestao (hoje redireciona para /sistema#tela-painel-gestao)
   - liberada em: Semana 9: Sprint 3, 07/11/2026
@@ -1639,7 +1639,7 @@ liberado" e "não é seu" precisam ser indistinguíveis.
 
   Analytics
   ~~~~~~~~~
-  Resultados dos modelos de ML com o método declarado ao lado.
+  Sinais que ajudam a comissão a saber onde olhar. Nada aqui muda nota.
   - id interno: analytics
   - rota histórica: /sistema/analytics (hoje redireciona para /sistema#tela-analytics)
   - liberada em: Semana 10: Sprint 4, 14/11/2026
@@ -1647,7 +1647,7 @@ liberado" e "não é seu" precisam ser indistinguíveis.
 
   Contestação
   ~~~~~~~~~~~
-  Gestor avaliado abre e acompanha contestação do resultado.
+  Onde o gestor que discorda da nota pede revisão e acompanha a resposta.
   - id interno: contestacao
   - rota histórica: /sistema/contestacao (hoje redireciona para /sistema#tela-contestacao)
   - liberada em: Semana 11: Validação, 21/11/2026
@@ -1660,22 +1660,20 @@ liberado" e "não é seu" precisam ser indistinguíveis.
 
   CAM (cam)
   ~~~~~~~~~
-  Comissão de Avaliação de Metas: o colegiado que conduz o ciclo do começo ao fim, do
-  cadastro da regra à publicação do resultado.
+  CAM quer dizer Comissão de Avaliação de Metas. É o grupo que cuida de todo o processo:
+  define o que será medido, cobra os números, faz a conta e divulga o resultado.
 
   O QUE FAZ
-  - Cadastra indicadores com meta, peso, unidade e fonte, e publica a regra que transforma
-    atingimento em pontos.
-  - Abre e fecha a janela de lançamento, e acompanha o funil de quais áreas já informaram.
-  - Apura o ciclo, homologa e publica o resultado.
-  - Recebe as contestações e responde por escrito.
+  - Cadastra o que vai ser medido: cada indicador, com a meta e o peso.
+  - Abre e fecha o prazo para as áreas informarem os números do mês.
+  - Faz a conta, aprova e divulga o resultado.
+  - Responde por escrito quem discordar da nota.
 
   O QUE O PROCESSO IMPEDE
-  - Editar uma regra já usada num ciclo homologado. Alterar cria versão nova, senão o ciclo
-    antigo deixaria de reproduzir o próprio número.
-  - Pular estado do ciclo. A máquina anda um passo por vez, e cada passagem entra na
-    trilha.
-  - Apagar evento da auditoria. A trilha só recebe, nunca perde.
+  - Mudar uma regra que já foi usada num mês fechado. Mudança vira regra nova, e a antiga
+    fica guardada.
+  - Pular etapa. O mês anda uma etapa por vez, e cada avanço fica anotado.
+  - Apagar o histórico. O que aconteceu fica registrado para sempre.
 
   TELAS QUE ENXERGA
   - Dashboard da CAM
@@ -1689,37 +1687,36 @@ liberado" e "não é seu" precisam ser indistinguíveis.
 
   Área técnica (area_tecnica)
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  A unidade que produz o dado: a diretoria ou coordenação dona daquele indicador, quem tem
-  o número na mão.
+  É o setor que produz o dado: a equipe que tem o número na mão, como a da vacinação ou a
+  das consultas.
 
   O QUE FAZ
-  - Informa o valor de cada indicador da própria área dentro da janela do ciclo.
-  - Declara a evidência que sustenta o número, de onde ele veio.
-  - Corrige um valor errado antes do fechamento, e a correção entra como versão nova.
+  - Digita o valor de cada indicador da sua área, dentro do prazo.
+  - Diz de onde cada número veio: qual relatório, qual sistema.
+  - Corrige um valor errado antes do fechamento. O valor antigo fica guardado.
 
   O QUE O PROCESSO IMPEDE
-  - Lançar fora da janela. Passado o prazo, o campo fecha e a tentativa fica registrada.
-  - Alterar meta ou peso. Quem informa o resultado não define a régua.
-  - Ver o score de gestor nenhum. A área entrega insumo, não recebe avaliação.
+  - Informar fora do prazo. Depois que o mês fecha, o campo trava.
+  - Mudar meta ou peso. Quem informa o resultado não escolhe a régua.
+  - Ver a nota dos gestores. A área entrega o número, não recebe nota.
 
   TELAS QUE ENXERGA
   - Lançamento
 
   Gestor avaliado (gestor)
   ~~~~~~~~~~~~~~~~~~~~~~~~
-  O servidor cuja gratificação depende do desempenho apurado. É por ele que este sistema
-  existe.
+  É a pessoa avaliada: o gestor cujo pagamento extra depende da nota. O sistema existe para
+  que ela entenda e confie na própria nota.
 
   O QUE FAZ
-  - Consulta o próprio score, a faixa alcançada e a evolução entre ciclos.
-  - Abre a memória de cálculo e segue cada número até o lançamento que o gerou.
-  - Contesta o resultado no prazo, e recebe resposta escrita da comissão.
+  - Vê a própria nota e a faixa de pagamento que ela dá.
+  - Abre a conta inteira e confere de onde veio cada número.
+  - Se discordar, pede revisão no prazo e recebe resposta por escrito.
 
   O QUE O PROCESSO IMPEDE
-  - Alterar lançamento. Discordar é um caminho formal, não uma edição.
-  - Ver o ranking nominal dos colegas. O painel da gestão é da gestão.
-  - Ter o resultado decidido por modelo. O cálculo é determinístico e a conta fica aberta
-    (art. 20 da LGPD).
+  - Mudar número. Discordar tem um caminho formal, não uma tela de edição.
+  - Ver a nota dos colegas pelo nome. O ranking com nomes é da gestão.
+  - Ter a nota decidida por robô. A conta segue sempre a mesma regra, aberta para conferir.
 
   TELAS QUE ENXERGA
   - Meu resultado
@@ -1727,17 +1724,16 @@ liberado" e "não é seu" precisam ser indistinguíveis.
 
   Auditoria (auditoria)
   ~~~~~~~~~~~~~~~~~~~~~
-  Controle interno, ou qualquer pessoa que precise conferir o processo sem participar dele.
+  É quem confere o processo de fora, como um fiscal: pode olhar tudo, e não muda nada.
 
   O QUE FAZ
-  - Percorre a trilha append-only e vê quem informou o quê, quando, e qual era o valor
-    anterior.
-  - Refaz o cálculo de um ciclo homologado e confere se dá o mesmo número.
-  - Cruza o resultado publicado com a regra vigente na competência.
+  - Lê o histórico completo: quem informou o quê, quando, e como estava antes.
+  - Refaz a conta de um mês fechado e confere se dá o mesmo resultado.
+  - Compara o resultado divulgado com a regra que valia naquele mês.
 
   O QUE O PROCESSO IMPEDE
-  - Escrever coisa alguma. Nenhuma tela oferece ação a este perfil, por desenho.
-  - Ser impedida de ver. É o único papel que enxerga as oito telas.
+  - Escrever qualquer coisa. Nenhuma tela dá botão de ação a este perfil, de propósito.
+  - Ficar sem ver algo. É o único papel que enxerga todas as telas.
 
   TELAS QUE ENXERGA
   - Dashboard da CAM
@@ -1759,198 +1755,192 @@ própria. Passos que apontam para tela ainda não liberada são descartados.
 
 --- Tutorial de CAM (9 passos) -------------------------------------------------------------
 
-  Você conduz o ciclo inteiro. O percurso abaixo é a ordem em que as coisas acontecem numa
-  competência real, do cadastro à publicação.
+  Você cuida do processo inteiro. Os passos abaixo seguem a ordem de um mês de verdade, do
+  começo ao resultado.
 
-  01. Confira a régua antes de abrir o ciclo
-      o que fazer: Abra "indicadores e regras" e leia o catálogo: meta, peso, unidade e
-      fonte de cada indicador. Desça até o diff entre versões da regra.
-      por quê: A régua precisa estar acertada antes de alguém informar valor. Mudar peso no
-      meio do ciclo é o que produz a desconfiança que este projeto ataca.
+  01. Veja o que será medido
+      o que fazer: Esta tela é a lista do que conta ponto. Cada linha mostra um indicador,
+      a meta dele e o peso: quanto maior o peso, mais ele vale na nota.
+      por quê: Antes de alguém informar número, todo mundo precisa conhecer a régua. Régua
+      que muda no meio do caminho é o que faz as pessoas desconfiarem do resultado.
       tela: indicadores · alvo: ind-catalogo
 
-  02. Acompanhe quem já informou
-      o que fazer: No dashboard, olhe o funil por área e a lista de pendências. Cada barra
-      é a fração de indicadores já lançados por aquela área.
-      por quê: É a informação que hoje só existe cobrando por e-mail. Ver a pendência em
-      tela substitui a pergunta "vocês já mandaram?".
+  02. Veja quem já mandou os números
+      o que fazer: Cada barra mostra quantos números aquela área já informou no mês. Barra
+      cheia: área em dia. Logo abaixo, a lista de quem ainda falta.
+      por quê: Hoje essa informação só existe cobrando por e-mail. Aqui ela aparece na
+      tela, na hora.
       tela: painel-cam · alvo: cam-funil
 
-  03. Cubra a área que não conseguir lançar
-      o que fazer: Em "lançamento", escolha a área pendente e informe valor e evidência em
-      nome dela.
-      por quê: A CAM pode lançar por terceiros para o ciclo não travar, e o autor do
-      lançamento fica registrado assim mesmo. Cobrir não é apagar de quem era a
-      responsabilidade.
+  03. Lance por uma área, se precisar
+      o que fazer: Escolha a área e digite o valor e a origem dele. A comissão pode fazer
+      isso no lugar de uma área atrasada.
+      por quê: O mês não pode travar por causa de uma área. E fica registrado que foi você
+      quem lançou, não a área.
       tela: lancamento · alvo: lanc-formularios
 
-  04. Feche a janela e apure
-      o que fazer: Ainda no dashboard, use o trilho de estados para avançar o ciclo. A
-      transição pede confirmação e entra na trilha com o estado anterior.
-      por quê: A máquina anda um passo por vez, de propósito. Sem estado explícito, ninguém
-      sabe se um número ainda pode mudar.
+  04. Avance a etapa do mês
+      o que fazer: O trilho no topo mostra em que etapa o mês está, e o quadro logo abaixo
+      explica cada uma. Quando o prazo acabar, marque a confirmação e clique no botão
+      laranja.
+      por quê: O mês anda uma etapa por vez, e cada avanço fica anotado no histórico. Assim
+      ninguém tem dúvida se um número ainda pode mudar.
       tela: painel-cam · alvo: cam-estado
 
-  05. Confira uma conta antes de publicar
-      o que fazer: Em "meu resultado", escolha um gestor e abra a memória de cálculo linha
-      a linha.
-      por quê: É a mesma tela que o avaliado vai abrir. Ver o resultado pelos olhos dele
-      antes de publicar é o que evita a pergunta que ninguém sabe responder na reunião.
+  05. Confira uma nota antes de divulgar
+      o que fazer: Escolha um gestor e abra a conta dele, linha por linha. É a mesma tela
+      que ele vai ver.
+      por quê: Olhar a nota com os olhos de quem recebe evita a pergunta sem resposta na
+      reunião.
       tela: meu-resultado · alvo: res-memoria
 
-  06. Publique e olhe o agregado
-      o que fazer: No painel da gestão, escolha a competência, ligue a anonimização e
-      exporte o CSV.
-      por quê: O agregado é o que vai para a reunião. A anonimização existe para que a
-      comparação entre áreas possa ser projetada sem expor pessoas.
+  06. Veja o resumo geral
+      o que fazer: Escolha o mês, ligue "esconder os nomes" se for apresentar em público, e
+      baixe a planilha se precisar.
+      por quê: O resumo é o que vai para a reunião de gestão. Esconder os nomes deixa
+      comparar as áreas sem expor pessoas.
       tela: painel-gestao · alvo: gest-ranking
 
-  07. Descubra onde olhar no próximo ciclo
-      o que fazer: Em analytics, veja as áreas com menor atingimento médio e os lançamentos
-      marcados como possível erro de digitação.
-      por quê: Nenhum número daqui entra na conta da gratificação, e isso é regra, não
-      limitação. Analytics serve para priorizar apoio, não para pontuar ninguém.
+  07. Descubra onde olhar no próximo mês
+      o que fazer: Esta tela aponta as áreas com resultado mais baixo e os números que
+      parecem erro de digitação.
+      por quê: Nada daqui muda a nota de ninguém. Serve para a comissão saber onde ajudar
+      primeiro.
       tela: analytics · alvo: ana-risco
 
   08. Responda quem discordou
-      o que fazer: Abra a contestação e leia o motivo registrado, com o ciclo e o
-      indicador.
-      por quê: Contestação sem resposta escrita é ouvidoria de fachada. O registro é o que
-      permite auditar depois se a comissão respondeu.
+      o que fazer: Aqui ficam os pedidos de revisão. Leia o motivo de cada um e responda
+      por escrito.
+      por quê: Pedido sem resposta escrita é caixa de sugestões. A resposta fica guardada
+      junto do pedido, para sempre.
       tela: contestacao · alvo: cont-lista
 
-  09. Prove o que aconteceu
-      o que fazer: Na auditoria, filtre por tipo de evento e confira o antes e o depois de
-      cada mudança.
-      por quê: É a diferença entre afirmar que o processo foi correto e conseguir
-      demonstrar isso.
+  09. Mostre o que aconteceu
+      o que fazer: O histórico lista tudo: quem fez, quando, como estava antes e como
+      ficou. Dá para filtrar por tipo ou por mês.
+      por quê: É a diferença entre dizer que o processo foi correto e conseguir provar que
+      foi.
       tela: auditoria · alvo: aud-linha
 
 
 --- Tutorial de Área técnica (4 passos) ----------------------------------------------------
 
-  Seu papel é curto e é o mais importante do ciclo: informar o número certo, com a
-  evidência que o sustenta, dentro do prazo.
+  Seu papel é simples e é o mais importante de todos: informar o número certo, dizer de
+  onde ele veio, e dentro do prazo.
 
   01. Escolha a sua área
-      o que fazer: Em "lançamento", use o seletor de área. A lista abaixo passa a mostrar
-      só os indicadores daquela unidade.
-      por quê: Cada área responde pelo que produz. Lançar indicador alheio é como assinar
-      relatório de outro setor.
+      o que fazer: Use a caixa de seleção. A lista abaixo muda e passa a mostrar só os
+      indicadores da área escolhida.
+      por quê: Cada área responde pelos próprios números, e só pelos próprios.
       tela: lancamento · alvo: lanc-area
 
-  02. Informe valor e evidência juntos
-      o que fazer: Preencha o valor e, ao lado, de onde ele veio: sistema de origem,
-      relatório, competência. Os dois campos são obrigatórios.
-      por quê: Número sem procedência é opinião. A evidência é o que torna a conferência
-      possível meses depois, quando ninguém lembra.
+  02. Digite o valor e diga de onde veio
+      o que fazer: Preencha o número e, ao lado, a origem dele: o relatório ou o sistema de
+      onde você tirou. Os dois campos são obrigatórios.
+      por quê: Número sem origem não dá para conferir depois. A origem é o que protege você
+      se alguém duvidar.
       tela: lancamento · alvo: lanc-formularios
 
-  03. Repare no aviso de valor estranho
-      o que fazer: Se o valor ficar muito longe da meta, aparece um alerta laranja embaixo
-      do campo. Ele não impede o envio.
-      por quê: A vírgula no lugar errado é o erro mais comum e o mais caro. O sistema
-      sinaliza e deixa a decisão com quem tem o dado na mão.
+  03. Repare no aviso laranja
+      o que fazer: Se o valor ficar muito longe da meta, aparece um aviso embaixo do campo.
+      Ele não trava o envio: só pede que você confira.
+      por quê: O erro mais comum é a vírgula no lugar errado. O sistema avisa, e quem
+      decide é você, que tem o dado na mão.
       tela: lancamento · alvo: lanc-formularios
 
-  04. Corrigiu? Não some com o anterior
-      o que fazer: Reenvie o formulário com o valor certo. O campo já vem preenchido com o
-      atual.
-      por quê: A correção entra como versão nova e o valor antigo continua na trilha. É o
-      que separa corrigir de encobrir.
+  04. Errou? Corrija sem medo
+      o que fazer: Envie de novo com o valor certo. O campo já mostra o que foi enviado
+      antes.
+      por quê: A correção entra como registro novo e o valor antigo fica guardado. Corrigir
+      às claras é diferente de apagar.
       tela: lancamento · alvo: lanc-formularios
 
 
 --- Tutorial de Gestor avaliado (4 passos) -------------------------------------------------
 
-  Você é quem a avaliação afeta. O sistema foi desenhado para que você consiga refazer a
-  própria conta, e discordar dela por escrito.
+  Você é quem recebe a nota. Aqui dá para entender a conta inteira, e discordar dela por
+  escrito se for o caso.
 
-  01. Veja o número e a faixa
-      o que fazer: Em "meu resultado", escolha o ciclo. O cartão do topo traz o score e a
-      faixa de gratificação alcançada.
-      por quê: Hoje esse número chega pronto, sem contexto. Aqui ele vem com a faixa e com
-      a régua que a produziu.
+  01. Veja a sua nota
+      o que fazer: Escolha o mês. O cartão do topo mostra a nota, de 0 a 100, e a faixa de
+      pagamento que ela dá.
+      por quê: Hoje a nota chega pronta, sem explicação. Aqui ela chega com a régua junto.
       tela: meu-resultado · alvo: res-score
 
-  02. Abra a memória de cálculo
-      o que fazer: Clique em "memória de cálculo". Cada linha mostra indicador, valor
-      informado, meta, atingimento, pontos, peso e contribuição, e ao pé a fórmula.
-      por quê: É a resposta para "por que deu isso?". A conta inteira fica aberta, item por
-      item, e fecha na soma que você vê no cartão.
+  02. Abra a conta inteira
+      o que fazer: Clique em "memória de cálculo". É o extrato da nota: cada linha mostra
+      um indicador, o valor informado, a meta e os pontos que ele rendeu. No fim, a soma
+      que vira a nota.
+      por quê: É a resposta para "por que a minha nota deu isso?". A conta fica aberta para
+      você conferir, sem depender de ninguém.
       tela: meu-resultado · alvo: res-memoria
 
-  03. Compare com os seus ciclos anteriores
-      o que fazer: Desça até "evolução entre ciclos" e veja o score por competência.
-      por quê: Um número sozinho não informa. A série mostra tendência, que é o que serve
-      para conversar sobre desempenho.
+  03. Compare com os meses anteriores
+      o que fazer: As barras mostram a sua nota mês a mês.
+      por quê: Um número sozinho diz pouco. A sequência mostra para onde você está indo.
       tela: meu-resultado · alvo: res-evolucao
 
-  04. Discorde formalmente, se for o caso
-      o que fazer: Use "abrir contestação", aponte o indicador (ou o resultado inteiro) e
-      descreva o motivo.
-      por quê: Discordar deixa de ser telefonema e vira registro com prazo e resposta. É o
-      direito de revisão do art. 20 da LGPD funcionando na prática.
+  04. Discorde, se for o caso
+      o que fazer: Clique em "abrir contestação", diga qual indicador (ou a nota toda) e
+      escreva o motivo.
+      por quê: Discordar deixa de ser telefonema e vira pedido registrado, com prazo e
+      resposta escrita. É um direito seu.
       tela: contestacao · alvo: cont-abrir
 
 
 --- Tutorial de Auditoria (8 passos) -------------------------------------------------------
 
-  Você enxerga as oito telas e não escreve em nenhuma. O percurso abaixo é o de conferir um
-  ciclo do fim para o começo, que é como auditoria se faz.
+  Você pode ver tudo e não mexe em nada. O caminho abaixo confere um mês do fim para o
+  começo, que é como se audita.
 
-  01. Comece pelo resultado publicado
-      o que fazer: No painel da gestão, escolha a competência fechada e observe o ranking.
-      por quê: É o que foi divulgado. Toda conferência parte da afirmação que se quer
-      testar.
+  01. Comece pelo resultado divulgado
+      o que fazer: Escolha um mês fechado e olhe o ranking.
+      por quê: Toda conferência começa pelo que foi divulgado: é a afirmação a testar.
       tela: painel-gestao · alvo: gest-ranking
 
-  02. Refaça a conta de um avaliado
-      o que fazer: Em "meu resultado", selecione o gestor e abra a memória de cálculo.
-      por quê: O motor é determinístico: o mesmo insumo com a mesma regra dá o mesmo
-      número, sempre. Se não der, existe defeito.
+  02. Refaça a conta de alguém
+      o que fazer: Escolha um gestor e abra a conta dele, linha por linha.
+      por quê: A regra é sempre a mesma: a mesma entrada tem de dar a mesma nota. Se não
+      der, há um problema.
       tela: meu-resultado · alvo: res-memoria
 
-  03. Confira a régua vigente na competência
-      o que fazer: Em "indicadores e regras", veja a vigência de cada versão e o diff entre
-      elas.
-      por quê: Ciclo antigo tem de ser apurado com a regra da época. Regra editada no lugar
-      apagaria essa possibilidade.
+  03. Confira qual régua valia naquele mês
+      o que fazer: Veja as versões da regra e o quadro do que mudou de uma versão para a
+      outra.
+      por quê: Mês antigo se confere com a regra da época. Por isso regra antiga nunca é
+      apagada, só substituída.
       tela: indicadores · alvo: ind-regras
 
-  04. Volte aos insumos que geraram o número
-      o que fazer: Em "lançamento", escolha a área e compare o valor informado com a
-      evidência declarada ao lado.
-      por quê: O score só é bom se o insumo for. A evidência é o que permite conferir a
-      origem sem pedir favor a ninguém.
+  04. Volte aos números de origem
+      o que fazer: Escolha a área e compare o valor informado com a origem declarada ao
+      lado dele.
+      por quê: A nota só é boa se o número que entrou for bom.
       tela: lancamento · alvo: lanc-formularios
 
-  05. Cheque a condução do ciclo
-      o que fazer: No dashboard da CAM, veja em que estado o ciclo está e quais áreas
-      ficaram pendentes.
-      por quê: Ciclo apurado com área faltando é achado de auditoria, e o funil mostra isso
-      sem depender do relato de ninguém.
+  05. Cheque a condução do mês
+      o que fazer: Veja em que etapa o mês está e quais áreas ficaram devendo.
+      por quê: Mês fechado com área faltando é um achado de auditoria, e aqui isso aparece
+      na tela.
       tela: painel-cam · alvo: cam-funil
 
   06. Veja se quem discordou foi respondido
-      o que fazer: Na contestação, percorra os registros e confira se cada um tem resposta
-      da comissão.
-      por quê: Contestação aberta sem resposta é o achado mais comum em processo de
-      avaliação, e aqui ela fica visível em vez de arquivada.
+      o que fazer: Percorra os pedidos de revisão e confira se cada um tem resposta.
+      por quê: Pedido sem resposta é o problema mais comum nesse tipo de processo. Aqui ele
+      fica visível.
       tela: contestacao · alvo: cont-lista
 
-  07. Percorra a trilha do começo ao fim
-      o que fazer: Na auditoria, filtre pelo ciclo e leia os eventos em ordem: quem
-      informou, quando, e qual era o valor anterior.
-      por quê: A trilha é append-only. É a única peça do sistema que serve de prova,
-      justamente porque ninguém a edita.
+  07. Percorra o histórico completo
+      o que fazer: Filtre pelo mês e leia os registros em ordem: quem fez, quando, antes e
+      depois.
+      por quê: O histórico não pode ser editado por ninguém. É por isso que ele serve de
+      prova.
       tela: auditoria · alvo: aud-linha
 
-  08. Verifique o que o modelo NÃO fez
-      o que fazer: Em analytics, confira que cada modelo publica método, métrica e linha de
-      base, e leia a limitação declarada.
-      por quê: Nenhuma saída de modelo entra no cálculo. Analytics aponta onde olhar; quem
-      decide é a comissão, e a decisão é contestável.
+  08. Confira o que o robô não faz
+      o que fazer: Na tela de sinais, veja que cada modelo mostra o método e o acerto,
+      comparado com um palpite simples.
+      por quê: Nenhum resultado de modelo entra na nota de ninguém. Ele só aponta onde
+      olhar, e isso está escrito na tela.
       tela: analytics · alvo: ana-modelos
 
 
@@ -2469,6 +2459,7 @@ Os porquês completos estão em `docs/decisoes.md`. Os títulos, aqui:
   - ADR-024 · O tutorial passou a conduzir, e o seletor de perfil ganhou o primeiro
     JavaScript
   - ADR-025 · A terceira lente era Nuvem, e o projeto estava chamando de Direito
+  - ADR-026 · A copy fala com quem não é da área, e o selo de rascunho saiu de cena
 
 ============================================================================================
 13.  COMO RODAR E COMO CONFERIR

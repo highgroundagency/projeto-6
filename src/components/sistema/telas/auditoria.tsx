@@ -63,15 +63,15 @@ export async function TelaAuditoria({ ctx }: PropsTela) {
       <AcoesDaTela>
         <SomenteLeitura />
         <span className="text-xs text-apagado">
-          <Num>{todos.length}</Num> eventos na trilha
+          <Num>{todos.length}</Num> registros no histórico
         </span>
       </AcoesDaTela>
 
       <div className="mb-5">
         <Aviso>
-          A trilha é <strong>append-only</strong>: correções entram como novos eventos, com o
-          valor anterior preservado. Trilha que pode ser editada não serve de prova, e é
-          justamente o que falta na planilha.
+          Este histórico só recebe registros novos: ninguém edita nem apaga o que já aconteceu,
+          nem mesmo a comissão. Correção entra como registro novo, com o valor antigo guardado
+          ao lado. É isso que faz o histórico servir de prova.
         </Aviso>
       </div>
 
@@ -105,7 +105,7 @@ export async function TelaAuditoria({ ctx }: PropsTela) {
 
           <div>
             <label htmlFor="aud_ciclo" className="rotulo">
-              Ciclo
+              Mês
             </label>
             <select
               id="aud_ciclo"
@@ -131,7 +131,7 @@ export async function TelaAuditoria({ ctx }: PropsTela) {
       <Painel
         alvo="aud-linha"
         titulo="Linha do tempo"
-        descricao={`${filtrados.length} eventos de ${todos.length}. Exibindo os ${Math.min(LIMITE, filtrados.length)} mais recentes.`}
+        descricao={`Tudo o que aconteceu, do mais novo para o mais antigo. ${filtrados.length} registros de ${todos.length}; mostrando os ${Math.min(LIMITE, filtrados.length)} mais recentes.`}
       >
         <ol className="divide-y divide-linha border-y border-linha">
           {filtrados.slice(0, LIMITE).map((evento) => (
@@ -158,7 +158,11 @@ export async function TelaAuditoria({ ctx }: PropsTela) {
         ) : null}
       </Painel>
 
-      <Painel alvo="aud-resumo" titulo="Resumo" descricao="Contagem por tipo de evento.">
+      <Painel
+        alvo="aud-resumo"
+        titulo="Resumo"
+        descricao="Quantos registros de cada tipo existem no histórico."
+      >
         <ul className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
           {Object.entries(ROTULO_TIPO).map(([valor, rotulo]) => {
             const quantidade = todos.filter((e) => e.tipo === valor).length

@@ -199,8 +199,8 @@ export async function TelaAnalytics() {
 
       <Painel
         alvo="ana-risco"
-        titulo="Risco de não-atingimento no próximo ciclo"
-        descricao="Método: média histórica de atingimento por área, com teto de 150%. Quanto menor a média, maior o risco."
+        titulo="Áreas com risco de não bater a meta"
+        descricao="Como é calculado: a média do que cada área atingiu nos meses anteriores. Quanto menor a média, maior o risco."
       >
         <ul className="divide-y divide-linha border-y border-linha">
           {risco.map(({ area, media, desvio, amostras }) => (
@@ -227,11 +227,11 @@ export async function TelaAnalytics() {
 
       <Painel
         alvo="ana-suspeitos"
-        titulo="Possível erro de digitação"
-        descricao="Método: valor a mais de 5× ou a menos de 1/5 da meta. O sistema SINALIZA e nunca bloqueia, a decisão é humana."
+        titulo="Números que parecem erro de digitação"
+        descricao="Como é achado: valor 5 vezes maior ou 5 vezes menor que a meta. O sistema só avisa; quem decide é gente."
       >
         {suspeitos.length === 0 ? (
-          <Aviso tom="ok">Nenhum lançamento fora do padrão esperado.</Aviso>
+          <Aviso tom="ok">Nenhum número fora do padrão esperado.</Aviso>
         ) : (
           <div className="overflow-x-auto border border-linha">
             <table className="w-full min-w-[36rem] border-collapse text-sm">
@@ -266,8 +266,8 @@ export async function TelaAnalytics() {
 
       <Painel
         alvo="ana-perfis"
-        titulo="Perfis de área"
-        descricao="Método: combinação de média e desvio-padrão do atingimento. Na F4 isto vira k-means com análise de silhueta."
+        titulo="O jeito de cada área"
+        descricao="Como é feito: com a média e a variação do resultado de cada área, mês a mês."
       >
         <ul className="grid gap-px border border-linha bg-linha sm:grid-cols-2">
           {perfis.map(({ area, perfil }) => (

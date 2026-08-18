@@ -50,8 +50,8 @@ export function Tutorial({
               Tutorial guiado para {PERFIS[perfil].rotulo}
             </p>
             <p className="mt-1 text-xs leading-relaxed text-apagado">
-              {passos.length} passos. O sistema abre a tela de cada passo e marca o botão de que
-              o texto está falando.
+              {passos.length} passos, um de cada vez. O sistema abre a tela certa e marca em
+              laranja a parte de que o texto está falando.
             </p>
           </div>
         </div>

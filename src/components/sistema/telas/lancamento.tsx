@@ -54,7 +54,7 @@ export async function TelaLancamento({ ctx }: PropsTela) {
       <Painel
         alvo="lanc-area"
         titulo="Área"
-        descricao="Cada área informa apenas os próprios indicadores."
+        descricao="Escolha a sua área. Cada área informa apenas os próprios números."
       >
         <form
           method="get"
@@ -91,8 +91,8 @@ export async function TelaLancamento({ ctx }: PropsTela) {
       {!cicloAberto ? (
         <div className="mt-6">
           <Aviso tom="alerta">
-            Não há ciclo com janela de lançamento aberta. Fora da janela, o lançamento fica
-            bloqueado: e a tentativa continua registrada na auditoria.
+            O prazo deste mês está fechado: não dá para informar número agora. Quem tenta fora
+            do prazo não consegue, e a tentativa fica registrada no histórico.
           </Aviso>
         </div>
       ) : null}
@@ -100,7 +100,7 @@ export async function TelaLancamento({ ctx }: PropsTela) {
       <Painel
         alvo="lanc-formularios"
         titulo={`Indicadores de ${area.nome}`}
-        descricao="Valores já enviados aparecem preenchidos. Corrigir cria uma nova versão na trilha; o valor anterior não some."
+        descricao="O que já foi enviado aparece preenchido. Corrigir cria um registro novo, e o valor antigo fica guardado."
       >
         <div className="space-y-3">
           {indicadores.map((indicador) => {
@@ -146,7 +146,7 @@ export async function TelaLancamento({ ctx }: PropsTela) {
                   </div>
                   <div>
                     <label htmlFor={`evidencia-${indicador.id}`} className="rotulo">
-                      Evidência
+                      De onde veio
                     </label>
                     <input
                       id={`evidencia-${indicador.id}`}
@@ -157,7 +157,7 @@ export async function TelaLancamento({ ctx }: PropsTela) {
                       maxLength={300}
                       disabled={!podeLancar}
                       defaultValue={atual?.evidencia ?? ''}
-                      placeholder="De onde veio este número?"
+                      placeholder="De onde veio este número? Ex.: relatório mensal"
                       className="mt-1 w-full border border-linha px-2 py-1.5 text-sm"
                     />
                   </div>
@@ -168,8 +168,8 @@ export async function TelaLancamento({ ctx }: PropsTela) {
 
                 {suspeito ? (
                   <p className="mt-2 border-l-2 border-alerta bg-alerta/5 px-2 py-1.5 text-xs text-alerta">
-                    Valor muito distante da meta: confira se a vírgula está no lugar. O sistema
-                    apenas sinaliza: quem decide é você.
+                    Este valor ficou muito longe da meta: confira se a vírgula está no lugar. O
+                    aviso não trava o envio; quem decide é você.
                   </p>
                 ) : null}
               </form>
@@ -179,8 +179,7 @@ export async function TelaLancamento({ ctx }: PropsTela) {
 
         {!podeLancar && cicloAberto ? (
           <p className="mt-3 text-xs text-apagado">
-            O perfil atual não lança indicadores: ele acompanha o que foi informado. Quem
-            preenche é a Área técnica.
+            Este perfil não informa números: ele só acompanha. Quem preenche é a Área técnica.
           </p>
         ) : null}
       </Painel>

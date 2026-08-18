@@ -159,7 +159,7 @@ test.describe('avanço de ciclo', () => {
     await expect(page.getByRole('heading', { name: 'Funil de lançamento por área' })).toBeVisible()
     await expect(page.getByRole('button', { name: CONTROLE })).toHaveCount(0)
     // E nem a dica de que existe transição: o visitante não sabe que dá para agir.
-    expect(await page.content()).not.toContain('Próxima transição')
+    expect(await page.content()).not.toContain('Próxima etapa')
   })
 })
 
@@ -189,7 +189,7 @@ test.describe('o sistema, visto pelo admin', () => {
 
   test('pular de uma tela para outra não descarta o que já foi escolhido', async ({ page }) => {
     await page.goto('/sistema?abrir=painel-gestao')
-    await page.getByLabel('Anonimizar o ranking').check()
+    await page.getByLabel('Esconder os nomes').check()
     await page.getByRole('button', { name: 'Aplicar' }).click()
     await expect(page).toHaveURL(/gest_anonimo=1/)
 
@@ -233,7 +233,7 @@ test.describe('o sistema, visto pelo admin', () => {
     await expect(page).toHaveURL(/passo=1/)
     // Passo 01 da CAM é o catálogo de indicadores.
     await expect(page.locator('#alvo-ind-catalogo')).toBeVisible()
-    await expect(page.getByText('confira a régua antes de abrir o ciclo')).toBeVisible()
+    await expect(page.getByText('veja o que será medido')).toBeVisible()
     // Uma tela só: o sumário e as outras sanfonas saem de cena.
     await expect(page.locator('#tela-auditoria')).toHaveCount(0)
     await expect(page.getByRole('navigation', { name: 'Telas do sistema' })).toHaveCount(0)
@@ -260,7 +260,7 @@ test.describe('o sistema, visto pelo admin', () => {
   test('a memória de cálculo explica de onde veio cada número', async ({ page }) => {
     await page.goto('/sistema?abrir=meu-resultado')
 
-    await expect(page.getByText('Score do ciclo', { exact: true })).toBeVisible()
+    await expect(page.getByText('Nota do mês', { exact: true })).toBeVisible()
 
     const memoria = page.getByText('Memória de cálculo', { exact: true })
     await expect(memoria).toBeVisible()
@@ -310,7 +310,7 @@ test.describe('o sistema, visto pelo admin', () => {
     await page.goto('/sistema?abrir=painel-gestao')
     await expect(page.getByRole('heading', { name: 'Ranking por área' })).toBeVisible()
 
-    await page.getByLabel('Anonimizar o ranking').check()
+    await page.getByLabel('Esconder os nomes').check()
     await page.getByRole('button', { name: 'Aplicar' }).click()
     await expect(page.getByText('gestor 01')).toBeVisible()
 

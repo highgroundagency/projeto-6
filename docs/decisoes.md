@@ -521,3 +521,44 @@ código em vez de virar uma conversa perdida.
 medida. Os números de escala em `docs/nuvem.md` são raciocínio de capacidade, não benchmark, e
 dizer o contrário seria inventar evidência, que é exatamente o que este projeto passou o
 semestre inteiro recusando.
+
+---
+
+## ADR-026 · A copy fala com quem não é da área, e o selo de rascunho saiu de cena
+
+**Contexto.** Quem usou o site relatou, com razão, que a linguagem era de especialista:
+"memória de cálculo" não dizia para que servia, "ciclo", "homologação" e "publicação" eram
+palavras soltas, o subtítulo do hero ("a regra vira dado versionado, e cada valor abre até a
+origem que o gerou") só fazia sentido para quem já sabia o que era dado versionado. E as
+semanas futuras exibiam a pílula "rascunho", que fala do processo interno da equipe e parecia
+defeito para quem lê. O usuário-alvo declarado passou a ser alguém de pouca escolaridade, que
+é de fato quem opera parte do processo real.
+
+**Decisão.** Uma passada de linguagem no site inteiro, com três regras práticas:
+
+1. **Palavra do processo ganha tradução ao lado, não substituição.** "Homologado" continua
+   existindo, porque é o nome real da etapa na portaria; mas todo lugar que o exibe tem a
+   explicação em uma frase a um clique ("A conta foi feita e a comissão aprovou o resultado").
+   Nasceu `EXPLICACAO_ESTADO` em `calculo/tipos.ts`, exibido no dashboard da CAM e na seção
+   "como funciona" da página inicial.
+2. **Metáfora do cotidiano no lugar do termo de sistema.** Score virou "nota do mês (score)";
+   competência virou "mês"; anonimizar virou "esconder os nomes"; evidência virou "de onde
+   veio"; trilha append-only virou "histórico que ninguém consegue apagar". O termo técnico
+   fica entre parênteses quando precisa continuar rastreável.
+3. **Toda tabela diz como se lê.** A memória de cálculo ganhou um parágrafo "como ler" antes
+   da tabela, porque mostrar a conta sem dizer para que ela serve era exatamente a reclamação.
+
+**A seção "o ciclo" virou "como funciona".** Explica primeiro o site em duas frases (diário
+do projeto + programa de exemplo) e depois desenha o fluxo do mês com uma frase de explicação
+embaixo de cada etapa e ações numeradas (1 informa, 2 faz a conta, 3 confere).
+
+**O selo "rascunho" não renderiza mais.** O dado continua nos arquivos de ciclo e o teste
+continua exigindo validador em bloco validado; só a pílula saiu da frente do visitante. É a
+segunda vida do mesmo aprendizado da ADR sobre "validado": selo que fala do processo interno
+da equipe não é informação para quem avalia o produto.
+
+**Consequência.** Os tutoriais foram reescritos por inteiro na mesma língua (25 passos), e a
+tela é sempre descrita pelo que a pessoa VÊ ("cada barra mostra", "o cartão do topo"), não
+pelo que o sistema é. O custo declarado: a copy ficou menos densa em vocabulário de auditoria,
+que era parte da identidade "folha de especificação". A identidade visual fica; o vocabulário
+passa a servir o leitor, não o contrário.

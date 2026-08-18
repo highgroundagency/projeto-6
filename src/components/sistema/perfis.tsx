@@ -68,7 +68,7 @@ export function ExplicacaoDosPerfis({
               </div>
 
               <div>
-                <h4 className="rotulo text-texto">O que o processo impede</h4>
+                <h4 className="rotulo text-texto">O que não pode fazer</h4>
                 <ul className="mt-2 space-y-1.5 text-sm leading-relaxed text-apagado">
                   {perfil.oQueNaoPode.map((item) => (
                     <li key={item} className="flex gap-2">
@@ -82,7 +82,7 @@ export function ExplicacaoDosPerfis({
 
             {suas.length > 0 ? (
               <div className="mt-4 border-t border-linha pt-3">
-                <h4 className="rotulo">Telas que enxerga</h4>
+                <h4 className="rotulo">Telas que vê</h4>
                 <ul className="mt-2 flex flex-wrap gap-x-4 gap-y-2">
                   {suas.map((feature) => {
                     const Icone = ICONE_DA_TELA[feature.id as FeatureId]

@@ -23,7 +23,7 @@ export function MemoriaDeCalculo({ avaliacao }: { avaliacao: Avaliacao }) {
         <span>
           <span className="fonte-display text-base">Memória de cálculo</span>
           <span className="mt-0.5 block text-xs text-apagado">
-            Cada passo do cálculo, do lançamento ao score.
+            O extrato da nota: a conta inteira, linha por linha, para conferir.
           </span>
         </span>
         <span className="rotulo shrink-0 text-acento">
@@ -33,7 +33,15 @@ export function MemoriaDeCalculo({ avaliacao }: { avaliacao: Avaliacao }) {
       </summary>
 
       <div className="border-t border-linha px-4 py-4">
-        <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs">
+        {/* Antes da tabela, o modo de ler. Sem isto a tela mostrava a conta e
+            não dizia para que ela serve, e quem não é da área ficava perdido. */}
+        <p className="max-w-prose text-sm leading-relaxed">
+          Como ler: cada linha é uma coisa que foi medida. O valor informado é comparado com a
+          meta e vira pontos. Os pontos são multiplicados pelo peso (o quanto aquele item vale).
+          A soma de tudo, dividida pelo máximo possível, dá a nota de 0 a 100.
+        </p>
+
+        <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-xs">
           <span>
             <span className="rotulo">Regra</span>{' '}
             <Num>
@@ -120,7 +128,7 @@ export function MemoriaDeCalculo({ avaliacao }: { avaliacao: Avaliacao }) {
         </div>
 
         <div className="mt-3 border-l-2 border-acento bg-superficie px-3 py-2">
-          <p className="rotulo">Fórmula</p>
+          <p className="rotulo">A conta final</p>
           <p className="numero mt-1 text-xs">{memoria.formula}</p>
           <p className="numero mt-1.5 text-sm">
             ({memoria.somaContribuicoes}) ÷ ({memoria.somaPesos} × {memoria.pontuacaoMaxima}) ×
@@ -150,19 +158,19 @@ export function CartaoScore({ avaliacao }: { avaliacao: Avaliacao }) {
   return (
     <div className="flex flex-wrap items-end justify-between gap-4 border border-linha bg-fundo p-5">
       <div>
-        <p className="rotulo">Score do ciclo</p>
+        <p className="rotulo">Nota do mês</p>
         <p className="numero mt-1 text-5xl font-semibold leading-none">
           {avaliacao.score.toFixed(2)}
         </p>
-        <p className="mt-1 text-xs text-apagado">de 0 a 100</p>
+        <p className="mt-1 text-xs text-apagado">o score, de 0 a 100</p>
       </div>
 
       <div className="text-right">
-        <p className="rotulo">Faixa de gratificação</p>
+        <p className="rotulo">Faixa de pagamento</p>
         <p className="fonte-display mt-1 text-xl">{avaliacao.faixa?.rotulo ?? 'sem faixa'}</p>
         {avaliacao.faixa ? (
           <p className="numero mt-0.5 text-sm text-apagado">
-            {avaliacao.faixa.percentual}% da gratificação
+            recebe {avaliacao.faixa.percentual}% da gratificação
           </p>
         ) : null}
       </div>

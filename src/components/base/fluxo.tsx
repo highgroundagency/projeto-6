@@ -18,10 +18,20 @@ export function Conector() {
   return <div aria-hidden className="conector conector-anima" />
 }
 
-export function EstadoDoFluxo({ children }: { children: ReactNode }) {
+export function EstadoDoFluxo({
+  children,
+  explicacao,
+}: {
+  children: ReactNode
+  /** Uma frase curta dizendo o que a etapa significa, sem palavra de sistema. */
+  explicacao?: string
+}) {
   return (
-    <div className="flex justify-center">
+    <div className="flex flex-col items-center gap-1.5 text-center">
       <span className="pilula pilula-acento numero">{children}</span>
+      {explicacao ? (
+        <span className="max-w-xs text-xs lowercase text-apagado">{explicacao}</span>
+      ) : null}
     </div>
   )
 }

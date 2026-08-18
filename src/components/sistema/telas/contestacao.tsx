@@ -51,8 +51,8 @@ export async function TelaContestacao({ ctx }: PropsTela) {
 
       <Painel
         alvo="cont-abrir"
-        titulo="Abrir contestação"
-        descricao="A contestação não altera o resultado por si só: ela abre uma análise, que fica registrada na trilha."
+        titulo="Pedir revisão da nota"
+        descricao="O pedido não muda a nota na hora: ele abre uma análise, que fica registrada e recebe resposta por escrito."
       >
         <form action="/api/sistema/contestacao" method="post" className="space-y-3">
           <div className="grid gap-3 sm:grid-cols-3">
@@ -76,7 +76,7 @@ export async function TelaContestacao({ ctx }: PropsTela) {
 
             <div>
               <label htmlFor="cicloId" className="rotulo">
-                Ciclo
+                Mês
               </label>
               <select
                 id="cicloId"
@@ -94,7 +94,7 @@ export async function TelaContestacao({ ctx }: PropsTela) {
 
             <div>
               <label htmlFor="indicadorId" className="rotulo">
-                Indicador (opcional)
+                Sobre o quê? (opcional)
               </label>
               <select
                 id="indicadorId"
@@ -102,7 +102,7 @@ export async function TelaContestacao({ ctx }: PropsTela) {
                 defaultValue=""
                 className="mt-1 w-full border border-linha px-2 py-1.5 text-sm"
               >
-                <option value="">o resultado como um todo</option>
+                <option value="">a nota como um todo</option>
                 {indicadoresDoGestor.map((i) => (
                   <option key={i.id} value={i.id}>
                     {i.nome}
@@ -124,7 +124,7 @@ export async function TelaContestacao({ ctx }: PropsTela) {
               maxLength={1000}
               rows={4}
               disabled={!podeAbrir}
-              placeholder="Descreva o que precisa ser revisto e por quê."
+              placeholder="Conte o que você acha que está errado e por quê."
               className="mt-1 w-full border border-linha px-2 py-1.5 text-sm"
             />
             <p className="mt-1 text-xs text-apagado">Entre 20 e 1000 caracteres.</p>
@@ -135,8 +135,8 @@ export async function TelaContestacao({ ctx }: PropsTela) {
           </Botao>
           {!podeAbrir ? (
             <p className="text-xs text-apagado">
-              Só o gestor avaliado (ou a CAM em nome dele) abre contestação. Este perfil
-              acompanha o andamento.
+              Só o gestor avaliado (ou a comissão em nome dele) pede revisão. Este perfil só
+              acompanha.
             </p>
           ) : null}
         </form>
@@ -145,10 +145,10 @@ export async function TelaContestacao({ ctx }: PropsTela) {
       <Painel
         alvo="cont-lista"
         titulo={`Contestações de ${gestor.nome}`}
-        descricao={`${minhas.length} de ${todas.length} registradas no sistema.`}
+        descricao={`Os pedidos deste gestor, com a situação de cada um. ${minhas.length} de ${todas.length} no sistema.`}
       >
         {minhas.length === 0 ? (
-          <p className="text-sm text-apagado">Nenhuma contestação registrada.</p>
+          <p className="text-sm text-apagado">Nenhum pedido de revisão registrado.</p>
         ) : (
           <ul className="divide-y divide-linha border-y border-linha">
             {minhas.map((contestacao) => (
@@ -158,7 +158,7 @@ export async function TelaContestacao({ ctx }: PropsTela) {
                     {contestacao.abertaEm.slice(0, 10)}
                   </Num>
                   <Num className="text-xs">
-                    ciclo {dados.cicloPorId(contestacao.cicloId)?.competencia}
+                    mês {dados.cicloPorId(contestacao.cicloId)?.competencia}
                   </Num>
                   <Etiqueta tom={TOM[contestacao.status]}>
                     {ROTULO[contestacao.status]}

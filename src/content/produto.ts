@@ -8,7 +8,7 @@ export const PRODUTO = {
     'Registro do projeto e MVP do sistema de cálculo da gratificação por desempenho da Secretaria de Saúde do Recife.',
   /** Por que este nome: fio de prumo é o instrumento que garante o alinhamento correto. */
   origemDoNome:
-    'Fio de prumo: o instrumento simples que diz se algo está no lugar certo. É o que falta ao cálculo da gratificação hoje.',
+    'Prumo é aquele peso na ponta de um fio que o pedreiro usa para ver se a parede está reta. É isso que o projeto quer ser para essa conta: o jeito simples de ver se está tudo no lugar.',
 } as const
 
 export const INSTITUICAO = {
@@ -27,9 +27,9 @@ export const CLIENTE = {
  * O problema em três linhas — abre o registro e o pitch.
  */
 export const PROBLEMA = [
-  'Desde 2023 a SESAU paga gratificação variável a gestores, supervisores e coordenadores com base em indicadores definidos em portaria.',
-  'São dezenas de indicadores, várias áreas responsáveis e múltiplas regras de cálculo, consolidados manualmente em planilhas pela CAM.',
-  'O resultado é um processo frágil: inconsistências, baixa rastreabilidade, manutenção difícil e dependência do conhecimento de poucas pessoas.',
+  'Desde 2023, a Secretaria de Saúde do Recife paga um extra no salário de gestores quando as metas da saúde são atingidas. As metas estão num documento oficial, a portaria.',
+  'Todo mês, dezenas de números vindos de várias áreas precisam virar uma nota para cada gestor. Hoje essa conta é feita à mão, em planilhas.',
+  'O resultado: erros difíceis de achar, contas difíceis de conferir, e um processo que depende da memória de poucas pessoas.',
 ] as const
 
 export const PERGUNTA_DO_PROJETO =

@@ -96,16 +96,16 @@ export async function TelaIndicadores() {
 
       <div className="mb-5">
         <Aviso>
-          Indicadores e regras são <strong>dados</strong>, não código: quando a portaria mudar,
-          o cadastro muda pela interface e o software fica igual. No protótipo o catálogo é
-          sintético e a edição ainda não está construída.
+          Esta tela é só de leitura: é a régua da avaliação. Quando o documento oficial mudar,
+          muda o cadastro aqui dentro, e as regras antigas ficam guardadas. Neste protótipo os
+          dados são de exemplo e a edição ainda não foi construída.
         </Aviso>
       </div>
 
       <Painel
         alvo="ind-catalogo"
         titulo="Catálogo de indicadores"
-        descricao={`${dados.indicadores.length} indicadores em ${dados.areas.length} áreas.`}
+        descricao={`Tudo o que é medido: ${dados.indicadores.length} indicadores em ${dados.areas.length} áreas, cada um com meta, peso e fonte.`}
       >
         <div className="space-y-5">
           {porArea.map(({ area, indicadores }) => (
@@ -158,8 +158,8 @@ export async function TelaIndicadores() {
 
       <Painel
         alvo="ind-regras"
-        titulo="Regras de pontuação versionadas"
-        descricao="Alterar uma regra cria uma nova versão. A vigente nunca é editada, sem isso, um ciclo homologado deixaria de reproduzir o próprio resultado."
+        titulo="Regras de pontuação"
+        descricao="A tabela que transforma resultado em pontos. Mudar a regra cria uma versão nova; a antiga fica guardada, para que a conta de um mês fechado sempre possa ser refeita igual."
       >
         <ul className="space-y-3">
           {dados.regras.map((regra) => (
@@ -188,7 +188,7 @@ export async function TelaIndicadores() {
         <Painel
           alvo="ind-diff"
           titulo={`Diff: v${v1.versao} → v${v2.versao}`}
-          descricao="O que exatamente mudou entre as versões da regra."
+          descricao="O quadro do que mudou de uma versão da regra para a outra, faixa por faixa."
         >
           <DiffDeVersoes anterior={v1} nova={v2} />
         </Painel>

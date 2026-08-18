@@ -38,85 +38,86 @@ export interface Tutorial {
 export const TUTORIAIS: Record<PerfilId, Tutorial> = {
   cam: {
     resumo:
-      'Você conduz o ciclo inteiro. O percurso abaixo é a ordem em que as coisas acontecem numa competência real, do cadastro à publicação.',
+      'Você cuida do processo inteiro. Os passos abaixo seguem a ordem de um mês de verdade, do começo ao resultado.',
     passos: [
       {
-        titulo: 'Confira a régua antes de abrir o ciclo',
+        titulo: 'Veja o que será medido',
         oQueFazer:
-          'Abra "indicadores e regras" e leia o catálogo: meta, peso, unidade e fonte de cada indicador. Desça até o diff entre versões da regra.',
+          'Esta tela é a lista do que conta ponto. Cada linha mostra um indicador, a meta dele e o peso: quanto maior o peso, mais ele vale na nota.',
         porque:
-          'A régua precisa estar acertada antes de alguém informar valor. Mudar peso no meio do ciclo é o que produz a desconfiança que este projeto ataca.',
+          'Antes de alguém informar número, todo mundo precisa conhecer a régua. Régua que muda no meio do caminho é o que faz as pessoas desconfiarem do resultado.',
         tela: 'indicadores',
         alvo: 'ind-catalogo',
       },
       {
-        titulo: 'Acompanhe quem já informou',
+        titulo: 'Veja quem já mandou os números',
         oQueFazer:
-          'No dashboard, olhe o funil por área e a lista de pendências. Cada barra é a fração de indicadores já lançados por aquela área.',
+          'Cada barra mostra quantos números aquela área já informou no mês. Barra cheia: área em dia. Logo abaixo, a lista de quem ainda falta.',
         porque:
-          'É a informação que hoje só existe cobrando por e-mail. Ver a pendência em tela substitui a pergunta "vocês já mandaram?".',
+          'Hoje essa informação só existe cobrando por e-mail. Aqui ela aparece na tela, na hora.',
         tela: 'painel-cam',
         alvo: 'cam-funil',
       },
       {
-        titulo: 'Cubra a área que não conseguir lançar',
+        titulo: 'Lance por uma área, se precisar',
         oQueFazer:
-          'Em "lançamento", escolha a área pendente e informe valor e evidência em nome dela.',
+          'Escolha a área e digite o valor e a origem dele. A comissão pode fazer isso no lugar de uma área atrasada.',
         porque:
-          'A CAM pode lançar por terceiros para o ciclo não travar, e o autor do lançamento fica registrado assim mesmo. Cobrir não é apagar de quem era a responsabilidade.',
+          'O mês não pode travar por causa de uma área. E fica registrado que foi você quem lançou, não a área.',
         tela: 'lancamento',
         alvo: 'lanc-formularios',
       },
       {
-        titulo: 'Feche a janela e apure',
+        titulo: 'Avance a etapa do mês',
         oQueFazer:
-          'Ainda no dashboard, use o trilho de estados para avançar o ciclo. A transição pede confirmação e entra na trilha com o estado anterior.',
+          'O trilho no topo mostra em que etapa o mês está, e o quadro logo abaixo explica cada uma. Quando o prazo acabar, marque a confirmação e clique no botão laranja.',
         porque:
-          'A máquina anda um passo por vez, de propósito. Sem estado explícito, ninguém sabe se um número ainda pode mudar.',
+          'O mês anda uma etapa por vez, e cada avanço fica anotado no histórico. Assim ninguém tem dúvida se um número ainda pode mudar.',
         tela: 'painel-cam',
         alvo: 'cam-estado',
       },
       {
-        titulo: 'Confira uma conta antes de publicar',
+        titulo: 'Confira uma nota antes de divulgar',
         oQueFazer:
-          'Em "meu resultado", escolha um gestor e abra a memória de cálculo linha a linha.',
+          'Escolha um gestor e abra a conta dele, linha por linha. É a mesma tela que ele vai ver.',
         porque:
-          'É a mesma tela que o avaliado vai abrir. Ver o resultado pelos olhos dele antes de publicar é o que evita a pergunta que ninguém sabe responder na reunião.',
+          'Olhar a nota com os olhos de quem recebe evita a pergunta sem resposta na reunião.',
         tela: 'meu-resultado',
         alvo: 'res-memoria',
       },
       {
-        titulo: 'Publique e olhe o agregado',
+        titulo: 'Veja o resumo geral',
         oQueFazer:
-          'No painel da gestão, escolha a competência, ligue a anonimização e exporte o CSV.',
+          'Escolha o mês, ligue "esconder os nomes" se for apresentar em público, e baixe a planilha se precisar.',
         porque:
-          'O agregado é o que vai para a reunião. A anonimização existe para que a comparação entre áreas possa ser projetada sem expor pessoas.',
+          'O resumo é o que vai para a reunião de gestão. Esconder os nomes deixa comparar as áreas sem expor pessoas.',
         tela: 'painel-gestao',
         alvo: 'gest-ranking',
       },
       {
-        titulo: 'Descubra onde olhar no próximo ciclo',
+        titulo: 'Descubra onde olhar no próximo mês',
         oQueFazer:
-          'Em analytics, veja as áreas com menor atingimento médio e os lançamentos marcados como possível erro de digitação.',
+          'Esta tela aponta as áreas com resultado mais baixo e os números que parecem erro de digitação.',
         porque:
-          'Nenhum número daqui entra na conta da gratificação, e isso é regra, não limitação. Analytics serve para priorizar apoio, não para pontuar ninguém.',
+          'Nada daqui muda a nota de ninguém. Serve para a comissão saber onde ajudar primeiro.',
         tela: 'analytics',
         alvo: 'ana-risco',
       },
       {
         titulo: 'Responda quem discordou',
-        oQueFazer: 'Abra a contestação e leia o motivo registrado, com o ciclo e o indicador.',
+        oQueFazer:
+          'Aqui ficam os pedidos de revisão. Leia o motivo de cada um e responda por escrito.',
         porque:
-          'Contestação sem resposta escrita é ouvidoria de fachada. O registro é o que permite auditar depois se a comissão respondeu.',
+          'Pedido sem resposta escrita é caixa de sugestões. A resposta fica guardada junto do pedido, para sempre.',
         tela: 'contestacao',
         alvo: 'cont-lista',
       },
       {
-        titulo: 'Prove o que aconteceu',
+        titulo: 'Mostre o que aconteceu',
         oQueFazer:
-          'Na auditoria, filtre por tipo de evento e confira o antes e o depois de cada mudança.',
+          'O histórico lista tudo: quem fez, quando, como estava antes e como ficou. Dá para filtrar por tipo ou por mês.',
         porque:
-          'É a diferença entre afirmar que o processo foi correto e conseguir demonstrar isso.',
+          'É a diferença entre dizer que o processo foi correto e conseguir provar que foi.',
         tela: 'auditoria',
         alvo: 'aud-linha',
       },
@@ -125,41 +126,40 @@ export const TUTORIAIS: Record<PerfilId, Tutorial> = {
 
   area_tecnica: {
     resumo:
-      'Seu papel é curto e é o mais importante do ciclo: informar o número certo, com a evidência que o sustenta, dentro do prazo.',
+      'Seu papel é simples e é o mais importante de todos: informar o número certo, dizer de onde ele veio, e dentro do prazo.',
     passos: [
       {
         titulo: 'Escolha a sua área',
         oQueFazer:
-          'Em "lançamento", use o seletor de área. A lista abaixo passa a mostrar só os indicadores daquela unidade.',
-        porque:
-          'Cada área responde pelo que produz. Lançar indicador alheio é como assinar relatório de outro setor.',
+          'Use a caixa de seleção. A lista abaixo muda e passa a mostrar só os indicadores da área escolhida.',
+        porque: 'Cada área responde pelos próprios números, e só pelos próprios.',
         tela: 'lancamento',
         alvo: 'lanc-area',
       },
       {
-        titulo: 'Informe valor e evidência juntos',
+        titulo: 'Digite o valor e diga de onde veio',
         oQueFazer:
-          'Preencha o valor e, ao lado, de onde ele veio: sistema de origem, relatório, competência. Os dois campos são obrigatórios.',
+          'Preencha o número e, ao lado, a origem dele: o relatório ou o sistema de onde você tirou. Os dois campos são obrigatórios.',
         porque:
-          'Número sem procedência é opinião. A evidência é o que torna a conferência possível meses depois, quando ninguém lembra.',
+          'Número sem origem não dá para conferir depois. A origem é o que protege você se alguém duvidar.',
         tela: 'lancamento',
         alvo: 'lanc-formularios',
       },
       {
-        titulo: 'Repare no aviso de valor estranho',
+        titulo: 'Repare no aviso laranja',
         oQueFazer:
-          'Se o valor ficar muito longe da meta, aparece um alerta laranja embaixo do campo. Ele não impede o envio.',
+          'Se o valor ficar muito longe da meta, aparece um aviso embaixo do campo. Ele não trava o envio: só pede que você confira.',
         porque:
-          'A vírgula no lugar errado é o erro mais comum e o mais caro. O sistema sinaliza e deixa a decisão com quem tem o dado na mão.',
+          'O erro mais comum é a vírgula no lugar errado. O sistema avisa, e quem decide é você, que tem o dado na mão.',
         tela: 'lancamento',
         alvo: 'lanc-formularios',
       },
       {
-        titulo: 'Corrigiu? Não some com o anterior',
+        titulo: 'Errou? Corrija sem medo',
         oQueFazer:
-          'Reenvie o formulário com o valor certo. O campo já vem preenchido com o atual.',
+          'Envie de novo com o valor certo. O campo já mostra o que foi enviado antes.',
         porque:
-          'A correção entra como versão nova e o valor antigo continua na trilha. É o que separa corrigir de encobrir.',
+          'A correção entra como registro novo e o valor antigo fica guardado. Corrigir às claras é diferente de apagar.',
         tela: 'lancamento',
         alvo: 'lanc-formularios',
       },
@@ -168,40 +168,38 @@ export const TUTORIAIS: Record<PerfilId, Tutorial> = {
 
   gestor: {
     resumo:
-      'Você é quem a avaliação afeta. O sistema foi desenhado para que você consiga refazer a própria conta, e discordar dela por escrito.',
+      'Você é quem recebe a nota. Aqui dá para entender a conta inteira, e discordar dela por escrito se for o caso.',
     passos: [
       {
-        titulo: 'Veja o número e a faixa',
+        titulo: 'Veja a sua nota',
         oQueFazer:
-          'Em "meu resultado", escolha o ciclo. O cartão do topo traz o score e a faixa de gratificação alcançada.',
-        porque:
-          'Hoje esse número chega pronto, sem contexto. Aqui ele vem com a faixa e com a régua que a produziu.',
+          'Escolha o mês. O cartão do topo mostra a nota, de 0 a 100, e a faixa de pagamento que ela dá.',
+        porque: 'Hoje a nota chega pronta, sem explicação. Aqui ela chega com a régua junto.',
         tela: 'meu-resultado',
         alvo: 'res-score',
       },
       {
-        titulo: 'Abra a memória de cálculo',
+        titulo: 'Abra a conta inteira',
         oQueFazer:
-          'Clique em "memória de cálculo". Cada linha mostra indicador, valor informado, meta, atingimento, pontos, peso e contribuição, e ao pé a fórmula.',
+          'Clique em "memória de cálculo". É o extrato da nota: cada linha mostra um indicador, o valor informado, a meta e os pontos que ele rendeu. No fim, a soma que vira a nota.',
         porque:
-          'É a resposta para "por que deu isso?". A conta inteira fica aberta, item por item, e fecha na soma que você vê no cartão.',
+          'É a resposta para "por que a minha nota deu isso?". A conta fica aberta para você conferir, sem depender de ninguém.',
         tela: 'meu-resultado',
         alvo: 'res-memoria',
       },
       {
-        titulo: 'Compare com os seus ciclos anteriores',
-        oQueFazer: 'Desça até "evolução entre ciclos" e veja o score por competência.',
-        porque:
-          'Um número sozinho não informa. A série mostra tendência, que é o que serve para conversar sobre desempenho.',
+        titulo: 'Compare com os meses anteriores',
+        oQueFazer: 'As barras mostram a sua nota mês a mês.',
+        porque: 'Um número sozinho diz pouco. A sequência mostra para onde você está indo.',
         tela: 'meu-resultado',
         alvo: 'res-evolucao',
       },
       {
-        titulo: 'Discorde formalmente, se for o caso',
+        titulo: 'Discorde, se for o caso',
         oQueFazer:
-          'Use "abrir contestação", aponte o indicador (ou o resultado inteiro) e descreva o motivo.',
+          'Clique em "abrir contestação", diga qual indicador (ou a nota toda) e escreva o motivo.',
         porque:
-          'Discordar deixa de ser telefonema e vira registro com prazo e resposta. É o direito de revisão do art. 20 da LGPD funcionando na prática.',
+          'Discordar deixa de ser telefonema e vira pedido registrado, com prazo e resposta escrita. É um direito seu.',
         tela: 'contestacao',
         alvo: 'cont-abrir',
       },
@@ -210,75 +208,71 @@ export const TUTORIAIS: Record<PerfilId, Tutorial> = {
 
   auditoria: {
     resumo:
-      'Você enxerga as oito telas e não escreve em nenhuma. O percurso abaixo é o de conferir um ciclo do fim para o começo, que é como auditoria se faz.',
+      'Você pode ver tudo e não mexe em nada. O caminho abaixo confere um mês do fim para o começo, que é como se audita.',
     passos: [
       {
-        titulo: 'Comece pelo resultado publicado',
-        oQueFazer: 'No painel da gestão, escolha a competência fechada e observe o ranking.',
-        porque:
-          'É o que foi divulgado. Toda conferência parte da afirmação que se quer testar.',
+        titulo: 'Comece pelo resultado divulgado',
+        oQueFazer: 'Escolha um mês fechado e olhe o ranking.',
+        porque: 'Toda conferência começa pelo que foi divulgado: é a afirmação a testar.',
         tela: 'painel-gestao',
         alvo: 'gest-ranking',
       },
       {
-        titulo: 'Refaça a conta de um avaliado',
-        oQueFazer: 'Em "meu resultado", selecione o gestor e abra a memória de cálculo.',
+        titulo: 'Refaça a conta de alguém',
+        oQueFazer: 'Escolha um gestor e abra a conta dele, linha por linha.',
         porque:
-          'O motor é determinístico: o mesmo insumo com a mesma regra dá o mesmo número, sempre. Se não der, existe defeito.',
+          'A regra é sempre a mesma: a mesma entrada tem de dar a mesma nota. Se não der, há um problema.',
         tela: 'meu-resultado',
         alvo: 'res-memoria',
       },
       {
-        titulo: 'Confira a régua vigente na competência',
+        titulo: 'Confira qual régua valia naquele mês',
         oQueFazer:
-          'Em "indicadores e regras", veja a vigência de cada versão e o diff entre elas.',
+          'Veja as versões da regra e o quadro do que mudou de uma versão para a outra.',
         porque:
-          'Ciclo antigo tem de ser apurado com a regra da época. Regra editada no lugar apagaria essa possibilidade.',
+          'Mês antigo se confere com a regra da época. Por isso regra antiga nunca é apagada, só substituída.',
         tela: 'indicadores',
         alvo: 'ind-regras',
       },
       {
-        titulo: 'Volte aos insumos que geraram o número',
+        titulo: 'Volte aos números de origem',
         oQueFazer:
-          'Em "lançamento", escolha a área e compare o valor informado com a evidência declarada ao lado.',
-        porque:
-          'O score só é bom se o insumo for. A evidência é o que permite conferir a origem sem pedir favor a ninguém.',
+          'Escolha a área e compare o valor informado com a origem declarada ao lado dele.',
+        porque: 'A nota só é boa se o número que entrou for bom.',
         tela: 'lancamento',
         alvo: 'lanc-formularios',
       },
       {
-        titulo: 'Cheque a condução do ciclo',
-        oQueFazer:
-          'No dashboard da CAM, veja em que estado o ciclo está e quais áreas ficaram pendentes.',
+        titulo: 'Cheque a condução do mês',
+        oQueFazer: 'Veja em que etapa o mês está e quais áreas ficaram devendo.',
         porque:
-          'Ciclo apurado com área faltando é achado de auditoria, e o funil mostra isso sem depender do relato de ninguém.',
+          'Mês fechado com área faltando é um achado de auditoria, e aqui isso aparece na tela.',
         tela: 'painel-cam',
         alvo: 'cam-funil',
       },
       {
         titulo: 'Veja se quem discordou foi respondido',
-        oQueFazer:
-          'Na contestação, percorra os registros e confira se cada um tem resposta da comissão.',
+        oQueFazer: 'Percorra os pedidos de revisão e confira se cada um tem resposta.',
         porque:
-          'Contestação aberta sem resposta é o achado mais comum em processo de avaliação, e aqui ela fica visível em vez de arquivada.',
+          'Pedido sem resposta é o problema mais comum nesse tipo de processo. Aqui ele fica visível.',
         tela: 'contestacao',
         alvo: 'cont-lista',
       },
       {
-        titulo: 'Percorra a trilha do começo ao fim',
+        titulo: 'Percorra o histórico completo',
         oQueFazer:
-          'Na auditoria, filtre pelo ciclo e leia os eventos em ordem: quem informou, quando, e qual era o valor anterior.',
+          'Filtre pelo mês e leia os registros em ordem: quem fez, quando, antes e depois.',
         porque:
-          'A trilha é append-only. É a única peça do sistema que serve de prova, justamente porque ninguém a edita.',
+          'O histórico não pode ser editado por ninguém. É por isso que ele serve de prova.',
         tela: 'auditoria',
         alvo: 'aud-linha',
       },
       {
-        titulo: 'Verifique o que o modelo NÃO fez',
+        titulo: 'Confira o que o robô não faz',
         oQueFazer:
-          'Em analytics, confira que cada modelo publica método, métrica e linha de base, e leia a limitação declarada.',
+          'Na tela de sinais, veja que cada modelo mostra o método e o acerto, comparado com um palpite simples.',
         porque:
-          'Nenhuma saída de modelo entra no cálculo. Analytics aponta onde olhar; quem decide é a comissão, e a decisão é contestável.',
+          'Nenhum resultado de modelo entra na nota de ninguém. Ele só aponta onde olhar, e isso está escrito na tela.',
         tela: 'analytics',
         alvo: 'ana-modelos',
       },

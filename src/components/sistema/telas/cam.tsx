@@ -3,7 +3,7 @@ import { Num } from '@/components/base/num'
 import { Etiqueta } from '@/components/base/selo'
 import { AcoesDaTela, Aviso, Barra, Painel, TrilhoEstados } from '@/components/sistema/base'
 import { mensagemDe, type PropsTela } from '@/components/sistema/telas/tipos'
-import { ROTULO_ESTADO } from '@/lib/calculo/tipos'
+import { EXPLICACAO_ESTADO, ORDEM_ESTADOS, ROTULO_ESTADO } from '@/lib/calculo/tipos'
 import { carregarDados, lancamentosDoCiclo } from '@/lib/dados/consultas'
 
 export async function TelaCam({ ctx }: PropsTela) {
@@ -38,7 +38,7 @@ export async function TelaCam({ ctx }: PropsTela) {
       <AcoesDaTela>
         <Etiqueta tom="acento">{ROTULO_ESTADO[emAndamento.estado]}</Etiqueta>
         <span className="text-xs text-apagado">
-          ciclo em andamento: <Num>{emAndamento.competencia}</Num>
+          mês em andamento: <Num>{emAndamento.competencia}</Num>
         </span>
       </AcoesDaTela>
 
@@ -55,14 +55,35 @@ export async function TelaCam({ ctx }: PropsTela) {
 
       <Painel
         alvo="cam-estado"
-        titulo={`Ciclo ${emAndamento.competencia}`}
-        descricao={`Regra em uso: ${emAndamento.regraId}. Janela de lançamento até ${emAndamento.janelaLancamentoFim.slice(0, 10)}.`}
+        titulo={`Mês ${emAndamento.competencia}`}
+        descricao={`Regra em uso: ${emAndamento.regraId}. Prazo para informar os números: até ${emAndamento.janelaLancamentoFim.slice(0, 10)}.`}
       >
         <TrilhoEstados estado={emAndamento.estado} />
 
+        {/* O trilho mostra ONDE o mês está; este quadro diz O QUE cada etapa
+            significa. Sem ele, "homologado" e "publicado" eram palavras soltas
+            para quem não é do processo, e foi exatamente a reclamação de quem
+            usou. Fica dobrado para não ocupar a tela de quem já sabe. */}
+        <details className="group mt-4">
+          <summary className="flex w-fit cursor-pointer list-none items-center gap-2 text-xs lowercase text-apagado transition-colors hover:text-texto [&::-webkit-details-marker]:hidden">
+            o que significa cada etapa?
+            <span aria-hidden className="transition-transform group-open:rotate-90">
+              →
+            </span>
+          </summary>
+          <ol className="mt-3 space-y-2 border-l-2 border-linha pl-4">
+            {ORDEM_ESTADOS.map((etapa) => (
+              <li key={etapa} className="text-sm leading-relaxed">
+                <span className="rotulo text-texto">{ROTULO_ESTADO[etapa]}</span>
+                <span className="mt-0.5 block text-apagado">{EXPLICACAO_ESTADO[etapa]}</span>
+              </li>
+            ))}
+          </ol>
+        </details>
+
         {!seguinte ? (
           <p className="mt-4 border-t border-linha pt-4 text-sm text-apagado">
-            O ciclo já está publicado: não há transição seguinte.
+            Este mês já foi publicado: não há mais etapa para avançar.
           </p>
         ) : ctx.admin ? (
           <form
@@ -72,7 +93,7 @@ export async function TelaCam({ ctx }: PropsTela) {
           >
             <input type="hidden" name="cicloId" value={emAndamento.id} />
             <p className="text-sm">
-              Próxima transição: <strong>{ROTULO_ESTADO[emAndamento.estado]}</strong> →{' '}
+              Próxima etapa: <strong>{ROTULO_ESTADO[emAndamento.estado]}</strong> →{' '}
               <strong>{ROTULO_ESTADO[seguinte]}</strong>
             </p>
             <label className="mt-2 flex items-start gap-2 text-sm">
@@ -84,8 +105,8 @@ export async function TelaCam({ ctx }: PropsTela) {
                 className="mt-0.5 size-4 accent-[color:var(--color-laranja)]"
               />
               <span>
-                Confirmo a transição. A mudança é registrada na trilha de auditoria com o estado
-                anterior e o novo.
+                Confirmo o avanço. Ele fica gravado no histórico, com a etapa anterior e a nova,
+                e não tem botão de desfazer.
               </span>
             </label>
             <Botao type="submit" variante="primario" className="mt-3" disabled={!podeAgir}>
@@ -94,9 +115,7 @@ export async function TelaCam({ ctx }: PropsTela) {
                 : `Avançar para ${ROTULO_ESTADO[seguinte]}`}
             </Botao>
             {!podeAgir ? (
-              <p className="mt-2 text-xs text-apagado">
-                Só o perfil CAM avança o estado do ciclo.
-              </p>
+              <p className="mt-2 text-xs text-apagado">Só o perfil CAM avança a etapa.</p>
             ) : null}
           </form>
         ) : null}
@@ -105,7 +124,7 @@ export async function TelaCam({ ctx }: PropsTela) {
       <Painel
         alvo="cam-funil"
         titulo="Funil de lançamento por área"
-        descricao="Quantos indicadores cada área já informou no ciclo em andamento."
+        descricao="Quantos números cada área já informou neste mês. Barra cheia: área em dia."
       >
         <ul className="divide-y divide-linha border-y border-linha">
           {porArea.map((linha) => (
@@ -125,10 +144,10 @@ export async function TelaCam({ ctx }: PropsTela) {
       <Painel
         alvo="cam-pendencias"
         titulo="Pendências"
-        descricao="Áreas que ainda não fecharam o lançamento do ciclo."
+        descricao="Áreas que ainda não informaram tudo neste mês."
       >
         {pendentes.length === 0 ? (
-          <Aviso tom="ok">Todas as áreas concluíram o lançamento deste ciclo.</Aviso>
+          <Aviso tom="ok">Todas as áreas já informaram tudo neste mês.</Aviso>
         ) : (
           <ul className="space-y-1.5 text-sm">
             {pendentes.map((linha) => (
@@ -144,7 +163,7 @@ export async function TelaCam({ ctx }: PropsTela) {
         )}
       </Painel>
 
-      <Painel titulo="Ciclos" descricao="Histórico de competências e seus estados.">
+      <Painel titulo="Meses" descricao="Cada mês já avaliado, com a etapa em que está.">
         <ul className="divide-y divide-linha border-y border-linha text-sm">
           {[...todos].reverse().map((c) => (
             <li key={c.id} className="flex flex-wrap items-center justify-between gap-2 py-2">

@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import { ClipboardCheck, ScrollText, Scale } from 'lucide-react'
 import { Chamada } from '@/components/base/botao'
 import { Cabecalho } from '@/components/base/cabecalho'
@@ -64,10 +65,11 @@ export default async function Pagina() {
 
           <h1 className="hero cursor mt-8">gratificação fora da planilha</h1>
 
-          {/* O subtítulo diz o que o sistema FAZ. O que é o problema fica para o
-              bloco abaixo — antes os dois contavam a mesma coisa. */}
+          {/* O subtítulo diz o que o sistema FAZ, numa frase que qualquer
+              pessoa entende. O problema fica para o bloco abaixo. */}
           <p className="prosa mt-7 text-base lowercase">
-            a regra vira dado versionado, e cada valor abre até a origem que o gerou.
+            a conta da gratificação feita às claras: qualquer número da tela mostra de onde
+            veio.
           </p>
 
           {/* Dois caminhos, um por linha: o sistema e as entregas da semana.
@@ -145,7 +147,7 @@ export default async function Pagina() {
             quem usa o sistema
           </h2>
           <p className="prosa mt-2 text-sm lowercase">
-            quatro papéis, e o que cada um pode e não pode fazer no ciclo.
+            quatro papéis, e o que cada um pode e não pode fazer.
           </p>
           <div className="mt-6">
             <ExplicacaoDosPerfis telas={featuresLiberadas(visao)} />
@@ -200,43 +202,75 @@ export default async function Pagina() {
           <TrilhaMarcos hoje={visao.hoje} />
         </div>
 
-        {/* O fluxo real do ciclo, não um fluxo ilustrativo. */}
-        <section className="bloco revelar border-b-0">
-          <h2 className="titulo-bloco">o ciclo</h2>
-          <p className="prosa mt-2 text-sm lowercase">
-            cada estado só avança um passo por vez, e a passagem fica na trilha.
-          </p>
+        {/* O desenho de como o processo funciona, do prazo aberto ao resultado
+            publicado. É o fluxo REAL da máquina de estados do motor, contado em
+            linguagem de balcão: cada pílula é uma etapa do mês, cada cartão é o
+            que alguém faz para o mês andar. */}
+        <section className="bloco revelar border-b-0" aria-labelledby="titulo-como-funciona">
+          <h2 id="titulo-como-funciona" className="titulo-bloco">
+            como funciona
+          </h2>
+
+          {/* Antes do desenho, o mapa do site em duas frases: sem isso, quem
+              chega não sabe o que é diário e o que é programa. */}
+          <div className="prosa mt-4 space-y-3 text-sm">
+            <p>
+              este site tem duas partes. esta página é o diário do projeto: o que a equipe fez a
+              cada semana, com as entregas dentro. o{' '}
+              <Link href="/sistema" className="underline underline-offset-4">
+                sistema
+              </Link>{' '}
+              é o programa de exemplo que faz a conta da gratificação.
+            </p>
+            <p>
+              no sistema, todo mês passa pelas etapas abaixo, sempre nesta ordem e uma de cada
+              vez. cada passagem fica gravada num histórico que ninguém consegue apagar.
+            </p>
+          </div>
 
           <div className="mt-10">
             <Fluxo>
-              <EstadoDoFluxo>lançamento aberto</EstadoDoFluxo>
+              <EstadoDoFluxo explicacao="o prazo está aberto: é hora de informar os números do mês.">
+                lançamento aberto
+              </EstadoDoFluxo>
               <Conector />
               <AcaoDoFluxo
                 icone={<ClipboardCheck size={24} strokeWidth={1.5} />}
-                titulo="área técnica informa"
+                titulo="1 · cada área informa seus números"
               >
-                valor e evidência de cada indicador, dentro da janela do ciclo.
+                quem tem o dado digita o valor e diz de onde ele veio, dentro do prazo.
               </AcaoDoFluxo>
               <Conector />
-              <EstadoDoFluxo>em validação</EstadoDoFluxo>
+              <EstadoDoFluxo explicacao="o prazo acabou. a comissão confere os números antes da conta.">
+                em validação
+              </EstadoDoFluxo>
               <Conector />
-              <AcaoDoFluxo icone={<Scale size={24} strokeWidth={1.5} />} titulo="cam apura">
-                a regra vigente na competência vira score, faixa e memória de cálculo.
+              <AcaoDoFluxo
+                icone={<Scale size={24} strokeWidth={1.5} />}
+                titulo="2 · a comissão faz a conta"
+              >
+                cada número vira pontos, e os pontos viram uma nota de 0 a 100. a conta fica
+                aberta para qualquer um conferir.
                 <span className="numero mt-2 block text-xs">
-                  score = (Σ pontos × peso) ÷ (Σ peso × pontuação máxima) × 100
+                  nota = (Σ pontos × peso) ÷ (Σ peso × pontuação máxima) × 100
                 </span>
               </AcaoDoFluxo>
               <Conector />
-              <EstadoDoFluxo>homologado</EstadoDoFluxo>
+              <EstadoDoFluxo explicacao="a conta foi feita e a comissão aprovou o resultado.">
+                homologado
+              </EstadoDoFluxo>
               <Conector />
               <AcaoDoFluxo
                 icone={<ScrollText size={24} strokeWidth={1.5} />}
-                titulo="gestor confere"
+                titulo="3 · o gestor confere a nota"
               >
-                cada número aberto até a origem. discordou, contesta no prazo.
+                vê a conta linha por linha. se discordar, pede revisão no prazo e recebe
+                resposta por escrito.
               </AcaoDoFluxo>
               <Conector />
-              <EstadoDoFluxo>publicado</EstadoDoFluxo>
+              <EstadoDoFluxo explicacao="o resultado está no ar: cada gestor vê a própria nota.">
+                publicado
+              </EstadoDoFluxo>
             </Fluxo>
           </div>
         </section>

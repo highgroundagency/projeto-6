@@ -24,7 +24,7 @@ export const FEATURES = [
     ciclo: 's5',
     rota: '/sistema/cam',
     rotulo: 'Dashboard da CAM',
-    descricao: 'Funil por área, pendências e avanço de estado do ciclo.',
+    descricao: 'Quem já mandou os números do mês, quem falta, e o botão de avançar a etapa.',
     perfis: ['cam', 'auditoria'],
   },
   {
@@ -32,7 +32,8 @@ export const FEATURES = [
     ciclo: 's5',
     rota: '/sistema/indicadores',
     rotulo: 'Indicadores e regras',
-    descricao: 'Cadastro de indicadores e regras de pontuação versionadas.',
+    descricao:
+      'A lista do que é medido, com a meta e o peso de cada item, e a tabela de pontos.',
     perfis: ['cam', 'auditoria'],
   },
   {
@@ -40,7 +41,7 @@ export const FEATURES = [
     ciclo: 's5',
     rota: '/sistema/lancamento',
     rotulo: 'Lançamento',
-    descricao: 'Área técnica informa os valores dos indicadores no prazo.',
+    descricao: 'Onde cada área digita os números do mês e diz de onde cada um veio.',
     perfis: ['area_tecnica', 'cam', 'auditoria'],
   },
   {
@@ -48,7 +49,8 @@ export const FEATURES = [
     ciclo: 's6',
     rota: '/sistema/meu-resultado',
     rotulo: 'Meu resultado',
-    descricao: 'Score, faixa, evolução e memória de cálculo do gestor avaliado.',
+    descricao:
+      'A nota do gestor, a conta inteira aberta e a comparação com os meses anteriores.',
     perfis: ['gestor', 'cam', 'auditoria'],
   },
   {
@@ -56,7 +58,7 @@ export const FEATURES = [
     ciclo: 's7',
     rota: '/sistema/auditoria',
     rotulo: 'Auditoria',
-    descricao: 'Linha do tempo imutável de tudo que aconteceu no ciclo.',
+    descricao: 'O histórico de tudo: quem fez o quê, quando, e como estava antes.',
     perfis: ['auditoria', 'cam'],
   },
   {
@@ -64,7 +66,7 @@ export const FEATURES = [
     ciclo: 's9',
     rota: '/sistema/gestao',
     rotulo: 'Painel da gestão',
-    descricao: 'Agregados por área, ranking anonimizável e exportação em CSV.',
+    descricao: 'O resumo geral: média, ranking das áreas e o botão de baixar a planilha.',
     perfis: ['cam', 'auditoria'],
   },
   {
@@ -72,7 +74,7 @@ export const FEATURES = [
     ciclo: 's10',
     rota: '/sistema/analytics',
     rotulo: 'Analytics',
-    descricao: 'Resultados dos modelos de ML com o método declarado ao lado.',
+    descricao: 'Sinais que ajudam a comissão a saber onde olhar. Nada aqui muda nota.',
     perfis: ['cam', 'auditoria'],
   },
   {
@@ -80,7 +82,7 @@ export const FEATURES = [
     ciclo: 's11',
     rota: '/sistema/contestacao',
     rotulo: 'Contestação',
-    descricao: 'Gestor avaliado abre e acompanha contestação do resultado.',
+    descricao: 'Onde o gestor que discorda da nota pede revisão e acompanha a resposta.',
     perfis: ['gestor', 'cam', 'auditoria'],
   },
 ] as const satisfies readonly Feature[]
@@ -135,66 +137,66 @@ export const ORDEM_PERFIS = [
 export const PERFIS: Record<PerfilId, Perfil> = {
   cam: {
     rotulo: 'CAM',
-    descricao: 'Comissão de Avaliação de Metas: gere ciclos, regras e homologação.',
+    descricao: 'A comissão que cuida do processo do começo ao fim.',
     quemE:
-      'Comissão de Avaliação de Metas: o colegiado que conduz o ciclo do começo ao fim, do cadastro da regra à publicação do resultado.',
+      'CAM quer dizer Comissão de Avaliação de Metas. É o grupo que cuida de todo o processo: define o que será medido, cobra os números, faz a conta e divulga o resultado.',
     oQueFaz: [
-      'Cadastra indicadores com meta, peso, unidade e fonte, e publica a regra que transforma atingimento em pontos.',
-      'Abre e fecha a janela de lançamento, e acompanha o funil de quais áreas já informaram.',
-      'Apura o ciclo, homologa e publica o resultado.',
-      'Recebe as contestações e responde por escrito.',
+      'Cadastra o que vai ser medido: cada indicador, com a meta e o peso.',
+      'Abre e fecha o prazo para as áreas informarem os números do mês.',
+      'Faz a conta, aprova e divulga o resultado.',
+      'Responde por escrito quem discordar da nota.',
     ],
     oQueNaoPode: [
-      'Editar uma regra já usada num ciclo homologado. Alterar cria versão nova, senão o ciclo antigo deixaria de reproduzir o próprio número.',
-      'Pular estado do ciclo. A máquina anda um passo por vez, e cada passagem entra na trilha.',
-      'Apagar evento da auditoria. A trilha só recebe, nunca perde.',
+      'Mudar uma regra que já foi usada num mês fechado. Mudança vira regra nova, e a antiga fica guardada.',
+      'Pular etapa. O mês anda uma etapa por vez, e cada avanço fica anotado.',
+      'Apagar o histórico. O que aconteceu fica registrado para sempre.',
     ],
   },
   area_tecnica: {
     rotulo: 'Área técnica',
-    descricao: 'Lança e edita os indicadores da própria área dentro do prazo.',
+    descricao: 'Quem informa os números da própria área, dentro do prazo.',
     quemE:
-      'A unidade que produz o dado: a diretoria ou coordenação dona daquele indicador, quem tem o número na mão.',
+      'É o setor que produz o dado: a equipe que tem o número na mão, como a da vacinação ou a das consultas.',
     oQueFaz: [
-      'Informa o valor de cada indicador da própria área dentro da janela do ciclo.',
-      'Declara a evidência que sustenta o número, de onde ele veio.',
-      'Corrige um valor errado antes do fechamento, e a correção entra como versão nova.',
+      'Digita o valor de cada indicador da sua área, dentro do prazo.',
+      'Diz de onde cada número veio: qual relatório, qual sistema.',
+      'Corrige um valor errado antes do fechamento. O valor antigo fica guardado.',
     ],
     oQueNaoPode: [
-      'Lançar fora da janela. Passado o prazo, o campo fecha e a tentativa fica registrada.',
-      'Alterar meta ou peso. Quem informa o resultado não define a régua.',
-      'Ver o score de gestor nenhum. A área entrega insumo, não recebe avaliação.',
+      'Informar fora do prazo. Depois que o mês fecha, o campo trava.',
+      'Mudar meta ou peso. Quem informa o resultado não escolhe a régua.',
+      'Ver a nota dos gestores. A área entrega o número, não recebe nota.',
     ],
   },
   gestor: {
     rotulo: 'Gestor avaliado',
-    descricao: 'Consulta o próprio resultado, a memória de cálculo e contesta.',
+    descricao: 'Quem recebe a nota. Vê a própria conta e pode discordar.',
     quemE:
-      'O servidor cuja gratificação depende do desempenho apurado. É por ele que este sistema existe.',
+      'É a pessoa avaliada: o gestor cujo pagamento extra depende da nota. O sistema existe para que ela entenda e confie na própria nota.',
     oQueFaz: [
-      'Consulta o próprio score, a faixa alcançada e a evolução entre ciclos.',
-      'Abre a memória de cálculo e segue cada número até o lançamento que o gerou.',
-      'Contesta o resultado no prazo, e recebe resposta escrita da comissão.',
+      'Vê a própria nota e a faixa de pagamento que ela dá.',
+      'Abre a conta inteira e confere de onde veio cada número.',
+      'Se discordar, pede revisão no prazo e recebe resposta por escrito.',
     ],
     oQueNaoPode: [
-      'Alterar lançamento. Discordar é um caminho formal, não uma edição.',
-      'Ver o ranking nominal dos colegas. O painel da gestão é da gestão.',
-      'Ter o resultado decidido por modelo. O cálculo é determinístico e a conta fica aberta (art. 20 da LGPD).',
+      'Mudar número. Discordar tem um caminho formal, não uma tela de edição.',
+      'Ver a nota dos colegas pelo nome. O ranking com nomes é da gestão.',
+      'Ter a nota decidida por robô. A conta segue sempre a mesma regra, aberta para conferir.',
     ],
   },
   auditoria: {
     rotulo: 'Auditoria',
-    descricao: 'Vê tudo, edita nada.',
+    descricao: 'Vê tudo, não mexe em nada.',
     quemE:
-      'Controle interno, ou qualquer pessoa que precise conferir o processo sem participar dele.',
+      'É quem confere o processo de fora, como um fiscal: pode olhar tudo, e não muda nada.',
     oQueFaz: [
-      'Percorre a trilha append-only e vê quem informou o quê, quando, e qual era o valor anterior.',
-      'Refaz o cálculo de um ciclo homologado e confere se dá o mesmo número.',
-      'Cruza o resultado publicado com a regra vigente na competência.',
+      'Lê o histórico completo: quem informou o quê, quando, e como estava antes.',
+      'Refaz a conta de um mês fechado e confere se dá o mesmo resultado.',
+      'Compara o resultado divulgado com a regra que valia naquele mês.',
     ],
     oQueNaoPode: [
-      'Escrever coisa alguma. Nenhuma tela oferece ação a este perfil, por desenho.',
-      'Ser impedida de ver. É o único papel que enxerga as oito telas.',
+      'Escrever qualquer coisa. Nenhuma tela dá botão de ação a este perfil, de propósito.',
+      'Ficar sem ver algo. É o único papel que enxerga todas as telas.',
     ],
   },
 }
