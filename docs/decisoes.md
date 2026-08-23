@@ -604,3 +604,83 @@ texto branco sobre papel branco.
 para inválido e o navegador caía no azul do sistema. Ou seja, nenhuma caixa de seleção do
 projeto jamais foi laranja. O token passou a existir de fato, e as caixas apontam para
 `--color-acento`, que acompanha o tema.
+
+---
+
+## ADR-028 · As fontes passam a ser arquivo versionado, não download de build
+
+**Contexto.** O CI falhou cinco vezes em dois dias, em `main` e na branch de trabalho, e
+nenhuma das falhas tinha a ver com o código. O sinal que denunciou isso foi o mais estranho
+possível: **o mesmo commit passava numa branch e quebrava na outra**, minutos depois, sem
+uma linha de diferença entre as duas execuções.
+
+A causa está no `next/font/google`. Ele não é um link para o Google no navegador de quem
+visita, e nisso a escolha original estava certa: ele baixa o `.woff2` e serve do próprio
+domínio, sem expor o visitante. O problema é *quando* ele baixa. É **em todo build**, contra
+`fonts.gstatic.com`, e sem cache entre execuções do runner. Quando a rede do GitHub Actions
+engasgava, o log era este:
+
+```
+Failed to fetch font file from `https://fonts.gstatic.com/s/martianmono/...woff2`.
+Retrying 3/3...
+NextFontError: Failed to fetch `Martian Mono` from Google Fonts.
+> Build failed because of webpack errors
+```
+
+Três tentativas, todas falhas, build morto. Duas vezes derrubou o passo `Build de produção`
+do job `verificar`; três vezes derrubou o `webServer` do Playwright, que compila o projeto
+antes de abrir o navegador, e aí o job `e2e` nem chegou a rodar um teste.
+
+**Decisão.** Os cinco arquivos passam a viver em `src/fontes/`, e o layout usa
+`next/font/local`. São os mesmos recortes de antes, o subconjunto latin, que já cobre todo o
+português: Martian Mono nos pesos 500 e 600, JetBrains Mono nos pesos 400, 500 e 600. Noventa
+e seis kilobytes no repositório, uma vez, contra um download a cada build de cada máquina.
+
+O build deixa de ter qualquer dependência de rede. Isso vale para o CI, mas vale igualmente
+para quem clonar o repositório e rodar `npm run build` num café com wi-fi ruim, ou daqui a
+três anos, quando a URL daquele `.woff2` já não responder.
+
+**Consequência.** `src/lib/fontes.test.ts` guarda as duas metades da correção: ninguém volta
+a importar de `next/font/google`, e todo arquivo declarado no layout existe no disco e começa
+com a assinatura `wOF2`. A verificação de assinatura é o que impede o caso chato, uma fonte
+truncada ou uma página de erro salva no lugar do arquivo, de passar como se estivesse certa.
+
+**O que isto não conserta.** Trocar de peso ou de família deixou de ser editar uma linha:
+agora exige baixar o arquivo e commitá-lo. É o custo aceito, e é pequeno perto de um CI que
+falha por sorte da rede. As falhas antigas continuam no histórico do Actions, vermelhas: elas
+não eram defeito do projeto e não há o que reescrever nelas.
+
+---
+
+## ADR-029 · Teste de ponta a ponta não escreve data nem id de ciclo à mão
+
+**Contexto.** Ao conferir o CI, três testes de Playwright falharam por conta própria, sem
+ninguém ter tocado no código que eles exercitam. Dois diziam, com o id escrito na mão, que o
+visitante **não** podia ver a `s4`. A `s4` entra no ar em 29/08, e o motor de releases adianta
+sete dias: em 22/08 ela virou pública, e a afirmação virou falsa sozinha.
+
+Um teste com data embutida não fica errado no dia em que falha. Ele já nasceu errado e apenas
+cobra a conta depois, quando ninguém se lembra do porquê. É a pior forma de vermelho: parece
+regressão, não é, e queima o tempo de quem for investigar.
+
+**O terceiro era diferente e pior.** `getByText('esta semana')` casa por substring, e o corpo
+das semanas diz "Nenhum bloqueio n*esta semana*" e "Registro d*esta semana* ainda não
+publicado". O `.first()` pegava um desses, dentro de sanfona fechada, portanto invisível. O
+teste reprovava enquanto a pílula funcionava perfeitamente. Passou até hoje por sorte de
+ordem no DOM, não por estar certo.
+
+**Decisão.** `e2e/cronograma.ts` calcula, da mesma fonte única de verdade que a aplicação usa,
+qual ciclo está público e qual é o primeiro ainda oculto. Os testes pedem "um ciclo oculto",
+nunca "a s4". O terceiro passou a usar `{ exact: true }`.
+
+O helper ignora os imprensados: eles têm carregador `null` de propósito, então procurar o
+marcador de um deles não acha nada nem para o admin. O registry é `server-only` e não pode ser
+importado do Playwright, então a dedução usa `tipo: 'pausa'` do cronograma, e
+`cronograma.test.ts` guarda a equivalência entre os dois. Sem essa guarda, o dia em que as
+duas listas divergissem apareceria como um marcador não encontrado no Playwright, que não diz
+nada a quem lê.
+
+**Consequência.** As 78 jornadas passam e continuam passando na semana que vem, sem manutenção
+de calendário. O que sobrou embutido é deliberado: o teste da vitrine fixa `2026-10-03` porque
+o ponto dele é justamente simular uma data, e ali o número é o objeto do teste, não uma
+suposição sobre quando alguém vai rodá-lo.

@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test'
+import { CICLO_OCULTO, CICLO_PUBLICO, marcador } from './cronograma'
 
 test.describe('página inicial', () => {
   test('a chamada e o hero cabem acima da dobra', async ({ page }) => {
@@ -113,7 +114,13 @@ test.describe('registro do projeto', () => {
     }
 
     // E a da vez vem marcada, para ele achar sem ler data por data.
-    await expect(page.getByText('esta semana').first()).toBeVisible()
+    //
+    // `exact` NÃO é detalhe: sem ele o texto casa por substring, e o corpo das
+    // semanas diz "Nenhum bloqueio nesta semana" e "Registro desta semana...".
+    // Os dois contêm "esta semana", os dois vivem dentro de sanfona fechada, e
+    // era um deles que o `.first()` pegava — invisível, teste vermelho, pílula
+    // funcionando o tempo todo.
+    await expect(page.getByText('esta semana', { exact: true })).toBeVisible()
 
     // A setinha abre as entregas daquela semana — sem JavaScript nosso.
     const escolhida = semanas.first()
@@ -163,9 +170,10 @@ test.describe('registro do projeto', () => {
 
     // `<details>` fechado continua no DOM: por isso semana não liberada não pode
     // sequer ser renderizada, dobrada ou não.
-    expect(html).toContain('PRUMO-MARCADOR-CICLO-s1')
-    expect(html).not.toContain('PRUMO-MARCADOR-CICLO-s4')
-    expect(html).not.toContain('PRUMO-MARCADOR-CICLO-ko')
+    // Os ciclos saem do cronograma, não de um id escrito à mão: o release anda
+    // com o calendário, e o teste precisa andar junto (ver e2e/cronograma.ts).
+    expect(html).toContain(marcador(CICLO_PUBLICO))
+    expect(html).not.toContain(marcador(CICLO_OCULTO))
   })
 
   test('transparência no uso de IA está publicada', async ({ page }) => {

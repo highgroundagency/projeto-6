@@ -71,6 +71,7 @@ src/
 │   ├── sistema/         primitivos, ícones, sanfona da tela, tutorial, perfis
 │   │   └── telas/       o corpo das 8 telas, sem gate por dentro (ADR-023)
 │   └── conteudo.tsx     primitivos usados pelo conteúdo dos ciclos
+├── fontes/              os .woff2 versionados (ADR-028): build sem rede
 ├── content/
 │   ├── ciclos/          um arquivo por ciclo + registry server-only
 │   ├── equipe.ts        os 6 integrantes e seus papéis

@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next'
-import { JetBrains_Mono, Martian_Mono } from 'next/font/google'
+import localFont from 'next/font/local'
 import { PRODUTO } from '@/content/produto'
 import { temaAtual } from '@/lib/tema'
 import './globals.css'
@@ -9,17 +9,31 @@ import './globals.css'
  *
  * Martian Mono é larga e pesada: serve ao display e aos números grandes.
  * JetBrains Mono carrega tudo o mais, inclusive o que antes era "corpo".
+ *
+ * OS ARQUIVOS SÃO VERSIONADOS, e não baixados do Google no build (ADR-028).
+ * `next/font/google` busca o .woff2 em fonts.gstatic.com toda vez que compila,
+ * e a rede do runner falhando derrubava o CI sem nada no código ter mudado: o
+ * mesmo commit passava numa branch e quebrava na outra. Aqui é `next/font/local`
+ * lendo de src/fontes/, então o build não depende de rede e é reprodutível.
+ *
+ * O recorte é o mesmo de antes: subconjunto latin, que já cobre todo o
+ * português. Trocar de peso ou de família exige baixar o arquivo e commitá-lo.
  */
-const display = Martian_Mono({
-  subsets: ['latin'],
-  weight: ['500', '600'],
+const display = localFont({
+  src: [
+    { path: '../fontes/martian-mono-500.woff2', weight: '500', style: 'normal' },
+    { path: '../fontes/martian-mono-600.woff2', weight: '600', style: 'normal' },
+  ],
   variable: '--fonte-display',
   display: 'swap',
 })
 
-const mono = JetBrains_Mono({
-  subsets: ['latin'],
-  weight: ['400', '500', '600'],
+const mono = localFont({
+  src: [
+    { path: '../fontes/jetbrains-mono-400.woff2', weight: '400', style: 'normal' },
+    { path: '../fontes/jetbrains-mono-500.woff2', weight: '500', style: 'normal' },
+    { path: '../fontes/jetbrains-mono-600.woff2', weight: '600', style: 'normal' },
+  ],
   variable: '--fonte-mono',
   display: 'swap',
 })

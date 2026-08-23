@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test'
+import { CICLO_OCULTO, marcador } from './cronograma'
 
 const SENHA = '0321'
 
@@ -27,8 +28,12 @@ test.describe('acesso ao painel', () => {
     // na ADR-015: um link rotulado é achado por Ctrl+F e por leitor de tela.
     for (const rota of ['/', '/registro', '/sistema', '/transparencia-ia', '/status']) {
       await page.goto(rota)
-      expect(await page.locator('a[href^="/admin"]').count(), `${rota} linka para /admin`).toBe(0)
-      expect(await page.content(), `${rota} cita o painel`).not.toContain('Painel administrativo')
+      expect(await page.locator('a[href^="/admin"]').count(), `${rota} linka para /admin`).toBe(
+        0,
+      )
+      expect(await page.content(), `${rota} cita o painel`).not.toContain(
+        'Painel administrativo',
+      )
     }
   })
 
@@ -43,7 +48,9 @@ test.describe('acesso ao painel', () => {
     await page.getByRole('button', { name: 'Entrar' }).click()
 
     await expect(page).toHaveURL(/erro=1/)
-    await expect(page.getByRole('alert').filter({ hasText: 'Não foi possível entrar.' })).toBeVisible()
+    await expect(
+      page.getByRole('alert').filter({ hasText: 'Não foi possível entrar.' }),
+    ).toBeVisible()
   })
 
   test('senha certa abre o painel completo', async ({ page }) => {
@@ -65,14 +72,16 @@ test.describe('acesso ao painel', () => {
 
 test.describe('modo completo e visão de visitante', () => {
   test('admin vê ciclos que o visitante não vê', async ({ page }) => {
+    // O ciclo alvo é o primeiro ainda não liberado hoje, calculado a partir do
+    // cronograma. Fixar `s4` aqui funcionou até a s4 virar pública sozinha.
     const comoVisitante = await (await page.request.get('/registro')).text()
-    expect(comoVisitante).not.toContain('PRUMO-MARCADOR-CICLO-s4')
+    expect(comoVisitante).not.toContain(marcador(CICLO_OCULTO))
 
     await entrarNoPainel(page)
     await page.goto('/registro')
 
     await expect(page.getByText('Modo completo: visível só para você')).toBeVisible()
-    expect(await page.content()).toContain('PRUMO-MARCADOR-CICLO-s4')
+    expect(await page.content()).toContain(marcador(CICLO_OCULTO))
   })
 
   test('ver como visitante com data simulada muda o recorte', async ({ page }) => {
@@ -156,7 +165,9 @@ test.describe('avanço de ciclo', () => {
     await page.getByRole('button', { name: 'Aplicar', exact: true }).click()
 
     await page.goto('/sistema/cam')
-    await expect(page.getByRole('heading', { name: 'Funil de lançamento por área' })).toBeVisible()
+    await expect(
+      page.getByRole('heading', { name: 'Funil de lançamento por área' }),
+    ).toBeVisible()
     await expect(page.getByRole('button', { name: CONTROLE })).toHaveCount(0)
     // E nem a dica de que existe transição: o visitante não sabe que dá para agir.
     expect(await page.content()).not.toContain('Próxima etapa')
@@ -175,7 +186,8 @@ test.describe('o sistema, visto pelo admin', () => {
     const auditoria = page.locator('#tela-auditoria')
     await expect(auditoria).toHaveJSProperty('open', false)
 
-    await page.getByRole('navigation', { name: 'Telas do sistema' })
+    await page
+      .getByRole('navigation', { name: 'Telas do sistema' })
       .getByRole('link', { name: 'Auditoria' })
       .click()
 
@@ -193,7 +205,8 @@ test.describe('o sistema, visto pelo admin', () => {
     await page.getByRole('button', { name: 'Aplicar' }).click()
     await expect(page).toHaveURL(/gest_anonimo=1/)
 
-    await page.getByRole('navigation', { name: 'Telas do sistema' })
+    await page
+      .getByRole('navigation', { name: 'Telas do sistema' })
       .getByRole('link', { name: 'Auditoria' })
       .click()
 

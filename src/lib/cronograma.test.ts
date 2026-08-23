@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest'
+import { CARREGADORES } from '@/content/ciclos/registro'
 import {
   CRONOGRAMA,
   IDS_CICLOS,
@@ -71,6 +72,22 @@ describe('cronograma', () => {
     expect(cicloPorId('s5').rotulo).toBe('Semana 5: Arquitetura')
     expect(indiceDoCiclo('s1')).toBe(0)
     expect(indiceDoCiclo('sr2')).toBe(17)
+  })
+
+  /**
+   * "Ciclo de pausa" e "ciclo sem registro" precisam continuar sendo a mesma
+   * coisa. Os testes de ponta a ponta deduzem o segundo a partir do primeiro,
+   * porque o registry é `server-only` e não pode ser importado de lá. No dia em
+   * que uma semana normal ganhar carregador `null`, ou um imprensado ganhar
+   * registro próprio, é aqui que a dedução cai — e não numa falha obscura de
+   * Playwright dizendo que um marcador não foi encontrado.
+   */
+  it('ciclo sem registro é exatamente ciclo de pausa', () => {
+    const semRegistro = CRONOGRAMA.filter((c) => CARREGADORES[c.id] === null).map((c) => c.id)
+    const pausas = CRONOGRAMA.filter((c) => c.tipo === 'pausa').map((c) => c.id)
+
+    expect(semRegistro).toEqual(pausas)
+    expect(pausas.length).toBeGreaterThan(0)
   })
 
   it('tem marcos paralelos de ML e Direito com datas válidas', () => {

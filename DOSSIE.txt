@@ -2488,6 +2488,8 @@ Os porquês completos estão em `docs/decisoes.md`. Os títulos, aqui:
   - ADR-025 · A terceira lente era Nuvem, e o projeto estava chamando de Direito
   - ADR-026 · A copy fala com quem não é da área, e o selo de rascunho saiu de cena
   - ADR-027 · Modo claro por cookie, pintado no servidor
+  - ADR-028 · As fontes passam a ser arquivo versionado, não download de build
+  - ADR-029 · Teste de ponta a ponta não escreve data nem id de ciclo à mão
 
 ============================================================================================
 13.  COMO RODAR E COMO CONFERIR
