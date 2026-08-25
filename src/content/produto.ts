@@ -20,7 +20,7 @@ export const INSTITUICAO = {
 
 export const CLIENTE = {
   orgao: 'Secretaria de Saúde do Recife (SESAU)',
-  area: 'Comissão de Avaliação de Metas (CAM)',
+  area: 'Secretaria Executiva de Atenção Básica (SEAB), com a SECOGE',
 } as const
 
 /**

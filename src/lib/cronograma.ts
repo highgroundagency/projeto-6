@@ -66,6 +66,7 @@ export const CRONOGRAMA = [
       'Alternativas levantadas',
       'Critérios de decisão',
       'Ideia escolhida com justificativa',
+      'Reunião com o cliente registrada',
     ],
   },
   {

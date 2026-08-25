@@ -1,4 +1,4 @@
-import { Lista, Quadro, Tabela } from '@/components/conteudo'
+import { Lista, Nota, Quadro, Tabela } from '@/components/conteudo'
 import type { Documento, RegistroSemana } from '@/lib/registro/tipos'
 
 export const registro = {
@@ -128,12 +128,18 @@ export const documentos = [
         <Lista
           itens={[
             'O quê: um sistema web que substitui a planilha de consolidação da gratificação por desempenho.',
-            'Para quem: CAM, áreas técnicas que informam dados, gestores avaliados e auditoria.',
-            'Como: indicadores e regras cadastrados pela interface; regra versionada; cálculo por função pura; memória de cálculo exibida junto de cada resultado; trilha de auditoria imutável.',
+            'Para quem: os quatro atores que o cliente nomeou, coordenação da SEAB, administrador da plataforma, gerentes distritais e gerentes de unidade.',
+            'Como: subindicadores preenchidos pelas unidades; indicador calculado; régua (meta e peso) por tipo de unidade, dentro da regra versionada; cálculo por função pura; memória de cálculo exibida junto de cada resultado; trilha de auditoria imutável.',
             'Por que agora: o processo depende de poucas pessoas e não tem rastreabilidade, um erro só aparece depois do pagamento.',
             'Como saberemos que deu certo: qualquer número do resultado responde “de onde veio?” em um clique, e o mesmo ciclo recalculado devolve o mesmo valor.',
           ]}
         />
+        <div className="mt-3">
+          <Nota>
+            Atualizado depois da reunião com o cliente de 22/08 (ver o documento da Semana 3):
+            o domínio ganhou subindicadores, tipos de unidade e a rede por distrito.
+          </Nota>
+        </div>
       </>
     ),
   },
@@ -148,12 +154,14 @@ export const documentos = [
             {
               titulo: 'Dentro',
               itens: [
-                'Cadastro de ciclos, áreas, indicadores e regras de pontuação versionadas',
-                'Lançamento de valores pelas áreas técnicas, com validação e evidência',
-                'Motor de cálculo com memória de cálculo por indicador',
+                'Cadastro da rede (distritos, tipos, unidades) e do catálogo de indicadores com seus subindicadores',
+                'Régua por tipo de unidade (meta e peso na regra versionada)',
+                'Lançamento por subindicador pelas unidades, com evidência e janela de revisão de 5 dias',
+                'Motor de cálculo com memória composta, subindicador por subindicador',
+                'Avaliação por unidade e a distrital (média das unidades do distrito)',
                 'Estados do ciclo, da abertura à publicação, com trilha de auditoria',
-                'Consulta do próprio resultado pelo gestor e abertura de contestação',
-                'Painel agregado por área e exportação em CSV',
+                'Consulta do próprio resultado pelo gerente e abertura de contestação',
+                'Painel agregado por distrito e exportação em CSV',
                 'Analytics com os resultados dos modelos e o método declarado',
               ],
             },
@@ -183,123 +191,128 @@ export const documentos = [
           linhas={[
             [
               'Ciclo',
-              'Como CAM, quero abrir um ciclo de avaliação para que as áreas possam lançar dados',
+              'Como SEAB, quero abrir um ciclo de avaliação para que as unidades possam lançar dados',
               'M',
             ],
             [
               'Ciclo',
-              'Como CAM, quero definir a janela de lançamento para controlar o prazo',
+              'Como SEAB, quero definir a janela de lançamento, com a janela de revisão nos dias finais, para controlar o prazo',
               'M',
             ],
             [
               'Ciclo',
-              'Como CAM, quero avançar o estado do ciclo para refletir a etapa real do processo',
+              'Como SEAB, quero avançar o estado do ciclo para refletir a etapa real do processo',
               'M',
             ],
-            ['Ciclo', 'Como CAM, quero homologar o ciclo para congelar os resultados', 'M'],
+            ['Ciclo', 'Como SEAB, quero homologar o ciclo para congelar os resultados', 'M'],
             [
               'Ciclo',
-              'Como CAM, quero publicar o ciclo para que os gestores vejam seus resultados',
+              'Como SEAB, quero publicar o ciclo para que os gerentes vejam seus resultados',
               'S',
             ],
             [
-              'Indicadores',
-              'Como CAM, quero cadastrar indicadores com meta, peso e direção para refletir a portaria',
+              'Régua',
+              'Como SEAB, quero cadastrar indicadores compostos por subindicadores (índice ou razão) para refletir o processo real',
               'M',
             ],
             [
-              'Indicadores',
-              'Como CAM, quero definir se o indicador é maior-melhor ou menor-melhor para calcular corretamente',
+              'Régua',
+              'Como SEAB, quero definir quais indicadores valem para cada tipo de unidade, com meta e peso próprios, para respeitar o recorte de cada tipo',
               'M',
             ],
             [
-              'Indicadores',
-              'Como CAM, quero criar uma nova versão da regra para não alterar ciclos já fechados',
+              'Régua',
+              'Como SEAB, quero criar uma nova versão da regra para não alterar ciclos já fechados',
               'M',
             ],
             [
-              'Indicadores',
-              'Como CAM, quero ver o diff entre versões da regra para saber o que mudou',
+              'Régua',
+              'Como SEAB, quero ver o diff entre versões da regra para saber o que mudou',
               'S',
             ],
             [
-              'Indicadores',
-              'Como CAM, quero definir a vigência da regra para que cada ciclo use a versão certa',
+              'Régua',
+              'Como SEAB, quero definir a vigência da regra para que cada ciclo use a versão certa',
               'M',
             ],
             [
               'Lançamento',
-              'Como área técnica, quero lançar o valor do meu indicador para cumprir minha parte',
+              'Como gerente de unidade, quero lançar cada subindicador da minha unidade (valor, ou numerador e denominador) para cumprir minha parte',
               'M',
             ],
             [
               'Lançamento',
-              'Como área técnica, quero anexar a evidência do dado para sustentar o que informei',
+              'Como gerente de unidade, quero anexar a evidência do dado para sustentar o que informei',
               'M',
             ],
             [
               'Lançamento',
-              'Como área técnica, quero editar meu lançamento dentro do prazo para corrigir engano',
+              'Como gerente de unidade, quero corrigir um lançamento na janela de revisão, com o valor antigo guardado, para acertar engano',
               'M',
             ],
             [
               'Lançamento',
-              'Como área técnica, quero ver o histórico da minha área para acompanhar o que já enviei',
+              'Como gerente distrital, quero revisar os lançamentos das minhas unidades na janela de revisão para responder pelo distrito',
               'S',
             ],
             [
               'Lançamento',
-              'Como área técnica, quero ser avisada de valor fora do padrão para conferir antes de enviar',
+              'Como gerente de unidade, quero ser avisado de valor fora do padrão para conferir antes de enviar',
               'C',
             ],
             [
               'Resultado',
-              'Como gestor avaliado, quero ver meu score e minha faixa para saber meu resultado',
+              'Como gerente de unidade, quero ver o score e a faixa da minha unidade para saber meu resultado',
               'M',
             ],
             [
               'Resultado',
-              'Como gestor avaliado, quero abrir a memória de cálculo para entender de onde veio o número',
+              'Como gerente de unidade, quero abrir a memória de cálculo, com a composição de cada subindicador, para entender de onde veio o número',
               'M',
             ],
             [
               'Resultado',
-              'Como gestor avaliado, quero comparar meus ciclos para acompanhar minha evolução',
+              'Como gerente distrital, quero ver minha nota como média das unidades do distrito, com a composição aberta, para saber meu resultado',
+              'M',
+            ],
+            [
+              'Resultado',
+              'Como gerente, quero comparar meus ciclos para acompanhar minha evolução',
               'S',
             ],
             [
               'Resultado',
-              'Como gestor avaliado, quero abrir contestação para questionar um resultado',
+              'Como gerente, quero abrir contestação para questionar um resultado',
               'S',
             ],
             [
               'Resultado',
-              'Como CAM, quero responder a contestação para encerrar o questionamento com registro',
+              'Como SEAB, quero responder a contestação para encerrar o questionamento com registro',
               'S',
             ],
             [
               'Governança',
-              'Como auditoria, quero ver a linha do tempo de tudo que aconteceu para fiscalizar',
+              'Como administrador, quero ver a linha do tempo de tudo que aconteceu para dar suporte e fiscalizar',
               'M',
             ],
             [
               'Governança',
-              'Como auditoria, quero que nada possa ser apagado para que a trilha sirva de prova',
+              'Como administrador, quero que nada possa ser apagado para que a trilha sirva de prova',
               'M',
             ],
             [
               'Governança',
-              'Como CAM, quero ver agregados por área para enxergar o funil do ciclo',
+              'Como SEAB, quero ver agregados por distrito para enxergar o funil do ciclo',
               'S',
             ],
             [
               'Governança',
-              'Como CAM, quero exportar os resultados em CSV para usar em outros relatórios',
+              'Como SEAB, quero exportar os resultados em CSV para usar em outros relatórios',
               'C',
             ],
             [
               'Governança',
-              'Como CAM, quero ver o risco de não-atingimento no próximo ciclo para agir antes',
+              'Como SEAB, quero ver o risco de não-atingimento no próximo ciclo para agir antes',
               'C',
             ],
           ]}

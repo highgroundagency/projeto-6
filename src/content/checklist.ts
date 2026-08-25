@@ -92,6 +92,13 @@ export const CHECKLIST: readonly ItemChecklist[] = [
     status: 'feito',
     responsavel: 'gabriel',
   },
+  {
+    ciclo: 's3',
+    evidencia: 'Reunião com o cliente registrada',
+    status: 'feito',
+    responsavel: 'matheus',
+    link: '/registro#s3',
+  },
 
   { ciclo: 's4', evidencia: 'Proposta de solução', status: 'feito', responsavel: 'gabriel' },
   {

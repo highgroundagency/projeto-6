@@ -20,6 +20,7 @@ export const registro = {
       'Oito alternativas levantadas a partir da pesquisa da Semana 2.',
       'Matriz de impacto × esforço × aderência montada para comparar as alternativas.',
       'Critérios de decisão acordados antes da votação, para evitar escolha por preferência pessoal.',
+      'Primeira reunião com o representante do cliente realizada em 22/08, com ata registrada como documento desta semana.',
     ],
   },
 
@@ -42,6 +43,12 @@ export const registro = {
         porque:
           'Ataca a causa (regra implícita na planilha) e não o sintoma (planilha bonita), e cabe no semestre.',
       },
+      {
+        decisao:
+          'Remodelar o domínio do MVP já, com o que a reunião com o cliente revelou: subindicadores, tipos de unidade e a rede por distrito.',
+        porque:
+          'O que muda é o coração do modelo, não um detalhe de tela. Cada semana construída sobre o entendimento antigo custaria mais caro de desfazer.',
+      },
     ],
   },
 
@@ -50,6 +57,7 @@ export const registro = {
     validadoPor: 'fernando',
     conteudo: [
       'Registro da dinâmica real das três técnicas pendente, esta seção é preenchida na semana com fotos e artefatos.',
+      'A planilha real de cálculo prometida na reunião ainda não chegou: a composição dos subindicadores e a agregação distrital seguem como suposições declaradas, marcadas na ata.',
     ],
   },
 
@@ -57,6 +65,16 @@ export const registro = {
     selo: 'validado',
     validadoPor: 'fernando',
     conteudo: [
+      {
+        origem: 'cliente',
+        texto:
+          'O que se preenche são subindicadores (valor direto, ou numerador e denominador); o indicador é calculado. A régua depende do tipo da unidade, e a rede é secretaria, distrito sanitário e unidade, com o gerente distrital também avaliado.',
+      },
+      {
+        origem: 'cliente',
+        texto:
+          'Confirmações do que o MVP já fazia: ciclo mensal, regra versionada que muda de ano em ano, correção com histórico, visualização por nível de acesso e exportação de planilha. Pedido novo: janela de revisão de cinco dias no fim do mês.',
+      },
       {
         origem: 'equipe',
         texto:
@@ -115,11 +133,102 @@ export const registro = {
         rotulo: 'Matriz de priorização',
         url: '/registro#s3',
       },
+      {
+        tipo: 'documento',
+        rotulo: 'Reunião com o cliente registrada',
+        url: '#doc-s3-reuniao-cliente',
+      },
     ],
   },
 } satisfies RegistroSemana
 
 export const documentos = [
+  {
+    id: 'reuniao-cliente',
+    titulo: 'Reunião com o cliente (22/08)',
+    resumo: 'a ata sintetizada: o que a conversa confirmou, o que ela mudou no domínio, e o que ficou para validar.',
+    Conteudo: () => (
+      <>
+        <p>
+          Primeira conversa com o representante do órgão (SECOGE/SESAU) sobre o processo real
+          da gratificação. A ata abaixo é sintetizada e sem nomes de pessoa, seguindo a regra
+          de privacidade do projeto: papel importa, identidade não.
+        </p>
+
+        <div className="mt-4">
+          <Tabela
+            colunas={['O que o MVP já cobria', 'O que a reunião mudou']}
+            linhas={[
+              [
+                'Indicador preenchido direto, com meta e peso próprios',
+                'O que se preenche é o SUBINDICADOR: valor direto (índice) ou numerador e denominador (razão). O indicador é calculado a partir deles.',
+              ],
+              [
+                'Áreas técnicas planas, todas com a mesma régua',
+                'A régua depende do TIPO da unidade (USF, CAPS, UPA, policlínica): a depender do tipo, só alguns indicadores valem, e os pesos mudam.',
+              ],
+              [
+                'Um gestor por área',
+                'A rede é secretaria → distrito sanitário → unidade. O gerente distrital também é avaliado: a nota dele agrega as unidades do distrito.',
+              ],
+              [
+                'Correção dentro da janela de lançamento',
+                'Janela de REVISÃO de cinco dias no fim do mês, com o valor antigo guardado no histórico.',
+              ],
+              [
+                'Perfis CAM, área técnica, gestor e auditoria',
+                'Os quatro atores nomeados: gerente de unidade, gerente distrital, administrador da plataforma e coordenação da SEAB.',
+              ],
+            ]}
+          />
+        </div>
+
+        <div className="mt-4">
+          <Grade colunas={2}>
+            <Cartao titulo="Gerente de unidade" etiqueta="ator 1">
+              <p>
+                Dirige uma unidade de saúde. Preenche os subindicadores do mês e responde pela
+                nota da unidade, que segue a régua do tipo dela.
+              </p>
+            </Cartao>
+            <Cartao titulo="Gerente distrital" etiqueta="ator 2">
+              <p>
+                Acompanha as unidades do distrito (na rede real, cerca de trinta) e revisa
+                números na janela. Também é avaliado, pela agregação das unidades.
+              </p>
+            </Cartao>
+            <Cartao titulo="Administrador" etiqueta="ator 3">
+              <p>
+                Opera a plataforma: cadastros, acessos e trilha. Administra a ferramenta, não
+                as notas.
+              </p>
+            </Cartao>
+            <Cartao titulo="Coordenação da SEAB" etiqueta="ator 4">
+              <p>
+                Coordena o processo: define a régua, cobra os números, faz a conta, homologa,
+                publica e responde contestação.
+              </p>
+            </Cartao>
+          </Grade>
+        </div>
+
+        <p className="mt-4">
+          <strong>O que a conversa confirmou</strong> do que o MVP já fazia: ciclo mensal,
+          regra versionada que muda de ano em ano, correção com histórico, visualização por
+          nível de acesso, exportação de planilha e persistência com historicidade.
+        </p>
+
+        <div className="mt-3">
+          <Nota>
+            Suposições declaradas, a validar com a planilha real prometida: razão =
+            numerador ÷ denominador; indicador com vários subindicadores = média simples dos
+            apurados; nota distrital = média simples das unidades. Se a planilha disser
+            diferente, vira versão nova da regra, não reescrita do sistema.
+          </Nota>
+        </div>
+      </>
+    ),
+  },
   {
     id: 'tecnicas-ideacao',
     titulo: 'Roteiro das três técnicas',

@@ -238,18 +238,18 @@ export default async function Pagina() {
               <Conector />
               <AcaoDoFluxo
                 icone={<ClipboardCheck size={24} strokeWidth={1.5} />}
-                titulo="1 · cada área informa seus números"
+                titulo="1 · cada unidade informa seus números"
               >
-                quem tem o dado digita o valor e diz de onde ele veio, dentro do prazo.
+                quem tem o dado preenche os subindicadores e diz de onde cada número veio, dentro do prazo. nos dias finais, a janela de revisão deixa corrigir com histórico.
               </AcaoDoFluxo>
               <Conector />
-              <EstadoDoFluxo explicacao="o prazo acabou. a comissão confere os números antes da conta.">
+              <EstadoDoFluxo explicacao="o prazo acabou. a SEAB confere os números antes da conta.">
                 em validação
               </EstadoDoFluxo>
               <Conector />
               <AcaoDoFluxo
                 icone={<Scale size={24} strokeWidth={1.5} />}
-                titulo="2 · a comissão faz a conta"
+                titulo="2 · a SEAB faz a conta"
               >
                 cada número vira pontos, e os pontos viram uma nota de 0 a 100. a conta fica
                 aberta para qualquer um conferir.
@@ -258,19 +258,19 @@ export default async function Pagina() {
                 </span>
               </AcaoDoFluxo>
               <Conector />
-              <EstadoDoFluxo explicacao="a conta foi feita e a comissão aprovou o resultado.">
+              <EstadoDoFluxo explicacao="a conta foi feita e a SEAB aprovou o resultado.">
                 homologado
               </EstadoDoFluxo>
               <Conector />
               <AcaoDoFluxo
                 icone={<ScrollText size={24} strokeWidth={1.5} />}
-                titulo="3 · o gestor confere a nota"
+                titulo="3 · o gerente confere a nota"
               >
                 vê a conta linha por linha. se discordar, pede revisão no prazo e recebe
                 resposta por escrito.
               </AcaoDoFluxo>
               <Conector />
-              <EstadoDoFluxo explicacao="o resultado está no ar: cada gestor vê a própria nota.">
+              <EstadoDoFluxo explicacao="o resultado está no ar: cada gerente vê a nota da sua unidade.">
                 publicado
               </EstadoDoFluxo>
             </Fluxo>
