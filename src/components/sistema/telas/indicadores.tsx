@@ -1,3 +1,4 @@
+import { GitCompareArrows, Ruler, Scale } from 'lucide-react'
 import { Num } from '@/components/base/num'
 import { Etiqueta } from '@/components/base/selo'
 import { AcoesDaTela, Aviso, Painel, SomenteLeitura } from '@/components/sistema/base'
@@ -104,7 +105,7 @@ export async function TelaIndicadores() {
 
       <Painel
         alvo="ind-catalogo"
-        titulo="Catálogo de indicadores"
+        titulo="Catálogo de indicadores" icone={Ruler}
         descricao={`Tudo o que é medido: ${dados.indicadores.length} indicadores em ${dados.areas.length} áreas, cada um com meta, peso e fonte.`}
       >
         <div className="space-y-5">
@@ -158,7 +159,7 @@ export async function TelaIndicadores() {
 
       <Painel
         alvo="ind-regras"
-        titulo="Regras de pontuação"
+        titulo="Regras de pontuação" icone={Scale}
         descricao="A tabela que transforma resultado em pontos. Mudar a regra cria uma versão nova; a antiga fica guardada, para que a conta de um mês fechado sempre possa ser refeita igual."
       >
         <ul className="space-y-3">
@@ -187,7 +188,7 @@ export async function TelaIndicadores() {
       {v1 && v2 ? (
         <Painel
           alvo="ind-diff"
-          titulo={`Diff: v${v1.versao} → v${v2.versao}`}
+          titulo={`Diff: v${v1.versao} → v${v2.versao}`} icone={GitCompareArrows}
           descricao="O quadro do que mudou de uma versão da regra para a outra, faixa por faixa."
         >
           <DiffDeVersoes anterior={v1} nova={v2} />

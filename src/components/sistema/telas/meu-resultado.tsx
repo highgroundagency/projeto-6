@@ -1,3 +1,4 @@
+import { MessageSquareWarning, TrendingUp, UserRound } from 'lucide-react'
 import { Botao, estiloBotao } from '@/components/base/botao'
 import { Num } from '@/components/base/num'
 import { Aviso, Painel, Preservar } from '@/components/sistema/base'
@@ -28,7 +29,7 @@ export async function TelaMeuResultado({ ctx }: PropsTela) {
     <>
       <Painel
         alvo="res-seletor"
-        titulo="Gestor avaliado"
+        titulo="Gestor avaliado" icone={UserRound}
         descricao="Neste protótipo você escolhe um gestor de exemplo. Na versão final, cada pessoa entraria com o próprio login e veria só a si."
       >
         <form
@@ -100,7 +101,7 @@ export async function TelaMeuResultado({ ctx }: PropsTela) {
 
           <Painel
             alvo="res-evolucao"
-            titulo="Evolução mês a mês"
+            titulo="Evolução mês a mês" icone={TrendingUp}
             descricao="A nota mês a mês. A barra laranja é o mês escolhido."
           >
             <ul className="space-y-2">
@@ -130,7 +131,7 @@ export async function TelaMeuResultado({ ctx }: PropsTela) {
 
           <Painel
             alvo="res-contestar"
-            titulo="Discorda da nota?"
+            titulo="Discorda da nota?" icone={MessageSquareWarning}
             descricao="O pedido de revisão fica registrado e recebe resposta da comissão por escrito."
           >
             {podeContestar ? (

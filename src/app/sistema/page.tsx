@@ -60,7 +60,7 @@ function Sumario({
     <nav
       id="sumario"
       aria-label="Telas do sistema"
-      className="sticky top-0 z-30 -mx-5 border-y border-linha bg-fundo/95 px-5 py-2.5 backdrop-blur sm:-mx-8 sm:px-8"
+      className="sticky top-0 z-30 -mx-5 border-b border-linha bg-fundo/90 px-5 py-2.5 backdrop-blur sm:-mx-8 sm:px-8"
     >
       {/* Rola na horizontal enquanto a tela é estreita; a partir de sm as
           pílulas quebram em linha, para nenhuma ficar cortada na borda. */}
@@ -73,11 +73,13 @@ function Sumario({
               <a
                 href={linkDaTela(params, feature.id as FeatureId)}
                 aria-current={atual ? 'true' : undefined}
-                className={`inline-flex items-center gap-2 border px-3 py-1.5 text-xs whitespace-nowrap transition-colors hover:border-acento hover:text-acento ${
-                  atual ? 'border-acento text-acento' : 'border-linha'
+                className={`inline-flex items-center gap-2 rounded-full px-3.5 py-1.5 text-[0.8125rem] font-medium whitespace-nowrap transition-colors ${
+                  atual
+                    ? 'bg-acento text-ink'
+                    : 'bg-superficie text-apagado hover:text-texto'
                 }`}
               >
-                <Icone aria-hidden size={15} strokeWidth={1.5} />
+                <Icone aria-hidden size={15} strokeWidth={1.8} />
                 {feature.rotulo}
               </a>
             </li>
@@ -251,8 +253,8 @@ export default async function SistemaCompleto({
                 <h2 id="titulo-telas" className="sr-only">
                   Telas
                 </h2>
-                <p className="text-sm lowercase text-apagado">
-                  clique num título e a tela abre aqui mesmo. nada abre em outra página.
+                <p className="text-sm text-apagado">
+                  Clique num título e a tela abre aqui mesmo. Nada abre em outra página.
                 </p>
 
                 <div className="mt-4">

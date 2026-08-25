@@ -73,21 +73,23 @@ function DestaqueDoAlvo({ alvo, ordem }: { alvo: string; ordem: number }) {
         position: relative;
         outline: 2px solid var(--color-acento);
         outline-offset: 6px;
+        border-radius: 14px;
         scroll-margin-top: 4.5rem;
         scroll-margin-bottom: 12rem;
       }
       #alvo-${seguro}::after {
         content: "passo ${String(ordem).padStart(2, '0')}";
         position: absolute;
-        top: -0.75rem;
+        top: -0.85rem;
         left: 0.75rem;
-        padding: 0.1rem 0.5rem;
+        padding: 0.12rem 0.6rem;
+        border-radius: 999px;
         background: var(--color-acento);
         color: var(--color-ink);
-        font-family: var(--fonte-mono), monospace;
-        font-size: 0.625rem;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
+        font-family: var(--font-sistema, var(--fonte-mono)), sans-serif;
+        font-size: 0.7rem;
+        font-weight: 600;
+        letter-spacing: 0;
         white-space: nowrap;
       }
     `}</style>
@@ -125,7 +127,7 @@ function BarraDoGuia({
   const feature = passo.tela ? featurePorId(passo.tela) : null
 
   return (
-    <div className="sem-impressao sticky bottom-0 z-40 mt-6 border-t-2 border-acento bg-fundo">
+    <div className="sem-impressao sticky bottom-0 z-40 mt-6 border-t border-linha bg-cartao/95 backdrop-blur">
       {/* Trilho de progresso: uma barra por passo, as vencidas em acento. */}
       <ol aria-hidden className="flex gap-1 pt-px">
         {Array.from({ length: total }, (_, i) => (
@@ -228,7 +230,7 @@ export function PalcoDoTutorial({
       {passo.alvo ? <DestaqueDoAlvo alvo={passo.alvo} ordem={indice} /> : null}
 
       <div id="palco" className="scroll-mt-4">
-        <div className="mt-6 border border-linha bg-fundo">
+        <div className="mt-6 rounded-2xl border border-linha bg-cartao shadow-[0_1px_2px_var(--color-sombra)]">
           <div className="flex items-center gap-3 border-b-2 border-acento px-4 py-4 sm:gap-4 sm:px-5">
             <Icone aria-hidden size={22} strokeWidth={1.5} className="shrink-0 text-acento" />
             <span className="min-w-0 flex-1">

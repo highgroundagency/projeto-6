@@ -34,7 +34,7 @@ export function Tela({
     <details
       id={idDaTela(feature.id as FeatureId)}
       open={aberta}
-      className="group scroll-mt-20 border border-linha bg-fundo [&+&]:mt-[-1px]"
+      className="group scroll-mt-20 overflow-hidden rounded-2xl border border-linha bg-cartao shadow-[0_1px_2px_var(--color-sombra)] [&+&]:mt-3"
     >
       <summary className="flex cursor-pointer list-none items-center gap-3 px-4 py-4 transition-colors hover:bg-superficie sm:gap-4 sm:px-5 [&::-webkit-details-marker]:hidden">
         {/* Apagado fechado, laranja aberto. Regra da casa nº 9: oito ícones em
@@ -62,12 +62,12 @@ export function Tela({
         />
       </summary>
 
-      <div className="border-t-2 border-acento px-4 py-5 sm:px-5">
+      <div className="border-t border-linha px-4 py-5 sm:px-5">
         {children}
 
         {/* Volta ao sumário sem exigir rolagem manual: as telas são longas. */}
         <p className="mt-6 border-t border-linha pt-4 text-xs">
-          <a href="#sumario" className="lowercase hover:text-acento">
+          <a href="#sumario" className="text-apagado hover:text-acento">
             ↑ voltar ao sumário
           </a>
         </p>

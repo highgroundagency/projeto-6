@@ -46,12 +46,18 @@ Site do Projeto 6 da CESAR School (2026.2, Equipe 2). Duas camadas:
    lugares por tela: número grande, chamada sólida e pílula/ícone do fluxo. Se precisar de
    mais uma cor para diferenciar alguma coisa, use hairline e caixa alta, não cor.
 
-## A identidade em uma linha
+## A identidade em uma linha (melhor: em duas)
 
-Folha de especificação, no escuro por padrão e no papel a um clique: tudo monoespaçado e minúsculo, blocos delimitados por
+**O site** é folha de especificação, no escuro por padrão e no papel a um clique: tudo monoespaçado e minúsculo, blocos delimitados por
 hairline de 1px que se encostam como tabela (`.bloco`, com `margin-top: -1px`), raio zero
 exceto em pílulas, e o gradiente granulado como única imagem do site. Caixa alta só em rótulo
 de estado ou etapa. Os detalhes e os contrastes conferidos estão na ADR-016.
+
+**O /sistema** tem pele própria (ADR-031), ligada por `data-pele="sistema"` no layout: sans
+do aparelho em caixa natural, fundo neutro, cartões arredondados com sombra sutil,
+botões-pílula e ícone nos painéis. É remapeamento de token, não segundo design system: os
+valores `--color-sis-*` moram nos DOIS blocos de tema e passam pelo mesmo teste de
+contraste. As regras 10 e 11 valem igual nas duas peles.
 
 ## Idioma
 

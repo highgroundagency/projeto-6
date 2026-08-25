@@ -1,3 +1,4 @@
+import { BrainCircuit, SearchCheck, Shapes, TrendingDown } from 'lucide-react'
 import { Num } from '@/components/base/num'
 import { Etiqueta } from '@/components/base/selo'
 import { Aviso, Painel } from '@/components/sistema/base'
@@ -103,7 +104,7 @@ export async function TelaAnalytics() {
           return (
             <Painel
               key={m.modelo}
-              titulo={ROTULO_MODELO[m.modelo] ?? m.modelo}
+              titulo={ROTULO_MODELO[m.modelo] ?? m.modelo} icone={BrainCircuit}
               descricao={`${m.pergunta}: ${m.metodo}`}
             >
               {supera === false ? (
@@ -199,7 +200,7 @@ export async function TelaAnalytics() {
 
       <Painel
         alvo="ana-risco"
-        titulo="Áreas com risco de não bater a meta"
+        titulo="Áreas com risco de não bater a meta" icone={TrendingDown}
         descricao="Como é calculado: a média do que cada área atingiu nos meses anteriores. Quanto menor a média, maior o risco."
       >
         <ul className="divide-y divide-linha border-y border-linha">
@@ -227,7 +228,7 @@ export async function TelaAnalytics() {
 
       <Painel
         alvo="ana-suspeitos"
-        titulo="Números que parecem erro de digitação"
+        titulo="Números que parecem erro de digitação" icone={SearchCheck}
         descricao="Como é achado: valor 5 vezes maior ou 5 vezes menor que a meta. O sistema só avisa; quem decide é gente."
       >
         {suspeitos.length === 0 ? (
@@ -266,14 +267,14 @@ export async function TelaAnalytics() {
 
       <Painel
         alvo="ana-perfis"
-        titulo="O jeito de cada área"
+        titulo="O jeito de cada área" icone={Shapes}
         descricao="Como é feito: com a média e a variação do resultado de cada área, mês a mês."
       >
         <ul className="grid gap-px border border-linha bg-linha sm:grid-cols-2">
           {perfis.map(({ area, perfil }) => (
             <li
               key={area.id}
-              className="flex items-baseline justify-between gap-3 bg-fundo px-3 py-2 text-sm"
+              className="flex items-baseline justify-between gap-3 bg-cartao px-3 py-2 text-sm"
             >
               <span>{area.nome}</span>
               <span className="rotulo shrink-0">{perfil}</span>

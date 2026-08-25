@@ -1,3 +1,4 @@
+import { Building2, PencilLine } from 'lucide-react'
 import { Botao } from '@/components/base/botao'
 import { Num } from '@/components/base/num'
 import { Etiqueta } from '@/components/base/selo'
@@ -53,7 +54,7 @@ export async function TelaLancamento({ ctx }: PropsTela) {
 
       <Painel
         alvo="lanc-area"
-        titulo="Área"
+        titulo="Área" icone={Building2}
         descricao="Escolha a sua área. Cada área informa apenas os próprios números."
       >
         <form
@@ -99,7 +100,7 @@ export async function TelaLancamento({ ctx }: PropsTela) {
 
       <Painel
         alvo="lanc-formularios"
-        titulo={`Indicadores de ${area.nome}`}
+        titulo={`Indicadores de ${area.nome}`} icone={PencilLine}
         descricao="O que já foi enviado aparece preenchido. Corrigir cria um registro novo, e o valor antigo fica guardado."
       >
         <div className="space-y-3">

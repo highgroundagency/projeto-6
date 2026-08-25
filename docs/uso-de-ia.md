@@ -48,6 +48,7 @@ Regras que a equipe adotou:
 | 23/08/2026 | s3 | Claude (Anthropic) | Diagnóstico das falhas de CI a partir dos logs do Actions e correção das duas causas: fontes passam a ser arquivo versionado lido por `next/font/local` (ADR-028) e testes de ponta a ponta deixam de embutir data e id de ciclo (ADR-029) | `src/app/layout.tsx`, `src/fontes/`, `src/lib/fontes.test.ts`, `e2e/cronograma.ts`, `e2e/*.spec.ts`, `src/lib/cronograma.test.ts` | pendente |
 | 25/08/2026 | s3 | Claude (Anthropic) | Guia do projeto em linguagem simples para alinhamento da equipe, escrito a partir do conteúdo já versionado | `PROJETO-EXPLICADO.txt` | pendente |
 | 25/08/2026 | s3 | Claude (Anthropic) | Link da vitrine pessoal: visão completa por URL com chave, cookie assinado, faixa própria e análise de superfície de ataque (ADR-030) | `src/lib/vitrine-pessoal.ts`, `src/app/vitrine/`, `src/lib/visao.ts`, `src/components/base/faixa-admin.tsx`, `docs/seguranca.md`, `docs/releases.md` | pendente |
+| 25/08/2026 | s3 | Claude (Anthropic) | Pele própria do /sistema: sans do aparelho, cartões arredondados, ícones nos painéis e oito pares novos de contraste testados (ADR-031) | `src/app/globals.css`, `src/app/sistema/`, `src/components/sistema/`, `src/lib/contraste.test.ts` | pendente |
 
 ## O que a IA **não** fez
 

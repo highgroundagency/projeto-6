@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react'
+import { Check, ChevronRight, CircleCheck, Info, TriangleAlert, type LucideIcon } from 'lucide-react'
 import { Num } from '@/components/base/num'
 import { Etiqueta } from '@/components/base/selo'
 import { ORDEM_ESTADOS, ROTULO_ESTADO, type EstadoCiclo } from '@/lib/calculo/tipos'
@@ -55,12 +56,15 @@ export function Preservar({
 export function Painel({
   titulo,
   descricao,
+  icone: Icone,
   children,
   className,
   alvo,
 }: {
   titulo: string
   descricao?: string
+  /** Símbolo do painel, num chip neutro: o acento fica para o que age. */
+  icone?: LucideIcon
   children: ReactNode
   className?: string
   /**
@@ -74,13 +78,26 @@ export function Painel({
   return (
     <section
       id={alvo ? idDoAlvo(alvo) : undefined}
-      className={cn('mt-6 border border-linha bg-fundo first:mt-0', className)}
+      className={cn(
+        'mt-4 rounded-2xl border border-linha bg-cartao shadow-[0_1px_2px_var(--color-sombra)] first:mt-0',
+        className,
+      )}
     >
-      <header className="border-b border-linha px-4 py-3">
-        <h2 className="fonte-display text-lg">{titulo}</h2>
-        {descricao ? <p className="mt-0.5 text-sm text-apagado">{descricao}</p> : null}
+      <header className="flex items-start gap-3 px-5 pt-4">
+        {Icone ? (
+          <span
+            aria-hidden
+            className="mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-lg bg-superficie text-apagado"
+          >
+            <Icone size={17} strokeWidth={1.8} />
+          </span>
+        ) : null}
+        <span className="min-w-0">
+          <h2 className="fonte-display text-lg leading-snug">{titulo}</h2>
+          {descricao ? <p className="mt-0.5 text-sm text-apagado">{descricao}</p> : null}
+        </span>
       </header>
-      <div className="px-4 py-4">{children}</div>
+      <div className="px-5 py-4">{children}</div>
     </section>
   )
 }
@@ -89,23 +106,22 @@ export function Painel({
 export function TrilhoEstados({ estado }: { estado: EstadoCiclo }) {
   const atual = ORDEM_ESTADOS.indexOf(estado)
   return (
-    <ol className="flex flex-wrap items-center gap-1.5">
+    <ol className="flex flex-wrap items-center gap-x-1 gap-y-1.5">
       {ORDEM_ESTADOS.map((passo, i) => (
-        <li key={passo} className="flex items-center gap-1.5">
+        <li key={passo} className="flex items-center gap-1">
           <span
             className={cn(
-              'rotulo border px-2 py-1',
-              i < atual && 'border-linha text-apagado',
-              i === atual && 'border-acento bg-acento-fraco text-texto',
+              'rotulo inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1',
+              i < atual && 'border-transparent bg-superficie text-apagado',
+              i === atual && 'border-transparent bg-acento-fraco text-acento',
               i > atual && 'border-dashed border-linha text-apagado',
             )}
           >
+            {i < atual ? <Check aria-hidden size={13} strokeWidth={2.5} /> : null}
             {ROTULO_ESTADO[passo]}
           </span>
           {i < ORDEM_ESTADOS.length - 1 ? (
-            <span aria-hidden className="text-apagado">
-              →
-            </span>
+            <ChevronRight aria-hidden size={14} strokeWidth={2} className="text-apagado" />
           ) : null}
         </li>
       ))}
@@ -118,11 +134,11 @@ export function Barra({ valor, total }: { valor: number; total: number }) {
   return (
     <div className="flex items-center gap-2">
       <div
-        className="h-2 w-full max-w-40 border border-linha bg-superficie"
+        className="h-2 w-full max-w-40 overflow-hidden rounded-full bg-superficie"
         role="img"
         aria-label={`${valor} de ${total}`}
       >
-        <div className="h-full bg-acento" style={{ width: `${porcentagem}%` }} />
+        <div className="h-full rounded-full bg-acento" style={{ width: `${porcentagem}%` }} />
       </div>
       <Num className="text-xs whitespace-nowrap">
         {valor}/{total}
@@ -138,16 +154,18 @@ export function Aviso({
   tom?: 'neutro' | 'ok' | 'alerta'
   children: ReactNode
 }) {
+  const Icone = tom === 'ok' ? CircleCheck : tom === 'alerta' ? TriangleAlert : Info
   return (
     <p
       className={cn(
-        'border px-3 py-2 text-sm',
+        'flex items-start gap-2.5 rounded-xl border px-3.5 py-2.5 text-sm',
         tom === 'ok' && 'border-ok/40 bg-ok/10 text-ok',
         tom === 'alerta' && 'border-alerta/40 bg-alerta/10 text-alerta',
         tom === 'neutro' && 'border-linha bg-superficie text-apagado',
       )}
     >
-      {children}
+      <Icone aria-hidden size={17} strokeWidth={1.9} className="mt-0.5 shrink-0" />
+      <span className="min-w-0">{children}</span>
     </p>
   )
 }

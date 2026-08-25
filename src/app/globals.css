@@ -52,6 +52,32 @@
   --font-display: var(--fonte-display), ui-monospace, monospace;
   --font-mono: var(--fonte-mono), ui-monospace, 'SFMono-Regular', monospace;
   --font-sans: var(--fonte-mono), ui-monospace, 'SFMono-Regular', monospace;
+
+  /* -------------------------------------------------------------------------
+     A PELE DO SISTEMA (ADR-031). O /sistema tem identidade própria: sans do
+     aparelho, cartões arredondados sobre fundo neutro, à la Apple. Os valores
+     moram AQUI (e no bloco claro) para obedecer a regra 10: cor nova entra nos
+     dois blocos, e o teste de contraste mede as duas paletas.
+  ------------------------------------------------------------------------- */
+
+  /* Cartão no tema do site: igual ao fundo (a profundidade vem da hairline).
+     A pele do sistema o remapeia para o cinza de cartão. */
+  --color-cartao: #0a0b0a;
+  /* Sombra dos cartões; no escuro precisa de mais peso para existir. */
+  --color-sombra: rgb(0 0 0 / 0.55);
+
+  --color-sis-fundo: #0d0d0f;
+  --color-sis-cartao: #1c1c1e;
+  --color-sis-campo: #2a2a2e;
+  --color-sis-linha: #313136;
+  --color-sis-linha-alta: #4b4b52;
+  --color-sis-texto: #f5f5f7;
+  --color-sis-apagado: #a3a3ab;
+  /* O laranja clareia um degrau: sobre o cartão #1c1c1e o tom do site daria
+     4,3:1 e reprovaria em corpo de texto. Continua o MESMO acento, ajustado
+     para a superfície, como o claro já faz (ADR-027). */
+  --color-sis-acento: #fb6b1f;
+  --color-sis-acento-fraco: #3a1c0b;
 }
 
 /* ---------------------------------------------------------------------------
@@ -94,6 +120,19 @@
 
   --color-grao-1: #f6ddc9;
   --color-grao-2: #fbeee2;
+
+  --color-cartao: #faf8f4;
+  --color-sombra: rgb(24 20 12 / 0.08);
+
+  --color-sis-fundo: #f5f5f7;
+  --color-sis-cartao: #ffffff;
+  --color-sis-campo: #f0f0f3;
+  --color-sis-linha: #e4e4e9;
+  --color-sis-linha-alta: #c8c8cf;
+  --color-sis-texto: #1d1d1f;
+  --color-sis-apagado: #5d5d66;
+  --color-sis-acento: #a83c05;
+  --color-sis-acento-fraco: #fdeadd;
 }
 
 /* ---------------------------------------------------------------------------
@@ -424,4 +463,107 @@ body {
   .sem-impressao {
     display: none !important;
   }
+}
+
+/* ---------------------------------------------------------------------------
+   A PELE DO SISTEMA (ADR-031)
+
+   O /sistema fala com servidor público, não com banca técnica: aqui a letra é
+   a sans do próprio aparelho, os cartões são arredondados e o fundo é neutro.
+   Tudo por REMAPEAMENTO de token: os utilitários continuam os mesmos
+   (bg-fundo, border-linha, text-apagado), e é o escopo que troca o valor.
+   Nenhuma cor literal aqui dentro: só var(), então os dois temas funcionam.
+
+   Estas regras ficam FORA de @layer de propósito: CSS sem camada vence
+   utilitário do Tailwind, e é isso que permite reestilizar sem tocar no site.
+--------------------------------------------------------------------------- */
+
+[data-pele='sistema'] {
+  --color-fundo: var(--color-sis-fundo);
+  --color-cartao: var(--color-sis-cartao);
+  --color-superficie: var(--color-sis-campo);
+  --color-linha: var(--color-sis-linha);
+  --color-linha-alta: var(--color-sis-linha-alta);
+  --color-texto: var(--color-sis-texto);
+  --color-apagado: var(--color-sis-apagado);
+  --color-acento: var(--color-sis-acento);
+  --color-acento-fraco: var(--color-sis-acento-fraco);
+
+  --font-sistema: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI',
+    Roboto, 'Helvetica Neue', 'Noto Sans', Arial, sans-serif;
+
+  font-family: var(--font-sistema);
+  font-size: 1rem;
+  line-height: 1.55;
+  letter-spacing: -0.011em;
+  color: var(--color-texto);
+  font-feature-settings: 'kern' 1;
+}
+
+/* Títulos em caixa natural e peso alto; o minúsculo é identidade do site. */
+[data-pele='sistema'] :where(.fonte-display) {
+  font-family: var(--font-sistema);
+  font-weight: 700;
+  letter-spacing: -0.022em;
+  text-transform: none;
+}
+
+[data-pele='sistema'] :where(.rotulo) {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+[data-pele='sistema'] :where(.pilula) {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
+  background: var(--color-superficie);
+  border-color: transparent;
+  padding: 0.3rem 0.8rem;
+}
+
+[data-pele='sistema'] :where(.pilula-acento) {
+  background: var(--color-acento-fraco);
+  color: var(--color-acento);
+}
+
+[data-pele='sistema'] :where(.numero, .ordinal) {
+  font-family: var(--font-sistema);
+}
+
+/* Campos no desenho de formulário da pele: preenchimento, canto, sem borda.
+   16px de corpo evita o zoom automático do iOS ao focar. */
+[data-pele='sistema']
+  :where(input:not([type='checkbox'], [type='radio'], [type='hidden']), select, textarea) {
+  border-radius: 12px;
+  background-color: var(--color-superficie);
+  border-color: transparent;
+  padding: 0.55rem 0.85rem;
+  font-size: 1rem;
+  color: var(--color-texto);
+}
+
+[data-pele='sistema'] :where(input, select, textarea):focus-visible {
+  outline: 2px solid var(--color-acento);
+  outline-offset: 1px;
+}
+
+[data-pele='sistema'] :where(input[type='checkbox']) {
+  width: 1.15rem;
+  height: 1.15rem;
+}
+
+/* Botões viram pílula, em caixa natural. */
+[data-pele='sistema'] :where(button, a[class~='justify-center']) {
+  border-radius: 999px;
+  text-transform: none;
+  letter-spacing: -0.01em;
+}
+
+/* Toda caixa com borda ganha canto arredondado por padrão da pele. */
+[data-pele='sistema'] :where(div, section, form, ol, ul, details, p)[class~='border'] {
+  border-radius: 14px;
 }

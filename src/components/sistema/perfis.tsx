@@ -38,7 +38,7 @@ export function ExplicacaoDosPerfis({
         return (
           <article
             key={id}
-            className={`border bg-fundo px-4 py-4 [&+&]:mt-[-1px] sm:px-5 ${
+            className={`rounded-2xl border bg-cartao px-4 py-4 [&+&]:mt-3 sm:px-5 ${
               ativo ? 'border-acento' : 'border-linha'
             }`}
           >

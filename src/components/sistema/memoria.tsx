@@ -18,7 +18,7 @@ export function MemoriaDeCalculo({ avaliacao }: { avaliacao: Avaliacao }) {
   const { memoria } = avaliacao
 
   return (
-    <details className="group border border-linha bg-fundo">
+    <details className="group overflow-hidden rounded-xl border border-linha bg-cartao">
       <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-4 py-3 hover:bg-superficie">
         <span>
           <span className="fonte-display text-base">Memória de cálculo</span>
@@ -156,7 +156,7 @@ export function MemoriaDeCalculo({ avaliacao }: { avaliacao: Avaliacao }) {
 
 export function CartaoScore({ avaliacao }: { avaliacao: Avaliacao }) {
   return (
-    <div className="flex flex-wrap items-end justify-between gap-4 border border-linha bg-fundo p-5">
+    <div className="flex flex-wrap items-end justify-between gap-4 rounded-xl border border-linha bg-superficie p-5">
       <div>
         <p className="rotulo">Nota do mês</p>
         <p className="numero mt-1 text-5xl font-semibold leading-none">

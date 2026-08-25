@@ -16,7 +16,10 @@ export default async function LayoutSistema({ children }: { children: React.Reac
   const tema = await temaAtual()
 
   return (
-    <>
+    // O atributo liga a pele do sistema (ADR-031): sans do aparelho, cartões
+    // arredondados, fundo neutro. A faixa de admin/vitrine fica dentro do
+    // envelope e herda a pele: cromo acompanha a superfície em que está.
+    <div data-pele="sistema" className="min-h-dvh bg-fundo text-texto">
       <FaixaAdmin visao={visao} />
 
       {/* Identidade e seletor: rolam junto com a página. O que fica grudado é o
@@ -58,6 +61,6 @@ export default async function LayoutSistema({ children }: { children: React.Reac
         {children}
         <Rodape className="mt-10" />
       </main>
-    </>
+    </div>
   )
 }

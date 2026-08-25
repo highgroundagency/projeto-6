@@ -36,7 +36,7 @@ export function Tutorial({
   if (passos.length === 0) return null
 
   return (
-    <div className="border border-linha bg-fundo">
+    <div className="rounded-2xl border border-linha bg-cartao shadow-[0_1px_2px_var(--color-sombra)]">
       <div className="flex flex-col gap-4 px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-5">
         <div className="flex items-center gap-3 sm:gap-4">
           <GraduationCap

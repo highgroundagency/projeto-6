@@ -721,3 +721,37 @@ o portador do cookie, como já ficava para todos com a janela aberta; o script d
 roda sem cookie e continua provando o comportamento público. A análise de superfície de
 ataque, incluindo a assimetria de revogação (trocar a chave não mata cookies já emitidos;
 trocar o segredo mata), está em docs/seguranca.md.
+
+---
+
+## ADR-031 · O sistema ganhou pele própria: sans do aparelho, cartões, fundo neutro
+
+**Contexto.** A identidade "folha de especificação" (ADR-016) nasceu para o registro: uma
+banca técnica lendo um artefato acadêmico. O /sistema tem outro leitor, o servidor público
+que informa números e confere a própria nota, e o feedback de uso foi direto: tudo
+monoespaçado e minúsculo cansa, os formulários pareciam confusos, faltava símbolo, faltava
+modernidade. A referência pedida foi a Apple.
+
+**Decisão.** O /sistema tem identidade visual própria, ligada por um atributo de escopo
+(`data-pele="sistema"`) no layout. A pele: letra do próprio aparelho (SF no iPhone e no Mac,
+Segoe no Windows, Roboto no Android), em caixa natural; fundo neutro com cartões
+arredondados e sombra sutil; campos de formulário com preenchimento e canto; botões-pílula;
+ícone em cada painel e em cada aviso; trilho de etapas com marca de concluído. O site
+continua folha de especificação: são duas peles, uma por camada, cada uma com o leitor
+certo.
+
+**Como, sem bifurcar o código.** Por REMAPEAMENTO de token: a pele redefine
+`--color-fundo`, `--color-linha` etc. para os valores `--color-sis-*`, e os utilitários
+continuam os mesmos. Os valores moram nos dois blocos de tema de `globals.css`, então a
+regra 10 continua valendo (cor nova nos dois blocos, contraste medido por teste: oito pares
+novos da pele, AA nos dois temas). A regra 11 também: um acento só, o laranja, que na pele
+escura clareia um degrau (`#fb6b1f`) porque o tom do site daria 4,3:1 sobre o cartão
+`#1c1c1e`, exatamente como o claro já fazia desde a ADR-027. As regras de escopo ficam fora
+de `@layer` de propósito: CSS sem camada vence utilitário do Tailwind, e é isso que permite
+reestilizar sem tocar em componente do site.
+
+**Consequência.** Nenhuma fonte nova baixada (a sans do aparelho custa zero byte e zero
+rede, coerente com a ADR-028). O tutorial, os gates e as jornadas continuam os mesmos: as
+88 passam sem mudança de comportamento. O custo aceito: a partir daqui, quem mexe no
+/sistema pensa em DUAS aparências para o mesmo componente compartilhado, e o teste de
+contraste é quem segura as duas paletas no chão.

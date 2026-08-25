@@ -1,3 +1,4 @@
+import { MessageSquarePlus, MessagesSquare } from 'lucide-react'
 import { Botao } from '@/components/base/botao'
 import { Num } from '@/components/base/num'
 import { Etiqueta } from '@/components/base/selo'
@@ -51,7 +52,7 @@ export async function TelaContestacao({ ctx }: PropsTela) {
 
       <Painel
         alvo="cont-abrir"
-        titulo="Pedir revisão da nota"
+        titulo="Pedir revisão da nota" icone={MessageSquarePlus}
         descricao="O pedido não muda a nota na hora: ele abre uma análise, que fica registrada e recebe resposta por escrito."
       >
         <form action="/api/sistema/contestacao" method="post" className="space-y-3">
@@ -144,7 +145,7 @@ export async function TelaContestacao({ ctx }: PropsTela) {
 
       <Painel
         alvo="cont-lista"
-        titulo={`Contestações de ${gestor.nome}`}
+        titulo={`Contestações de ${gestor.nome}`} icone={MessagesSquare}
         descricao={`Os pedidos deste gestor, com a situação de cada um. ${minhas.length} de ${todas.length} no sistema.`}
       >
         {minhas.length === 0 ? (

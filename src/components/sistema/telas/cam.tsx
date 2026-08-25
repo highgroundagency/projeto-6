@@ -1,3 +1,4 @@
+import { BarChart3, CalendarClock, CalendarDays, CircleAlert } from 'lucide-react'
 import { Botao } from '@/components/base/botao'
 import { Num } from '@/components/base/num'
 import { Etiqueta } from '@/components/base/selo'
@@ -55,7 +56,7 @@ export async function TelaCam({ ctx }: PropsTela) {
 
       <Painel
         alvo="cam-estado"
-        titulo={`Mês ${emAndamento.competencia}`}
+        titulo={`Mês ${emAndamento.competencia}`} icone={CalendarClock}
         descricao={`Regra em uso: ${emAndamento.regraId}. Prazo para informar os números: até ${emAndamento.janelaLancamentoFim.slice(0, 10)}.`}
       >
         <TrilhoEstados estado={emAndamento.estado} />
@@ -123,7 +124,7 @@ export async function TelaCam({ ctx }: PropsTela) {
 
       <Painel
         alvo="cam-funil"
-        titulo="Funil de lançamento por área"
+        titulo="Funil de lançamento por área" icone={BarChart3}
         descricao="Quantos números cada área já informou neste mês. Barra cheia: área em dia."
       >
         <ul className="divide-y divide-linha border-y border-linha">
@@ -143,7 +144,7 @@ export async function TelaCam({ ctx }: PropsTela) {
 
       <Painel
         alvo="cam-pendencias"
-        titulo="Pendências"
+        titulo="Pendências" icone={CircleAlert}
         descricao="Áreas que ainda não informaram tudo neste mês."
       >
         {pendentes.length === 0 ? (
@@ -163,7 +164,7 @@ export async function TelaCam({ ctx }: PropsTela) {
         )}
       </Painel>
 
-      <Painel titulo="Meses" descricao="Cada mês já avaliado, com a etapa em que está.">
+      <Painel titulo="Meses" descricao="Cada mês já avaliado, com a etapa em que está." icone={CalendarDays}>
         <ul className="divide-y divide-linha border-y border-linha text-sm">
           {[...todos].reverse().map((c) => (
             <li key={c.id} className="flex flex-wrap items-center justify-between gap-2 py-2">

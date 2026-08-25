@@ -1,3 +1,4 @@
+import { CalendarDays, Trophy } from 'lucide-react'
 import { Botao, estiloBotao } from '@/components/base/botao'
 import { Num } from '@/components/base/num'
 import { Etiqueta } from '@/components/base/selo'
@@ -43,7 +44,7 @@ export async function TelaGestao({ ctx }: PropsTela) {
         </a>
       </AcoesDaTela>
 
-      <Painel alvo="gest-ciclo" titulo="Ciclo">
+      <Painel alvo="gest-ciclo" titulo="Ciclo" icone={CalendarDays}>
         <form
           method="get"
           action={`/sistema${ancoraDaTela('painel-gestao')}`}
@@ -93,7 +94,7 @@ export async function TelaGestao({ ctx }: PropsTela) {
           { rotulo: 'Gestores avaliados', valor: String(avaliacoes.length) },
           { rotulo: 'Avaliações com aviso', valor: String(comAviso) },
         ].map((item) => (
-          <div key={item.rotulo} className="border border-linha bg-fundo px-4 py-3">
+          <div key={item.rotulo} className="rounded-xl bg-superficie px-4 py-3">
             <p className="rotulo">{item.rotulo}</p>
             <p className="numero mt-1 text-2xl">{item.valor}</p>
           </div>
@@ -102,7 +103,7 @@ export async function TelaGestao({ ctx }: PropsTela) {
 
       <Painel
         alvo="gest-ranking"
-        titulo="Ranking por área"
+        titulo="Ranking por área" icone={Trophy}
         descricao={
           anonimizado
             ? 'Nomes escondidos: dá para comparar as áreas sem expor quem é quem.'

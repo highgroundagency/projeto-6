@@ -59,6 +59,19 @@ describe('contraste dos pares que a identidade usa', () => {
     ['corpo de texto sobre a superfície', 'apagado', 'superficie'],
     ['estado ok sobre o fundo', 'ok', 'fundo'],
     ['estado de alerta sobre o fundo', 'alerta', 'fundo'],
+
+    // A pele do sistema (ADR-031): mesma régua, outra paleta. Os pares medem o
+    // que as telas realmente empilham: texto sobre cartão, texto sobre fundo,
+    // acento sobre cartão (o tom escuro do site daria 4,3:1 sobre #1c1c1e, e é
+    // por isso que existe um sis-acento), e a pílula de acento da pele.
+    ['pele: texto sobre o cartão', 'sis-texto', 'sis-cartao'],
+    ['pele: texto sobre o fundo', 'sis-texto', 'sis-fundo'],
+    ['pele: texto apagado sobre o cartão', 'sis-apagado', 'sis-cartao'],
+    ['pele: texto apagado sobre o campo', 'sis-apagado', 'sis-campo'],
+    ['pele: acento como texto sobre o cartão', 'sis-acento', 'sis-cartao'],
+    ['pele: acento sobre a pílula da pele', 'sis-acento', 'sis-acento-fraco'],
+    ['pele: estado ok sobre o cartão', 'ok', 'sis-cartao'],
+    ['pele: estado de alerta sobre o cartão', 'alerta', 'sis-cartao'],
   ]
 
   /**

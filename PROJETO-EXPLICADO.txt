@@ -608,11 +608,15 @@ depende de rede quebra por motivos que não são seus.
 18. O VISUAL (POR QUE O SITE TEM ESSA CARA)
 ------------------------------------------------------------
 
-A identidade se chama "folha de especificação": escuro por padrão, tudo
-em fonte monoespaçada (aquela de código, em que todas as letras têm a
-mesma largura), minúsculas, blocos separados por linhas finas de 1px
-que se encostam como tabela, e UMA cor de destaque só: o laranja da
-CESAR, usado em no máximo três lugares por tela.
+São duas caras, uma por camada. O SITE usa a identidade "folha de
+especificação": escuro por padrão, tudo em fonte monoespaçada (aquela
+de código), minúsculas, blocos separados por linhas finas que se
+encostam como tabela, e UMA cor de destaque só: o laranja da CESAR,
+usado em no máximo três lugares por tela. O SISTEMA tem uma pele
+própria, mais parecida com a da Apple: a letra do próprio aparelho da
+pessoa, cartões arredondados sobre fundo neutro, botões-pílula e
+ícones nos painéis, porque o leitor dele é o servidor público, não a
+banca técnica.
 
 Por quê? O produto é uma memória de cálculo auditável. A página PARECE
 o que o produto É: uma ficha técnica, não um panfleto.

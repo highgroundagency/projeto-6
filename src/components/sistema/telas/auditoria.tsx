@@ -1,3 +1,4 @@
+import { History, ListChecks, SlidersHorizontal } from 'lucide-react'
 import { Botao } from '@/components/base/botao'
 import { Num } from '@/components/base/num'
 import { Etiqueta } from '@/components/base/selo'
@@ -75,7 +76,7 @@ export async function TelaAuditoria({ ctx }: PropsTela) {
         </Aviso>
       </div>
 
-      <Painel alvo="aud-filtros" titulo="Filtros">
+      <Painel alvo="aud-filtros" titulo="Filtros" icone={SlidersHorizontal}>
         <form
           method="get"
           action={`/sistema${ancoraDaTela('auditoria')}`}
@@ -130,7 +131,7 @@ export async function TelaAuditoria({ ctx }: PropsTela) {
 
       <Painel
         alvo="aud-linha"
-        titulo="Linha do tempo"
+        titulo="Linha do tempo" icone={History}
         descricao={`Tudo o que aconteceu, do mais novo para o mais antigo. ${filtrados.length} registros de ${todos.length}; mostrando os ${Math.min(LIMITE, filtrados.length)} mais recentes.`}
       >
         <ol className="divide-y divide-linha border-y border-linha">
@@ -160,7 +161,7 @@ export async function TelaAuditoria({ ctx }: PropsTela) {
 
       <Painel
         alvo="aud-resumo"
-        titulo="Resumo"
+        titulo="Resumo" icone={ListChecks}
         descricao="Quantos registros de cada tipo existem no histórico."
       >
         <ul className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
