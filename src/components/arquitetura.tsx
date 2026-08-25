@@ -42,56 +42,92 @@ interface Classe {
 const CLASSES: readonly Classe[] = [
   {
     icone: Building2,
-    nome: 'Área',
-    campos: ['nome', 'sigla'],
-    ligacoes: ['tem 1 gestor', 'tem N indicadores'],
-  },
-  {
-    icone: UserRound,
-    nome: 'Gestor',
-    campos: ['nome', 'cargo', 'areaId'],
-    ligacoes: ['pertence a 1 área', 'recebe 1 avaliação por mês'],
-    nota: 'sem CPF, sem matrícula, sem endereço: o que não existe não vaza',
+    nome: 'Distrito sanitário',
+    campos: ['nome'],
+    ligacoes: ['tem N unidades', 'tem 1 gerência distrital'],
   },
   {
     icone: Ruler,
+    nome: 'Tipo de unidade',
+    campos: ['nome', 'sigla (USF, CAPS, UPA, POLI)'],
+    ligacoes: ['decide a régua de N unidades'],
+    nota: 'é o tipo que diz quais indicadores valem, e com que meta e peso',
+  },
+  {
+    icone: Building2,
+    nome: 'Unidade',
+    campos: ['nome', 'distritoId', 'tipoId'],
+    ligacoes: ['pertence a 1 distrito', 'é de 1 tipo', 'recebe 1 avaliação por mês'],
+  },
+  {
+    icone: UserRound,
+    nome: 'Gerente',
+    campos: ['nome', 'cargo', 'escopo: unidade ou distrito'],
+    ligacoes: ['responde por 1 unidade OU 1 distrito', 'abre contestação'],
+    nota: 'sem CPF, sem matrícula, sem endereço: o que não existe não vaza',
+  },
+  {
+    icone: Gauge,
     nome: 'Indicador',
-    campos: ['nome', 'unidade', 'direção', 'meta', 'peso', 'fonte'],
-    ligacoes: ['pertence a 1 área', 'recebe N lançamentos'],
+    campos: ['nome', 'unidade de medida', 'direção', 'fonte', 'periodicidade'],
+    ligacoes: ['composto por N subindicadores'],
+    nota: 'meta e peso não moram aqui: moram na régua da regra, por tipo de unidade',
+  },
+  {
+    icone: PencilLine,
+    nome: 'Subindicador',
+    campos: ['nome', 'tipo: índice ou razão'],
+    ligacoes: ['compõe 1 indicador', 'recebe N lançamentos'],
+    nota: 'é o que a unidade de fato preenche: valor direto, ou numerador e denominador',
   },
   {
     icone: CalendarClock,
     nome: 'Ciclo (o mês)',
-    campos: ['competência', 'estado', 'janela de lançamento', 'regraId'],
+    campos: ['competência', 'estado', 'janela de lançamento', 'revisão a partir de', 'regraId'],
     ligacoes: ['usa 1 regra', 'recebe N lançamentos'],
-    nota: 'anda uma etapa por vez e nunca volta',
+    nota: 'anda uma etapa por vez e nunca volta; os dias finais são a janela de revisão',
   },
   {
     icone: PencilLine,
     nome: 'Lançamento',
-    campos: ['valor', 'evidência', 'autor', 'registradoEm', 'status'],
-    ligacoes: ['de 1 indicador', 'em 1 ciclo'],
+    campos: ['valor OU numerador e denominador', 'evidência', 'autor', 'registradoEm', 'status'],
+    ligacoes: ['de 1 subindicador', 'por 1 unidade', 'em 1 ciclo'],
   },
   {
     icone: Scale,
     nome: 'Regra de pontuação',
-    campos: ['versão', 'vigenteDe / vigenteAté', 'faixas de pontos', 'faixas de gratificação', 'teto de atingimento'],
+    campos: [
+      'versão',
+      'vigenteDe / vigenteAté',
+      'faixas de pontos',
+      'faixas de gratificação',
+      'aplicabilidades: tipo × indicador → meta e peso',
+      'teto de atingimento',
+    ],
     ligacoes: ['calcula N avaliações'],
     nota: 'imutável: mudança vira versão nova, a antiga fica valendo para os meses dela',
   },
   {
     icone: Gauge,
     nome: 'Avaliação',
-    campos: ['score (0 a 100)', 'faixa', 'memória de cálculo', 'avisos'],
-    ligacoes: ['de 1 gestor', 'num 1 ciclo', 'pela regra vigente'],
+    campos: ['score (0 a 100)', 'faixa', 'memória de cálculo com sub-passos', 'avisos'],
+    ligacoes: ['de 1 unidade', 'num 1 ciclo', 'pela regra vigente'],
+  },
+  {
+    icone: Sigma,
+    nome: 'Avaliação distrital',
+    campos: ['score = média das unidades', 'faixa', 'nota de cada unidade'],
+    ligacoes: ['de 1 distrito', 'num 1 ciclo'],
+    nota: 'suposição declarada, a validar com a planilha do cliente',
   },
   {
     icone: MessageSquareWarning,
     nome: 'Contestação',
     campos: ['motivo', 'status', 'resposta'],
-    ligacoes: ['aberta por 1 gestor', 'sobre 1 ciclo'],
+    ligacoes: ['aberta por 1 gerente', 'sobre 1 ciclo'],
   },
 ]
+
 
 const PROMPT_DIAGRAMAS = `Você é um arquiteto de software especialista no modelo C4. Crie os
 diagramas do sistema descrito abaixo, em quatro entregas: (1) contexto,
@@ -107,35 +143,48 @@ cálculo; os dados são 100% sintéticos e vivem em memória; o seletor de
 papéis é login simulado de demonstração.
 
 FATOS. Nome: Prumo, sistema web acadêmico (CESAR School) que substitui
-a planilha da gratificação por desempenho da SESAU Recife. Pessoas:
-CAM (gere o mês e homologa), área técnica (informa os números da própria
-área), gestor avaliado (vê a própria nota e contesta), auditoria (lê
-tudo, não escreve), professor (lê o registro semanal), dono (opera
-liberações por painel com senha). Externos: GitHub (código; push vira
-deploy), Vercel (hospedagem serverless), Google Drive (só um link).
+a planilha da gratificação por desempenho da SESAU Recife. Pessoas, os
+quatro atores que o cliente nomeou mais dois do projeto: gerente de
+unidade (preenche os subindicadores da unidade e recebe a nota dela),
+gerente distrital (acompanha as unidades do distrito, revisa na janela e
+é avaliado pela média delas), coordenação da SEAB (define a régua, cobra,
+homologa e publica), administrador (cuida da plataforma e da trilha, não
+das notas), professor (lê o registro semanal), dono (opera liberações
+por painel com senha). Externos: GitHub (código; push vira deploy),
+Vercel (hospedagem serverless), Google Drive (só um link).
 Contêineres: aplicação Next.js 15 App Router com React Server Components
-(site, 8 telas, painel e motor de cálculo puro: score = soma de pontos x
-peso sobre o máximo possível, x 100); middleware Edge protegendo /admin;
-route handlers Node (login, ciclo, lançamento, contestação, CSV, tema,
-perfil, status); base sintética em memória com semente fixa 20262 (10
-áreas, 10 gestores, 30 indicadores, 6 meses, trilha imutável); motor de
-liberações por calendário (conteúdo futuro não vai ao navegador; tela
-não liberada responde 404); schema PostgreSQL versionado com RLS e 4
-gatilhos, testado no CI e DESLIGADO; pipeline de ML offline em Python
-que exporta src/content/ml/resultados.json.
-Classes do domínio (campos reais): Área (nome, sigla); Gestor (nome,
-cargo, areaId; sem CPF nem matrícula, por desenho); Indicador (nome,
-unidade, direção, meta, peso, fonte); Ciclo (competência, estado com 5
-etapas que andam uma por vez e nunca voltam, janela de lançamento,
-regraId); Lançamento (valor, evidência, autor, registradoEm, status);
-Regra de pontuação (versão, vigência, faixas de pontos, faixas de
-gratificação, teto; imutável, muda-se de versão); Avaliação (score 0 a
-100, faixa, memória de cálculo, avisos); Contestação (motivo, status,
-resposta); Evento de auditoria (quando, autor, tipo, entidade, antes,
-depois; append-only, registra todas as outras classes). Ligações: Área
-1-1 Gestor e 1-N Indicador; Ciclo usa 1 Regra e recebe N Lançamentos;
-Lançamento referencia 1 Indicador e 1 Ciclo; Avaliação liga 1 Gestor a
-1 Ciclo pela Regra vigente; Contestação é de 1 Gestor sobre 1 Ciclo.
+(site, 8 telas, painel e motor de cálculo puro: cada indicador é a média
+dos subindicadores apurados; atingimento contra a meta do TIPO da
+unidade; score = soma de pontos x peso sobre o máximo possível, x 100);
+middleware Edge protegendo /admin; route handlers Node (login, ciclo,
+lançamento, contestação, CSV, tema, perfil, status); base sintética em
+memória com semente fixa 20262 (3 distritos, 4 tipos de unidade, 12
+unidades, 7 indicadores, 11 subindicadores, 15 gerentes, 6 meses, trilha
+imutável); motor de liberações por calendário (conteúdo futuro não vai
+ao navegador; tela não liberada responde 404); schema PostgreSQL
+versionado com RLS e 4 gatilhos, testado no CI e DESLIGADO (ainda no
+domínio anterior à remodelagem, com pendência declarada); pipeline de ML
+offline em Python que exporta src/content/ml/resultados.json.
+Classes do domínio (campos reais): Distrito (nome); Tipo de unidade
+(nome, sigla: USF, CAPS, UPA, POLI); Unidade (nome, distritoId, tipoId);
+Gerente (nome, cargo, escopo unidade ou distrito; sem CPF nem matrícula,
+por desenho); Indicador (nome, unidade de medida, direção, fonte; SEM
+meta e peso próprios); Subindicador (nome, tipo índice ou razão; é o que
+se preenche); Ciclo (competência, estado com 5 etapas que andam uma por
+vez e nunca voltam, janela de lançamento, início da janela de revisão,
+regraId); Lançamento (valor OU numerador e denominador, evidência,
+autor, registradoEm, status); Regra de pontuação (versão, vigência,
+faixas de pontos, faixas de gratificação, aplicabilidades tipo ×
+indicador com meta e peso, teto; imutável, muda-se de versão); Avaliação
+(score 0 a 100, faixa, memória de cálculo com sub-passos, avisos);
+Avaliação distrital (score = média das unidades do distrito); Contestação
+(motivo, status, resposta); Evento de auditoria (quando, autor, tipo,
+entidade, antes, depois; append-only, registra todas as outras classes).
+Ligações: Distrito 1-N Unidade; Tipo de unidade 1-N Unidade; Indicador
+1-N Subindicador; Ciclo usa 1 Regra e recebe N Lançamentos; Lançamento
+referencia 1 Subindicador, 1 Unidade e 1 Ciclo; Avaliação liga 1 Unidade
+a 1 Ciclo pela Regra vigente; Avaliação distrital agrega as Avaliações
+das unidades do Distrito; Contestação é de 1 Gerente sobre 1 Ciclo.
 
 SAÍDA: cada diagrama num bloco Mermaid separado (C4Context, C4Container,
 flowchart e classDiagram), rótulos em português, uma linha por
@@ -183,14 +232,16 @@ export function ConteudoArquitetura() {
       <section id="fluxo" className="mt-12 scroll-mt-6" aria-label="O caminho de um número">
         <Rotulado eyebrow="o produto em um desenho" titulo="O caminho de um número" />
         <p className="mt-2 max-w-prose text-sm leading-relaxed text-apagado">
-          Do dedo da área técnica até a nota do gestor, tudo passa por aqui, nesta ordem.
+          Do dedo de quem preenche na unidade até a nota do gerente, tudo passa por aqui,
+          nesta ordem.
         </p>
 
         <div className="mt-6">
           <Fluxo>
             <AcaoDoFluxo icone={<PencilLine size={18} strokeWidth={1.5} />} titulo="Lançamento">
-              a área informa o valor e diz de onde ele veio. entrada inválida é recusada na
-              hora, e fora do prazo o campo trava.
+              a unidade preenche cada subindicador (valor direto, ou numerador e denominador)
+              e diz de onde veio. entrada inválida é recusada na hora, e fora do prazo o campo
+              trava; nos dias finais, a janela de revisão deixa corrigir com histórico.
             </AcaoDoFluxo>
             <Conector />
             <AcaoDoFluxo icone={<ScrollText size={18} strokeWidth={1.5} />} titulo="Trilha">
@@ -204,11 +255,12 @@ export function ConteudoArquitetura() {
             </AcaoDoFluxo>
             <Conector />
             <AcaoDoFluxo icone={<Sigma size={18} strokeWidth={1.5} />} titulo="Motor de cálculo">
-              função pura: mesma entrada, mesma saída, sempre. sai a nota, a faixa e a memória
-              de cálculo passo a passo.
+              função pura: compõe cada indicador dos subindicadores, aplica a régua do TIPO da
+              unidade e sai a nota, a faixa e a memória de cálculo passo a passo. a nota do
+              distrito é a média das unidades dele.
             </AcaoDoFluxo>
             <Conector />
-            <EstadoDoFluxo explicacao="o gestor vê a nota e a conta aberta; a gestão vê o agregado e exporta">
+            <EstadoDoFluxo explicacao="o gerente vê a nota e a conta aberta; a gestão vê o agregado por distrito e exporta">
               nota + memória de cálculo
             </EstadoDoFluxo>
           </Fluxo>

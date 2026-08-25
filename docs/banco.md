@@ -1,5 +1,14 @@
 # O banco que existe, mas não está ligado
 
+> **Pendência declarada (ADR-034).** Este schema modela o domínio ANTERIOR à reunião com
+> o cliente de 22/08: áreas técnicas planas, indicador com meta e peso próprios e
+> lançamento direto no indicador. O domínio vivo do app já fala em distritos, tipos de
+> unidade, subindicadores e aplicabilidade na regra. O SQL continua valendo como prova de
+> RLS e gatilhos, e a semeadura passou a usar a fotografia congelada de
+> `src/lib/dados/dominio-v1.ts`. A remodelagem do schema acompanha a ligação de uma
+> persistência real, quando (e se) ela entrar no escopo.
+
+
 O Prumo roda **sem banco**: os dados vivem em memória, gerados por script com semente fixa.
 `git clone && npm run dev` funciona sem nenhuma credencial, e é assim de propósito.
 

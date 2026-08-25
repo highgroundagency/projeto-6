@@ -829,3 +829,39 @@ fantasma perderam a borda que nunca deveriam ter tido, e o acento voltou a poder
 uma caixa. As 92 jornadas, os 459 testes e as 35 checagens de contraste passaram depois da
 mudança. Fica a lição, que agora é regra de revisão: CSS novo em `globals.css` nasce DENTRO
 de uma camada, a menos que vencer utilitário seja o objetivo declarado no comentário.
+
+---
+
+## ADR-034 · A reunião com o cliente remodelou o domínio, e o MVP acompanhou já
+
+**Contexto.** Em 22/08 a equipe teve a primeira conversa real com o representante do órgão
+(SECOGE/SESAU). Ela corrigiu o entendimento em quatro pontos que não são detalhe de tela:
+(1) o que se preenche é o SUBINDICADOR, valor direto ou numerador/denominador, e o
+indicador é calculado; (2) a régua depende do TIPO da unidade (USF, CAPS, UPA,
+policlínica): a depender do tipo, só alguns indicadores valem, e os pesos mudam; (3) a
+rede é secretaria → distrito sanitário → unidade, e o gerente distrital também é avaliado,
+pela agregação das unidades; (4) os atores são gerente de unidade, gerente distrital,
+administrador da plataforma e coordenação da SEAB. Veio ainda um pedido novo: janela de
+revisão de cinco dias no fim do mês, com histórico. A ata sintetizada está na Semana 3 do
+registro, sem nomes de pessoa.
+
+**Decisão.** Remodelar o núcleo agora, em vez de acumular semanas sobre o modelo antigo.
+`Area` deu lugar a `Distrito`/`TipoUnidade`/`Unidade`; `Gestor` virou `Gerente` com
+escopo; `Indicador` perdeu meta e peso próprios e ganhou `Subindicador`; a APLICABILIDADE
+(tipo × indicador → meta e peso) mora na regra versionada, porque "muda de ano em ano" é
+exatamente o que regra versionada resolve; o ciclo ganhou `revisaoInicio` como PERÍODO
+dentro do lançamento aberto, sem sexto estado. O motor compõe o indicador pela média
+simples dos subindicadores apurados e calcula o distrital como média das unidades — as
+duas fórmulas são SUPOSIÇÕES declaradas, a validar com a planilha prometida; se vierem
+diferentes, viram versão nova da regra, não reescrita. Os quatro perfis do sistema
+passaram a ser os do cliente; o perfil "auditoria" saiu e a TELA de trilha ficou com o
+administrador e a SEAB, porque fiscalizar virou capacidade de papel existente, não papel
+próprio, até o cliente dizer o contrário.
+
+**Consequência.** Duas dívidas declaradas, com dono e data: o schema PostgreSQL guardado
+segue no domínio anterior (a semeadura usa a fotografia congelada de
+`src/lib/dados/dominio-v1.ts`; pendência em `banco.md`) e os modelos de ML seguem
+treinados no recorte antigo, com aviso na própria tela de analytics e re-treino no marco
+"ML: entrega parcial" do cronograma. Renomear os ids de perfil invalida cookies antigos do
+seletor simulado, que caem no padrão sem erro. O custo de remodelar cedo foi um fim de
+semana de refatoração; o custo de adiar seria pago com juros a cada tela nova.

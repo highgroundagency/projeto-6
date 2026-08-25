@@ -8,7 +8,7 @@ usada para o resto — esconder isso seria pior do que ter o risco.
 
 | Ameaça | Onde se aplica | Mitigação atual | Estado |
 | --- | --- | --- | --- |
-| **S**poofing — fingir ser a CAM | Painel `/admin` | Senha única conferida só no servidor, em tempo constante; cookie httpOnly assinado com HMAC-SHA256; 30 dias de validade | Implementado |
+| **S**poofing — fingir ser quem opera o painel | Painel `/admin` | Senha única conferida só no servidor, em tempo constante; cookie httpOnly assinado com HMAC-SHA256; 30 dias de validade | Implementado |
 | **S**poofing — fingir ser outro perfil no sistema | Seletor de perfil | **Não mitigado, por design**: o seletor é login simulado e não protege nada, o que a tela declara. Ele é cookie por visitante, então trocar de perfil não afeta terceiros. As políticas de RLS que resolveriam isso estão escritas e testadas em `supabase/migrations/`, mas não ligadas ao app | Risco aceito e declarado |
 | **T**ampering — adulterar o cookie de sessão | `/admin/*` | Payload assinado; qualquer alteração invalida a assinatura; comparação em tempo constante | Implementado |
 | **T**ampering — adulterar o overlay de visão | Cookie `prumo_visao` | Mesmo esquema de assinatura; conteúdo revalidado com zod após verificar a assinatura | Implementado |
@@ -80,11 +80,19 @@ assinar cookie com valor previsível.
 
 Vale distinguir duas coisas que costumam ser confundidas.
 
-**Escrito e testado.** `supabase/migrations/` traz o RBAC do §8.1 como políticas de RLS: a
-CAM gere, a área técnica só alcança a própria área, o gestor só a própria avaliação, a
-auditoria lê e não escreve. Mais quatro invariantes em gatilho, que valem inclusive para a
-service role: trilha append-only, transição de ciclo um passo por vez, janela de lançamento
-e regra imutável. São 21 verificações contra um PostgreSQL real (`npm run testar-rls`).
+**Escrito e testado.** `supabase/migrations/` traz o RBAC como políticas de RLS: quem gere
+alcança tudo, quem informa só alcança o próprio recorte, o avaliado só a própria
+avaliação, quem fiscaliza lê e não escreve. Mais quatro invariantes em gatilho, que valem
+inclusive para a service role: trilha append-only, transição de ciclo um passo por vez,
+janela de lançamento e regra imutável. São 21 verificações contra um PostgreSQL real
+(`npm run testar-rls`). Atenção: essas políticas ainda usam os papéis anteriores à
+remodelagem pós-reunião (ADR-034); a pendência está declarada em `banco.md`.
+
+**Os papéis do app hoje** são os quatro que o cliente nomeou: coordenação da SEAB (gere a
+régua e o ciclo), administrador (plataforma e trilha, sem tocar em nota), gerente
+distrital (o recorte do próprio distrito, com revisão na janela) e gerente de unidade (os
+próprios subindicadores e a própria nota). O recorte roda no servidor, tela a tela
+(`exigirPerfil`, 404 para quem não tem direito), sobre o seletor simulado.
 
 **Ligado ao app.** Nada disso. O app não usa banco (ADR-011): o perfil vem de um seletor
 simulado, sem autenticação, e quem separa as visões é a própria aplicação. Isso é adequado

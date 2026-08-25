@@ -52,6 +52,7 @@ Regras que a equipe adotou:
 | 25/08/2026 | s3 | Claude (Anthropic) | Página /arquitetura: C4 explicado em linguagem simples, os três desenhos na identidade do site e o prompt de regeneração embutido (ADR-032) | `src/app/arquitetura/page.tsx`, `src/components/base/rodape.tsx`, `scripts/verificar-vazamento.ts` | pendente |
 | 25/08/2026 | s3 | Claude (Anthropic) | Página de arquitetura na pele do sistema com diagrama de classes e porta na home; e a correção do CSS sem camada que engolia utilidade de borda no site inteiro (ADR-032 adendo e ADR-033) | `src/components/arquitetura.tsx`, `src/app/arquitetura/`, `src/app/page.tsx`, `src/app/globals.css` | pendente |
 | 25/08/2026 | s3 | Claude (Anthropic) | Diagramas C4 de contexto e contêineres redesenhados como SVG espacial no servidor, na gramática clássica da notação (ADR-032, segundo adendo) | `src/components/arquitetura-c4.tsx`, `src/components/arquitetura.tsx` | pendente |
+| 25/08/2026 | s3 | Claude (Anthropic) | Remodelagem do domínio pós-reunião com o cliente (ADR-034): subindicadores, tipos de unidade, rede por distrito, janela de revisão, os 4 papéis do cliente nas 8 telas, ata na s3 e replanejamento da s4; a ata em PDF foi resumida pela IA e conferida contra o original | `src/lib/calculo/`, `src/lib/seed/`, `src/lib/dados/`, `src/lib/features.ts`, `src/components/sistema/`, `src/content/ciclos/s3.tsx`, `src/content/ciclos/s4.tsx`, docs | pendente |
 
 ## O que a IA **não** fez
 

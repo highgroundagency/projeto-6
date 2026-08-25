@@ -49,16 +49,16 @@ A pergunta que guia tudo (está no topo do site):
 2. O PROBLEMA, DO JEITO QUE ELE EXISTE HOJE
 ------------------------------------------------------------
 
-Imagine a cena. Todo mês, dezenas de números chegam de várias áreas da
-saúde (vacinação, farmácia, urgência...). Uma comissão chamada CAM
-(Comissão de Avaliação de Metas) copia esses números para uma planilha
-gigante, aplica fórmulas e chega numa nota para cada gestor. Essa nota
-decide quanto de gratificação a pessoa recebe.
+Imagine a cena. Todo mês, dezenas de números chegam de várias unidades
+da rede (USFs, CAPS, UPAs...). Uma equipe da secretaria (a
+coordenação da SEAB, ligada à SECOGE) copia esses números para uma
+planilha gigante, aplica fórmulas e chega numa nota para cada gerente.
+Essa nota decide quanto de gratificação a pessoa recebe.
 
 O que quebra nesse processo, etapa por etapa (isso veio da nossa
 pesquisa da Semana 2):
 
-- COLETA: cada área manda os números por planilha ou e-mail, cada uma
+- COLETA: cada unidade manda os números por planilha ou e-mail, cada uma
   num formato. Nada é validado na origem.
 - CONSOLIDAÇÃO: alguém copia tudo à mão para a planilha mestre. Erro de
   digitação passa batido.
@@ -87,7 +87,8 @@ fechar a conta.
 A pesquisa definiu três personas (pessoas inventadas que representam
 quem vive o problema). Nenhuma é pessoa real.
 
-A ANALISTA DA CAM (persona principal)
+A ANALISTA DA SECRETARIA (persona principal; na reunião de 22/08 o
+papel real apareceu com nome: coordenação da SEAB)
   Opera a planilha mestre há três ciclos, sabe as regras de cor, é quem
   todo mundo procura quando há contestação. Precisa fechar o mês sem
   medo de ter errado uma fórmula. O maior medo dela: descobrir um erro
@@ -124,7 +125,7 @@ Na Semana 2 a gente comparou cinco tipos de ferramenta que já existem
 - Ferramentas de OKR (metas de empresa): boas para acompanhar objetivos,
   mas score de empresa não é ato administrativo que vira dinheiro em
   folha, e licença por usuário não cabe num órgão público.
-- A própria planilha da CAM: flexível e de graça, mas sem trilha, sem
+- A própria planilha da secretaria: flexível e de graça, mas sem trilha, sem
   versão, sem controle de acesso, e com o conhecimento preso em quem a
   escreveu.
 
@@ -138,7 +139,7 @@ honestidade: nossa força é ter um cliente real com regra explícita, que
 dá para modelar e testar; nossa fraqueza é não ter acesso à portaria
 vigente e ninguém da equipe conhecer o processo por dentro; a
 oportunidade é a demanda represada (já tentaram automatizar e falharam);
-a ameaça é a agenda da CAM não deixar a gente validar com o cliente.
+a ameaça é a agenda do cliente não deixar a gente validar com o cliente.
 
 ------------------------------------------------------------
 5. COMO A IDEIA FOI ESCOLHIDA (SEMANA 3)
@@ -178,8 +179,9 @@ memória até o SR1; auditoria e gestão nas sprints seguintes.
 O QUÊ: um sistema web que substitui a planilha de consolidação da
 gratificação por desempenho.
 
-PARA QUEM: a CAM, as áreas técnicas que informam dados, os gestores
-avaliados e a auditoria.
+PARA QUEM (atualizado depois da reunião com o cliente de 22/08): a
+coordenação da SEAB, o administrador da plataforma, os gerentes
+distritais e os gerentes de unidade.
 
 COMO: indicadores e regras cadastrados pela interface; regra com versão;
 cálculo por função pura (seção 8); memória de cálculo junto de cada
@@ -197,9 +199,35 @@ pagamento, login corporativo da prefeitura, migração de dados históricos
 reais, aplicativo mobile. O sistema calcula o percentual devido; pagar é
 trabalho de outro sistema.
 
-O backlog nasceu com 25 histórias em 5 épicos (Ciclo, Indicadores,
+O backlog nasceu com 25 histórias em 5 épicos (Ciclo, Régua,
 Lançamento, Resultado, Governança), priorizadas por MoSCoW, com os
 "Must" cabendo até o SR1.
+
+A REUNIÃO COM O CLIENTE (22/08) MUDOU O DESENHO. Na primeira conversa
+real com o órgão (SECOGE/SESAU), o entendimento cresceu em quatro
+pontos, e o sistema foi remodelado na mesma semana:
+
+1. O que se preenche é o SUBINDICADOR, não o indicador. Uns pedem um
+   valor direto ("índice"); outros pedem numerador e denominador
+   ("razão"): gestantes com consulta em dia SOBRE gestantes
+   cadastradas. O indicador é CALCULADO a partir deles.
+2. O TIPO da unidade decide a régua. Uma USF, um CAPS, uma UPA e uma
+   policlínica não medem as mesmas coisas, e os pesos mudam por tipo.
+   Essa tabela (tipo x indicador, com meta e peso) mora na regra
+   versionada, porque é o que muda de ano em ano.
+3. A rede tem degraus: secretaria -> distrito sanitário -> unidade. O
+   gerente distrital também é avaliado, pela média das unidades dele.
+4. Os papéis reais são: gerente de unidade, gerente distrital,
+   administrador da plataforma e coordenação da SEAB.
+
+Veio também um pedido novo: JANELA DE REVISÃO de cinco dias no fim do
+mês, para corrigir números com o valor antigo guardado no histórico.
+
+Duas fórmulas seguem como SUPOSIÇÃO declarada, esperando a planilha
+real prometida: a composição (média simples dos subindicadores) e a
+agregação distrital (média simples das unidades). Se a planilha disser
+diferente, vira versão nova da regra, não reescrita do sistema. A ata
+sintetizada está na Semana 3 do registro, sem nomes de pessoa.
 
 ------------------------------------------------------------
 7. O NOME
@@ -280,33 +308,41 @@ docs/seguranca.md.
 10. O SISTEMA POR DENTRO: OS 4 PAPÉIS
 ------------------------------------------------------------
 
-O sistema tem quatro papéis, e um seletor no topo para você "vestir"
-cada um. Trocar o papel muda o que aparece: cada um vê só as telas que
-são dele. Importante: esse seletor é um login SIMULADO, de
-demonstração, e a tela diz isso. Serve para a banca experimentar os
-quatro pontos de vista sem criar conta.
+O sistema tem quatro papéis (os que o CLIENTE nomeou na reunião de
+22/08), e um seletor no topo para você "vestir" cada um. Trocar o papel
+muda o que aparece: cada um vê só as telas que são dele. Importante:
+esse seletor é um login SIMULADO, de demonstração, e a tela diz isso.
+Serve para a banca experimentar os quatro pontos de vista sem criar
+conta.
 
-CAM (Comissão de Avaliação de Metas): a dona do processo. Cadastra o
-  que vai ser medido, abre e fecha o prazo do mês, faz a conta, aprova
-  e divulga. Não pode: mudar regra já usada num mês fechado (mudança
-  vira regra NOVA, a antiga fica guardada), pular etapa, apagar
-  histórico. Vê as 8 telas.
+COORDENAÇÃO DA SEAB: quem coordena o processo. Define a régua (o que
+  cada tipo de unidade mede, com que meta e peso), abre e fecha o prazo
+  do mês, faz a conta, homologa, publica e responde contestação. Não
+  pode: mudar regra já usada num mês fechado (mudança vira regra NOVA,
+  a antiga fica guardada), pular etapa, apagar histórico. Vê as 8
+  telas.
 
-ÁREA TÉCNICA: quem produz o dado (a equipe da vacinação, das
-  consultas...). Digita os números da própria área dentro do prazo e
-  diz de onde cada um veio. Não pode: informar fora do prazo, mudar
-  meta ou peso ("quem informa o resultado não escolhe a régua"), ver a
-  nota dos gestores. Vê 1 tela (Lançamento).
+ADMINISTRADOR: quem cuida da plataforma, não das notas. Mantém os
+  cadastros da rede (distritos, tipos, unidades, gerentes) e confere a
+  trilha de auditoria. Não pode: lançar número por unidade, mudar nota
+  ou régua, apagar a trilha. Vê 5 telas.
 
-GESTOR AVALIADO: quem recebe a nota. Vê a própria nota, abre a conta
-  inteira e, se discordar, pede revisão formal. Não pode: mudar número,
-  ver a nota dos colegas pelo nome, ter a nota decidida por robô. Vê 2
-  telas (Meu resultado e Contestação).
+GERENTE DISTRITAL: responde por um distrito sanitário. Acompanha as
+  unidades dele, revisa e corrige lançamentos na janela de revisão (os
+  dias finais do prazo), e também é AVALIADO: a nota dele é a média das
+  unidades do distrito. Não pode: ver o recorte de outro distrito,
+  mudar meta ou peso, alterar número fora da janela. Vê 4 telas.
 
-AUDITORIA: o fiscal. Lê o histórico completo, refaz a conta de um mês
-  fechado e confere se dá o mesmo resultado. Não pode escrever NADA:
-  nenhuma tela dá botão de ação a esse perfil, de propósito. É o único
-  papel que enxerga todas as telas.
+GERENTE DE UNIDADE: dirige uma unidade de saúde (USF, CAPS, UPA,
+  policlínica). Preenche os subindicadores do mês, diz de onde cada
+  número veio, corrige na janela de revisão e recebe a nota da unidade
+  com a conta aberta. Não pode: lançar por outra unidade, mudar meta ou
+  peso ("quem informa o resultado não escolhe a régua"), ter a nota
+  decidida por robô. Vê 3 telas.
+
+O fiscal de fora (a antiga "auditoria") deixou de ser um papel próprio:
+fiscalizar virou capacidade da SEAB e do administrador, até o cliente
+pedir diferente. A TELA de trilha continua existindo.
 
 Cada papel tem um TUTORIAL GUIADO: um passeio passo a passo que abre
 uma tela por vez, desenha um contorno laranja em volta do botão certo e
@@ -316,23 +352,28 @@ explica o que fazer ali. É literalmente pegar na mão.
 11. O SISTEMA POR DENTRO: AS 8 TELAS
 ------------------------------------------------------------
 
-1. DASHBOARD DA CAM: quem já mandou os números do mês, quem falta, e o
-   botão de avançar a etapa.
-2. INDICADORES E REGRAS: a lista do que é medido, com meta e peso de
-   cada item, e a tabela de pontos. Mostra o diff entre versões da
-   regra (o que mudou da v1 para a v2).
-3. LANÇAMENTO: onde cada área digita os números do mês e diz de onde
-   cada um veio. Recusa entrada inválida.
-4. MEU RESULTADO: a nota do gestor, a conta inteira aberta e a
-   comparação com os meses anteriores.
-5. AUDITORIA: o histórico de tudo. Quem fez o quê, quando, e como
-   estava antes.
-6. PAINEL DA GESTÃO: o resumo geral. Média, ranking das áreas, botão de
-   esconder os nomes (para projetar numa reunião sem constranger
-   ninguém) e exportação em CSV.
+1. PAINEL DA SEAB: quem já mandou os números do mês, quem falta
+   (unidade por unidade), e o botão de avançar a etapa.
+2. INDICADORES E REGRAS: o catálogo do que é medido, os subindicadores
+   que compõem cada item, e a RÉGUA POR TIPO de unidade (meta e peso).
+   Mostra o diff entre versões da regra (o que mudou da v1 para a v2).
+3. LANÇAMENTO DA UNIDADE: agrupado por indicador, com os subindicadores
+   dentro. Índice pede um valor; razão pede numerador e denominador, e
+   a tela mostra a proporção apurada. Recusa entrada inválida, e a
+   pílula no topo diz quando é a janela de revisão.
+4. MEU RESULTADO: a nota da unidade (ou a média do distrito, para o
+   gerente distrital, com a composição aberta) e a comparação com os
+   meses anteriores.
+5. TRILHA DE AUDITORIA: o histórico de tudo. Quem fez o quê, quando, e
+   como estava antes.
+6. PAINEL DA GESTÃO: o resumo geral. Média, nota por distrito, ranking
+   das unidades com tipo e distrito, botão de esconder os nomes (para
+   projetar numa reunião sem constranger ninguém) e exportação em CSV.
 7. ANALYTICS: os sinais dos modelos de machine learning. A tela avisa:
-   nada aqui muda nota.
-8. CONTESTAÇÃO: onde o gestor que discorda pede revisão e acompanha a
+   nada aqui muda nota, e os modelos ainda foram treinados no recorte
+   anterior à remodelagem (o re-treino tem marco próprio no
+   cronograma).
+8. CONTESTAÇÃO: onde o gerente que discorda pede revisão e acompanha a
    resposta.
 
 Tudo abre numa página só: você clica no título e a tela abre ali
@@ -344,14 +385,15 @@ Associação: pense numa prova da escola.
 
 1. RASCUNHO: o mês está sendo preparado. Ninguém informa nada ainda.
    (A professora está montando a prova.)
-2. LANÇAMENTO ABERTO: o prazo está aberto, cada área informa os números.
+2. LANÇAMENTO ABERTO: o prazo está aberto, cada unidade informa os
+   números; os dias finais são a janela de revisão.
    (A prova está acontecendo.)
-3. EM VALIDAÇÃO: o prazo acabou, a comissão confere antes de calcular.
+3. EM VALIDAÇÃO: o prazo acabou, a SEAB confere antes de calcular.
    (A professora está corrigindo.)
 4. HOMOLOGADO: a conta foi feita e aprovada.
    (A nota foi fechada.)
-5. PUBLICADO: o resultado está no ar, cada gestor vê a própria nota.
-   (O boletim foi entregue.)
+5. PUBLICADO: o resultado está no ar, cada gerente vê a nota da sua
+   unidade. (O boletim foi entregue.)
 
 O mês anda uma etapa por vez, nunca pula, nunca volta. Cada avanço fica
 gravado na trilha com quem fez e quando.
@@ -366,16 +408,22 @@ A fórmula que o sistema grava em cada memória de cálculo:
 
 Traduzindo em passos:
 
+0. Antes de tudo, COMPÕE cada indicador a partir dos SUBINDICADORES
+   preenchidos: razão vira percentual (numerador / denominador x 100) e
+   o indicador é a média simples dos apurados. Denominador zero não
+   explode a conta: o subindicador fica de fora, com aviso na memória.
 1. Para cada indicador, calcula o ATINGIMENTO: quanto do combinado foi
-   feito. Se a meta era 100 consultas e teve 88, atingiu 88%. (Para
-   indicador do tipo "quanto menor, melhor", tipo fila de espera, a
-   conta inverte.)
+   feito, contra a META DO TIPO da unidade (a régua da regra vigente).
+   Se a meta era 100 consultas e teve 88, atingiu 88%. (Para indicador
+   do tipo "quanto menor, melhor", tipo fila de espera, a conta
+   inverte.)
 2. O atingimento cai numa FAIXA DE PONTOS. Na regra v1: menos de 70%
    dá 0 ponto; de 70% a 85% dá 4; de 85% a 95% dá 7; de 95% a 100% dá
    9; e 100% ou mais dá 10.
-3. Cada indicador contribui com pontos x peso. Soma tudo, divide pelo
-   máximo possível, multiplica por 100. O resultado é uma nota de 0 a
-   100.
+3. Cada indicador contribui com pontos x o PESO que a régua dá a ele
+   naquele tipo de unidade. Soma tudo, divide pelo máximo possível,
+   multiplica por 100. O resultado é a nota da UNIDADE, de 0 a 100.
+   A nota do DISTRITO é a média das notas das unidades dele.
 
 Exemplo com dois indicadores:
   Indicador A: peso 3, atingiu 100% da meta = 10 pontos. Contribui 30.
@@ -419,21 +467,25 @@ QUEBRA O BUILD se um CPF, e-mail ou telefone aparecer na base.
 Associação: boneco de crash test. Para testar o carro não se usa gente
 de verdade; para testar o sistema não se usa servidor de verdade.
 
-O que a base sintética simula:
-- 10 áreas da saúde com siglas verossímeis (APS, VIS, REG, AF, SM, URG,
-  SB, GP, PLAN, OUV), tipo Atenção Primária, Vigilância, Farmácia...
-- 10 gestores fictícios, um por área, só com iniciais ("A. Moraes").
-  A entidade Gestor nem TEM campo de CPF, matrícula ou endereço: o que
-  não existe não vaza.
-- 30 indicadores com nomes reais de saúde pública ("Crianças com
-  esquema vacinal em dia", "Tempo médio de regulação de consulta").
+O que a base sintética simula (remodelada com a reunião de 22/08):
+- 3 distritos sanitários (Leste, Norte, Oeste) e 4 tipos de unidade
+  (USF, CAPS, UPA, Policlínica).
+- 12 unidades com nomes de aves, de propósito inventados ("USF Sabiá",
+  "CAPS Colibri", "UPA Andorinha"...).
+- 15 gerentes fictícios (12 de unidade, 3 distritais), só com iniciais
+  ("A. Moraes"). A entidade Gerente nem TEM campo de CPF, matrícula ou
+  endereço: o que não existe não vaza.
+- 7 indicadores calculados e 11 subindicadores preenchíveis, com nomes
+  reais de saúde pública ("Esquema de pólio completo", "Dias até a
+  consulta agendada"). A régua (meta e peso) varia por tipo: o CAPS tem
+  recorte menor, como o cliente descreveu.
 - 6 meses de dados (janeiro a junho de 2026), em estados diferentes:
   quatro publicados, um homologado, um com lançamento aberto (para o
-  funil da CAM ter pendência de verdade para mostrar).
+  funil da SEAB ter pendência de verdade para mostrar).
 - 3 contestações de exemplo (uma em análise, uma acatada, uma recusada).
-- Uma correção de lançamento com antes e depois (uma "vírgula
-  deslocada": valor 10x maior, corrigido), para a auditoria ter uma
-  história real para contar.
+- Uma correção DENTRO da janela de revisão, com antes e depois (uma
+  "vírgula deslocada": valor 10x maior, corrigido), para a trilha ter
+  uma história real para contar.
 
 E o mais importante: a base é gerada com SEMENTE FIXA (o número 20262).
 Semente é o ponto de partida do gerador de números: mesma semente,
@@ -467,7 +519,7 @@ NUVEM (docs/nuvem.md)
   O MVP roda em funções serverless. Associação: luz com sensor de
   presença, que acende só quando alguém entra na sala, em vez de um
   gerador ligado 24h. Por que isso serve ao caso: o gargalo do processo
-  é de calendário, todas as áreas lançam nos mesmos dois dias do mês.
+  é de calendário, todas as unidades lançam nos mesmos dias do mês.
   Pico curto e vale longo é exatamente o que serverless resolve. O
   documento confere os doze fatores (um checklist clássico de app
   nativo de nuvem) um a um, e declara com todas as letras a ressalva:
@@ -515,12 +567,14 @@ gente grande na banca:
    falhou e mostrar só a que deu certo seria escolher a métrica depois
    de ver o resultado."
 2. CLASSIFICAÇÃO "vai melhorar em relação ao mês passado?": funcionou.
-   76,7% de acerto contra 53,3% do chute. Serve para a CAM saber onde
+   76,7% de acerto contra 53,3% do chute. Serve para a SEAB saber onde
    olhar antes que piore.
 3. REGRESSÃO "qual atingimento esperar?": erra em média 0,105, um pouco
    menos que chutar a média (0,118). Melhor que o chute, mas pouco, e o
    arquivo diz isso.
 4. CLUSTERING "quais áreas se comportam parecido?": agrupa as 10 áreas
+   do recorte ANTERIOR à remodelagem (o re-treino no domínio novo tem
+   marco próprio no cronograma)
    em 3 grupos de comportamento ("mais alto e estável", "intermediário
    e oscilante", "mais baixo e oscilante"). Agrupa ÁREAS, nunca
    pessoas: clusterizar servidor seria outra conversa jurídica, e não é
@@ -556,7 +610,8 @@ em supabase/migrations/. Ele tem:
 - Controle de acesso NO BANCO (RLS): cada perfil só enxerga as próprias
   linhas. Associação: um armário onde cada gaveta tem a própria chave.
   Mesmo alguém falando direto com o banco, sem passar pelo site, um
-  gestor só receberia as próprias notas.
+  gestor só receberia as próprias notas (o schema segue no domínio
+  anterior à remodelagem de 22/08; a pendência está em docs/banco.md).
 - 4 travas de aço (gatilhos) que valem até para o administrador do
   banco: a trilha de auditoria não se apaga nem se edita (caderno de
   caneta, sem borracha); o ciclo anda um estado por vez e nunca volta;
@@ -651,7 +706,7 @@ fundo claro, e isso foi medido, não chutado.
   i3   31/10  Imprensado              peso 0
   s9   07/11  Semana 9: Sprint 3      peso 8
   s10  14/11  Semana 10: Sprint 4     peso 8
-  s11  21/11  Semana 11: Validação    peso 10  <- entrevistas com a CAM
+  s11  21/11  Semana 11: Validação    peso 10  <- entrevistas com o cliente
   s12  28/11  Semana 12: Pré-SR2      peso 5
   sr2  05/12  SR2: Final              peso 18  <- entrega final
 
@@ -678,8 +733,8 @@ parciais, 1 fora de escopo. Os parciais, com a ressalva honesta:
   acesso de verdade está escrito e testado no schema do banco, que está
   desligado.
 - REGRAS DA PORTARIA: a equipe não teve acesso à portaria vigente. Os
-  pesos e faixas da base são arbitrados e precisam de conferência com a
-  CAM. Isso está declarado como bloqueio no registro.
+  pesos e faixas da base são arbitrados e precisam de conferência com o
+  cliente. Isso está declarado como bloqueio no registro.
 - VALIDAÇÃO COM O CLIENTE: os instrumentos (roteiro de entrevista,
   questionário) estão prontos; o resultado não existe porque a Semana
   11 não chegou. Inventar fala de cliente seria fabricar evidência.
@@ -705,7 +760,7 @@ LGPD de qualquer jeito.
 ------------------------------------------------------------
 
   Gabriel Tenório de Lima Teixeira: Produto e PO. Escopo, backlog,
-    priorização e conversa com a CAM.
+    priorização e conversa com o cliente.
   Matheus Lustosa: Pesquisa e validação. Personas, benchmarking,
     entrevistas e instrumentos de validação.
   João Henrique Micucci: Arquitetura e backend. Modelo de dados, motor
@@ -761,7 +816,7 @@ linhas é tarefa de todos nós.
 
 "Vocês tiveram acesso à portaria?"
   Não, e está declarado como bloqueio. Os indicadores são verossímeis e
-  fictícios; a conferência com a CAM está no plano da validação.
+  fictícios; a conferência com o cliente está no plano da validação.
 
 "Por que tela sem permissão dá 404 e não 'acesso negado'?"
   Porque 'acesso negado' confirma que a coisa existe. Da porta para

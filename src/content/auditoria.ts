@@ -57,9 +57,11 @@ export const REQUISITOS: readonly Requisito[] = [
     pedido: 'Permitindo que cada área técnica informe seus indicadores diretamente no sistema.',
     estado: 'atendido',
     onde: [
-      'src/components/sistema/telas/lancamento.tsx: um formulário por indicador da área',
+      'src/components/sistema/telas/lancamento.tsx: um formulário por subindicador da unidade, com numerador e denominador quando é razão',
       'src/app/api/sistema/lancamento/route.ts: a escrita, com o autor registrado',
     ],
+    ressalva:
+      'A reunião com o cliente (22/08, ADR-034) trocou "área técnica" por UNIDADE: quem informa é a unidade de saúde, e o que se preenche é o subindicador. O pedido do briefing segue atendido, com o vocabulário corrigido pelo processo real.',
   },
   {
     id: 'regras-validacao',
@@ -78,12 +80,13 @@ export const REQUISITOS: readonly Requisito[] = [
     pedido: 'Com perfis de acesso.',
     estado: 'parcial',
     onde: [
+      'src/lib/features.ts: os quatro papéis que o CLIENTE nomeou (SEAB, administrador, gerente distrital, gerente de unidade)',
       'src/lib/sistema.ts: `exigirPerfil` fecha cada tela no servidor e responde 404',
       'src/lib/sistema.test.ts: as 8 telas contra os 4 perfis, sem amostragem',
       'supabase/migrations/: as políticas de RLS que fariam isso valer de verdade',
     ],
     ressalva:
-      'O perfil vem de um seletor simulado, não de autenticação. O recorte é real e roda no servidor, mas quem escolhe o papel é o próprio visitante. O RBAC de verdade está escrito e testado no schema, e desligado do app (ADR-011).',
+      'O perfil vem de um seletor simulado, não de autenticação. O recorte é real e roda no servidor, mas quem escolhe o papel é o próprio visitante. O RBAC de verdade está escrito e testado no schema, e desligado do app (ADR-011); as políticas guardadas ainda usam os papéis anteriores à ADR-034, com pendência declarada em docs/banco.md.',
   },
   {
     id: 'regras-da-portaria',
@@ -233,10 +236,11 @@ export const REQUISITOS: readonly Requisito[] = [
       'Semana 11: entrevistas e questionários com o cliente; ajustes no MVP com base no feedback.',
     estado: 'parcial',
     onde: [
+      'src/content/ciclos/s3.tsx: a PRIMEIRA conversa real com o cliente (22/08), registrada como documento, com o replanejamento que ela causou',
       'src/content/ciclos/s11.tsx: roteiro da entrevista e tarefas do teste de usabilidade, cronometrado',
     ],
     ressalva:
-      'Os INSTRUMENTOS estão prontos; o resultado não existe porque a semana não chegou. O bloco de feedback está em "nenhum" de propósito: inventar fala de cliente seria fabricar evidência (ADR-020).',
+      'A validação formal da Semana 11 ainda não aconteceu; o que existe é a reunião de levantamento de 22/08, que já mudou o domínio (ADR-034). Fala de cliente só entra registrada, nunca inventada (ADR-020).',
   },
   {
     id: 'planejado-realizado',

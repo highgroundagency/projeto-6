@@ -4,7 +4,7 @@ Gratificação por desempenho da SESAU Recife
 ============================================================================================
 
 CESAR School, Sistemas de Informação, 2026.2, Equipe 2. Cliente do caso: Secretaria de
-Saúde do Recife (SESAU), Comissão de Avaliação de Metas (CAM).
+Saúde do Recife (SESAU), Secretaria Executiva de Atenção Básica (SEAB), com a SECOGE.
 
 Este arquivo é GERADO por `npm run dossie` a partir do próprio código do site. Nada aqui
 foi digitado duas vezes: o cronograma vem do cronograma, os registros semanais vêm dos
@@ -353,6 +353,8 @@ feedback de professor ou de cliente seria fabricar evidência.
   - Matriz de impacto × esforço × aderência montada para comparar as alternativas.
   - Critérios de decisão acordados antes da votação, para evitar escolha por preferência
     pessoal.
+  - Primeira reunião com o representante do cliente realizada em 22/08, com ata registrada
+    como documento desta semana.
 
   Decisões  [validado, validado por fernando]
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -364,14 +366,27 @@ feedback de professor ou de cliente seria fabricar evidência.
   - Ideia escolhida: sistema com regra parametrizável e memória de cálculo auditável.
       por quê: Ataca a causa (regra implícita na planilha) e não o sintoma (planilha
       bonita), e cabe no semestre.
+  - Remodelar o domínio do MVP já, com o que a reunião com o cliente revelou:
+    subindicadores, tipos de unidade e a rede por distrito.
+      por quê: O que muda é o coração do modelo, não um detalhe de tela. Cada semana
+      construída sobre o entendimento antigo custaria mais caro de desfazer.
 
   Bloqueios  [validado, validado por fernando]
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   - Registro da dinâmica real das três técnicas pendente, esta seção é preenchida na semana
     com fotos e artefatos.
+  - A planilha real de cálculo prometida na reunião ainda não chegou: a composição dos
+    subindicadores e a agregação distrital seguem como suposições declaradas, marcadas na
+    ata.
 
   Feedback recebido  [validado, validado por fernando]
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  - (cliente) O que se preenche são subindicadores (valor direto, ou numerador e
+    denominador); o indicador é calculado. A régua depende do tipo da unidade, e a rede é
+    secretaria, distrito sanitário e unidade, com o gerente distrital também avaliado.
+  - (cliente) Confirmações do que o MVP já fazia: ciclo mensal, regra versionada que muda
+    de ano em ano, correção com histórico, visualização por nível de acesso e exportação de
+    planilha. Pedido novo: janela de revisão de cinco dias no fim do mês.
   - (equipe) A alternativa de “só melhorar a planilha” foi mantida na matriz de propósito:
     serve de linha de base para comparar ganho real.
 
@@ -393,9 +408,40 @@ feedback de professor ou de cliente seria fabricar evidência.
   Evidências  [validado, validado por fernando]
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   - [documento] Matriz de priorização -> /registro#s3
+  - [documento] Reunião com o cliente registrada -> #doc-s3-reuniao-cliente
 
-  Documentos de entrega desta semana (3)
+  Documentos de entrega desta semana (4)
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  >>> REUNIÃO COM O CLIENTE (22/08)
+      âncora no site: #doc-s3-reuniao-cliente
+      a ata sintetizada: o que a conversa confirmou, o que ela mudou no domínio, e o que
+      ficou para validar.
+
+      Primeira conversa com o representante do órgão (SECOGE/SESAU) sobre o processo real da gratificação. A ata abaixo é sintetizada e sem nomes de pessoa, seguindo a regra de privacidade do projeto: papel importa, identidade não.
+
+       O que o MVP já cobria | O que a reunião mudou
+
+       Indicador preenchido direto, com meta e peso próprios | O que se preenche é o SUBINDICADOR: valor direto (índice) ou numerador e denominador (razão). O indicador é calculado a partir deles.
+       Áreas técnicas planas, todas com a mesma régua | A régua depende do TIPO da unidade (USF, CAPS, UPA, policlínica): a depender do tipo, só alguns indicadores valem, e os pesos mudam.
+       Um gestor por área | A rede é secretaria → distrito sanitário → unidade. O gerente distrital também é avaliado: a nota dele agrega as unidades do distrito.
+       Correção dentro da janela de lançamento | Janela de REVISÃO de cinco dias no fim do mês, com o valor antigo guardado no histórico.
+       Perfis CAM, área técnica, gestor e auditoria | Os quatro atores nomeados: gerente de unidade, gerente distrital, administrador da plataforma e coordenação da SEAB.
+
+      Gerente de unidade
+      ator 1Dirige uma unidade de saúde. Preenche os subindicadores do mês e responde pela nota da unidade, que segue a régua do tipo dela.
+
+      Gerente distrital
+      ator 2Acompanha as unidades do distrito (na rede real, cerca de trinta) e revisa números na janela. Também é avaliado, pela agregação das unidades.
+
+      Administrador
+      ator 3Opera a plataforma: cadastros, acessos e trilha. Administra a ferramenta, não as notas.
+
+      Coordenação da SEAB
+      ator 4Coordena o processo: define a régua, cobra os números, faz a conta, homologa, publica e responde contestação.
+
+      O que a conversa confirmou do que o MVP já fazia: ciclo mensal, regra versionada que muda de ano em ano, correção com histórico, visualização por nível de acesso, exportação de planilha e persistência com historicidade.
+      Suposições declaradas, a validar com a planilha real prometida: razão = numerador ÷ denominador; indicador com vários subindicadores = média simples dos apurados; nota distrital = média simples das unidades. Se a planilha disser diferente, vira versão nova da regra, não reescrita do sistema.
 
   >>> ROTEIRO DAS TRÊS TÉCNICAS
       âncora no site: #doc-s3-tecnicas-ideacao
@@ -504,10 +550,11 @@ feedback de professor ou de cliente seria fabricar evidência.
       o produto, o recorte e a aposta central.
 
       - O quê: um sistema web que substitui a planilha de consolidação da gratificação por desempenho.
-       - Para quem: CAM, áreas técnicas que informam dados, gestores avaliados e auditoria.
-       - Como: indicadores e regras cadastrados pela interface; regra versionada; cálculo por função pura; memória de cálculo exibida junto de cada resultado; trilha de auditoria imutável.
+       - Para quem: os quatro atores que o cliente nomeou, coordenação da SEAB, administrador da plataforma, gerentes distritais e gerentes de unidade.
+       - Como: subindicadores preenchidos pelas unidades; indicador calculado; régua (meta e peso) por tipo de unidade, dentro da regra versionada; cálculo por função pura; memória de cálculo exibida junto de cada resultado; trilha de auditoria imutável.
        - Por que agora: o processo depende de poucas pessoas e não tem rastreabilidade, um erro só aparece depois do pagamento.
        - Como saberemos que deu certo: qualquer número do resultado responde “de onde veio?” em um clique, e o mesmo ciclo recalculado devolve o mesmo valor.
+      Atualizado depois da reunião com o cliente de 22/08 (ver o documento da Semana 3): o domínio ganhou subindicadores, tipos de unidade e a rede por distrito.
 
   >>> ESCOPO
       âncora no site: #doc-s4-escopo
@@ -515,12 +562,14 @@ feedback de professor ou de cliente seria fabricar evidência.
 
       Dentro
 
-       - Cadastro de ciclos, áreas, indicadores e regras de pontuação versionadas
-       - Lançamento de valores pelas áreas técnicas, com validação e evidência
-       - Motor de cálculo com memória de cálculo por indicador
+       - Cadastro da rede (distritos, tipos, unidades) e do catálogo de indicadores com seus subindicadores
+       - Régua por tipo de unidade (meta e peso na regra versionada)
+       - Lançamento por subindicador pelas unidades, com evidência e janela de revisão de 5 dias
+       - Motor de cálculo com memória composta, subindicador por subindicador
+       - Avaliação por unidade e a distrital (média das unidades do distrito)
        - Estados do ciclo, da abertura à publicação, com trilha de auditoria
-       - Consulta do próprio resultado pelo gestor e abertura de contestação
-       - Painel agregado por área e exportação em CSV
+       - Consulta do próprio resultado pelo gerente e abertura de contestação
+       - Painel agregado por distrito e exportação em CSV
        - Analytics com os resultados dos modelos e o método declarado
 
       Fora
@@ -537,31 +586,32 @@ feedback de professor ou de cliente seria fabricar evidência.
 
       Épico | História | MoSCoW
 
-       Ciclo | Como CAM, quero abrir um ciclo de avaliação para que as áreas possam lançar dados | M
-       Ciclo | Como CAM, quero definir a janela de lançamento para controlar o prazo | M
-       Ciclo | Como CAM, quero avançar o estado do ciclo para refletir a etapa real do processo | M
-       Ciclo | Como CAM, quero homologar o ciclo para congelar os resultados | M
-       Ciclo | Como CAM, quero publicar o ciclo para que os gestores vejam seus resultados | S
-       Indicadores | Como CAM, quero cadastrar indicadores com meta, peso e direção para refletir a portaria | M
-       Indicadores | Como CAM, quero definir se o indicador é maior-melhor ou menor-melhor para calcular corretamente | M
-       Indicadores | Como CAM, quero criar uma nova versão da regra para não alterar ciclos já fechados | M
-       Indicadores | Como CAM, quero ver o diff entre versões da regra para saber o que mudou | S
-       Indicadores | Como CAM, quero definir a vigência da regra para que cada ciclo use a versão certa | M
-       Lançamento | Como área técnica, quero lançar o valor do meu indicador para cumprir minha parte | M
-       Lançamento | Como área técnica, quero anexar a evidência do dado para sustentar o que informei | M
-       Lançamento | Como área técnica, quero editar meu lançamento dentro do prazo para corrigir engano | M
-       Lançamento | Como área técnica, quero ver o histórico da minha área para acompanhar o que já enviei | S
-       Lançamento | Como área técnica, quero ser avisada de valor fora do padrão para conferir antes de enviar | C
-       Resultado | Como gestor avaliado, quero ver meu score e minha faixa para saber meu resultado | M
-       Resultado | Como gestor avaliado, quero abrir a memória de cálculo para entender de onde veio o número | M
-       Resultado | Como gestor avaliado, quero comparar meus ciclos para acompanhar minha evolução | S
-       Resultado | Como gestor avaliado, quero abrir contestação para questionar um resultado | S
-       Resultado | Como CAM, quero responder a contestação para encerrar o questionamento com registro | S
-       Governança | Como auditoria, quero ver a linha do tempo de tudo que aconteceu para fiscalizar | M
-       Governança | Como auditoria, quero que nada possa ser apagado para que a trilha sirva de prova | M
-       Governança | Como CAM, quero ver agregados por área para enxergar o funil do ciclo | S
-       Governança | Como CAM, quero exportar os resultados em CSV para usar em outros relatórios | C
-       Governança | Como CAM, quero ver o risco de não-atingimento no próximo ciclo para agir antes | C
+       Ciclo | Como SEAB, quero abrir um ciclo de avaliação para que as unidades possam lançar dados | M
+       Ciclo | Como SEAB, quero definir a janela de lançamento, com a janela de revisão nos dias finais, para controlar o prazo | M
+       Ciclo | Como SEAB, quero avançar o estado do ciclo para refletir a etapa real do processo | M
+       Ciclo | Como SEAB, quero homologar o ciclo para congelar os resultados | M
+       Ciclo | Como SEAB, quero publicar o ciclo para que os gerentes vejam seus resultados | S
+       Régua | Como SEAB, quero cadastrar indicadores compostos por subindicadores (índice ou razão) para refletir o processo real | M
+       Régua | Como SEAB, quero definir quais indicadores valem para cada tipo de unidade, com meta e peso próprios, para respeitar o recorte de cada tipo | M
+       Régua | Como SEAB, quero criar uma nova versão da regra para não alterar ciclos já fechados | M
+       Régua | Como SEAB, quero ver o diff entre versões da regra para saber o que mudou | S
+       Régua | Como SEAB, quero definir a vigência da regra para que cada ciclo use a versão certa | M
+       Lançamento | Como gerente de unidade, quero lançar cada subindicador da minha unidade (valor, ou numerador e denominador) para cumprir minha parte | M
+       Lançamento | Como gerente de unidade, quero anexar a evidência do dado para sustentar o que informei | M
+       Lançamento | Como gerente de unidade, quero corrigir um lançamento na janela de revisão, com o valor antigo guardado, para acertar engano | M
+       Lançamento | Como gerente distrital, quero revisar os lançamentos das minhas unidades na janela de revisão para responder pelo distrito | S
+       Lançamento | Como gerente de unidade, quero ser avisado de valor fora do padrão para conferir antes de enviar | C
+       Resultado | Como gerente de unidade, quero ver o score e a faixa da minha unidade para saber meu resultado | M
+       Resultado | Como gerente de unidade, quero abrir a memória de cálculo, com a composição de cada subindicador, para entender de onde veio o número | M
+       Resultado | Como gerente distrital, quero ver minha nota como média das unidades do distrito, com a composição aberta, para saber meu resultado | M
+       Resultado | Como gerente, quero comparar meus ciclos para acompanhar minha evolução | S
+       Resultado | Como gerente, quero abrir contestação para questionar um resultado | S
+       Resultado | Como SEAB, quero responder a contestação para encerrar o questionamento com registro | S
+       Governança | Como administrador, quero ver a linha do tempo de tudo que aconteceu para dar suporte e fiscalizar | M
+       Governança | Como administrador, quero que nada possa ser apagado para que a trilha sirva de prova | M
+       Governança | Como SEAB, quero ver agregados por distrito para enxergar o funil do ciclo | S
+       Governança | Como SEAB, quero exportar os resultados em CSV para usar em outros relatórios | C
+       Governança | Como SEAB, quero ver o risco de não-atingimento no próximo ciclo para agir antes | C
 
 --- KO · Kick-off · 12/09/2026 -------------------------------------------------------------
 
@@ -1594,85 +1644,88 @@ cada uma delas, nesta ordem: o gate de release (a tela já existe hoje?) e o gat
 liberado" e "não é seu" precisam ser indistinguíveis.
 
 
-  Dashboard da CAM
-  ~~~~~~~~~~~~~~~~
+  Painel da SEAB
+  ~~~~~~~~~~~~~~
   Quem já mandou os números do mês, quem falta, e o botão de avançar a etapa.
-  - id interno: painel-cam
-  - rota histórica: /sistema/cam (hoje redireciona para /sistema#tela-painel-cam)
+  - id interno: painel-seab
+  - rota histórica: /sistema/cam (hoje redireciona para /sistema#tela-painel-seab)
   - liberada em: Semana 5: Arquitetura, 19/09/2026
-  - perfis que enxergam: CAM, Auditoria
+  - perfis que enxergam: Coordenação da SEAB, Administrador
 
   Indicadores e regras
   ~~~~~~~~~~~~~~~~~~~~
-  A lista do que é medido, com a meta e o peso de cada item, e a tabela de pontos.
+  O catálogo do que é medido, os subindicadores que compõem cada item e a régua por tipo de
+  unidade.
   - id interno: indicadores
   - rota histórica: /sistema/indicadores (hoje redireciona para /sistema#tela-indicadores)
   - liberada em: Semana 5: Arquitetura, 19/09/2026
-  - perfis que enxergam: CAM, Auditoria
+  - perfis que enxergam: Administrador, Coordenação da SEAB
 
-  Lançamento
-  ~~~~~~~~~~
-  Onde cada área digita os números do mês e diz de onde cada um veio.
+  Lançamento da unidade
+  ~~~~~~~~~~~~~~~~~~~~~
+  Onde a unidade preenche os subindicadores do mês e diz de onde cada número veio.
   - id interno: lancamento
   - rota histórica: /sistema/lancamento (hoje redireciona para /sistema#tela-lancamento)
   - liberada em: Semana 5: Arquitetura, 19/09/2026
-  - perfis que enxergam: Área técnica, CAM, Auditoria
+  - perfis que enxergam: Gerente de unidade, Gerente distrital, Coordenação da SEAB
 
   Meu resultado
   ~~~~~~~~~~~~~
-  A nota do gestor, a conta inteira aberta e a comparação com os meses anteriores.
+  A nota da unidade ou do distrito, a conta inteira aberta e a comparação com os meses
+  anteriores.
   - id interno: meu-resultado
   - rota histórica: /sistema/meu-resultado (hoje redireciona para
     /sistema#tela-meu-resultado)
   - liberada em: Semana 6: Pré-SR1, 26/09/2026
-  - perfis que enxergam: Gestor avaliado, CAM, Auditoria
+  - perfis que enxergam: Gerente de unidade, Gerente distrital, Coordenação da SEAB
 
-  Auditoria
-  ~~~~~~~~~
+  Trilha de auditoria
+  ~~~~~~~~~~~~~~~~~~~
   O histórico de tudo: quem fez o quê, quando, e como estava antes.
   - id interno: auditoria
   - rota histórica: /sistema/auditoria (hoje redireciona para /sistema#tela-auditoria)
   - liberada em: Semana 7: Sprint 1, 17/10/2026
-  - perfis que enxergam: Auditoria, CAM
+  - perfis que enxergam: Administrador, Coordenação da SEAB
 
   Painel da gestão
   ~~~~~~~~~~~~~~~~
-  O resumo geral: média, ranking das áreas e o botão de baixar a planilha.
+  O resumo geral: média, ranking das unidades por distrito e o botão de baixar a planilha.
   - id interno: painel-gestao
   - rota histórica: /sistema/gestao (hoje redireciona para /sistema#tela-painel-gestao)
   - liberada em: Semana 9: Sprint 3, 07/11/2026
-  - perfis que enxergam: CAM, Auditoria
+  - perfis que enxergam: Coordenação da SEAB, Administrador, Gerente distrital
 
   Analytics
   ~~~~~~~~~
-  Sinais que ajudam a comissão a saber onde olhar. Nada aqui muda nota.
+  Sinais que ajudam a SEAB a saber onde olhar. Nada aqui muda nota.
   - id interno: analytics
   - rota histórica: /sistema/analytics (hoje redireciona para /sistema#tela-analytics)
   - liberada em: Semana 10: Sprint 4, 14/11/2026
-  - perfis que enxergam: CAM, Auditoria
+  - perfis que enxergam: Coordenação da SEAB, Administrador
 
   Contestação
   ~~~~~~~~~~~
-  Onde o gestor que discorda da nota pede revisão e acompanha a resposta.
+  Onde o gerente que discorda da nota pede revisão e acompanha a resposta.
   - id interno: contestacao
   - rota histórica: /sistema/contestacao (hoje redireciona para /sistema#tela-contestacao)
   - liberada em: Semana 11: Validação, 21/11/2026
-  - perfis que enxergam: Gestor avaliado, CAM, Auditoria
+  - perfis que enxergam: Gerente de unidade, Gerente distrital, Coordenação da SEAB
 
 ============================================================================================
 5.  OS QUATRO PAPÉIS DO PROCESSO
 ============================================================================================
 
 
-  CAM (cam)
-  ~~~~~~~~~
-  CAM quer dizer Comissão de Avaliação de Metas. É o grupo que cuida de todo o processo:
-  define o que será medido, cobra os números, faz a conta e divulga o resultado.
+  Coordenação da SEAB (seab)
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~
+  A SEAB é a secretaria executiva que coordena a avaliação. É quem define o que será medido
+  em cada tipo de unidade, cobra os números, faz a conta e divulga o resultado.
 
   O QUE FAZ
-  - Cadastra o que vai ser medido: cada indicador, com a meta e o peso.
-  - Abre e fecha o prazo para as áreas informarem os números do mês.
-  - Faz a conta, aprova e divulga o resultado.
+  - Cadastra a régua: indicadores, subindicadores, e a meta e o peso de cada tipo de
+    unidade.
+  - Abre e fecha o prazo para as unidades informarem os números do mês.
+  - Faz a conta, homologa e divulga o resultado das unidades e dos distritos.
   - Responde por escrito quem discordar da nota.
 
   O QUE O PROCESSO IMPEDE
@@ -1682,73 +1735,79 @@ liberado" e "não é seu" precisam ser indistinguíveis.
   - Apagar o histórico. O que aconteceu fica registrado para sempre.
 
   TELAS QUE ENXERGA
-  - Dashboard da CAM
+  - Painel da SEAB
   - Indicadores e regras
-  - Lançamento
+  - Lançamento da unidade
   - Meu resultado
-  - Auditoria
+  - Trilha de auditoria
   - Painel da gestão
   - Analytics
   - Contestação
 
-  Área técnica (area_tecnica)
-  ~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  É o setor que produz o dado: a equipe que tem o número na mão, como a da vacinação ou a
-  das consultas.
+  Administrador (administrador)
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  É quem opera a plataforma por dentro: mantém cadastros e acessos em ordem e confere a
+  trilha de auditoria. Administra a ferramenta, não as notas.
 
   O QUE FAZ
-  - Digita o valor de cada indicador da sua área, dentro do prazo.
-  - Diz de onde cada número veio: qual relatório, qual sistema.
-  - Corrige um valor errado antes do fechamento. O valor antigo fica guardado.
+  - Mantém os cadastros da rede: distritos, tipos de unidade, unidades e gerentes.
+  - Acompanha a trilha de auditoria completa, com o antes e o depois de cada mudança.
+  - Confere os painéis para dar suporte a quem usa o sistema.
 
   O QUE O PROCESSO IMPEDE
-  - Informar fora do prazo. Depois que o mês fecha, o campo trava.
-  - Mudar meta ou peso. Quem informa o resultado não escolhe a régua.
-  - Ver a nota dos gestores. A área entrega o número, não recebe nota.
+  - Informar número por uma unidade. Quem lança é quem tem o dado na mão.
+  - Mudar nota, meta ou peso. A régua é da SEAB, e versão antiga fica guardada.
+  - Apagar ou editar o histórico. A trilha só cresce, nunca encolhe.
 
   TELAS QUE ENXERGA
-  - Lançamento
+  - Painel da SEAB
+  - Indicadores e regras
+  - Trilha de auditoria
+  - Painel da gestão
+  - Analytics
 
-  Gestor avaliado (gestor)
-  ~~~~~~~~~~~~~~~~~~~~~~~~
-  É a pessoa avaliada: o gestor cujo pagamento extra depende da nota. O sistema existe para
-  que ela entenda e confie na própria nota.
+  Gerente distrital (gerente_distrital)
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  Cada distrito sanitário tem uma gerência que acompanha as unidades dele. Ela também é
+  avaliada: a nota do distrito é a média das notas das suas unidades.
 
   O QUE FAZ
-  - Vê a própria nota e a faixa de pagamento que ela dá.
-  - Abre a conta inteira e confere de onde veio cada número.
-  - Se discordar, pede revisão no prazo e recebe resposta por escrito.
+  - Acompanha o painel do próprio distrito, unidade por unidade.
+  - Revisa e corrige lançamentos das unidades na janela de revisão, os dias finais do
+    prazo.
+  - Vê a própria nota, que é a média do distrito, e abre contestação se discordar.
 
   O QUE O PROCESSO IMPEDE
-  - Mudar número. Discordar tem um caminho formal, não uma tela de edição.
-  - Ver a nota dos colegas pelo nome. O ranking com nomes é da gestão.
+  - Ver o recorte de outro distrito. Cada gerência enxerga o seu.
+  - Mudar meta ou peso. Quem informa o resultado não escolhe a régua.
+  - Alterar número fora da janela. Depois que o mês fecha, o campo trava.
+
+  TELAS QUE ENXERGA
+  - Lançamento da unidade
+  - Meu resultado
+  - Painel da gestão
+  - Contestação
+
+  Gerente de unidade (gerente_unidade)
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  É quem dirige uma unidade de saúde: USF, CAPS, UPA ou policlínica. Preenche os
+  subindicadores do mês e responde pela nota da unidade, que depende do tipo dela.
+
+  O QUE FAZ
+  - Preenche cada subindicador da unidade, no prazo: valor direto, ou numerador e
+    denominador.
+  - Diz de onde cada número veio: qual relatório, qual sistema.
+  - Corrige um valor na janela de revisão. O valor antigo fica guardado.
+  - Vê a nota da unidade com a conta aberta, e pede revisão se discordar.
+
+  O QUE O PROCESSO IMPEDE
+  - Lançar por outra unidade. Cada uma responde pelos próprios números.
+  - Mudar meta ou peso. A régua do tipo da unidade vem da regra vigente.
   - Ter a nota decidida por robô. A conta segue sempre a mesma regra, aberta para conferir.
 
   TELAS QUE ENXERGA
+  - Lançamento da unidade
   - Meu resultado
-  - Contestação
-
-  Auditoria (auditoria)
-  ~~~~~~~~~~~~~~~~~~~~~
-  É quem confere o processo de fora, como um fiscal: pode olhar tudo, e não muda nada.
-
-  O QUE FAZ
-  - Lê o histórico completo: quem informou o quê, quando, e como estava antes.
-  - Refaz a conta de um mês fechado e confere se dá o mesmo resultado.
-  - Compara o resultado divulgado com a regra que valia naquele mês.
-
-  O QUE O PROCESSO IMPEDE
-  - Escrever qualquer coisa. Nenhuma tela dá botão de ação a este perfil, de propósito.
-  - Ficar sem ver algo. É o único papel que enxerga todas as telas.
-
-  TELAS QUE ENXERGA
-  - Dashboard da CAM
-  - Indicadores e regras
-  - Lançamento
-  - Meu resultado
-  - Auditoria
-  - Painel da gestão
-  - Analytics
   - Contestação
 
 ============================================================================================
@@ -1759,30 +1818,32 @@ Com `?passo=N` o sistema entra em modo tutorial: uma tela só na página, o elem
 passo fala contornado em laranja, e uma barra no rodapé conduzindo. Cada passo tem URL
 própria. Passos que apontam para tela ainda não liberada são descartados.
 
---- Tutorial de CAM (9 passos) -------------------------------------------------------------
+--- Tutorial de Coordenação da SEAB (9 passos) ---------------------------------------------
 
-  Você cuida do processo inteiro. Os passos abaixo seguem a ordem de um mês de verdade, do
-  começo ao resultado.
+  Você coordena o processo inteiro. Os passos abaixo seguem a ordem de um mês de verdade,
+  do começo ao resultado.
 
-  01. Veja o que será medido
-      o que fazer: Esta tela é a lista do que conta ponto. Cada linha mostra um indicador,
-      a meta dele e o peso: quanto maior o peso, mais ele vale na nota.
-      por quê: Antes de alguém informar número, todo mundo precisa conhecer a régua. Régua
-      que muda no meio do caminho é o que faz as pessoas desconfiarem do resultado.
-      tela: indicadores · alvo: ind-catalogo
+  01. Veja a régua de cada tipo de unidade
+      o que fazer: Esta tela mostra o que conta ponto: cada indicador, os subindicadores
+      que o compõem, e a meta e o peso que valem para cada tipo de unidade, USF, CAPS, UPA
+      ou policlínica.
+      por quê: Foi o que a reunião com o cliente deixou claro: a régua depende do tipo da
+      unidade. Régua que muda no meio do caminho é o que faz as pessoas desconfiarem do
+      resultado.
+      tela: indicadores · alvo: ind-regua
 
   02. Veja quem já mandou os números
-      o que fazer: Cada barra mostra quantos números aquela área já informou no mês. Barra
-      cheia: área em dia. Logo abaixo, a lista de quem ainda falta.
+      o que fazer: Cada barra mostra quantos subindicadores aquela unidade já informou no
+      mês. Barra cheia: unidade em dia. Logo abaixo, a lista de quem ainda falta.
       por quê: Hoje essa informação só existe cobrando por e-mail. Aqui ela aparece na
-      tela, na hora.
-      tela: painel-cam · alvo: cam-funil
+      tela, na hora, unidade por unidade.
+      tela: painel-seab · alvo: seab-funil
 
-  03. Lance por uma área, se precisar
-      o que fazer: Escolha a área e digite o valor e a origem dele. A comissão pode fazer
-      isso no lugar de uma área atrasada.
-      por quê: O mês não pode travar por causa de uma área. E fica registrado que foi você
-      quem lançou, não a área.
+  03. Lance por uma unidade, se precisar
+      o que fazer: Escolha a unidade e preencha os subindicadores: valor direto, ou
+      numerador e denominador. A SEAB pode fazer isso no lugar de uma unidade atrasada.
+      por quê: O mês não pode travar por causa de uma unidade. E fica registrado que foi
+      você quem lançou, não a unidade.
       tela: lancamento · alvo: lanc-formularios
 
   04. Avance a etapa do mês
@@ -1791,26 +1852,26 @@ própria. Passos que apontam para tela ainda não liberada são descartados.
       laranja.
       por quê: O mês anda uma etapa por vez, e cada avanço fica anotado no histórico. Assim
       ninguém tem dúvida se um número ainda pode mudar.
-      tela: painel-cam · alvo: cam-estado
+      tela: painel-seab · alvo: seab-estado
 
   05. Confira uma nota antes de divulgar
-      o que fazer: Escolha um gestor e abra a conta dele, linha por linha. É a mesma tela
-      que ele vai ver.
+      o que fazer: Escolha um gerente e abra a conta dele, linha por linha, com os
+      subindicadores dentro de cada indicador. É a mesma tela que ele vai ver.
       por quê: Olhar a nota com os olhos de quem recebe evita a pergunta sem resposta na
       reunião.
       tela: meu-resultado · alvo: res-memoria
 
   06. Veja o resumo geral
-      o que fazer: Escolha o mês, ligue "esconder os nomes" se for apresentar em público, e
-      baixe a planilha se precisar.
-      por quê: O resumo é o que vai para a reunião de gestão. Esconder os nomes deixa
-      comparar as áreas sem expor pessoas.
+      o que fazer: Escolha o mês e o distrito, ligue "esconder os nomes" se for apresentar
+      em público, e baixe a planilha se precisar.
+      por quê: O resumo é o que vai para a reunião de gestão. A nota de cada distrito é a
+      média das unidades dele, que é a nota do gerente distrital.
       tela: painel-gestao · alvo: gest-ranking
 
   07. Descubra onde olhar no próximo mês
-      o que fazer: Esta tela aponta as áreas com resultado mais baixo e os números que
+      o que fazer: Esta tela aponta as unidades com resultado mais baixo e os números que
       parecem erro de digitação.
-      por quê: Nada daqui muda a nota de ninguém. Serve para a comissão saber onde ajudar
+      por quê: Nada daqui muda a nota de ninguém. Serve para a SEAB saber onde ajudar
       primeiro.
       tela: analytics · alvo: ana-risco
 
@@ -1829,125 +1890,128 @@ própria. Passos que apontam para tela ainda não liberada são descartados.
       tela: auditoria · alvo: aud-linha
 
 
---- Tutorial de Área técnica (4 passos) ----------------------------------------------------
+--- Tutorial de Administrador (5 passos) ---------------------------------------------------
 
-  Seu papel é simples e é o mais importante de todos: informar o número certo, dizer de
-  onde ele veio, e dentro do prazo.
+  Você cuida da plataforma, não das notas. O caminho abaixo confere se a ferramenta está em
+  ordem, do cadastro à trilha.
 
-  01. Escolha a sua área
-      o que fazer: Use a caixa de seleção. A lista abaixo muda e passa a mostrar só os
-      indicadores da área escolhida.
-      por quê: Cada área responde pelos próprios números, e só pelos próprios.
-      tela: lancamento · alvo: lanc-area
+  01. Confira os cadastros
+      o que fazer: Esta tela lista o catálogo inteiro: indicadores, subindicadores e a
+      régua de cada tipo de unidade. É o que você mantém em dia.
+      por quê: Cadastro errado vira nota errada. A régua é da SEAB, mas quem garante que
+      ela está carregada certa é você.
+      tela: indicadores · alvo: ind-catalogo
 
-  02. Digite o valor e diga de onde veio
-      o que fazer: Preencha o número e, ao lado, a origem dele: o relatório ou o sistema de
-      onde você tirou. Os dois campos são obrigatórios.
-      por quê: Número sem origem não dá para conferir depois. A origem é o que protege você
-      se alguém duvidar.
+  02. Acompanhe o andamento do mês
+      o que fazer: O painel mostra a etapa do mês e o funil de lançamento por unidade. Você
+      acompanha; quem avança a etapa é a SEAB.
+      por quê: Quando uma unidade liga dizendo que "não consegue lançar", a resposta começa
+      aqui: ou o prazo fechou, ou é chamado de suporte.
+      tela: painel-seab · alvo: seab-funil
+
+  03. Veja o conjunto pelos painéis
+      o que fazer: O painel da gestão soma tudo: média, ranking das unidades e a nota de
+      cada distrito.
+      por quê: Para dar suporte é preciso ver o que cada perfil vê. Este é o retrato que a
+      gestão olha.
+      tela: painel-gestao · alvo: gest-numeros
+
+  04. Confira os sinais de analytics
+      o que fazer: Veja os números que parecem erro de digitação e as unidades em risco.
+      Nada daqui muda nota.
+      por quê: É o lugar onde um problema de dado aparece primeiro, antes de virar
+      contestação.
+      tela: analytics · alvo: ana-suspeitos
+
+  05. Percorra a trilha de auditoria
+      o que fazer: Filtre o histórico por tipo ou por mês e leia os registros: quem fez,
+      quando, antes e depois.
+      por quê: A trilha só cresce, nunca encolhe, e ninguém a edita, nem você. É isso que
+      faz dela prova.
+      tela: auditoria · alvo: aud-linha
+
+
+--- Tutorial de Gerente distrital (4 passos) -----------------------------------------------
+
+  Você responde pelo distrito: acompanha as unidades, revisa números na janela de revisão,
+  e a sua nota é a média delas.
+
+  01. Veja o retrato do seu distrito
+      o que fazer: O painel abre já recortado no seu distrito: a média, o ranking das suas
+      unidades e quem está com aviso.
+      por quê: O seu resultado nasce daqui: a nota do distrito é a média das notas das
+      unidades dele.
+      tela: painel-gestao · alvo: gest-ranking
+
+  02. Revise um lançamento na janela
+      o que fazer: Escolha a unidade e confira os subindicadores lançados. Nos dias finais
+      do prazo, a janela de revisão, dá para corrigir: o valor antigo fica guardado.
+      por quê: Foi um pedido do cliente: cinco dias no fim do mês para revisão, com
+      histórico. Corrigir às claras é diferente de apagar.
       tela: lancamento · alvo: lanc-formularios
 
-  03. Repare no aviso laranja
-      o que fazer: Se o valor ficar muito longe da meta, aparece um aviso embaixo do campo.
-      Ele não trava o envio: só pede que você confira.
-      por quê: O erro mais comum é a vírgula no lugar errado. O sistema avisa, e quem
-      decide é você, que tem o dado na mão.
+  03. Veja a sua nota e a composição dela
+      o que fazer: Escolha o seu nome no seletor. O cartão mostra a média do distrito, e o
+      quadro abaixo abre a nota de cada unidade que entrou na conta.
+      por quê: Uma média sem composição é um número solto. Aqui dá para ver de onde cada
+      décimo veio.
+      tela: meu-resultado · alvo: res-composicao
+
+  04. Discorde, se for o caso
+      o que fazer: Abra uma contestação, diga qual indicador (ou a nota toda) e escreva o
+      motivo.
+      por quê: Discordar deixa de ser telefonema e vira pedido registrado, com prazo e
+      resposta escrita.
+      tela: contestacao · alvo: cont-abrir
+
+
+--- Tutorial de Gerente de unidade (6 passos) ----------------------------------------------
+
+  Você preenche os subindicadores da sua unidade e recebe a nota dela. O caminho abaixo é o
+  seu mês inteiro.
+
+  01. Escolha a sua unidade
+      o que fazer: Use a caixa de seleção. A lista abaixo muda e mostra só o que o TIPO da
+      sua unidade preenche: um CAPS não vê os indicadores de pré-natal de uma USF.
+      por quê: Cada unidade responde pelos próprios números, e a régua dela depende do
+      tipo. Foi o que o cliente explicou na reunião.
+      tela: lancamento · alvo: lanc-unidade
+
+  02. Preencha cada subindicador
+      o que fazer: Alguns pedem um valor direto; outros pedem numerador e denominador, por
+      exemplo, gestantes com consulta em dia sobre gestantes cadastradas. Diga sempre de
+      onde o número veio.
+      por quê: O indicador é calculado a partir do que você preenche. Número sem origem não
+      dá para conferir depois, e a origem é o que protege você.
       tela: lancamento · alvo: lanc-formularios
 
-  04. Errou? Corrija sem medo
-      o que fazer: Envie de novo com o valor certo. O campo já mostra o que foi enviado
-      antes.
+  03. Errou? Corrija na janela de revisão
+      o que fazer: Envie de novo com o valor certo, até o fim do prazo. Os dias finais são
+      a janela de revisão; o campo já mostra o que foi enviado antes.
       por quê: A correção entra como registro novo e o valor antigo fica guardado. Corrigir
       às claras é diferente de apagar.
       tela: lancamento · alvo: lanc-formularios
 
-
---- Tutorial de Gestor avaliado (4 passos) -------------------------------------------------
-
-  Você é quem recebe a nota. Aqui dá para entender a conta inteira, e discordar dela por
-  escrito se for o caso.
-
-  01. Veja a sua nota
+  04. Veja a nota da sua unidade
       o que fazer: Escolha o mês. O cartão do topo mostra a nota, de 0 a 100, e a faixa de
       pagamento que ela dá.
       por quê: Hoje a nota chega pronta, sem explicação. Aqui ela chega com a régua junto.
       tela: meu-resultado · alvo: res-score
 
-  02. Abra a conta inteira
-      o que fazer: Clique em "memória de cálculo". É o extrato da nota: cada linha mostra
-      um indicador, o valor informado, a meta e os pontos que ele rendeu. No fim, a soma
-      que vira a nota.
+  05. Abra a conta inteira
+      o que fazer: Clique em "memória de cálculo". Cada linha é um indicador, com os
+      subindicadores que você preencheu dentro dela, a meta do seu tipo de unidade e os
+      pontos que rendeu.
       por quê: É a resposta para "por que a minha nota deu isso?". A conta fica aberta para
       você conferir, sem depender de ninguém.
       tela: meu-resultado · alvo: res-memoria
 
-  03. Compare com os meses anteriores
-      o que fazer: As barras mostram a sua nota mês a mês.
-      por quê: Um número sozinho diz pouco. A sequência mostra para onde você está indo.
-      tela: meu-resultado · alvo: res-evolucao
-
-  04. Discorde, se for o caso
+  06. Discorde, se for o caso
       o que fazer: Clique em "abrir contestação", diga qual indicador (ou a nota toda) e
       escreva o motivo.
       por quê: Discordar deixa de ser telefonema e vira pedido registrado, com prazo e
       resposta escrita. É um direito seu.
       tela: contestacao · alvo: cont-abrir
-
-
---- Tutorial de Auditoria (8 passos) -------------------------------------------------------
-
-  Você pode ver tudo e não mexe em nada. O caminho abaixo confere um mês do fim para o
-  começo, que é como se audita.
-
-  01. Comece pelo resultado divulgado
-      o que fazer: Escolha um mês fechado e olhe o ranking.
-      por quê: Toda conferência começa pelo que foi divulgado: é a afirmação a testar.
-      tela: painel-gestao · alvo: gest-ranking
-
-  02. Refaça a conta de alguém
-      o que fazer: Escolha um gestor e abra a conta dele, linha por linha.
-      por quê: A regra é sempre a mesma: a mesma entrada tem de dar a mesma nota. Se não
-      der, há um problema.
-      tela: meu-resultado · alvo: res-memoria
-
-  03. Confira qual régua valia naquele mês
-      o que fazer: Veja as versões da regra e o quadro do que mudou de uma versão para a
-      outra.
-      por quê: Mês antigo se confere com a regra da época. Por isso regra antiga nunca é
-      apagada, só substituída.
-      tela: indicadores · alvo: ind-regras
-
-  04. Volte aos números de origem
-      o que fazer: Escolha a área e compare o valor informado com a origem declarada ao
-      lado dele.
-      por quê: A nota só é boa se o número que entrou for bom.
-      tela: lancamento · alvo: lanc-formularios
-
-  05. Cheque a condução do mês
-      o que fazer: Veja em que etapa o mês está e quais áreas ficaram devendo.
-      por quê: Mês fechado com área faltando é um achado de auditoria, e aqui isso aparece
-      na tela.
-      tela: painel-cam · alvo: cam-funil
-
-  06. Veja se quem discordou foi respondido
-      o que fazer: Percorra os pedidos de revisão e confira se cada um tem resposta.
-      por quê: Pedido sem resposta é o problema mais comum nesse tipo de processo. Aqui ele
-      fica visível.
-      tela: contestacao · alvo: cont-lista
-
-  07. Percorra o histórico completo
-      o que fazer: Filtre pelo mês e leia os registros em ordem: quem fez, quando, antes e
-      depois.
-      por quê: O histórico não pode ser editado por ninguém. É por isso que ele serve de
-      prova.
-      tela: auditoria · alvo: aud-linha
-
-  08. Confira o que o robô não faz
-      o que fazer: Na tela de sinais, veja que cada modelo mostra o método e o acerto,
-      comparado com um palpite simples.
-      por quê: Nenhum resultado de modelo entra na nota de ninguém. Ele só aponta onde
-      olhar, e isso está escrito na tela.
-      tela: analytics · alvo: ana-modelos
 
 
 ============================================================================================
@@ -2040,6 +2104,7 @@ histórico de quem mudou o quê e quando, que é exatamente o que o projeto defe
   - [feito] Alternativas levantadas (João Pedro Mamede)
   - [feito] Critérios de decisão (Gabriel Tenório de Lima Teixeira)
   - [feito] Ideia escolhida com justificativa (Gabriel Tenório de Lima Teixeira)
+  - [feito] Reunião com o cliente registrada (Matheus Lustosa) -> /registro#s3
 
   S4 · Semana 4: Proposta · 29/08/2026
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -2056,10 +2121,10 @@ histórico de quem mudou o quê e quando, que é exatamente o que o projeto defe
 
   Totais
   ~~~~~~
-  - feito: 17
+  - feito: 18
   - validado: 2
   - em andamento: 2
-  - total de evidências acompanhadas: 21
+  - total de evidências acompanhadas: 22
 
 ============================================================================================
 9.  FUNCIONALIDADES DO SITE, UMA A UMA
@@ -2169,8 +2234,13 @@ banca pergunte. Auditoria que só encontra acerto não auditou nada.
   sistema."
 
   onde está:
-    - src/components/sistema/telas/lancamento.tsx: um formulário por indicador da área
+    - src/components/sistema/telas/lancamento.tsx: um formulário por subindicador da
+      unidade, com numerador e denominador quando é razão
     - src/app/api/sistema/lancamento/route.ts: a escrita, com o autor registrado
+
+  RESSALVA: A reunião com o cliente (22/08, ADR-034) trocou "área técnica" por UNIDADE:
+  quem informa é a unidade de saúde, e o que se preenche é o subindicador. O pedido do
+  briefing segue atendido, com o vocabulário corrigido pelo processo real.
 
   [atendido] regras-validacao
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -2188,13 +2258,16 @@ banca pergunte. Auditoria que só encontra acerto não auditou nada.
   pedido: "Com perfis de acesso."
 
   onde está:
+    - src/lib/features.ts: os quatro papéis que o CLIENTE nomeou (SEAB, administrador,
+      gerente distrital, gerente de unidade)
     - src/lib/sistema.ts: `exigirPerfil` fecha cada tela no servidor e responde 404
     - src/lib/sistema.test.ts: as 8 telas contra os 4 perfis, sem amostragem
     - supabase/migrations/: as políticas de RLS que fariam isso valer de verdade
 
   RESSALVA: O perfil vem de um seletor simulado, não de autenticação. O recorte é real e
   roda no servidor, mas quem escolhe o papel é o próprio visitante. O RBAC de verdade está
-  escrito e testado no schema, e desligado do app (ADR-011).
+  escrito e testado no schema, e desligado do app (ADR-011); as políticas guardadas ainda
+  usam os papéis anteriores à ADR-034, com pendência declarada em docs/banco.md.
 
   [parcial] regras-da-portaria
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -2344,12 +2417,14 @@ banca pergunte. Auditoria que só encontra acerto não auditou nada.
   feedback."
 
   onde está:
+    - src/content/ciclos/s3.tsx: a PRIMEIRA conversa real com o cliente (22/08), registrada
+      como documento, com o replanejamento que ela causou
     - src/content/ciclos/s11.tsx: roteiro da entrevista e tarefas do teste de usabilidade,
       cronometrado
 
-  RESSALVA: Os INSTRUMENTOS estão prontos; o resultado não existe porque a semana não
-  chegou. O bloco de feedback está em "nenhum" de propósito: inventar fala de cliente seria
-  fabricar evidência (ADR-020).
+  RESSALVA: A validação formal da Semana 11 ainda não aconteceu; o que existe é a reunião
+  de levantamento de 22/08, que já mudou o domínio (ADR-034). Fala de cliente só entra
+  registrada, nunca inventada (ADR-020).
 
   [parcial] planejado-realizado
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -2494,6 +2569,7 @@ Os porquês completos estão em `docs/decisoes.md`. Os títulos, aqui:
   - ADR-031 · O sistema ganhou pele própria: sans do aparelho, cartões, fundo neutro
   - ADR-032 · A arquitetura ganhou página no site, com o prompt que a redesenha
   - ADR-033 · O CSS da casa entrou em camada, e um bug de três meses apareceu
+  - ADR-034 · A reunião com o cliente remodelou o domínio, e o MVP acompanhou já
 
 ============================================================================================
 13.  COMO RODAR E COMO CONFERIR

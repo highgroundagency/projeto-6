@@ -280,11 +280,12 @@ function Tela({ largura, altura, titulo, children }: { largura: number; altura: 
 /* ── nível 1: contexto ──────────────────────────────────────────────────── */
 
 const PESSOAS_C4: readonly [string, string][] = [
-  // nome, o que faz (o verbo vai na seta)
-  ['CAM', 'gere e homologa'],
-  ['Área técnica', 'lança os números'],
-  ['Gestor avaliado', 'vê a nota e contesta'],
-  ['Auditoria', 'confere a trilha'],
+  // nome, o que faz (o verbo vai na seta). Os quatro primeiros são os atores
+  // que o cliente nomeou na reunião de 22/08 (ADR-034).
+  ['Gerente de unidade', 'preenche e confere'],
+  ['Gerente distrital', 'acompanha e revisa'],
+  ['Coordenação SEAB', 'coordena e homologa'],
+  ['Administrador', 'cuida da plataforma'],
   ['Professor', 'lê o registro'],
   ['Dono do site', 'libera conteúdo'],
 ]
@@ -443,7 +444,7 @@ export function DiagramaConteineres() {
         {...base}
         tipo="[em memória · semente fixa 20262]"
         nome="Base sintética"
-        desc="10 áreas, 30 indicadores, 6 meses, trilha imutável; zera a cada deploy"
+        desc="12 unidades em 3 distritos, 7 indicadores, 11 subindicadores, 6 meses, trilha imutável; zera a cada deploy"
       />
       <Cilindro
         {...schema}

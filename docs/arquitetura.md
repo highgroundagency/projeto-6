@@ -2,23 +2,25 @@
 
 ## Visão de contexto (C4 nível 1)
 
+Os quatro primeiros atores são os que o cliente nomeou na reunião de 22/08 (ADR-034).
+
 ```mermaid
 C4Context
   title Prumo — contexto
-  Person(cam, "CAM", "Comissão de Avaliação de Metas: gere ciclos, regras e homologação")
-  Person(area, "Área técnica", "Informa os indicadores da própria área")
-  Person(gestor, "Gestor avaliado", "Consulta o próprio resultado e contesta")
-  Person(auditoria, "Auditoria", "Fiscaliza; vê tudo, edita nada")
+  Person(unidade, "Gerente de unidade", "Preenche os subindicadores da unidade e recebe a nota dela")
+  Person(distrital, "Gerente distrital", "Acompanha as unidades do distrito e revisa na janela; avaliado pela média")
+  Person(seab, "Coordenação da SEAB", "Define a régua, cobra, homologa e publica")
+  Person(admin, "Administrador", "Cuida da plataforma e da trilha, não das notas")
   Person(professor, "Professor", "Avalia o registro do projeto")
 
   System(prumo, "Prumo", "Registro do projeto e MVP do cálculo da gratificação")
   System_Ext(drive, "Google Drive", "Repositório oficial de documentos da equipe")
   System_Ext(ml, "Pipeline de ML", "Notebooks offline que exportam JSON")
 
-  Rel(cam, prumo, "Gere ciclos, homologa e publica")
-  Rel(area, prumo, "Lança indicadores com evidência")
-  Rel(gestor, prumo, "Consulta resultado e memória de cálculo")
-  Rel(auditoria, prumo, "Lê a trilha de auditoria")
+  Rel(unidade, prumo, "Lança subindicadores com evidência")
+  Rel(distrital, prumo, "Revisa lançamentos e consulta a média do distrito")
+  Rel(seab, prumo, "Gere ciclos, homologa e publica")
+  Rel(admin, prumo, "Mantém cadastros e confere a trilha")
   Rel(professor, prumo, "Lê o registro semanal")
   Rel(prumo, drive, "Link para os documentos")
   Rel(ml, prumo, "Artefatos JSON consumidos pela tela de analytics")
@@ -29,7 +31,7 @@ C4Context
 ```mermaid
 C4Container
   title Prumo — contêineres
-  Person(usuario, "Usuário", "CAM, área técnica, gestor, auditoria ou professor")
+  Person(usuario, "Usuário", "SEAB, administrador, gerente distrital, gerente de unidade ou professor")
 
   Container_Boundary(vercel, "Vercel") {
     Container(browser, "Navegador", "HTML + CSS", "Recebe HTML renderizado no servidor; quase nenhum JavaScript de aplicação")
@@ -41,7 +43,7 @@ C4Container
   Container_Boundary(dados, "Dados") {
     ContainerDb(seed, "Seed em memória", "TypeScript", "Base sintética com semente fixa — a fonte ativa")
     ContainerDb(arquivo, "config-site.json", "JSON local", "Configuração de release em desenvolvimento")
-    ContainerDb(schema, "Schema PostgreSQL", "SQL versionado", "Escrito e testado, NÃO ligado ao app — ver docs/banco.md")
+    ContainerDb(schema, "Schema PostgreSQL", "SQL versionado", "Escrito e testado, NÃO ligado ao app; ainda no domínio anterior à ADR-034 — ver docs/banco.md")
   }
 
   Container_Boundary(offline, "Offline") {
@@ -64,18 +66,24 @@ C4Container
 
 ```mermaid
 flowchart LR
-  A[Área técnica<br/>informa o valor] -->|zod valida| B[Lançamento<br/>+ evidência + autor]
+  A[Unidade preenche<br/>cada subindicador] -->|zod valida| B[Lançamento<br/>+ evidência + autor]
   B --> C{Ciclo em<br/>janela aberta?}
   C -->|não| D[Recusa com motivo<br/>registrado na trilha]
   C -->|sim| E[Trilha de auditoria<br/>append-only]
   E --> F[Motor de cálculo<br/>função pura]
-  G[Regra vigente<br/>versionada] --> F
-  F --> H[Avaliação<br/>score + faixa]
-  F --> I[Memória de cálculo<br/>passo a passo]
-  H --> J[Gestor avaliado]
+  G[Regra vigente<br/>com a régua por tipo] --> F
+  F --> H[Avaliação da unidade<br/>score + faixa]
+  F --> I[Memória de cálculo<br/>com sub-passos]
+  H --> L[Avaliação distrital<br/>média das unidades]
+  H --> J[Gerente]
   I --> J
-  H --> K[Painel da gestão<br/>agregados e CSV]
+  L --> K[Painel da gestão<br/>agregados por distrito e CSV]
 ```
+
+O motor compõe cada indicador pela média simples dos subindicadores apurados (razão =
+numerador ÷ denominador, em percentual) e calcula o atingimento contra a meta que a regra
+versionada define para o TIPO da unidade. As fórmulas de composição e agregação são
+suposições declaradas, a validar com a planilha prometida pelo cliente.
 
 ## Decisões e por quês
 
@@ -95,11 +103,13 @@ dependência de JavaScript habilitado. Também simplifica a CSP.
 
 **Persistência: decisão adiada, com o trabalho preparatório feito.** O MVP roda com dados
 sintéticos em memória, o que basta para demonstrar o processo inteiro e dispensa credencial
-para qualquer pessoa da equipe rodar o projeto. O schema PostgreSQL — com o RBAC do §8.1
-espelhado em políticas de RLS e quatro invariantes em gatilho — está escrito, versionado e
-testado contra um banco real, mas não ligado à aplicação. O porquê está em `decisoes.md`
-(ADR-011 e ADR-012); o como usar, em `banco.md`. Se a persistência virar requisito, a troca
-é acrescentar um driver: as telas falam com `src/lib/dados/`, não com a fonte.
+para qualquer pessoa da equipe rodar o projeto. O schema PostgreSQL — com RBAC espelhado em
+políticas de RLS e quatro invariantes em gatilho — está escrito, versionado e testado
+contra um banco real, mas não ligado à aplicação; desde a remodelagem pós-reunião
+(ADR-034) ele modela o domínio anterior, com a pendência declarada em `banco.md`. O porquê
+está em `decisoes.md` (ADR-011 e ADR-012). Se a persistência virar requisito, a troca é
+acrescentar um driver e atualizar o SQL: as telas falam com `src/lib/dados/`, não com a
+fonte.
 
 **Pipeline de ML offline.** Treinar modelo em requisição não faz sentido aqui: os dados
 mudam por ciclo, não por segundo. Os notebooks rodam offline, exportam JSON versionado e a
