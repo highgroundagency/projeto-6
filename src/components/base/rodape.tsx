@@ -42,12 +42,20 @@ export function Rodape({ className }: { className?: string }) {
         <span>{INSTITUICAO.equipe}</span>
       </div>
 
-      <Link
-        href="/transparencia-ia"
-        className="underline decoration-linha-alta underline-offset-4 lowercase transition-colors hover:text-acento hover:decoration-acento"
-      >
-        transparência no uso de ia
-      </Link>
+      <span className="flex flex-wrap items-center gap-x-4 gap-y-1">
+        <Link
+          href="/arquitetura"
+          className="underline decoration-linha-alta underline-offset-4 lowercase transition-colors hover:text-acento hover:decoration-acento"
+        >
+          arquitetura
+        </Link>
+        <Link
+          href="/transparencia-ia"
+          className="underline decoration-linha-alta underline-offset-4 lowercase transition-colors hover:text-acento hover:decoration-acento"
+        >
+          transparência no uso de ia
+        </Link>
+      </span>
     </footer>
   )
 }

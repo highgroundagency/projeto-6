@@ -2492,6 +2492,7 @@ Os porquês completos estão em `docs/decisoes.md`. Os títulos, aqui:
   - ADR-029 · Teste de ponta a ponta não escreve data nem id de ciclo à mão
   - ADR-030 · Um link com chave abre a visão completa, sem senha e sem painel
   - ADR-031 · O sistema ganhou pele própria: sans do aparelho, cartões, fundo neutro
+  - ADR-032 · A arquitetura ganhou página no site, com o prompt que a redesenha
 
 ============================================================================================
 13.  COMO RODAR E COMO CONFERIR

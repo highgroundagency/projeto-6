@@ -188,6 +188,35 @@ test.describe('registro do projeto', () => {
   })
 })
 
+test.describe('arquitetura em desenhos', () => {
+  test('a página existe, com os três desenhos e o prompt', async ({ page }) => {
+    await page.goto('/')
+    await page.getByRole('link', { name: 'arquitetura', exact: true }).click()
+    await expect(page).toHaveURL(/\/arquitetura$/)
+
+    await expect(page.getByRole('heading', { name: 'arquitetura em desenhos' })).toBeVisible()
+    await expect(page.getByRole('heading', { name: /contexto: o sistema visto de fora/ })).toBeVisible()
+    await expect(page.getByRole('heading', { name: /contêineres: as peças da caixa/ })).toBeVisible()
+    await expect(page.getByRole('heading', { name: /o caminho de um número/ })).toBeVisible()
+
+    // O banco guardado aparece, e aparece como desligado: honestidade no desenho.
+    await expect(page.getByText('Schema PostgreSQL guardado')).toBeVisible()
+    await expect(page.getByText('não ligado', { exact: true })).toBeVisible()
+
+    // O prompt abre na própria página e é o prompt de verdade.
+    await page.getByText('abrir o prompt completo').click()
+    await expect(page.getByText(/arquiteto de software especialista no modelo C4/)).toBeVisible()
+  })
+
+  test('não estoura a largura da tela', async ({ page }) => {
+    await page.goto('/arquitetura')
+    const estoura = await page.evaluate(
+      () => document.documentElement.scrollWidth > window.innerWidth,
+    )
+    expect(estoura).toBe(false)
+  })
+})
+
 /**
  * Modo claro (ADR-027).
  *

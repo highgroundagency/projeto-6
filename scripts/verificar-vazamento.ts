@@ -96,7 +96,7 @@ async function main() {
     // ---- 1 e 2: HTML e payload RSC das páginas públicas ----
     // `/registro` saiu da lista: virou redirecionamento para `/#registro`, e o
     // registro semanal agora é uma seção da raiz. Conferir a raiz é conferir ele.
-    for (const rota of ['/', '/transparencia-ia']) {
+    for (const rota of ['/', '/transparencia-ia', '/arquitetura']) {
       const html = await (await fetch(`${BASE}${rota}`)).text()
       const flight = await (await fetch(`${BASE}${rota}`, { headers: { RSC: '1' } })).text()
 

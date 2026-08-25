@@ -790,6 +790,7 @@ Rotas do site:
   /                  a página com tudo (registro, equipe, marcos)
   /sistema           o MVP com as 8 telas e os 4 papéis
   /transparencia-ia  a declaração de uso de IA
+  /arquitetura       os desenhos do sistema (C4) explicados do zero
   /status            health check
 
 Para rodar na sua máquina:

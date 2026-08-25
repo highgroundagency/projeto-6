@@ -755,3 +755,33 @@ rede, coerente com a ADR-028). O tutorial, os gates e as jornadas continuam os m
 88 passam sem mudança de comportamento. O custo aceito: a partir daqui, quem mexe no
 /sistema pensa em DUAS aparências para o mesmo componente compartilhado, e o teste de
 contraste é quem segura as duas paletas no chão.
+
+---
+
+## ADR-032 · A arquitetura ganhou página no site, com o prompt que a redesenha
+
+**Contexto.** Os diagramas C4 de contexto e contêineres existiam desde o início em
+`docs/arquitetura.md`, em Mermaid, legíveis só por quem abre o repositório e sabe o que
+procurar. A equipe pediu o contrário: um lugar simples, no próprio site, onde qualquer
+colega entenda os desenhos sem clonar nada. É a regra da casa nº 5 aplicada à própria
+arquitetura: documento de entrega é página, nunca arquivo para ir buscar.
+
+**Decisão.** Rota pública `/arquitetura`, no molde da `/transparencia-ia` (página própria,
+link no rodapé). Quatro blocos: a explicação do que é C4 em linguagem simples (quatro níveis
+de zoom, como um mapa); o desenho de contexto redesenhado na identidade do site (quem usa,
+o sistema, com quem conversa); o de contêineres, com o schema guardado em borda TRACEJADA e
+pílula "não ligado", porque desenho de arquitetura que esconde o que está desligado ensina
+errado; e o caminho de um número, reusando o componente de fluxo vertical da página inicial.
+Fecha com uma sanfona contendo o prompt completo que regenera os três diagramas em Mermaid
+em qualquer IA, com os fatos e as regras de honestidade embutidos.
+
+**Por que expor antes da Semana 5.** A matriz pede arquitetura na Semana 5, e o registro
+daquela semana continuará sendo a entrega formal. A página não fura o recorte do §6.3: os
+mesmos diagramas já eram públicos em `docs/arquitetura.md` num repositório aberto, e a
+página não contém conteúdo de ciclo (a varredura de vazamento passou a incluir a rota, e as
+checagens subiram de 94 para 122).
+
+**Consequência.** O prompt vive no código, não numa conversa perdida: quando a arquitetura
+mudar, o diff da página denuncia o desenho desatualizado. O custo aceito é manter dois
+formatos do mesmo desenho (a página e o Mermaid do docs); o teste de ponta a ponta da página
+e a nota de sincronia neste ADR são o lembrete.
