@@ -208,7 +208,7 @@ export default async function Pagina() {
             publicado. É o fluxo REAL da máquina de estados do motor, contado em
             linguagem de balcão: cada pílula é uma etapa do mês, cada cartão é o
             que alguém faz para o mês andar. */}
-        <section className="bloco revelar border-b-0" aria-labelledby="titulo-como-funciona">
+        <section className="bloco revelar" aria-labelledby="titulo-como-funciona">
           <h2 id="titulo-como-funciona" className="titulo-bloco">
             como funciona
           </h2>
@@ -274,6 +274,29 @@ export default async function Pagina() {
                 publicado
               </EstadoDoFluxo>
             </Fluxo>
+          </div>
+        </section>
+
+        {/* A porta para os desenhos da arquitetura. O conteúdo mora em página
+            própria porque veste a pele do sistema (ADR-031 e ADR-032): misturar
+            as duas identidades numa seção ficaria pior que um clique. */}
+        <section
+          id="arquitetura"
+          className="bloco revelar scroll-mt-20 border-b-0"
+          aria-labelledby="titulo-arquitetura"
+        >
+          <h2 id="titulo-arquitetura" className="rotulo">
+            Arquitetura
+          </h2>
+          <p className="prosa mt-4 text-sm">
+            como o sistema é feito por dentro, em quatro desenhos: quem usa, as peças, o
+            caminho que um número percorre até virar nota, e as classes que ele guarda. clica
+            e abre, com direito ao prompt que redesenha tudo em qualquer IA.
+          </p>
+          <div className="mt-6">
+            <Chamada href="/arquitetura" variante="secundario">
+              ver a arquitetura
+            </Chamada>
           </div>
         </section>
 

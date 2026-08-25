@@ -50,6 +50,7 @@ Regras que a equipe adotou:
 | 25/08/2026 | s3 | Claude (Anthropic) | Link da vitrine pessoal: visão completa por URL com chave, cookie assinado, faixa própria e análise de superfície de ataque (ADR-030) | `src/lib/vitrine-pessoal.ts`, `src/app/vitrine/`, `src/lib/visao.ts`, `src/components/base/faixa-admin.tsx`, `docs/seguranca.md`, `docs/releases.md` | pendente |
 | 25/08/2026 | s3 | Claude (Anthropic) | Pele própria do /sistema: sans do aparelho, cartões arredondados, ícones nos painéis e oito pares novos de contraste testados (ADR-031) | `src/app/globals.css`, `src/app/sistema/`, `src/components/sistema/`, `src/lib/contraste.test.ts` | pendente |
 | 25/08/2026 | s3 | Claude (Anthropic) | Página /arquitetura: C4 explicado em linguagem simples, os três desenhos na identidade do site e o prompt de regeneração embutido (ADR-032) | `src/app/arquitetura/page.tsx`, `src/components/base/rodape.tsx`, `scripts/verificar-vazamento.ts` | pendente |
+| 25/08/2026 | s3 | Claude (Anthropic) | Página de arquitetura na pele do sistema com diagrama de classes e porta na home; e a correção do CSS sem camada que engolia utilidade de borda no site inteiro (ADR-032 adendo e ADR-033) | `src/components/arquitetura.tsx`, `src/app/arquitetura/`, `src/app/page.tsx`, `src/app/globals.css` | pendente |
 
 ## O que a IA **não** fez
 

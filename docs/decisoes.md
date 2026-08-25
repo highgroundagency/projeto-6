@@ -785,3 +785,38 @@ checagens subiram de 94 para 122).
 mudar, o diff da página denuncia o desenho desatualizado. O custo aceito é manter dois
 formatos do mesmo desenho (a página e o Mermaid do docs); o teste de ponta a ponta da página
 e a nota de sincronia neste ADR são o lembrete.
+
+**Adendo (25/08).** A pedido da equipe, a página trocou de pele e cresceu: veste a pele do
+sistema (ADR-031), perdeu a aula sobre C4 (ficaram só os desenhos, com um eyebrow dizendo o
+nível), ganhou o quarto desenho, um diagrama de classes com os campos REAIS de
+`src/lib/calculo/tipos.ts` e as ligações entre as classes, e ganhou uma porta na página
+inicial (seção "Arquitetura", com chamada). O conteúdo mudou-se para
+`src/components/arquitetura.tsx`, compartilhado.
+
+---
+
+## ADR-033 · O CSS da casa entrou em camada, e um bug de três meses apareceu
+
+**Contexto.** Ao aplicar o acento na página de arquitetura, `border-2 border-acento` rendeu
+uma borda cinza. A investigação achou a causa em `globals.css`: a regra universal
+`* { border-color: var(--color-linha) }` estava FORA de qualquer `@layer`. Regra de cascata
+do CSS: estilo sem camada vence estilo em camada, não importa a especificidade. Como todos
+os utilitários do Tailwind vivem em camada, a regra universal vencia TODA utilidade de cor
+de borda do site, desde sempre: `border-acento`, `border-ok/40`, `border-alerta/40` e
+`border-transparent` nunca tiveram efeito, em lugar nenhum. O mesmo valia para `.rotulo` e
+`.pilula` engolindo `text-acento` e afins. Ninguém percebeu porque a hairline é discreta e
+o resultado parecia intenção, a mesma anatomia do bug do `--color-laranja` (ADR-027).
+
+**Decisão.** A regra universal de borda entrou em `@layer base`, e `.rotulo`/`.pilula` em
+`@layer components`. A ordem de camadas do Tailwind (theme, base, components, utilities)
+volta a valer como todo mundo já assumia: o padrão da casa vale até alguém escrever um
+utilitário por cima, e aí o utilitário vence. O bloco da pele do sistema (ADR-031) continua
+fora de camada DE PROPÓSITO, porque o papel dele é exatamente vencer utilitário; a diferença
+é que agora isso está escrito e é escolha, não acidente.
+
+**Consequência.** Utilidades escritas ao longo do semestre inteiro "ligaram" de uma vez:
+avisos de ok e alerta ganharam a borda tonalizada que o código sempre pediu, botões
+fantasma perderam a borda que nunca deveriam ter tido, e o acento voltou a poder contornar
+uma caixa. As 92 jornadas, os 459 testes e as 35 checagens de contraste passaram depois da
+mudança. Fica a lição, que agora é regra de revisão: CSS novo em `globals.css` nasce DENTRO
+de uma camada, a menos que vencer utilitário seja o objetivo declarado no comentário.

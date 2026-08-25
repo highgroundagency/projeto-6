@@ -189,19 +189,26 @@ test.describe('registro do projeto', () => {
 })
 
 test.describe('arquitetura em desenhos', () => {
-  test('a página existe, com os três desenhos e o prompt', async ({ page }) => {
+  test('a home tem a porta, e a página tem os quatro desenhos e o prompt', async ({ page }) => {
     await page.goto('/')
-    await page.getByRole('link', { name: 'arquitetura', exact: true }).click()
+    // A seção da home é a porta de entrada: clicou, apareceu.
+    await expect(page.getByRole('heading', { name: 'Arquitetura' })).toBeVisible()
+    await page.getByRole('link', { name: /ver a arquitetura/ }).click()
     await expect(page).toHaveURL(/\/arquitetura$/)
 
-    await expect(page.getByRole('heading', { name: 'arquitetura em desenhos' })).toBeVisible()
-    await expect(page.getByRole('heading', { name: /contexto: o sistema visto de fora/ })).toBeVisible()
-    await expect(page.getByRole('heading', { name: /contêineres: as peças da caixa/ })).toBeVisible()
-    await expect(page.getByRole('heading', { name: /o caminho de um número/ })).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'Arquitetura' })).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'O sistema visto de fora' })).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'As peças da caixa' })).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'O caminho de um número' })).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'O que o sistema guarda' })).toBeVisible()
 
     // O banco guardado aparece, e aparece como desligado: honestidade no desenho.
     await expect(page.getByText('Schema PostgreSQL guardado')).toBeVisible()
     await expect(page.getByText('não ligado', { exact: true })).toBeVisible()
+
+    // O diagrama de classes usa campos reais e diz com quem cada classe se liga.
+    await expect(page.getByText('Regra de pontuação', { exact: true })).toBeVisible()
+    await expect(page.getByText('Evento de auditoria', { exact: true })).toBeVisible()
 
     // O prompt abre na própria página e é o prompt de verdade.
     await page.getByText('abrir o prompt completo').click()

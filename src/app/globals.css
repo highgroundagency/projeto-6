@@ -139,8 +139,16 @@
    Base
 --------------------------------------------------------------------------- */
 
-* {
-  border-color: var(--color-linha);
+/* O padrão de toda borda é a hairline. NA CAMADA BASE de propósito: fora de
+   camada, esta regra universal vencia TODA utilidade de cor de borda do
+   Tailwind (border-acento, border-ok, border-transparent), porque CSS sem
+   camada ganha de CSS em camada, não importa a especificidade. Foi um bug
+   silencioso da mesma família do --color-laranja (ADR-027): ninguém percebia
+   porque a hairline é discreta e parecia intenção. */
+@layer base {
+  * {
+    border-color: var(--color-linha);
+  }
 }
 
 html {
@@ -208,13 +216,17 @@ body {
   line-height: 1.3;
 }
 
-/* Rótulo de estado/etapa — a única coisa em caixa alta. */
-.rotulo {
-  font-size: 0.75rem;
-  font-weight: 500;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--color-apagado);
+/* Rótulo de estado/etapa — a única coisa em caixa alta. Na camada components
+   pela mesma razão da borda acima: `rotulo text-texto` era escrito por toda
+   parte esperando o utilitário vencer, e ele perdia em silêncio. */
+@layer components {
+  .rotulo {
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-apagado);
+  }
 }
 
 /* Números, datas, scores e memória de cálculo. Tudo já é mono; aqui o que
@@ -280,7 +292,8 @@ body {
   }
 }
 
-/* Pílula — a única coisa arredondada da identidade. */
+/* Pílula — a única coisa arredondada da identidade. Em camada, como o rótulo. */
+@layer components {
 .pilula {
   display: inline-flex;
   align-items: center;
@@ -300,6 +313,7 @@ body {
   background: var(--color-acento-fraco);
   border-color: transparent;
   color: var(--color-acento);
+}
 }
 
 /* ---------------------------------------------------------------------------
