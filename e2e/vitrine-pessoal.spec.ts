@@ -17,13 +17,14 @@ test.describe('vitrine pessoal', () => {
     expect(errada.status()).toBe(404)
   })
 
-  test('a chave certa abre o site inteiro, com a data simulada', async ({ page }) => {
+  test('a chave certa abre o site inteiro', async ({ page }) => {
     await page.goto(`/vitrine/${CHAVE}`)
 
-    // O link deposita o cookie e manda para a página.
+    // O link deposita o cookie e manda para a página. A faixa é mínima de
+    // propósito: nome e saída, sem data simulada nem frase de explicação.
     await expect(page).toHaveURL(/\/$/)
-    await expect(page.getByText('Vitrine pessoal', { exact: false })).toBeVisible()
-    await expect(page.getByText(/simulando/)).toBeVisible()
+    await expect(page.getByText('vitrine pessoal', { exact: false })).toBeVisible()
+    await expect(page.getByText(/simulando/)).toHaveCount(0)
 
     // Um ciclo que o visitante de hoje NÃO vê está no registro.
     expect(await page.content()).toContain(marcador(CICLO_OCULTO))
