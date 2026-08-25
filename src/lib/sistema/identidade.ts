@@ -3,9 +3,14 @@ import { cookies } from 'next/headers'
 import type { PerfilId } from '@/lib/features'
 
 export const NOME_COOKIE_PERFIL = 'prumo_perfil'
-export const PERFIL_PADRAO: PerfilId = 'cam'
+export const PERFIL_PADRAO: PerfilId = 'seab'
 
-const PERFIS_VALIDOS: readonly PerfilId[] = ['cam', 'area_tecnica', 'gestor', 'auditoria']
+const PERFIS_VALIDOS: readonly PerfilId[] = [
+  'seab',
+  'administrador',
+  'gerente_distrital',
+  'gerente_unidade',
+]
 
 export function ehPerfilValido(valor: string): valor is PerfilId {
   return PERFIS_VALIDOS.includes(valor as PerfilId)
@@ -20,14 +25,21 @@ export function ehPerfilValido(valor: string): valor is PerfilId {
  * uma banca de cinco minutos precisa.
  *
  * O RBAC de verdade está escrito e testado em `supabase/migrations/`, como
- * políticas de RLS. Ele não está ligado ao app: ver docs/decisoes.md (ADR-011)
- * e docs/seguranca.md.
+ * políticas de RLS (ainda no domínio anterior; pendência em docs/banco.md).
+ * Ver docs/decisoes.md (ADR-011) e docs/seguranca.md.
  */
 export interface Identidade {
   perfil: PerfilId
   nome: string
-  areaId: string | null
-  gestorId: string | null
+  /**
+   * Vínculos da sessão. Hoje sempre `null`, e é de propósito: é a costura por
+   * onde o login de verdade entra. Quando existir sessão, "meu resultado" abre
+   * na própria unidade (ou no próprio distrito) em vez de na primeira da
+   * lista, sem que a tela precise mudar.
+   */
+  gerenteId: string | null
+  unidadeId: string | null
+  distritoId: string | null
   /** Sempre true nesta versão: o perfil vem do seletor, não de uma sessão. */
   simulada: boolean
 }
@@ -40,8 +52,9 @@ export async function identidadeAtual(): Promise<Identidade> {
   return {
     perfil,
     nome: 'Perfil simulado',
-    areaId: null,
-    gestorId: null,
+    gerenteId: null,
+    unidadeId: null,
+    distritoId: null,
     simulada: true,
   }
 }

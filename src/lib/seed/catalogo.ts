@@ -1,458 +1,263 @@
-import type { Area, Direcao, Periodicidade } from '@/lib/calculo/tipos'
+import type {
+  Aplicabilidade,
+  Distrito,
+  Indicador,
+  Subindicador,
+  TipoUnidade,
+  Unidade,
+} from '@/lib/calculo/tipos'
 
 /**
- * Catálogo sintético de áreas e indicadores.
+ * Catálogo sintético da rede: distritos, tipos, unidades, indicadores e
+ * subindicadores — a forma que a reunião com o cliente (22/08) descreveu.
  *
- * ATENÇÃO (§2.4): tudo aqui é FICTÍCIO. Nomes de área e de indicador foram
- * escritos para serem verossímeis no vocabulário da saúde pública, mas nenhum
- * número, meta ou pessoa vem da SESAU. Quando a portaria real chegar, estes
- * dados são substituídos pelo cadastro feito na própria interface — sem tocar
- * em código.
+ * ATENÇÃO (§2.4): tudo aqui é FICTÍCIO. Nomes de unidade são aves, os
+ * distritos são pontos cardeais, e nenhum número, meta ou pessoa vem da SESAU.
+ * Quando a planilha real chegar, estes dados são substituídos pelo cadastro
+ * feito na própria interface — sem tocar em código.
  */
 
-export const AREAS: readonly Area[] = [
-  { id: 'aps', sigla: 'APS', nome: 'Atenção Primária à Saúde' },
-  { id: 'vis', sigla: 'VIS', nome: 'Vigilância em Saúde' },
-  { id: 'reg', sigla: 'REG', nome: 'Regulação e Controle' },
-  { id: 'af', sigla: 'AF', nome: 'Assistência Farmacêutica' },
-  { id: 'sm', sigla: 'SM', nome: 'Saúde Mental' },
-  { id: 'urg', sigla: 'URG', nome: 'Urgência e Emergência' },
-  { id: 'sb', sigla: 'SB', nome: 'Saúde Bucal' },
-  { id: 'gp', sigla: 'GP', nome: 'Gestão de Pessoas' },
-  { id: 'plan', sigla: 'PLAN', nome: 'Planejamento e Orçamento' },
-  { id: 'ouv', sigla: 'OUV', nome: 'Ouvidoria e Participação' },
+export const DISTRITOS: readonly Distrito[] = [
+  { id: 'ds-leste', nome: 'Distrito Sanitário Leste' },
+  { id: 'ds-norte', nome: 'Distrito Sanitário Norte' },
+  { id: 'ds-oeste', nome: 'Distrito Sanitário Oeste' },
 ]
 
-export interface DefinicaoIndicador {
-  readonly id: string
-  readonly areaId: string
-  readonly nome: string
-  readonly unidade: string
-  readonly direcao: Direcao
-  readonly fonte: string
-  readonly periodicidade: Periodicidade
-  readonly meta: number
-  readonly peso: number
-  /** Comportamento base usado pelo gerador: quão perto da meta a área costuma ficar. */
+export const TIPOS_UNIDADE: readonly TipoUnidade[] = [
+  { id: 'usf', sigla: 'USF', nome: 'Unidade de Saúde da Família' },
+  { id: 'caps', sigla: 'CAPS', nome: 'Centro de Atenção Psicossocial' },
+  { id: 'upa', sigla: 'UPA', nome: 'Unidade de Pronto Atendimento' },
+  { id: 'poli', sigla: 'POLI', nome: 'Policlínica' },
+]
+
+export const UNIDADES: readonly Unidade[] = [
+  { id: 'usf-sabia', nome: 'USF Sabiá', distritoId: 'ds-leste', tipoId: 'usf' },
+  { id: 'usf-bem-te-vi', nome: 'USF Bem-te-vi', distritoId: 'ds-leste', tipoId: 'usf' },
+  { id: 'caps-colibri', nome: 'CAPS Colibri', distritoId: 'ds-leste', tipoId: 'caps' },
+  { id: 'upa-andorinha', nome: 'UPA Andorinha', distritoId: 'ds-leste', tipoId: 'upa' },
+  { id: 'usf-canario', nome: 'USF Canário', distritoId: 'ds-norte', tipoId: 'usf' },
+  { id: 'usf-juriti', nome: 'USF Juriti', distritoId: 'ds-norte', tipoId: 'usf' },
+  { id: 'caps-rolinha', nome: 'CAPS Rolinha', distritoId: 'ds-norte', tipoId: 'caps' },
+  { id: 'poli-garca', nome: 'Policlínica Garça', distritoId: 'ds-norte', tipoId: 'poli' },
+  { id: 'usf-curio', nome: 'USF Curió', distritoId: 'ds-oeste', tipoId: 'usf' },
+  { id: 'usf-asa-branca', nome: 'USF Asa-branca', distritoId: 'ds-oeste', tipoId: 'usf' },
+  { id: 'upa-gaivota', nome: 'UPA Gaivota', distritoId: 'ds-oeste', tipoId: 'upa' },
+  { id: 'poli-tuim', nome: 'Policlínica Tuim', distritoId: 'ds-oeste', tipoId: 'poli' },
+]
+
+/**
+ * Catálogo GLOBAL de indicadores calculados: sem meta e sem peso, porque isso
+ * depende do tipo da unidade e mora na regra versionada (`APLICABILIDADES_*`).
+ */
+export const INDICADORES: readonly Indicador[] = [
+  {
+    id: 'acompanhamento',
+    nome: 'Famílias acompanhadas pela equipe',
+    unidadeMedida: '%',
+    direcao: 'maior_melhor',
+    fonte: 'Cadastro das equipes',
+    periodicidade: 'mensal',
+  },
+  {
+    id: 'pre-natal',
+    nome: 'Pré-natal em dia',
+    unidadeMedida: '%',
+    direcao: 'maior_melhor',
+    fonte: 'Sistema de acompanhamento',
+    periodicidade: 'mensal',
+  },
+  {
+    id: 'vacinacao',
+    nome: 'Vacinação infantil em dia',
+    unidadeMedida: '%',
+    direcao: 'maior_melhor',
+    fonte: 'Sistema de imunização',
+    periodicidade: 'mensal',
+  },
+  {
+    id: 'tempo-espera',
+    nome: 'Tempo médio de espera pelo atendimento',
+    unidadeMedida: 'dias',
+    direcao: 'menor_melhor',
+    fonte: 'Agenda regulada',
+    periodicidade: 'mensal',
+  },
+  {
+    id: 'acolhimento',
+    nome: 'Acolhimento com classificação de risco',
+    unidadeMedida: '%',
+    direcao: 'maior_melhor',
+    fonte: 'Prontuário de urgência',
+    periodicidade: 'mensal',
+  },
+  {
+    id: 'absenteismo',
+    nome: 'Absenteísmo da equipe',
+    unidadeMedida: '%',
+    direcao: 'menor_melhor',
+    fonte: 'Folha de frequência',
+    periodicidade: 'mensal',
+  },
+  {
+    id: 'prontuario',
+    nome: 'Registro em prontuário eletrônico no dia',
+    unidadeMedida: '%',
+    direcao: 'maior_melhor',
+    fonte: 'Prontuário eletrônico',
+    periodicidade: 'mensal',
+  },
+]
+
+/**
+ * O que a unidade de fato preenche. 'razao' pede numerador e denominador;
+ * 'indice' pede o valor direto.
+ */
+export const SUBINDICADORES: readonly Subindicador[] = [
+  {
+    id: 'acompanhamento-familias',
+    indicadorId: 'acompanhamento',
+    nome: 'Famílias acompanhadas no mês',
+    tipo: 'razao',
+    rotuloNumerador: 'famílias acompanhadas',
+    rotuloDenominador: 'famílias cadastradas',
+  },
+  {
+    id: 'pre-natal-consultas',
+    indicadorId: 'pre-natal',
+    nome: 'Gestantes com consultas em dia',
+    tipo: 'razao',
+    rotuloNumerador: 'gestantes com consultas em dia',
+    rotuloDenominador: 'gestantes cadastradas',
+  },
+  {
+    id: 'pre-natal-exames',
+    indicadorId: 'pre-natal',
+    nome: 'Gestantes com exames do trimestre',
+    tipo: 'razao',
+    rotuloNumerador: 'gestantes com exames em dia',
+    rotuloDenominador: 'gestantes cadastradas',
+  },
+  {
+    id: 'vacinacao-polio',
+    indicadorId: 'vacinacao',
+    nome: 'Esquema de pólio completo',
+    tipo: 'razao',
+    rotuloNumerador: 'crianças com esquema completo',
+    rotuloDenominador: 'crianças cadastradas',
+  },
+  {
+    id: 'vacinacao-penta',
+    indicadorId: 'vacinacao',
+    nome: 'Esquema pentavalente completo',
+    tipo: 'razao',
+    rotuloNumerador: 'crianças com esquema completo',
+    rotuloDenominador: 'crianças cadastradas',
+  },
+  {
+    id: 'espera-agendada',
+    indicadorId: 'tempo-espera',
+    nome: 'Dias até a consulta agendada',
+    tipo: 'indice',
+  },
+  {
+    id: 'espera-acolhimento',
+    indicadorId: 'tempo-espera',
+    nome: 'Dias até o primeiro acolhimento',
+    tipo: 'indice',
+  },
+  {
+    id: 'acolhimento-classificado',
+    indicadorId: 'acolhimento',
+    nome: 'Atendimentos com classificação registrada',
+    tipo: 'razao',
+    rotuloNumerador: 'atendimentos com classificação',
+    rotuloDenominador: 'atendimentos realizados',
+  },
+  {
+    id: 'absenteismo-taxa',
+    indicadorId: 'absenteismo',
+    nome: 'Taxa de faltas do mês',
+    tipo: 'indice',
+  },
+  {
+    id: 'prontuario-no-dia',
+    indicadorId: 'prontuario',
+    nome: 'Atendimentos registrados no mesmo dia',
+    tipo: 'razao',
+    rotuloNumerador: 'registros feitos no dia',
+    rotuloDenominador: 'atendimentos realizados',
+  },
+  {
+    id: 'prontuario-pendencias',
+    indicadorId: 'prontuario',
+    nome: 'Percentual de registros sem pendência',
+    tipo: 'indice',
+  },
+]
+
+/**
+ * A tabela que a reunião de 22/08 revelou: a depender do TIPO da unidade, só
+ * alguns indicadores valem, e os pesos mudam. O CAPS tem o recorte menor de
+ * propósito — foi o exemplo do próprio cliente.
+ */
+export const APLICABILIDADES_V1: readonly Aplicabilidade[] = [
+  { tipoUnidadeId: 'usf', indicadorId: 'acompanhamento', meta: 85, peso: 3 },
+  { tipoUnidadeId: 'usf', indicadorId: 'pre-natal', meta: 75, peso: 3 },
+  { tipoUnidadeId: 'usf', indicadorId: 'vacinacao', meta: 95, peso: 3 },
+  { tipoUnidadeId: 'usf', indicadorId: 'absenteismo', meta: 5, peso: 1 },
+  { tipoUnidadeId: 'usf', indicadorId: 'prontuario', meta: 90, peso: 2 },
+
+  { tipoUnidadeId: 'caps', indicadorId: 'acolhimento', meta: 90, peso: 3 },
+  { tipoUnidadeId: 'caps', indicadorId: 'tempo-espera', meta: 7, peso: 2 },
+  { tipoUnidadeId: 'caps', indicadorId: 'absenteismo', meta: 5, peso: 1 },
+  { tipoUnidadeId: 'caps', indicadorId: 'prontuario', meta: 85, peso: 2 },
+
+  { tipoUnidadeId: 'upa', indicadorId: 'acolhimento', meta: 95, peso: 3 },
+  { tipoUnidadeId: 'upa', indicadorId: 'absenteismo', meta: 6, peso: 1 },
+  { tipoUnidadeId: 'upa', indicadorId: 'prontuario', meta: 95, peso: 3 },
+
+  { tipoUnidadeId: 'poli', indicadorId: 'tempo-espera', meta: 30, peso: 3 },
+  { tipoUnidadeId: 'poli', indicadorId: 'acolhimento', meta: 85, peso: 2 },
+  { tipoUnidadeId: 'poli', indicadorId: 'absenteismo', meta: 5, peso: 1 },
+  { tipoUnidadeId: 'poli', indicadorId: 'prontuario', meta: 90, peso: 2 },
+]
+
+/**
+ * A revisão de abril: além das faixas, a régua de dois tipos muda — é a
+ * "regra que muda de ano em ano" acontecendo dentro da própria demonstração.
+ */
+export const APLICABILIDADES_V2: readonly Aplicabilidade[] = APLICABILIDADES_V1.map(
+  (aplicabilidade) => {
+    if (aplicabilidade.tipoUnidadeId === 'usf' && aplicabilidade.indicadorId === 'prontuario') {
+      return { ...aplicabilidade, meta: 95 }
+    }
+    if (aplicabilidade.tipoUnidadeId === 'poli' && aplicabilidade.indicadorId === 'tempo-espera') {
+      return { ...aplicabilidade, meta: 25 }
+    }
+    return aplicabilidade
+  },
+)
+
+/** Comportamento base do gerador: quão perto da meta cada indicador costuma ficar. */
+export interface ComportamentoIndicador {
+  readonly indicadorId: string
   readonly desempenhoBase: number
   /** Amplitude da variação mês a mês. */
   readonly volatilidade: number
 }
 
-export const INDICADORES: readonly DefinicaoIndicador[] = [
-  // Atenção Primária
-  {
-    id: 'aps-cobertura-esf',
-    areaId: 'aps',
-    nome: 'Cobertura populacional por equipes de Saúde da Família',
-    unidade: '%',
-    direcao: 'maior_melhor',
-    fonte: 'Cadastro de equipes',
-    periodicidade: 'mensal',
-    meta: 85,
-    peso: 3,
-    desempenhoBase: 0.97,
-    volatilidade: 0.04,
-  },
-  {
-    id: 'aps-consultas-agendadas',
-    areaId: 'aps',
-    nome: 'Consultas agendadas dentro do prazo pactuado',
-    unidade: '%',
-    direcao: 'maior_melhor',
-    fonte: 'Prontuário eletrônico',
-    periodicidade: 'mensal',
-    meta: 90,
-    peso: 2,
-    desempenhoBase: 0.93,
-    volatilidade: 0.06,
-  },
-  {
-    id: 'aps-visitas-domiciliares',
-    areaId: 'aps',
-    nome: 'Visitas domiciliares por agente comunitário',
-    unidade: 'visitas/mês',
-    direcao: 'maior_melhor',
-    fonte: 'Registro de campo',
-    periodicidade: 'mensal',
-    meta: 120,
-    peso: 2,
-    desempenhoBase: 0.89,
-    volatilidade: 0.09,
-  },
-  {
-    id: 'aps-pre-natal',
-    areaId: 'aps',
-    nome: 'Gestantes com sete ou mais consultas de pré-natal',
-    unidade: '%',
-    direcao: 'maior_melhor',
-    fonte: 'Sistema de acompanhamento',
-    periodicidade: 'trimestral',
-    meta: 75,
-    peso: 3,
-    desempenhoBase: 0.95,
-    volatilidade: 0.05,
-  },
-
-  // Vigilância em Saúde
-  {
-    id: 'vis-vacinacao',
-    areaId: 'vis',
-    nome: 'Crianças com esquema vacinal em dia',
-    unidade: '%',
-    direcao: 'maior_melhor',
-    fonte: 'Sistema de imunização',
-    periodicidade: 'mensal',
-    meta: 95,
-    peso: 3,
-    desempenhoBase: 0.94,
-    volatilidade: 0.05,
-  },
-  {
-    id: 'vis-investigacao-obitos',
-    areaId: 'vis',
-    nome: 'Óbitos investigados no prazo',
-    unidade: '%',
-    direcao: 'maior_melhor',
-    fonte: 'Vigilância epidemiológica',
-    periodicidade: 'mensal',
-    meta: 90,
-    peso: 2,
-    desempenhoBase: 0.91,
-    volatilidade: 0.07,
-  },
-  {
-    id: 'vis-tempo-notificacao',
-    areaId: 'vis',
-    nome: 'Tempo médio de notificação de agravo',
-    unidade: 'dias',
-    direcao: 'menor_melhor',
-    fonte: 'Vigilância epidemiológica',
-    periodicidade: 'mensal',
-    meta: 5,
-    peso: 2,
-    desempenhoBase: 0.96,
-    volatilidade: 0.08,
-  },
-  {
-    id: 'vis-inspecoes',
-    areaId: 'vis',
-    nome: 'Inspeções sanitárias realizadas sobre programadas',
-    unidade: '%',
-    direcao: 'maior_melhor',
-    fonte: 'Vigilância sanitária',
-    periodicidade: 'mensal',
-    meta: 80,
-    peso: 2,
-    desempenhoBase: 0.86,
-    volatilidade: 0.11,
-  },
-
-  // Regulação
-  {
-    id: 'reg-tempo-regulacao',
-    areaId: 'reg',
-    nome: 'Tempo médio de regulação de consulta especializada',
-    unidade: 'dias',
-    direcao: 'menor_melhor',
-    fonte: 'Central de regulação',
-    periodicidade: 'mensal',
-    meta: 30,
-    peso: 3,
-    desempenhoBase: 0.84,
-    volatilidade: 0.12,
-  },
-  {
-    id: 'reg-fila-espera',
-    areaId: 'reg',
-    nome: 'Pacientes na fila há mais de 90 dias',
-    unidade: 'pacientes',
-    direcao: 'menor_melhor',
-    fonte: 'Central de regulação',
-    periodicidade: 'mensal',
-    meta: 400,
-    peso: 3,
-    desempenhoBase: 0.79,
-    volatilidade: 0.14,
-  },
-  {
-    id: 'reg-vagas-ocupadas',
-    areaId: 'reg',
-    nome: 'Taxa de ocupação das vagas ofertadas',
-    unidade: '%',
-    direcao: 'maior_melhor',
-    fonte: 'Central de regulação',
-    periodicidade: 'mensal',
-    meta: 92,
-    peso: 2,
-    desempenhoBase: 0.93,
-    volatilidade: 0.05,
-  },
-
-  // Assistência Farmacêutica
-  {
-    id: 'af-disponibilidade',
-    areaId: 'af',
-    nome: 'Disponibilidade de medicamentos da relação básica',
-    unidade: '%',
-    direcao: 'maior_melhor',
-    fonte: 'Estoque central',
-    periodicidade: 'mensal',
-    meta: 95,
-    peso: 3,
-    desempenhoBase: 0.92,
-    volatilidade: 0.07,
-  },
-  {
-    id: 'af-perda-validade',
-    areaId: 'af',
-    nome: 'Perda por vencimento sobre o estoque',
-    unidade: '%',
-    direcao: 'menor_melhor',
-    fonte: 'Estoque central',
-    periodicidade: 'mensal',
-    meta: 2,
-    peso: 2,
-    desempenhoBase: 0.88,
-    volatilidade: 0.13,
-  },
-  {
-    id: 'af-tempo-dispensacao',
-    areaId: 'af',
-    nome: 'Tempo médio de dispensação na farmácia',
-    unidade: 'minutos',
-    direcao: 'menor_melhor',
-    fonte: 'Farmácia distrital',
-    periodicidade: 'mensal',
-    meta: 12,
-    peso: 1,
-    desempenhoBase: 0.94,
-    volatilidade: 0.08,
-  },
-
-  // Saúde Mental
-  {
-    id: 'sm-acolhimentos',
-    areaId: 'sm',
-    nome: 'Acolhimentos realizados no CAPS',
-    unidade: 'atendimentos',
-    direcao: 'maior_melhor',
-    fonte: 'Rede de atenção psicossocial',
-    periodicidade: 'mensal',
-    meta: 350,
-    peso: 2,
-    desempenhoBase: 0.9,
-    volatilidade: 0.1,
-  },
-  {
-    id: 'sm-abandono',
-    areaId: 'sm',
-    nome: 'Abandono de tratamento continuado',
-    unidade: '%',
-    direcao: 'menor_melhor',
-    fonte: 'Rede de atenção psicossocial',
-    periodicidade: 'trimestral',
-    meta: 15,
-    peso: 3,
-    desempenhoBase: 0.85,
-    volatilidade: 0.11,
-  },
-  {
-    id: 'sm-matriciamento',
-    areaId: 'sm',
-    nome: 'Equipes de APS com matriciamento no período',
-    unidade: '%',
-    direcao: 'maior_melhor',
-    fonte: 'Rede de atenção psicossocial',
-    periodicidade: 'trimestral',
-    meta: 70,
-    peso: 2,
-    desempenhoBase: 0.87,
-    volatilidade: 0.12,
-  },
-
-  // Urgência e Emergência
-  {
-    id: 'urg-tempo-resposta',
-    areaId: 'urg',
-    nome: 'Tempo médio de resposta do serviço móvel',
-    unidade: 'minutos',
-    direcao: 'menor_melhor',
-    fonte: 'Central de urgência',
-    periodicidade: 'mensal',
-    meta: 18,
-    peso: 3,
-    desempenhoBase: 0.91,
-    volatilidade: 0.09,
-  },
-  {
-    id: 'urg-classificacao-risco',
-    areaId: 'urg',
-    nome: 'Atendimentos com classificação de risco registrada',
-    unidade: '%',
-    direcao: 'maior_melhor',
-    fonte: 'Prontuário de urgência',
-    periodicidade: 'mensal',
-    meta: 98,
-    peso: 2,
-    desempenhoBase: 0.97,
-    volatilidade: 0.03,
-  },
-  {
-    id: 'urg-permanencia',
-    areaId: 'urg',
-    nome: 'Permanência média em observação',
-    unidade: 'horas',
-    direcao: 'menor_melhor',
-    fonte: 'Prontuário de urgência',
-    periodicidade: 'mensal',
-    meta: 8,
-    peso: 2,
-    desempenhoBase: 0.86,
-    volatilidade: 0.1,
-  },
-
-  // Saúde Bucal
-  {
-    id: 'sb-primeira-consulta',
-    areaId: 'sb',
-    nome: 'Primeira consulta odontológica programática',
-    unidade: '%',
-    direcao: 'maior_melhor',
-    fonte: 'Prontuário eletrônico',
-    periodicidade: 'mensal',
-    meta: 60,
-    peso: 2,
-    desempenhoBase: 0.88,
-    volatilidade: 0.1,
-  },
-  {
-    id: 'sb-escovacao',
-    areaId: 'sb',
-    nome: 'Escolas com escovação supervisionada',
-    unidade: '%',
-    direcao: 'maior_melhor',
-    fonte: 'Programa escolar',
-    periodicidade: 'trimestral',
-    meta: 80,
-    peso: 2,
-    desempenhoBase: 0.9,
-    volatilidade: 0.09,
-  },
-  {
-    id: 'sb-exodontias',
-    areaId: 'sb',
-    nome: 'Exodontias sobre procedimentos odontológicos',
-    unidade: '%',
-    direcao: 'menor_melhor',
-    fonte: 'Prontuário eletrônico',
-    periodicidade: 'mensal',
-    meta: 8,
-    peso: 1,
-    desempenhoBase: 0.92,
-    volatilidade: 0.08,
-  },
-
-  // Gestão de Pessoas
-  {
-    id: 'gp-absenteismo',
-    areaId: 'gp',
-    nome: 'Absenteísmo das equipes assistenciais',
-    unidade: '%',
-    direcao: 'menor_melhor',
-    fonte: 'Folha de frequência',
-    periodicidade: 'mensal',
-    meta: 4,
-    peso: 2,
-    desempenhoBase: 0.87,
-    volatilidade: 0.11,
-  },
-  {
-    id: 'gp-capacitacao',
-    areaId: 'gp',
-    nome: 'Servidores capacitados no período',
-    unidade: '%',
-    direcao: 'maior_melhor',
-    fonte: 'Educação permanente',
-    periodicidade: 'semestral',
-    meta: 65,
-    peso: 2,
-    desempenhoBase: 0.83,
-    volatilidade: 0.13,
-  },
-  {
-    id: 'gp-avaliacoes-prazo',
-    areaId: 'gp',
-    nome: 'Avaliações de desempenho entregues no prazo',
-    unidade: '%',
-    direcao: 'maior_melhor',
-    fonte: 'Gestão de pessoas',
-    periodicidade: 'semestral',
-    meta: 95,
-    peso: 2,
-    desempenhoBase: 0.9,
-    volatilidade: 0.08,
-  },
-
-  // Planejamento
-  {
-    id: 'plan-execucao-orcamentaria',
-    areaId: 'plan',
-    nome: 'Execução orçamentária do programa',
-    unidade: '%',
-    direcao: 'maior_melhor',
-    fonte: 'Sistema orçamentário',
-    periodicidade: 'trimestral',
-    meta: 90,
-    peso: 3,
-    desempenhoBase: 0.92,
-    volatilidade: 0.06,
-  },
-  {
-    id: 'plan-relatorios-prazo',
-    areaId: 'plan',
-    nome: 'Relatórios de gestão entregues no prazo',
-    unidade: '%',
-    direcao: 'maior_melhor',
-    fonte: 'Planejamento',
-    periodicidade: 'trimestral',
-    meta: 100,
-    peso: 2,
-    desempenhoBase: 0.94,
-    volatilidade: 0.06,
-  },
-
-  // Ouvidoria
-  {
-    id: 'ouv-tempo-resposta',
-    areaId: 'ouv',
-    nome: 'Tempo médio de resposta à manifestação',
-    unidade: 'dias',
-    direcao: 'menor_melhor',
-    fonte: 'Ouvidoria',
-    periodicidade: 'mensal',
-    meta: 15,
-    peso: 2,
-    desempenhoBase: 0.89,
-    volatilidade: 0.1,
-  },
-  {
-    id: 'ouv-resolutividade',
-    areaId: 'ouv',
-    nome: 'Manifestações resolvidas na primeira resposta',
-    unidade: '%',
-    direcao: 'maior_melhor',
-    fonte: 'Ouvidoria',
-    periodicidade: 'mensal',
-    meta: 70,
-    peso: 2,
-    desempenhoBase: 0.85,
-    volatilidade: 0.12,
-  },
+export const COMPORTAMENTOS: readonly ComportamentoIndicador[] = [
+  { indicadorId: 'acompanhamento', desempenhoBase: 0.95, volatilidade: 0.05 },
+  { indicadorId: 'pre-natal', desempenhoBase: 0.92, volatilidade: 0.07 },
+  { indicadorId: 'vacinacao', desempenhoBase: 0.94, volatilidade: 0.05 },
+  { indicadorId: 'tempo-espera', desempenhoBase: 0.88, volatilidade: 0.11 },
+  { indicadorId: 'acolhimento', desempenhoBase: 0.96, volatilidade: 0.04 },
+  { indicadorId: 'absenteismo', desempenhoBase: 0.87, volatilidade: 0.12 },
+  { indicadorId: 'prontuario', desempenhoBase: 0.91, volatilidade: 0.08 },
 ]
 
-/** Gestores fictícios: nomes genéricos, sem qualquer correspondência real. */
-export const NOMES_GESTORES: readonly string[] = [
+/** Gerentes fictícios: nomes genéricos, sem qualquer correspondência real. */
+export const NOMES_GERENTES: readonly string[] = [
   'A. Moraes',
   'B. Siqueira',
   'C. Andrade',
@@ -467,9 +272,8 @@ export const NOMES_GESTORES: readonly string[] = [
   'L. Pontes',
 ]
 
-export const CARGOS: readonly string[] = [
-  'Coordenação',
-  'Gerência',
-  'Supervisão',
-  'Diretoria técnica',
+export const NOMES_GERENTES_DISTRITAIS: readonly string[] = [
+  'M. Quintela',
+  'N. Sarmento',
+  'O. Tavares',
 ]

@@ -6,7 +6,7 @@ import { TUTORIAIS } from './tutoriais'
 
 /** Onde mora o corpo de cada tela, para conferir os alvos no fonte. */
 const ARQUIVO_DA_TELA: Record<FeatureId, string> = {
-  'painel-cam': 'cam.tsx',
+  'painel-seab': 'painel-seab.tsx',
   indicadores: 'indicadores.tsx',
   lancamento: 'lancamento.tsx',
   'meu-resultado': 'meu-resultado.tsx',

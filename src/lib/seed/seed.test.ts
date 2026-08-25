@@ -1,7 +1,13 @@
 import { describe, expect, it } from 'vitest'
 import { gerarBase, SEMENTE_PADRAO } from './gerar'
 import { pareceErroDeDigitacao } from './index'
-import { AREAS, INDICADORES } from './catalogo'
+import {
+  DISTRITOS,
+  INDICADORES,
+  SUBINDICADORES,
+  TIPOS_UNIDADE,
+  UNIDADES,
+} from './catalogo'
 import { prng } from './prng'
 
 const base = gerarBase(SEMENTE_PADRAO)
@@ -33,32 +39,94 @@ describe('base sintética', () => {
   })
 
   it('muda quando a semente muda', () => {
-    expect(gerarBase(1).lancamentos[0].valor).not.toBe(gerarBase(2).lancamentos[0].valor)
+    expect(gerarBase(1).lancamentos).not.toEqual(gerarBase(2).lancamentos)
   })
 
-  it('tem o volume prometido no briefing', () => {
-    expect(base.areas.length).toBe(AREAS.length)
-    expect(base.areas.length).toBeGreaterThanOrEqual(10)
+  it('tem o volume da rede remodelada', () => {
+    expect(base.distritos.length).toBe(DISTRITOS.length)
+    expect(base.tiposUnidade.length).toBe(TIPOS_UNIDADE.length)
+    expect(base.unidades.length).toBe(UNIDADES.length)
+    expect(base.unidades.length).toBeGreaterThanOrEqual(12)
     expect(base.indicadores.length).toBe(INDICADORES.length)
-    expect(base.indicadores.length).toBeGreaterThanOrEqual(25)
+    expect(base.subindicadores.length).toBe(SUBINDICADORES.length)
+    expect(base.subindicadores.length).toBeGreaterThanOrEqual(10)
     expect(base.ciclos.length).toBe(6)
-    expect(base.gestores.length).toBe(AREAS.length)
+    // Um gerente por unidade e um por distrito.
+    expect(base.gerentes.length).toBe(UNIDADES.length + DISTRITOS.length)
   })
 
   it('só tem referências válidas', () => {
-    const areas = new Set(base.areas.map((a) => a.id))
+    const distritos = new Set(base.distritos.map((d) => d.id))
+    const tipos = new Set(base.tiposUnidade.map((t) => t.id))
+    const unidades = new Set(base.unidades.map((u) => u.id))
     const indicadores = new Set(base.indicadores.map((i) => i.id))
+    const subindicadores = new Set(base.subindicadores.map((s) => s.id))
     const ciclos = new Set(base.ciclos.map((c) => c.id))
+    const gerentes = new Set(base.gerentes.map((g) => g.id))
 
-    for (const indicador of base.indicadores) expect(areas.has(indicador.areaId)).toBe(true)
-    for (const gestor of base.gestores) expect(areas.has(gestor.areaId)).toBe(true)
+    for (const unidade of base.unidades) {
+      expect(distritos.has(unidade.distritoId)).toBe(true)
+      expect(tipos.has(unidade.tipoId)).toBe(true)
+    }
+    for (const sub of base.subindicadores) expect(indicadores.has(sub.indicadorId)).toBe(true)
     for (const lancamento of base.lancamentos) {
-      expect(indicadores.has(lancamento.indicadorId)).toBe(true)
+      expect(subindicadores.has(lancamento.subindicadorId)).toBe(true)
+      expect(unidades.has(lancamento.unidadeId)).toBe(true)
       expect(ciclos.has(lancamento.cicloId)).toBe(true)
     }
+    for (const regra of base.regras) {
+      for (const aplicabilidade of regra.aplicabilidades) {
+        expect(tipos.has(aplicabilidade.tipoUnidadeId)).toBe(true)
+        expect(indicadores.has(aplicabilidade.indicadorId)).toBe(true)
+      }
+    }
     for (const contestacao of base.contestacoes) {
+      expect(gerentes.has(contestacao.gerenteId)).toBe(true)
       expect(ciclos.has(contestacao.cicloId)).toBe(true)
       if (contestacao.indicadorId) expect(indicadores.has(contestacao.indicadorId)).toBe(true)
+    }
+  })
+
+  it('todo gerente tem o vínculo do próprio escopo, e só ele', () => {
+    for (const gerente of base.gerentes) {
+      if (gerente.escopo === 'unidade') {
+        expect(gerente.unidadeId).not.toBeNull()
+        expect(gerente.distritoId).toBeNull()
+      } else {
+        expect(gerente.distritoId).not.toBeNull()
+        expect(gerente.unidadeId).toBeNull()
+      }
+    }
+  })
+
+  it('o lançamento tem a forma do tipo do subindicador', () => {
+    const tipoDe = new Map(base.subindicadores.map((s) => [s.id, s.tipo]))
+    for (const lancamento of base.lancamentos) {
+      if (tipoDe.get(lancamento.subindicadorId) === 'indice') {
+        expect(lancamento.valor).not.toBeNull()
+        expect(lancamento.numerador).toBeNull()
+        expect(lancamento.denominador).toBeNull()
+      } else {
+        expect(lancamento.valor).toBeNull()
+        expect(lancamento.numerador).not.toBeNull()
+        expect(lancamento.denominador).not.toBeNull()
+        expect(lancamento.denominador).toBeGreaterThan(0)
+      }
+    }
+  })
+
+  it('só lança o que a regra do ciclo aplica ao tipo da unidade', () => {
+    const tipoDaUnidade = new Map(base.unidades.map((u) => [u.id, u.tipoId]))
+    const indicadorDoSub = new Map(base.subindicadores.map((s) => [s.id, s.indicadorId]))
+    for (const lancamento of base.lancamentos) {
+      const ciclo = base.ciclos.find((c) => c.id === lancamento.cicloId)!
+      const regra = base.regras.find((r) => r.id === ciclo.regraId)!
+      const aplicavel = regra.aplicabilidades.some(
+        (a) =>
+          a.tipoUnidadeId === tipoDaUnidade.get(lancamento.unidadeId) &&
+          a.indicadorId === indicadorDoSub.get(lancamento.subindicadorId),
+      )
+      expect(aplicavel, `${lancamento.id} sem aplicabilidade`).toBe(true)
     }
   })
 
@@ -67,14 +135,27 @@ describe('base sintética', () => {
     expect(abertos.length).toBeGreaterThan(0)
     for (const ciclo of abertos) {
       expect(base.avaliacoes.filter((a) => a.cicloId === ciclo.id)).toHaveLength(0)
+      expect(base.avaliacoesDistritais.filter((a) => a.cicloId === ciclo.id)).toHaveLength(0)
     }
   })
 
-  it('gera avaliação para todo gestor em todo ciclo fechado', () => {
+  it('gera avaliação para toda unidade, e a distrital, em todo ciclo fechado', () => {
     const fechados = base.ciclos.filter(
       (c) => c.estado === 'publicado' || c.estado === 'homologado',
     )
-    expect(base.avaliacoes.length).toBe(fechados.length * base.gestores.length)
+    expect(base.avaliacoes.length).toBe(fechados.length * base.unidades.length)
+    expect(base.avaliacoesDistritais.length).toBe(fechados.length * base.distritos.length)
+  })
+
+  it('a distrital é a média das unidades do distrito', () => {
+    const distrital = base.avaliacoesDistritais.find(
+      (a) => a.distritoId === 'ds-leste' && a.cicloId === 'ciclo-2026-01',
+    )!
+    const unidadesDoDistrito = base.unidades.filter((u) => u.distritoId === 'ds-leste')
+    expect(distrital.porUnidade.length).toBe(unidadesDoDistrito.length)
+    const media =
+      distrital.porUnidade.reduce((s, u) => s + u.score, 0) / distrital.porUnidade.length
+    expect(Math.abs(distrital.score - media)).toBeLessThan(0.01)
   })
 
   it('usa a regra vigente da competência de cada ciclo', () => {
@@ -82,26 +163,84 @@ describe('base sintética', () => {
     expect(base.ciclos.find((c) => c.competencia === '2026-05')?.regraId).toBe('regra-v2')
   })
 
-  it('deixa o ciclo aberto com lançamentos faltando — é o funil da CAM', () => {
+  it('a janela de revisão cabe dentro da janela de lançamento', () => {
+    for (const ciclo of base.ciclos) {
+      expect(ciclo.revisaoInicio >= ciclo.janelaLancamentoInicio.slice(0, 10)).toBe(true)
+      expect(ciclo.revisaoInicio <= ciclo.janelaLancamentoFim.slice(0, 10)).toBe(true)
+    }
+  })
+
+  it('tem uma correção dentro da janela de revisão, e a correção vence', () => {
+    const alterado = base.eventos.find((e) => e.tipo === 'lancamento_alterado')
+    expect(alterado?.descricao).toContain('janela de revisão')
+
+    const correcao = base.lancamentos.find((l) => l.id.endsWith('-rev'))!
+    const original = base.lancamentos.find(
+      (l) =>
+        l.id !== correcao.id &&
+        l.subindicadorId === correcao.subindicadorId &&
+        l.unidadeId === correcao.unidadeId &&
+        l.cicloId === correcao.cicloId,
+    )!
+    const ciclo = base.ciclos.find((c) => c.id === correcao.cicloId)!
+
+    expect(correcao.registradoEm > original.registradoEm).toBe(true)
+    expect(correcao.registradoEm.slice(0, 10) >= ciclo.revisaoInicio).toBe(true)
+    // O valor errado (vírgula deslocada) fica na base; a memória usa o certo.
+    expect(original.valor).toBe((correcao.valor ?? 0) * 10)
+  })
+
+  it('deixa o ciclo aberto com lançamentos faltando — é o funil da SEAB', () => {
     const aberto = base.ciclos.find((c) => c.estado === 'lancamento_aberto')!
+    const regra = base.regras.find((r) => r.id === aberto.regraId)!
     const lancados = base.lancamentos.filter((l) => l.cicloId === aberto.id)
+
+    let esperados = 0
+    for (const unidade of base.unidades) {
+      for (const aplicabilidade of regra.aplicabilidades) {
+        if (aplicabilidade.tipoUnidadeId !== unidade.tipoId) continue
+        esperados += base.subindicadores.filter(
+          (s) => s.indicadorId === aplicabilidade.indicadorId,
+        ).length
+      }
+    }
+
     expect(lancados.length).toBeGreaterThan(0)
-    expect(lancados.length).toBeLessThan(base.indicadores.length)
+    expect(lancados.length).toBeLessThan(esperados)
   })
 
   it('inclui outliers plausíveis, na proporção prometida', () => {
+    const tipoDaUnidade = new Map(base.unidades.map((u) => [u.id, u.tipoId]))
+    const subPorId = new Map(base.subindicadores.map((s) => [s.id, s]))
+
     const suspeitos = base.lancamentos.filter((lancamento) => {
-      const indicador = base.indicadores.find((i) => i.id === lancamento.indicadorId)!
-      return pareceErroDeDigitacao(lancamento.valor, indicador.meta)
+      const sub = subPorId.get(lancamento.subindicadorId)!
+      const ciclo = base.ciclos.find((c) => c.id === lancamento.cicloId)!
+      const regra = base.regras.find((r) => r.id === ciclo.regraId)!
+      const aplicabilidade = regra.aplicabilidades.find(
+        (a) =>
+          a.tipoUnidadeId === tipoDaUnidade.get(lancamento.unidadeId) &&
+          a.indicadorId === sub.indicadorId,
+      )
+      if (!aplicabilidade) return false
+      const apurado =
+        sub.tipo === 'indice'
+          ? (lancamento.valor ?? 0)
+          : ((lancamento.numerador ?? 0) / (lancamento.denominador ?? 1)) * 100
+      return pareceErroDeDigitacao(apurado, aplicabilidade.meta)
     })
+
     expect(suspeitos.length).toBeGreaterThan(0)
     expect(suspeitos.length / base.lancamentos.length).toBeLessThan(0.1)
   })
 
   it('nunca gera valor negativo ou não finito', () => {
     for (const lancamento of base.lancamentos) {
-      expect(Number.isFinite(lancamento.valor)).toBe(true)
-      expect(lancamento.valor).toBeGreaterThanOrEqual(0)
+      for (const campo of [lancamento.valor, lancamento.numerador, lancamento.denominador]) {
+        if (campo === null) continue
+        expect(Number.isFinite(campo)).toBe(true)
+        expect(campo).toBeGreaterThanOrEqual(0)
+      }
     }
   })
 

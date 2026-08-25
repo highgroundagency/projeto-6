@@ -1,13 +1,24 @@
 import { describe, expect, it } from 'vitest'
 import {
+  aplicabilidadeDe,
+  apurarSubindicador,
   arredondar,
   calcularAtingimento,
   calcularAvaliacao,
+  calcularAvaliacaoDistrital,
   faixaDoAtingimento,
   faixaDoScore,
   regraVigente,
 } from './motor'
-import type { Gestor, Indicador, Lancamento, RegraDePontuacao } from './tipos'
+import type {
+  Aplicabilidade,
+  Avaliacao,
+  Indicador,
+  Lancamento,
+  RegraDePontuacao,
+  Subindicador,
+  Unidade,
+} from './tipos'
 
 const REGRA_V1: RegraDePontuacao = {
   id: 'regra-2026-v1',
@@ -29,6 +40,7 @@ const REGRA_V1: RegraDePontuacao = {
     { de: 70, ate: 90, rotulo: 'integral', percentual: 80 },
     { de: 90, ate: null, rotulo: 'integral plena', percentual: 100 },
   ],
+  aplicabilidades: [],
   arredondamento: { casas: 2, modo: 'meio_para_cima' },
   tetoAtingimento: 1.5,
   semLancamento: 'zera_com_aviso',
@@ -50,46 +62,98 @@ const REGRA_V2: RegraDePontuacao = {
   ],
 }
 
-const GESTOR: Gestor = {
-  id: 'g1',
-  nome: 'Gestor Sintético 1',
-  cargo: 'Coordenação',
-  areaId: 'a1',
-}
+const USF: Unidade = { id: 'u1', nome: 'USF Sintética 1', distritoId: 'd1', tipoId: 'usf' }
+const CAPS: Unidade = { id: 'u2', nome: 'CAPS Sintético 1', distritoId: 'd1', tipoId: 'caps' }
 
 function indicador(parcial: Partial<Indicador> & Pick<Indicador, 'id'>): Indicador {
   return {
-    areaId: 'a1',
     nome: `Indicador ${parcial.id}`,
-    unidade: '%',
+    unidadeMedida: '%',
     direcao: 'maior_melhor',
     fonte: 'sintético',
     periodicidade: 'mensal',
-    meta: 100,
-    peso: 1,
     ...parcial,
   }
 }
 
-function lancamento(indicadorId: string, valor: number): Lancamento {
+function sub(
+  id: string,
+  indicadorId: string,
+  tipo: Subindicador['tipo'] = 'indice',
+): Subindicador {
+  return { id, indicadorId, nome: `Subindicador ${id}`, tipo }
+}
+
+function aplic(
+  indicadorId: string,
+  parcial: Partial<Aplicabilidade> = {},
+): Aplicabilidade {
+  return { tipoUnidadeId: 'usf', indicadorId, meta: 100, peso: 1, ...parcial }
+}
+
+function lancIndice(
+  subindicadorId: string,
+  valor: number,
+  extra: Partial<Lancamento> = {},
+): Lancamento {
   return {
-    id: `l-${indicadorId}`,
-    indicadorId,
+    id: `l-${subindicadorId}`,
+    subindicadorId,
+    unidadeId: 'u1',
     cicloId: 'c1',
     valor,
+    numerador: null,
+    denominador: null,
     evidencia: 'planilha sintética',
     autor: 'seed',
     registradoEm: '2026-02-01T12:00:00.000Z',
     status: 'validado',
+    ...extra,
+  }
+}
+
+function lancRazao(
+  subindicadorId: string,
+  numerador: number,
+  denominador: number,
+  extra: Partial<Lancamento> = {},
+): Lancamento {
+  return {
+    ...lancIndice(subindicadorId, 0, extra),
+    valor: null,
+    numerador,
+    denominador,
   }
 }
 
 function avaliar(
   indicadores: Indicador[],
+  subindicadores: Subindicador[],
   lancamentos: Lancamento[],
   regra: RegraDePontuacao = REGRA_V1,
+  unidade: Unidade = USF,
 ) {
-  return calcularAvaliacao({ gestor: GESTOR, cicloId: 'c1', indicadores, lancamentos, regra })
+  return calcularAvaliacao({
+    unidade,
+    cicloId: 'c1',
+    indicadores,
+    subindicadores,
+    lancamentos,
+    regra,
+  })
+}
+
+/** Um indicador com um subindicador 'indice' de mesmo nome: o caso simples. */
+function cenarioSimples(ids: string[], pesos?: number[]) {
+  const indicadores = ids.map((id) => indicador({ id }))
+  const subindicadores = ids.map((id) => sub(`s-${id}`, id))
+  const aplicabilidades = ids.map((id, i) => aplic(id, { peso: pesos?.[i] ?? 1 }))
+  return {
+    indicadores,
+    subindicadores,
+    regra: { ...REGRA_V1, aplicabilidades },
+    lancar: (valores: number[]) => ids.map((id, i) => lancIndice(`s-${id}`, valores[i])),
+  }
 }
 
 describe('arredondar', () => {
@@ -180,33 +244,49 @@ describe('faixas', () => {
   })
 })
 
+describe('apurarSubindicador', () => {
+  const indice = sub('s1', 'i1', 'indice')
+  const razao = sub('s2', 'i1', 'razao')
+
+  it('índice devolve o valor como veio', () => {
+    expect(apurarSubindicador(indice, lancIndice('s1', 87)).valor).toBe(87)
+  })
+
+  it('razão vira proporção em percentual', () => {
+    const passo = apurarSubindicador(razao, lancRazao('s2', 45, 50))
+    expect(passo.valor).toBe(90)
+    expect(passo.numerador).toBe(45)
+    expect(passo.denominador).toBe(50)
+  })
+
+  it('denominador zero não vira #DIV/0!: fica sem valor, com aviso', () => {
+    const passo = apurarSubindicador(razao, lancRazao('s2', 45, 0))
+    expect(passo.valor).toBeNull()
+    expect(passo.aviso).toContain('denominador zero')
+  })
+
+  it('sem lançamento fica sem valor, com aviso', () => {
+    const passo = apurarSubindicador(indice, undefined)
+    expect(passo.valor).toBeNull()
+    expect(passo.aviso).toBe('sem lançamento')
+  })
+})
+
 describe('calcularAvaliacao', () => {
   it('desempenho perfeito dá exatamente 100, sem sobra de arredondamento', () => {
-    const indicadores = [
-      indicador({ id: 'i1' }),
-      indicador({ id: 'i2' }),
-      indicador({ id: 'i3' }),
-    ]
-    const avaliacao = avaliar(indicadores, [
-      lancamento('i1', 100),
-      lancamento('i2', 100),
-      lancamento('i3', 100),
-    ])
+    const { indicadores, subindicadores, regra, lancar } = cenarioSimples(['i1', 'i2', 'i3'])
+    const avaliacao = avaliar(indicadores, subindicadores, lancar([100, 100, 100]), regra)
     expect(avaliacao.score).toBe(100)
     expect(avaliacao.faixa?.rotulo).toBe('integral plena')
   })
 
   it('a memória de cálculo fecha na conta que ela mesma mostra', () => {
-    const indicadores = [
-      indicador({ id: 'i1', peso: 0.3 }),
-      indicador({ id: 'i2', peso: 0.3 }),
-      indicador({ id: 'i3', peso: 0.4 }),
-    ]
-    const avaliacao = avaliar(indicadores, [
-      lancamento('i1', 100), // 100% → 10 pontos
-      lancamento('i2', 90), // 90%  → 7 pontos
-      lancamento('i3', 80), // 80%  → 4 pontos
-    ])
+    const { indicadores, subindicadores, regra, lancar } = cenarioSimples(
+      ['i1', 'i2', 'i3'],
+      [0.3, 0.3, 0.4],
+    )
+    // 100% → 10 pontos; 90% → 7 pontos; 80% → 4 pontos.
+    const avaliacao = avaliar(indicadores, subindicadores, lancar([100, 90, 80]), regra)
 
     const soma = avaliacao.memoria.passos.reduce((s, p) => s + p.contribuicao, 0)
     expect(arredondar(soma, 2)).toBe(avaliacao.memoria.somaContribuicoes)
@@ -214,56 +294,158 @@ describe('calcularAvaliacao', () => {
     expect(avaliacao.score).toBe(67)
   })
 
-  it('registra um passo por indicador, com todos os campos da auditoria', () => {
-    const avaliacao = avaliar([indicador({ id: 'i1' })], [lancamento('i1', 88)])
-    const passo = avaliacao.memoria.passos[0]
+  it('compõe o indicador pela média simples dos subindicadores', () => {
+    const indicadores = [indicador({ id: 'i1' })]
+    const subindicadores = [sub('s1', 'i1'), sub('s2', 'i1')]
+    const regra = { ...REGRA_V1, aplicabilidades: [aplic('i1')] }
+    const avaliacao = avaliar(
+      indicadores,
+      subindicadores,
+      [lancIndice('s1', 80), lancIndice('s2', 120)],
+      regra,
+    )
 
-    expect(passo).toMatchObject({
-      indicadorId: 'i1',
-      valor: 88,
-      meta: 100,
-      atingimento: 0.88,
-      pontos: 7,
-      peso: 1,
-      contribuicao: 7,
-      direcao: 'maior_melhor',
-    })
-    expect(passo.faixa).toBe('85% a <95%')
-    expect(avaliacao.memoria.versaoRegra).toBe(1)
-    expect(avaliacao.memoria.regraId).toBe('regra-2026-v1')
+    const passo = avaliacao.memoria.passos[0]
+    expect(passo.valor).toBe(100)
+    expect(passo.subPassos.map((p) => p.valor)).toEqual([80, 120])
+    expect(passo.pontos).toBe(10)
+    expect(avaliacao.score).toBe(100)
   })
 
-  it('respeita menor_melhor no cálculo completo', () => {
-    const indicadores = [
-      indicador({ id: 'tempo', direcao: 'menor_melhor', meta: 10, unidade: 'dias' }),
-    ]
-    const bom = avaliar(indicadores, [lancamento('tempo', 8)])
-    const ruim = avaliar(indicadores, [lancamento('tempo', 20)])
+  it('mistura índice e razão na mesma composição', () => {
+    const indicadores = [indicador({ id: 'i1' })]
+    const subindicadores = [sub('s1', 'i1', 'indice'), sub('s2', 'i1', 'razao')]
+    const regra = { ...REGRA_V1, aplicabilidades: [aplic('i1')] }
+    const avaliacao = avaliar(
+      indicadores,
+      subindicadores,
+      [lancIndice('s1', 100), lancRazao('s2', 40, 50)],
+      regra,
+    )
 
-    expect(bom.memoria.passos[0].pontos).toBe(10)
-    expect(ruim.memoria.passos[0].pontos).toBe(0)
-    expect(bom.score).toBeGreaterThan(ruim.score)
+    // (100 + 80) / 2 = 90 → faixa 85–95 → 7 pontos.
+    expect(avaliacao.memoria.passos[0].valor).toBe(90)
+    expect(avaliacao.memoria.passos[0].pontos).toBe(7)
+  })
+
+  it('subindicador com denominador zero sai da média, com aviso na memória', () => {
+    const indicadores = [indicador({ id: 'i1' })]
+    const subindicadores = [sub('s1', 'i1', 'indice'), sub('s2', 'i1', 'razao')]
+    const regra = { ...REGRA_V1, aplicabilidades: [aplic('i1')] }
+    const avaliacao = avaliar(
+      indicadores,
+      subindicadores,
+      [lancIndice('s1', 100), lancRazao('s2', 45, 0)],
+      regra,
+    )
+
+    const passo = avaliacao.memoria.passos[0]
+    expect(passo.valor).toBe(100)
+    expect(passo.subPassos.find((p) => p.subindicadorId === 's2')?.aviso).toContain(
+      'denominador zero',
+    )
+    expect(avaliacao.avisos.join(' ')).toContain('subindicadores sem valor apurado')
+  })
+
+  it('indicador cujo único subindicador falhou é tratado como sem lançamento', () => {
+    const indicadores = [indicador({ id: 'i1' })]
+    const subindicadores = [sub('s1', 'i1', 'razao')]
+    const regra = { ...REGRA_V1, aplicabilidades: [aplic('i1')] }
+    const avaliacao = avaliar(indicadores, subindicadores, [lancRazao('s1', 45, 0)], regra)
+
+    expect(avaliacao.score).toBe(0)
+    expect(avaliacao.memoria.passos[0].faixa).toBe('sem lançamento')
+    expect(avaliacao.memoria.passos[0].subPassos[0].aviso).toContain('denominador zero')
+  })
+
+  it('indicador sem aplicabilidade para o tipo fica fora da conta e da memória', () => {
+    const indicadores = [indicador({ id: 'i1' }), indicador({ id: 'i2' })]
+    const subindicadores = [sub('s1', 'i1'), sub('s2', 'i2')]
+    // Só i1 vale para USF; i2 não existe para esse tipo.
+    const regra = { ...REGRA_V1, aplicabilidades: [aplic('i1')] }
+    const avaliacao = avaliar(
+      indicadores,
+      subindicadores,
+      [lancIndice('s1', 100), lancIndice('s2', 10)],
+      regra,
+    )
+
+    expect(avaliacao.memoria.passos.map((p) => p.indicadorId)).toEqual(['i1'])
+    expect(avaliacao.score).toBe(100)
+    expect(avaliacao.avisos).toEqual([])
+  })
+
+  it('meta e peso vêm da aplicabilidade do TIPO da unidade', () => {
+    const indicadores = [indicador({ id: 'i1' })]
+    const subindicadores = [sub('s1', 'i1')]
+    const regra = {
+      ...REGRA_V1,
+      aplicabilidades: [
+        aplic('i1', { tipoUnidadeId: 'usf', meta: 100 }),
+        aplic('i1', { tipoUnidadeId: 'caps', meta: 80 }),
+      ],
+    }
+    const lancamentosUsf = [lancIndice('s1', 80)]
+    const lancamentosCaps = [lancIndice('s1', 80, { unidadeId: 'u2' })]
+
+    // O MESMO valor 80: na USF é 80% da meta (4 pontos); no CAPS é 100% (10).
+    const naUsf = avaliar(indicadores, subindicadores, lancamentosUsf, regra, USF)
+    const noCaps = avaliar(indicadores, subindicadores, lancamentosCaps, regra, CAPS)
+    expect(naUsf.memoria.passos[0].pontos).toBe(4)
+    expect(noCaps.memoria.passos[0].pontos).toBe(10)
+    expect(naUsf.memoria.passos[0].meta).toBe(100)
+    expect(noCaps.memoria.passos[0].meta).toBe(80)
+  })
+
+  it('a correção mais recente do mesmo subindicador vence', () => {
+    const { indicadores, subindicadores, regra } = cenarioSimples(['i1'])
+    const original = lancIndice('s-i1', 10, {
+      id: 'l-a',
+      registradoEm: '2026-02-01T10:00:00.000Z',
+    })
+    const correcao = lancIndice('s-i1', 100, {
+      id: 'l-b',
+      registradoEm: '2026-02-02T10:00:00.000Z',
+    })
+    const avaliacao = avaliar(indicadores, subindicadores, [original, correcao], regra)
+    expect(avaliacao.memoria.passos[0].valor).toBe(100)
+    expect(avaliacao.score).toBe(100)
+  })
+
+  it('ignora lançamento de outra unidade e de outro ciclo', () => {
+    const { indicadores, subindicadores, regra } = cenarioSimples(['i1'])
+    const deOutraUnidade = lancIndice('s-i1', 100, { unidadeId: 'u9' })
+    const deOutroCiclo = lancIndice('s-i1', 100, { cicloId: 'c2' })
+    const avaliacao = avaliar(
+      indicadores,
+      subindicadores,
+      [deOutraUnidade, deOutroCiclo],
+      regra,
+    )
+    expect(avaliacao.memoria.passos[0].valor).toBeNull()
+    expect(avaliacao.score).toBe(0)
   })
 
   it('indicador sem lançamento zera com aviso, por padrão', () => {
-    const indicadores = [indicador({ id: 'i1' }), indicador({ id: 'i2' })]
-    const avaliacao = avaliar(indicadores, [lancamento('i1', 100)])
+    const { indicadores, subindicadores, regra } = cenarioSimples(['i1', 'i2'])
+    const avaliacao = avaliar(indicadores, subindicadores, [lancIndice('s-i1', 100)], regra)
 
     expect(avaliacao.memoria.passos).toHaveLength(2)
     const semLancamento = avaliacao.memoria.passos.find((p) => p.indicadorId === 'i2')
     expect(semLancamento?.pontos).toBe(0)
     expect(semLancamento?.valor).toBeNull()
     expect(semLancamento?.faixa).toBe('sem lançamento')
-    expect(avaliacao.avisos.join(' ')).toContain('sem lançamento')
+    expect(avaliacao.avisos.join(' ')).toContain('sem subindicador apurado')
     expect(avaliacao.score).toBe(50)
   })
 
   it('com "ignora", o indicador sem lançamento sai da conta e do peso', () => {
-    const regra = { ...REGRA_V1, semLancamento: 'ignora' } as RegraDePontuacao
+    const { indicadores, subindicadores, regra } = cenarioSimples(['i1', 'i2'])
     const avaliacao = avaliar(
-      [indicador({ id: 'i1' }), indicador({ id: 'i2' })],
-      [lancamento('i1', 100)],
-      regra,
+      indicadores,
+      subindicadores,
+      [lancIndice('s-i1', 100)],
+      { ...regra, semLancamento: 'ignora' },
     )
     expect(avaliacao.memoria.passos).toHaveLength(1)
     expect(avaliacao.memoria.somaPesos).toBe(1)
@@ -271,74 +453,139 @@ describe('calcularAvaliacao', () => {
   })
 
   it('com "usa_meta", o indicador sem lançamento entra como meta cumprida', () => {
-    const regra = { ...REGRA_V1, semLancamento: 'usa_meta' } as RegraDePontuacao
+    const { indicadores, subindicadores, regra } = cenarioSimples(['i1', 'i2'])
     const avaliacao = avaliar(
-      [indicador({ id: 'i1' }), indicador({ id: 'i2' })],
-      [lancamento('i1', 100)],
-      regra,
+      indicadores,
+      subindicadores,
+      [lancIndice('s-i1', 100)],
+      { ...regra, semLancamento: 'usa_meta' },
     )
     expect(avaliacao.score).toBe(100)
     expect(avaliacao.avisos.join(' ')).toContain('meta cumprida')
   })
 
   it('normaliza pesos que não somam 1', () => {
+    const grandes = cenarioSimples(['i1', 'i2'], [30, 70])
+    const fracionarios = cenarioSimples(['i1', 'i2'], [0.3, 0.7])
     const comPesosGrandes = avaliar(
-      [indicador({ id: 'i1', peso: 30 }), indicador({ id: 'i2', peso: 70 })],
-      [lancamento('i1', 100), lancamento('i2', 60)],
+      grandes.indicadores,
+      grandes.subindicadores,
+      grandes.lancar([100, 60]),
+      grandes.regra,
     )
     const comPesosFracionarios = avaliar(
-      [indicador({ id: 'i1', peso: 0.3 }), indicador({ id: 'i2', peso: 0.7 })],
-      [lancamento('i1', 100), lancamento('i2', 60)],
+      fracionarios.indicadores,
+      fracionarios.subindicadores,
+      fracionarios.lancar([100, 60]),
+      fracionarios.regra,
     )
     expect(comPesosGrandes.score).toBe(comPesosFracionarios.score)
     expect(comPesosGrandes.score).toBe(30)
   })
 
-  it('ignora indicadores de outra área', () => {
-    const avaliacao = avaliar(
-      [indicador({ id: 'i1' }), indicador({ id: 'outra', areaId: 'a2' })],
-      [lancamento('i1', 100)],
-    )
-    expect(avaliacao.memoria.passos.map((p) => p.indicadorId)).toEqual(['i1'])
-  })
-
-  it('devolve score zero e aviso quando a área não tem indicador com peso', () => {
-    const avaliacao = avaliar([], [])
+  it('devolve score zero e aviso quando nada se aplica ao tipo da unidade', () => {
+    const avaliacao = avaliar([indicador({ id: 'i1' })], [sub('s1', 'i1')], [], REGRA_V1)
     expect(avaliacao.score).toBe(0)
     expect(avaliacao.memoria.passos).toEqual([])
-    expect(avaliacao.avisos[0]).toContain('Nenhum indicador')
+    expect(avaliacao.avisos[0]).toContain('Nenhum indicador aplicável')
   })
 
   it('mantém o score dentro de 0 a 100 mesmo com todo mundo estourando o teto', () => {
-    const avaliacao = avaliar(
-      [indicador({ id: 'i1' }), indicador({ id: 'i2' })],
-      [lancamento('i1', 900), lancamento('i2', 900)],
-    )
+    const { indicadores, subindicadores, regra, lancar } = cenarioSimples(['i1', 'i2'])
+    const avaliacao = avaliar(indicadores, subindicadores, lancar([900, 900]), regra)
     expect(avaliacao.score).toBe(100)
     expect(avaliacao.memoria.passos.every((p) => p.aplicouTeto)).toBe(true)
   })
 
   it('é determinística: mesma entrada, mesmo resultado', () => {
-    const indicadores = [indicador({ id: 'i1' }), indicador({ id: 'i2', peso: 2 })]
-    const lancamentos = [lancamento('i1', 93), lancamento('i2', 71)]
-    expect(avaliar(indicadores, lancamentos)).toEqual(avaliar(indicadores, lancamentos))
+    const { indicadores, subindicadores, regra, lancar } = cenarioSimples(['i1', 'i2'], [1, 2])
+    const lancamentos = lancar([93, 71])
+    expect(avaliar(indicadores, subindicadores, lancamentos, regra)).toEqual(
+      avaliar(indicadores, subindicadores, lancamentos, regra),
+    )
+  })
+})
+
+describe('calcularAvaliacaoDistrital', () => {
+  function avaliacaoDaUnidade(unidadeId: string, score: number): Avaliacao {
+    return {
+      unidadeId,
+      cicloId: 'c1',
+      score,
+      faixa: faixaDoScore(score, REGRA_V1),
+      memoria: {
+        regraId: REGRA_V1.id,
+        versaoRegra: 1,
+        passos: [],
+        somaPesos: 1,
+        somaContribuicoes: 0,
+        pontuacaoMaxima: 10,
+        score,
+        formula: 'sintética',
+      },
+      avisos: [],
+    }
+  }
+
+  it('é a média simples das unidades do distrito', () => {
+    const resultado = calcularAvaliacaoDistrital({
+      distritoId: 'd1',
+      cicloId: 'c1',
+      avaliacoesDasUnidades: [
+        avaliacaoDaUnidade('u1', 80),
+        avaliacaoDaUnidade('u2', 90),
+        avaliacaoDaUnidade('u3', 100),
+      ],
+      regra: REGRA_V1,
+    })
+    expect(resultado.score).toBe(90)
+    expect(resultado.faixa?.rotulo).toBe('integral plena')
+    expect(resultado.porUnidade).toHaveLength(3)
   })
 
-  it('ignora lançamento de outro ciclo', () => {
-    const deOutroCiclo = { ...lancamento('i1', 100), cicloId: 'c2' }
-    const avaliacao = avaliar([indicador({ id: 'i1' })], [deOutroCiclo])
-    expect(avaliacao.memoria.passos[0].valor).toBeNull()
-    expect(avaliacao.score).toBe(0)
+  it('só conta avaliações do ciclo pedido', () => {
+    const deOutroCiclo = { ...avaliacaoDaUnidade('u2', 0), cicloId: 'c9' }
+    const resultado = calcularAvaliacaoDistrital({
+      distritoId: 'd1',
+      cicloId: 'c1',
+      avaliacoesDasUnidades: [avaliacaoDaUnidade('u1', 80), deOutroCiclo],
+      regra: REGRA_V1,
+    })
+    expect(resultado.score).toBe(80)
+    expect(resultado.porUnidade).toHaveLength(1)
+  })
+
+  it('distrito sem unidade avaliada devolve zero com aviso', () => {
+    const resultado = calcularAvaliacaoDistrital({
+      distritoId: 'd1',
+      cicloId: 'c1',
+      avaliacoesDasUnidades: [],
+      regra: REGRA_V1,
+    })
+    expect(resultado.score).toBe(0)
+    expect(resultado.avisos[0]).toContain('Nenhuma unidade')
+  })
+})
+
+describe('aplicabilidadeDe', () => {
+  it('encontra o par tipo × indicador, e devolve null quando não há', () => {
+    const regra = { ...REGRA_V1, aplicabilidades: [aplic('i1', { meta: 42 })] }
+    expect(aplicabilidadeDe(regra, 'usf', 'i1')?.meta).toBe(42)
+    expect(aplicabilidadeDe(regra, 'caps', 'i1')).toBeNull()
+    expect(aplicabilidadeDe(regra, 'usf', 'i2')).toBeNull()
   })
 })
 
 describe('troca de versão da regra entre ciclos', () => {
-  const indicadores = [indicador({ id: 'i1' })]
-  const lancamentos = [lancamento('i1', 92)]
+  const cenario = cenarioSimples(['i1'])
+  const lancamentos = cenario.lancar([92])
+  const v1 = { ...REGRA_V1, aplicabilidades: cenario.regra.aplicabilidades }
+  const v2 = { ...REGRA_V2, aplicabilidades: cenario.regra.aplicabilidades }
 
   it('o mesmo lançamento pontua diferente sob regras diferentes', () => {
-    const sobV1 = avaliar(indicadores, lancamentos, REGRA_V1) // 92% → faixa 85-95 → 7
-    const sobV2 = avaliar(indicadores, lancamentos, REGRA_V2) // 92% → faixa 90-100 → 8
+    // 92%: na v1 cai na faixa 85–95 (7 pontos); na v2, na faixa 90–100 (8).
+    const sobV1 = avaliar(cenario.indicadores, cenario.subindicadores, lancamentos, v1)
+    const sobV2 = avaliar(cenario.indicadores, cenario.subindicadores, lancamentos, v2)
 
     expect(sobV1.memoria.passos[0].pontos).toBe(7)
     expect(sobV2.memoria.passos[0].pontos).toBe(8)
@@ -347,8 +594,12 @@ describe('troca de versão da regra entre ciclos', () => {
   })
 
   it('a memória diz qual versão foi usada — é o que torna o ciclo reproduzível', () => {
-    expect(avaliar(indicadores, lancamentos, REGRA_V1).memoria.versaoRegra).toBe(1)
-    expect(avaliar(indicadores, lancamentos, REGRA_V2).memoria.versaoRegra).toBe(2)
+    expect(
+      avaliar(cenario.indicadores, cenario.subindicadores, lancamentos, v1).memoria.versaoRegra,
+    ).toBe(1)
+    expect(
+      avaliar(cenario.indicadores, cenario.subindicadores, lancamentos, v2).memoria.versaoRegra,
+    ).toBe(2)
   })
 
   it('regraVigente escolhe pela competência do ciclo', () => {

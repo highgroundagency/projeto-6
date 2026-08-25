@@ -26,14 +26,15 @@ export const PARAMETROS_SISTEMA = [
   'de',
   'ok',
   'erro',
-  'lanc_area',
-  'res_gestor',
+  'lanc_unidade',
+  'res_gerente',
   'res_ciclo',
   'aud_tipo',
   'aud_ciclo',
   'gest_ciclo',
+  'gest_distrito',
   'gest_anonimo',
-  'cont_gestor',
+  'cont_gerente',
   'cont_ciclo',
 ] as const
 

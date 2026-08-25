@@ -6,12 +6,12 @@ import { comParametros, redirecionar } from '@/lib/http'
 import { exigirPerfil, perfilAtual } from '@/lib/sistema'
 import { ancoraDaTela } from '@/lib/sistema/parametros'
 
-/** Volta para a sanfona da CAM, já aberta e com a faixa endereçada a ela. */
+/** Volta para a sanfona da SEAB, já aberta e com a faixa endereçada a ela. */
 function deVolta(resultado: { ok?: string; erro?: string }): string {
   return comParametros(
     '/sistema',
-    { abrir: 'painel-cam', de: 'painel-cam', ...resultado },
-    ancoraDaTela('painel-cam'),
+    { abrir: 'painel-seab', de: 'painel-seab', ...resultado },
+    ancoraDaTela('painel-seab'),
   )
 }
 
@@ -35,10 +35,10 @@ const corpoSchema = z.object({
  */
 export async function POST(requisicao: NextRequest) {
   await exigirAdmin()
-  await exigirPerfil('painel-cam')
+  await exigirPerfil('painel-seab')
 
-  if ((await perfilAtual()) !== 'cam') {
-    return redirecionar(deVolta({ erro: 'Somente o perfil CAM pode avançar o ciclo.' }))
+  if ((await perfilAtual()) !== 'seab') {
+    return redirecionar(deVolta({ erro: 'Somente a SEAB pode avançar o ciclo.' }))
   }
 
   const formulario = await requisicao.formData()
@@ -53,7 +53,7 @@ export async function POST(requisicao: NextRequest) {
 
   const resultado = await repositorio().avancarCiclo(
     analisado.data.cicloId,
-    'comissao',
+    'seab',
     new Date().toISOString(),
   )
 

@@ -6,20 +6,20 @@ import { comParametros, redirecionar } from '@/lib/http'
 import { exigirPerfil, perfilAtual } from '@/lib/sistema'
 import { ancoraDaTela } from '@/lib/sistema/parametros'
 
-/** Volta para a sanfona da contestação, já aberta e no gestor certo. */
+/** Volta para a sanfona da contestação, já aberta e no gerente certo. */
 function deVolta(
-  gestor: string | undefined,
+  gerente: string | undefined,
   resultado: { ok?: string; erro?: string },
 ): string {
   return comParametros(
     '/sistema',
-    { abrir: 'contestacao', de: 'contestacao', cont_gestor: gestor, ...resultado },
+    { abrir: 'contestacao', de: 'contestacao', cont_gerente: gerente, ...resultado },
     ancoraDaTela('contestacao'),
   )
 }
 
 const corpoSchema = z.object({
-  gestorId: z.string().min(1).max(80),
+  gerenteId: z.string().min(1).max(80),
   cicloId: z.string().min(1).max(80),
   indicadorId: z.string().max(80).optional(),
   motivo: z.string().trim().min(20).max(1000),
@@ -31,12 +31,12 @@ export async function POST(requisicao: NextRequest) {
   const formulario = await requisicao.formData()
   const perfil = await perfilAtual()
 
-  if (perfil !== 'gestor' && perfil !== 'cam') {
+  if (perfil === 'administrador') {
     return redirecionar(deVolta(undefined, { erro: 'Este perfil não abre contestação.' }))
   }
 
   const analisado = corpoSchema.safeParse({
-    gestorId: formulario.get('gestorId'),
+    gerenteId: formulario.get('gerenteId'),
     cicloId: formulario.get('cicloId'),
     indicadorId: formulario.get('indicadorId') || undefined,
     motivo: formulario.get('motivo'),
@@ -54,13 +54,13 @@ export async function POST(requisicao: NextRequest) {
   const dados = analisado.data
   const panorama = await carregarDados()
 
-  if (!panorama.gestorPorId(dados.gestorId) || !panorama.cicloPorId(dados.cicloId)) {
-    return redirecionar(deVolta(undefined, { erro: 'Gestor ou ciclo desconhecido.' }))
+  if (!panorama.gerentePorId(dados.gerenteId) || !panorama.cicloPorId(dados.cicloId)) {
+    return redirecionar(deVolta(undefined, { erro: 'Gerente ou ciclo desconhecido.' }))
   }
 
   const resultado = await repositorio().abrirContestacao(
     {
-      gestorId: dados.gestorId,
+      gerenteId: dados.gerenteId,
       cicloId: dados.cicloId,
       indicadorId: dados.indicadorId ?? null,
       motivo: dados.motivo,
@@ -69,6 +69,6 @@ export async function POST(requisicao: NextRequest) {
   )
 
   return redirecionar(
-    deVolta(dados.gestorId, { [resultado.ok ? 'ok' : 'erro']: resultado.mensagem }),
+    deVolta(dados.gerenteId, { [resultado.ok ? 'ok' : 'erro']: resultado.mensagem }),
   )
 }

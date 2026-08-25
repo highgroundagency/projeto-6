@@ -1,51 +1,85 @@
 import { gerarBase, SEMENTE_PADRAO, type BaseSintetica } from './gerar'
-import type { Avaliacao, CicloAvaliacao, Gestor, Indicador } from '@/lib/calculo/tipos'
+import type {
+  Avaliacao,
+  AvaliacaoDistrital,
+  CicloAvaliacao,
+  Gerente,
+  Indicador,
+  Subindicador,
+  Unidade,
+} from '@/lib/calculo/tipos'
 
 /**
  * Base sintética do MVP, calculada uma vez por processo.
  *
  * Os dados vivem em memória, com semente fixa (§3). O acesso das telas passa
  * por `src/lib/dados/`, então trocar esta fonte por um banco é acrescentar um
- * driver — o schema já está escrito em `supabase/migrations/`.
+ * driver — o schema guardado em `supabase/migrations/` ainda modela o domínio
+ * anterior; a pendência está declarada em docs/banco.md.
  */
 export const BASE: BaseSintetica = gerarBase(SEMENTE_PADRAO)
 
-export function areaPorId(id: string) {
-  return BASE.areas.find((a) => a.id === id)
+export function distritoPorId(id: string) {
+  return BASE.distritos.find((d) => d.id === id)
 }
 
-export function gestorPorId(id: string): Gestor | undefined {
-  return BASE.gestores.find((g) => g.id === id)
+export function tipoUnidadePorId(id: string) {
+  return BASE.tiposUnidade.find((t) => t.id === id)
+}
+
+export function unidadePorId(id: string): Unidade | undefined {
+  return BASE.unidades.find((u) => u.id === id)
+}
+
+export function unidadesDoDistrito(distritoId: string): Unidade[] {
+  return BASE.unidades.filter((u) => u.distritoId === distritoId)
+}
+
+export function gerentePorId(id: string): Gerente | undefined {
+  return BASE.gerentes.find((g) => g.id === id)
 }
 
 export function indicadorPorId(id: string): Indicador | undefined {
   return BASE.indicadores.find((i) => i.id === id)
 }
 
-export function cicloPorId(id: string): CicloAvaliacao | undefined {
-  return BASE.ciclos.find((c) => c.id === id)
+export function subindicadorPorId(id: string): Subindicador | undefined {
+  return BASE.subindicadores.find((s) => s.id === id)
 }
 
-export function indicadoresDaArea(areaId: string): Indicador[] {
-  return BASE.indicadores.filter((i) => i.areaId === areaId)
+export function subindicadoresDoIndicador(indicadorId: string): Subindicador[] {
+  return BASE.subindicadores.filter((s) => s.indicadorId === indicadorId)
+}
+
+export function cicloPorId(id: string): CicloAvaliacao | undefined {
+  return BASE.ciclos.find((c) => c.id === id)
 }
 
 export function lancamentosDoCiclo(cicloId: string) {
   return BASE.lancamentos.filter((l) => l.cicloId === cicloId)
 }
 
-export function avaliacaoDe(gestorId: string, cicloId: string): Avaliacao | undefined {
-  return BASE.avaliacoes.find((a) => a.gestorId === gestorId && a.cicloId === cicloId)
+export function avaliacaoDe(unidadeId: string, cicloId: string): Avaliacao | undefined {
+  return BASE.avaliacoes.find((a) => a.unidadeId === unidadeId && a.cicloId === cicloId)
 }
 
-export function avaliacoesDoGestor(gestorId: string): Avaliacao[] {
+export function avaliacoesDaUnidade(unidadeId: string): Avaliacao[] {
   return BASE.avaliacoes
-    .filter((a) => a.gestorId === gestorId)
+    .filter((a) => a.unidadeId === unidadeId)
     .sort((a, b) => a.cicloId.localeCompare(b.cicloId))
 }
 
 export function avaliacoesDoCiclo(cicloId: string): Avaliacao[] {
   return BASE.avaliacoes.filter((a) => a.cicloId === cicloId)
+}
+
+export function avaliacaoDistritalDe(
+  distritoId: string,
+  cicloId: string,
+): AvaliacaoDistrital | undefined {
+  return BASE.avaliacoesDistritais.find(
+    (a) => a.distritoId === distritoId && a.cicloId === cicloId,
+  )
 }
 
 export function regraPorId(id: string) {

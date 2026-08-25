@@ -6,48 +6,57 @@ import { comParametros, redirecionar } from '@/lib/http'
 import { exigirPerfil, identidadeAtual } from '@/lib/sistema'
 import { ancoraDaTela } from '@/lib/sistema/parametros'
 
-/** Volta para a sanfona de lançamento, já aberta e com a área preservada. */
-function deVolta(area: string, resultado: { ok?: string; erro?: string }): string {
+/** Volta para a sanfona de lançamento, já aberta e com a unidade preservada. */
+function deVolta(unidade: string, resultado: { ok?: string; erro?: string }): string {
   return comParametros(
     '/sistema',
-    { abrir: 'lancamento', de: 'lancamento', lanc_area: area, ...resultado },
+    { abrir: 'lancamento', de: 'lancamento', lanc_unidade: unidade, ...resultado },
     ancoraDaTela('lancamento'),
   )
 }
 
 /**
- * Registro de lançamento (§8.4, tela 3).
+ * Registro de lançamento (§8.4, tela 3), por SUBINDICADOR.
  *
  * Toda entrada passa por zod antes de tocar em qualquer coisa (§9): número
- * finito e não negativo, evidência com conteúdo, indicador e ciclo existentes.
- * A janela de prazo é garantida pela camada de dados — e, no schema de
- * `supabase/migrations/`, por gatilho, que vale para qualquer caminho de
- * escrita.
+ * finito e não negativo, evidência com conteúdo, subindicador, unidade e ciclo
+ * existentes. Subindicador 'indice' exige `valor`; 'razao' exige `numerador` e
+ * `denominador`. A janela de prazo é garantida pela camada de dados.
  */
 const corpoSchema = z.object({
-  indicadorId: z.string().min(1).max(80),
+  subindicadorId: z.string().min(1).max(80),
+  unidadeId: z.string().min(1).max(80),
   cicloId: z.string().min(1).max(80),
-  valor: z.coerce.number().finite().min(0).max(1_000_000_000),
+  valor: z.coerce.number().finite().min(0).max(1_000_000_000).optional(),
+  numerador: z.coerce.number().finite().min(0).max(1_000_000_000).optional(),
+  denominador: z.coerce.number().finite().min(0).max(1_000_000_000).optional(),
   evidencia: z.string().trim().min(5).max(300),
-  area: z.string().min(1).max(40),
 })
+
+function opcional(bruto: FormDataEntryValue | null): FormDataEntryValue | undefined {
+  return bruto === null || bruto === '' ? undefined : bruto
+}
 
 export async function POST(requisicao: NextRequest) {
   await exigirPerfil('lancamento')
 
   const formulario = await requisicao.formData()
+  const unidadeBruta = String(formulario.get('unidadeId') ?? '')
+
   const analisado = corpoSchema.safeParse({
-    indicadorId: formulario.get('indicadorId'),
+    subindicadorId: formulario.get('subindicadorId'),
+    unidadeId: formulario.get('unidadeId'),
     cicloId: formulario.get('cicloId'),
-    valor: formulario.get('valor'),
+    valor: opcional(formulario.get('valor')),
+    numerador: opcional(formulario.get('numerador')),
+    denominador: opcional(formulario.get('denominador')),
     evidencia: formulario.get('evidencia'),
-    area: formulario.get('area'),
   })
 
   if (!analisado.success) {
     const primeiro = analisado.error.issues[0]
     return redirecionar(
-      deVolta(String(formulario.get('area') ?? ''), {
+      deVolta(unidadeBruta, {
         erro: `Lançamento recusado em ${primeiro.path.join('.')}: ${primeiro.message}.`,
       }),
     )
@@ -56,30 +65,50 @@ export async function POST(requisicao: NextRequest) {
   const dados = analisado.data
   const identidade = await identidadeAtual()
 
-  if (identidade.perfil !== 'area_tecnica' && identidade.perfil !== 'cam') {
-    return redirecionar(deVolta(dados.area, { erro: 'Este perfil não lança indicadores.' }))
+  if (identidade.perfil === 'administrador') {
+    return redirecionar(deVolta(dados.unidadeId, { erro: 'Este perfil não lança números.' }))
   }
 
   const panorama = await carregarDados()
-  const indicador = panorama.indicadorPorId(dados.indicadorId)
-  if (!indicador) {
-    return redirecionar(deVolta(dados.area, { erro: 'Indicador desconhecido.' }))
+  const subindicador = panorama.subindicadorPorId(dados.subindicadorId)
+  if (!subindicador || !panorama.unidadePorId(dados.unidadeId)) {
+    return redirecionar(
+      deVolta(dados.unidadeId, { erro: 'Subindicador ou unidade desconhecidos.' }),
+    )
+  }
+
+  // A forma tem de bater com o tipo: 'indice' pede valor; 'razao', a fração.
+  if (subindicador.tipo === 'indice' && dados.valor === undefined) {
+    return redirecionar(
+      deVolta(dados.unidadeId, { erro: 'Este subindicador pede um valor direto.' }),
+    )
+  }
+  if (
+    subindicador.tipo === 'razao' &&
+    (dados.numerador === undefined || dados.denominador === undefined)
+  ) {
+    return redirecionar(
+      deVolta(dados.unidadeId, { erro: 'Este subindicador pede numerador e denominador.' }),
+    )
   }
 
   const agora = new Date().toISOString()
   const resultado = await repositorio().registrarLancamento(
     {
-      indicadorId: dados.indicadorId,
+      subindicadorId: dados.subindicadorId,
+      unidadeId: dados.unidadeId,
       cicloId: dados.cicloId,
-      valor: dados.valor,
+      valor: subindicador.tipo === 'indice' ? (dados.valor ?? null) : null,
+      numerador: subindicador.tipo === 'razao' ? (dados.numerador ?? null) : null,
+      denominador: subindicador.tipo === 'razao' ? (dados.denominador ?? null) : null,
       evidencia: dados.evidencia,
       autor:
-        identidade.nome !== 'Perfil simulado' ? identidade.nome : `gestor-${indicador.areaId}`,
+        identidade.nome !== 'Perfil simulado' ? identidade.nome : `ger-${dados.unidadeId}`,
     },
     agora,
   )
 
   return redirecionar(
-    deVolta(dados.area, { [resultado.ok ? 'ok' : 'erro']: resultado.mensagem }),
+    deVolta(dados.unidadeId, { [resultado.ok ? 'ok' : 'erro']: resultado.mensagem }),
   )
 }

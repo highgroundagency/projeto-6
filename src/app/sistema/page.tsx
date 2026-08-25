@@ -8,7 +8,7 @@ import { ExplicacaoDosPerfis } from '@/components/sistema/perfis'
 import { Tela } from '@/components/sistema/tela'
 import { TelaAnalytics } from '@/components/sistema/telas/analytics'
 import { TelaAuditoria } from '@/components/sistema/telas/auditoria'
-import { TelaCam } from '@/components/sistema/telas/cam'
+import { TelaPainelSeab } from '@/components/sistema/telas/painel-seab'
 import { TelaContestacao } from '@/components/sistema/telas/contestacao'
 import { TelaGestao } from '@/components/sistema/telas/gestao'
 import { TelaIndicadores } from '@/components/sistema/telas/indicadores'
@@ -125,14 +125,14 @@ export default async function SistemaCompleto({
     perfil: identidade.perfil,
     admin: visao.admin && !visao.verComoVisitante,
     disponiveis: doPerfil.map((f) => f.id as FeatureId),
-    gestorId: identidade.gestorId,
+    gerenteId: identidade.gerenteId,
   }
 
   /** O corpo de cada tela, sem a casca. Serve à página e ao palco do tutorial. */
   function corpoDaTela(id: FeatureId): React.ReactNode {
     switch (id) {
-      case 'painel-cam':
-        return <TelaCam ctx={ctx} />
+      case 'painel-seab':
+        return <TelaPainelSeab ctx={ctx} />
       case 'indicadores':
         return <TelaIndicadores />
       case 'lancamento':
@@ -258,7 +258,7 @@ export default async function SistemaCompleto({
                 </p>
 
                 <div className="mt-4">
-                  {montar('painel-cam')}
+                  {montar('painel-seab')}
                   {montar('indicadores')}
                   {montar('lancamento')}
                   {montar('meu-resultado')}

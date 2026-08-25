@@ -74,12 +74,12 @@ describe('exigirFeature — quem pode operar', () => {
   it('sem sessão, a tela nem abre: o gate de release fecha antes', async () => {
     // Em 15/08/2026 a s5 ainda não foi liberada, então o visitante leva 404 na
     // porta. É a primeira camada, e ela é anterior a qualquer questão de perfil.
-    await expect(exigirFeature('painel-cam')).rejects.toThrow('NEXT_NOT_FOUND')
+    await expect(exigirFeature('painel-seab')).rejects.toThrow('NEXT_NOT_FOUND')
   })
 
   it('com sessão, o modo completo abre a tela e libera o controle', async () => {
     await entrarComoAdmin()
-    const contexto = await exigirFeature('painel-cam')
+    const contexto = await exigirFeature('painel-seab')
 
     expect(contexto.visao.modoCompleto).toBe(true)
     expect(contexto.admin).toBe(true)
@@ -89,7 +89,7 @@ describe('exigirFeature — quem pode operar', () => {
     await entrarComoAdmin()
     await definirOverlay({ verComoVisitante: true, dataSimulada: '2026-09-19' })
 
-    const contexto = await exigirFeature('painel-cam')
+    const contexto = await exigirFeature('painel-seab')
 
     // A prévia enxerga a tela porque, em 19/09, a s5 já saiu...
     expect(contexto.visao.verComoVisitante).toBe(true)
@@ -101,11 +101,11 @@ describe('exigirFeature — quem pode operar', () => {
   it('o perfil do seletor não concede nada', async () => {
     await entrarComoAdmin()
     await definirOverlay({ verComoVisitante: true, dataSimulada: '2026-09-19' })
-    potes.set(NOME_COOKIE_PERFIL, 'cam')
+    potes.set(NOME_COOKIE_PERFIL, 'seab')
 
-    const contexto = await exigirFeature('painel-cam')
+    const contexto = await exigirFeature('painel-seab')
 
-    expect(contexto.perfil).toBe('cam')
+    expect(contexto.perfil).toBe('seab')
     expect(contexto.admin).toBe(false)
   })
 })

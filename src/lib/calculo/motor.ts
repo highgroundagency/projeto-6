@@ -1,12 +1,17 @@
 import type {
+  Aplicabilidade,
   Avaliacao,
+  AvaliacaoDistrital,
+  Direcao,
   FaixaGratificacao,
-  Gestor,
   Indicador,
   Lancamento,
   ModoArredondamento,
   PassoMemoria,
+  PassoSubindicador,
   RegraDePontuacao,
+  Subindicador,
+  Unidade,
 } from './tipos'
 
 /**
@@ -15,6 +20,11 @@ import type {
  * FUNÇÃO PURA: sem I/O, sem relógio, sem aleatoriedade. Os mesmos insumos
  * devolvem sempre o mesmo resultado — é o que permite recalcular um ciclo
  * homologado meses depois e obter exatamente o mesmo número.
+ *
+ * Depois da reunião com o cliente (ADR-034), a conta tem um degrau a mais:
+ * o que a unidade preenche são SUBINDICADORES; o valor do indicador é composto
+ * a partir deles; e a meta e o peso vêm da APLICABILIDADE do tipo da unidade,
+ * que mora na regra versionada.
  *
  * Cada passo alimenta a MEMÓRIA DE CÁLCULO, que responde "de onde veio este
  * número?" em um clique. Esse é o argumento central contra a planilha.
@@ -60,7 +70,7 @@ export function arredondar(
 export function calcularAtingimento(
   valor: number,
   meta: number,
-  direcao: Indicador['direcao'],
+  direcao: Direcao,
   teto: number,
 ): { bruto: number; comTeto: number; aplicouTeto: boolean } {
   let bruto: number
@@ -100,16 +110,121 @@ function descreverFaixa(de: number, ate: number | null): string {
   return ate === null ? `≥ ${inicio}` : `${inicio} a <${Math.round(ate * 100)}%`
 }
 
+/** As aplicabilidades da regra para um tipo de unidade, na ordem da regra. */
+export function aplicabilidadesDoTipo(
+  regra: RegraDePontuacao,
+  tipoUnidadeId: string,
+): readonly Aplicabilidade[] {
+  return regra.aplicabilidades.filter((a) => a.tipoUnidadeId === tipoUnidadeId)
+}
+
+export function aplicabilidadeDe(
+  regra: RegraDePontuacao,
+  tipoUnidadeId: string,
+  indicadorId: string,
+): Aplicabilidade | null {
+  return (
+    regra.aplicabilidades.find(
+      (a) => a.tipoUnidadeId === tipoUnidadeId && a.indicadorId === indicadorId,
+    ) ?? null
+  )
+}
+
+/**
+ * Apura o valor de um subindicador a partir do lançamento vigente dele.
+ *
+ * 'indice' devolve o valor como veio; 'razao' devolve a proporção em
+ * percentual (numerador ÷ denominador × 100). Denominador zero não vira
+ * #DIV/0!: o subindicador fica sem valor e o aviso conta o porquê.
+ */
+export function apurarSubindicador(
+  subindicador: Subindicador,
+  lancamento: Lancamento | undefined,
+): PassoSubindicador {
+  const base = {
+    subindicadorId: subindicador.id,
+    subindicador: subindicador.nome,
+    tipo: subindicador.tipo,
+  }
+
+  if (!lancamento) {
+    return { ...base, numerador: null, denominador: null, valor: null, aviso: 'sem lançamento' }
+  }
+
+  if (subindicador.tipo === 'indice') {
+    if (lancamento.valor === null) {
+      return {
+        ...base,
+        numerador: null,
+        denominador: null,
+        valor: null,
+        aviso: 'lançamento sem valor',
+      }
+    }
+    return { ...base, numerador: null, denominador: null, valor: lancamento.valor }
+  }
+
+  const { numerador, denominador } = lancamento
+  if (numerador === null || denominador === null) {
+    return { ...base, numerador, denominador, valor: null, aviso: 'lançamento incompleto' }
+  }
+  if (denominador === 0) {
+    return {
+      ...base,
+      numerador,
+      denominador,
+      valor: null,
+      aviso: 'denominador zero: proporção impossível de apurar',
+    }
+  }
+
+  return { ...base, numerador, denominador, valor: arredondar((numerador / denominador) * 100, 4) }
+}
+
+/** O lançamento vigente de um subindicador: o último registrado vence. */
+function lancamentoVigenteDoSub(
+  lancamentos: readonly Lancamento[],
+  subindicadorId: string,
+): Lancamento | undefined {
+  return lancamentos
+    .filter((l) => l.subindicadorId === subindicadorId)
+    .reduce<Lancamento | undefined>((vigente, atual) => {
+      if (!vigente) return atual
+      if (atual.registradoEm > vigente.registradoEm) return atual
+      if (atual.registradoEm === vigente.registradoEm && atual.id > vigente.id) return atual
+      return vigente
+    }, undefined)
+}
+
 export interface EntradaCalculo {
-  gestor: Gestor
+  unidade: Unidade
   cicloId: string
   indicadores: readonly Indicador[]
+  subindicadores: readonly Subindicador[]
   lancamentos: readonly Lancamento[]
   regra: RegraDePontuacao
 }
 
+interface Composicao {
+  indicador: Indicador
+  aplicabilidade: Aplicabilidade
+  subPassos: PassoSubindicador[]
+  /** Valor composto do indicador; null quando nenhum subindicador foi apurado. */
+  valor: number | null
+  avisoComposicao: string | null
+}
+
 /**
- * Calcula a avaliação de um gestor num ciclo.
+ * Calcula a avaliação de uma UNIDADE num ciclo.
+ *
+ * Entram na conta os indicadores com aplicabilidade para o TIPO da unidade na
+ * regra do ciclo — os demais ficam fora da conta e da memória, porque para
+ * aquele tipo eles simplesmente não existem.
+ *
+ * COMPOSIÇÃO (suposição declarada, a validar com a planilha do cliente): o
+ * valor do indicador é a média simples dos valores apurados dos seus
+ * subindicadores. O atingimento é calculado uma vez, sobre o valor composto,
+ * contra a meta da aplicabilidade.
  *
  * O score é a média dos pontos ponderada pelos pesos, reescalada para 0–100
  * pela pontuação máxima da regra:
@@ -122,28 +237,52 @@ export interface EntradaCalculo {
  * deixaria de fechar na conta. Aqui os números somam exatamente o que mostram.
  */
 export function calcularAvaliacao({
-  gestor,
+  unidade,
   cicloId,
   indicadores,
+  subindicadores,
   lancamentos,
   regra,
 }: EntradaCalculo): Avaliacao {
   const { casas, modo } = regra.arredondamento
   const avisos: string[] = []
 
-  const doGestor = indicadores.filter((indicador) => indicador.areaId === gestor.areaId)
-  const lancamentosDoCiclo = lancamentos.filter((l) => l.cicloId === cicloId)
+  const lancamentosDaUnidade = lancamentos.filter(
+    (l) => l.cicloId === cicloId && l.unidadeId === unidade.id,
+  )
 
-  const considerados = doGestor.filter((indicador) => {
-    if (regra.semLancamento !== 'ignora') return true
-    return lancamentosDoCiclo.some((l) => l.indicadorId === indicador.id)
+  // A ordem do catálogo manda: a memória sai sempre na mesma sequência.
+  const composicoes: Composicao[] = indicadores.flatMap((indicador) => {
+    const aplicabilidade = aplicabilidadeDe(regra, unidade.tipoId, indicador.id)
+    if (!aplicabilidade) return []
+
+    const subs = subindicadores.filter((s) => s.indicadorId === indicador.id)
+    const subPassos = subs.map((sub) =>
+      apurarSubindicador(sub, lancamentoVigenteDoSub(lancamentosDaUnidade, sub.id)),
+    )
+
+    const apurados = subPassos.filter((p) => p.valor !== null)
+    const valor =
+      apurados.length === 0
+        ? null
+        : arredondar(apurados.reduce((s, p) => s + (p.valor ?? 0), 0) / apurados.length, 4, modo)
+
+    const avisoComposicao =
+      apurados.length > 0 && apurados.length < subPassos.length
+        ? `${subPassos.length - apurados.length} de ${subPassos.length} subindicadores sem valor apurado: a média usou os que existem.`
+        : null
+
+    return [{ indicador, aplicabilidade, subPassos, valor, avisoComposicao }]
   })
 
-  const somaPesos = considerados.reduce((soma, indicador) => soma + indicador.peso, 0)
+  const considerados =
+    regra.semLancamento === 'ignora' ? composicoes.filter((c) => c.valor !== null) : composicoes
+
+  const somaPesos = considerados.reduce((soma, c) => soma + c.aplicabilidade.peso, 0)
 
   if (somaPesos <= 0) {
     return {
-      gestorId: gestor.id,
+      unidadeId: unidade.id,
       cicloId,
       score: 0,
       faixa: faixaDoScore(0, regra),
@@ -155,102 +294,98 @@ export function calcularAvaliacao({
         somaContribuicoes: 0,
         pontuacaoMaxima: regra.pontuacaoMaxima,
         score: 0,
-        formula: 'Sem indicadores com peso: score 0.',
+        formula: 'Sem indicadores aplicáveis com peso: score 0.',
       },
-      avisos: ['Nenhum indicador com peso positivo para esta área neste ciclo.'],
+      avisos: ['Nenhum indicador aplicável com peso positivo para o tipo desta unidade neste ciclo.'],
     }
   }
 
-  const passos: PassoMemoria[] = considerados.map((indicador) => {
-    const lancamento = lancamentosDoCiclo.find((l) => l.indicadorId === indicador.id)
-    const pesoNormalizado = arredondar(indicador.peso / somaPesos, 6, 'meio_para_cima')
+  const passos: PassoMemoria[] = considerados.map(
+    ({ indicador, aplicabilidade, subPassos, valor, avisoComposicao }) => {
+      const pesoNormalizado = arredondar(aplicabilidade.peso / somaPesos, 6, 'meio_para_cima')
+      const base = {
+        indicadorId: indicador.id,
+        indicador: indicador.nome,
+        unidadeMedida: indicador.unidadeMedida,
+        direcao: indicador.direcao,
+        subPassos,
+        meta: aplicabilidade.meta,
+        peso: aplicabilidade.peso,
+        pesoNormalizado,
+      }
 
-    if (!lancamento) {
-      if (regra.semLancamento === 'usa_meta') {
-        const { comTeto } = calcularAtingimento(
-          indicador.meta,
-          indicador.meta,
-          indicador.direcao,
-          regra.tetoAtingimento,
-        )
-        const faixa = faixaDoAtingimento(comTeto, regra)
-        const pontos = faixa?.pontos ?? 0
-        const aviso = `Sem lançamento: a regra manda considerar a meta cumprida para "${indicador.nome}".`
+      if (valor === null) {
+        if (regra.semLancamento === 'usa_meta') {
+          const { comTeto } = calcularAtingimento(
+            aplicabilidade.meta,
+            aplicabilidade.meta,
+            indicador.direcao,
+            regra.tetoAtingimento,
+          )
+          const faixa = faixaDoAtingimento(comTeto, regra)
+          const pontos = faixa?.pontos ?? 0
+          const aviso = `Sem lançamento: a regra manda considerar a meta cumprida para "${indicador.nome}".`
+          avisos.push(aviso)
+          return {
+            ...base,
+            valor: null,
+            atingimentoBruto: comTeto,
+            atingimento: comTeto,
+            aplicouTeto: false,
+            faixa: faixa ? descreverFaixa(faixa.de, faixa.ate) : 'sem faixa correspondente',
+            pontos,
+            contribuicao: arredondar(pontos * aplicabilidade.peso, casas, modo),
+            aviso,
+          }
+        }
+
+        const aviso = `Indicador "${indicador.nome}" sem subindicador apurado neste ciclo: pontuação zerada.`
         avisos.push(aviso)
         return {
-          indicadorId: indicador.id,
-          indicador: indicador.nome,
-          unidade: indicador.unidade,
-          direcao: indicador.direcao,
+          ...base,
           valor: null,
-          meta: indicador.meta,
-          atingimentoBruto: comTeto,
-          atingimento: comTeto,
+          atingimentoBruto: null,
+          atingimento: null,
           aplicouTeto: false,
-          faixa: faixa ? descreverFaixa(faixa.de, faixa.ate) : 'sem faixa correspondente',
-          pontos,
-          peso: indicador.peso,
-          pesoNormalizado,
-          contribuicao: arredondar(pontos * indicador.peso, casas, modo),
+          faixa: 'sem lançamento',
+          pontos: 0,
+          contribuicao: 0,
           aviso,
         }
       }
 
-      const aviso = `Indicador "${indicador.nome}" sem lançamento neste ciclo: pontuação zerada.`
-      avisos.push(aviso)
-      return {
-        indicadorId: indicador.id,
-        indicador: indicador.nome,
-        unidade: indicador.unidade,
-        direcao: indicador.direcao,
-        valor: null,
-        meta: indicador.meta,
-        atingimentoBruto: null,
-        atingimento: null,
-        aplicouTeto: false,
-        faixa: 'sem lançamento',
-        pontos: 0,
-        peso: indicador.peso,
-        pesoNormalizado,
-        contribuicao: 0,
-        aviso,
+      if (avisoComposicao) avisos.push(`${indicador.nome}: ${avisoComposicao}`)
+
+      const { bruto, comTeto, aplicouTeto } = calcularAtingimento(
+        valor,
+        aplicabilidade.meta,
+        indicador.direcao,
+        regra.tetoAtingimento,
+      )
+      const faixa = faixaDoAtingimento(comTeto, regra)
+      const pontos = faixa?.pontos ?? 0
+
+      const passo: PassoMemoria = {
+        ...base,
+        valor,
+        atingimentoBruto: arredondar(bruto, 4, modo),
+        atingimento: arredondar(comTeto, 4, modo),
+        aplicouTeto,
+        faixa: faixa ? descreverFaixa(faixa.de, faixa.ate) : 'sem faixa correspondente',
+        pontos,
+        contribuicao: arredondar(pontos * aplicabilidade.peso, casas, modo),
+        ...(avisoComposicao ? { aviso: avisoComposicao } : {}),
+        ...(faixa
+          ? {}
+          : {
+              aviso: `Atingimento de ${Math.round(comTeto * 100)}% não caiu em nenhuma faixa da regra ${regra.id}.`,
+            }),
       }
-    }
 
-    const { bruto, comTeto, aplicouTeto } = calcularAtingimento(
-      lancamento.valor,
-      indicador.meta,
-      indicador.direcao,
-      regra.tetoAtingimento,
-    )
-    const faixa = faixaDoAtingimento(comTeto, regra)
-    const pontos = faixa?.pontos ?? 0
-
-    const passo: PassoMemoria = {
-      indicadorId: indicador.id,
-      indicador: indicador.nome,
-      unidade: indicador.unidade,
-      direcao: indicador.direcao,
-      valor: lancamento.valor,
-      meta: indicador.meta,
-      atingimentoBruto: arredondar(bruto, 4, modo),
-      atingimento: arredondar(comTeto, 4, modo),
-      aplicouTeto,
-      faixa: faixa ? descreverFaixa(faixa.de, faixa.ate) : 'sem faixa correspondente',
-      pontos,
-      peso: indicador.peso,
-      pesoNormalizado,
-      contribuicao: arredondar(pontos * indicador.peso, casas, modo),
-      ...(faixa
-        ? {}
-        : {
-            aviso: `Atingimento de ${Math.round(comTeto * 100)}% não caiu em nenhuma faixa da regra ${regra.id}.`,
-          }),
-    }
-
-    if (!faixa && passo.aviso) avisos.push(passo.aviso)
-    return passo
-  })
+      if (!faixa && passo.aviso) avisos.push(passo.aviso)
+      return passo
+    },
+  )
 
   const somaContribuicoes = arredondar(
     passos.reduce((soma, passo) => soma + passo.contribuicao, 0),
@@ -270,7 +405,7 @@ export function calcularAvaliacao({
   }
 
   return {
-    gestorId: gestor.id,
+    unidadeId: unidade.id,
     cicloId,
     score: scoreLimitado,
     faixa: faixaDoScore(scoreLimitado, regra),
@@ -282,9 +417,63 @@ export function calcularAvaliacao({
       somaContribuicoes,
       pontuacaoMaxima: regra.pontuacaoMaxima,
       score: scoreLimitado,
-      formula: 'score = (Σ pontos × peso) ÷ (Σ peso × pontuação máxima) × 100',
+      formula:
+        'indicador = média dos subindicadores apurados; score = (Σ pontos × peso) ÷ (Σ peso × pontuação máxima) × 100',
     },
     avisos,
+  }
+}
+
+export interface EntradaCalculoDistrital {
+  distritoId: string
+  cicloId: string
+  /** As avaliações das unidades do distrito. Quem filtra por distrito é quem chama. */
+  avaliacoesDasUnidades: readonly Avaliacao[]
+  regra: RegraDePontuacao
+}
+
+/**
+ * A nota do gerente distrital: média simples dos scores das unidades do
+ * distrito naquele ciclo.
+ *
+ * SUPOSIÇÃO declarada (a validar com a planilha prometida): a agregação real
+ * pode ponderar por porte ou tipo de unidade. Se vier diferente, vira campo da
+ * regra versionada — não muda a forma desta função.
+ */
+export function calcularAvaliacaoDistrital({
+  distritoId,
+  cicloId,
+  avaliacoesDasUnidades,
+  regra,
+}: EntradaCalculoDistrital): AvaliacaoDistrital {
+  const { casas, modo } = regra.arredondamento
+  const doCiclo = avaliacoesDasUnidades.filter((a) => a.cicloId === cicloId)
+
+  if (doCiclo.length === 0) {
+    return {
+      distritoId,
+      cicloId,
+      score: 0,
+      faixa: faixaDoScore(0, regra),
+      porUnidade: [],
+      avisos: ['Nenhuma unidade avaliada neste distrito neste ciclo.'],
+    }
+  }
+
+  const porUnidade = doCiclo.map((a) => ({ unidadeId: a.unidadeId, score: a.score }))
+  const score = arredondar(
+    porUnidade.reduce((s, u) => s + u.score, 0) / porUnidade.length,
+    casas,
+    modo,
+  )
+
+  return {
+    distritoId,
+    cicloId,
+    score,
+    faixa: faixaDoScore(score, regra),
+    porUnidade,
+    avisos: [],
   }
 }
 

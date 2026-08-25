@@ -1,6 +1,6 @@
 import { Num } from '@/components/base/num'
 import { Etiqueta } from '@/components/base/selo'
-import type { Avaliacao } from '@/lib/calculo/tipos'
+import type { Avaliacao, PassoSubindicador } from '@/lib/calculo/tipos'
 
 /**
  * A MEMÓRIA DE CÁLCULO (§8.3).
@@ -36,9 +36,11 @@ export function MemoriaDeCalculo({ avaliacao }: { avaliacao: Avaliacao }) {
         {/* Antes da tabela, o modo de ler. Sem isto a tela mostrava a conta e
             não dizia para que ela serve, e quem não é da área ficava perdido. */}
         <p className="max-w-prose text-sm leading-relaxed">
-          Como ler: cada linha é uma coisa que foi medida. O valor informado é comparado com a
-          meta e vira pontos. Os pontos são multiplicados pelo peso (o quanto aquele item vale).
-          A soma de tudo, dividida pelo máximo possível, dá a nota de 0 a 100.
+          Como ler: cada linha é um indicador, e o valor dele nasce dos subindicadores que a
+          unidade preencheu, listados dentro da própria linha. O valor composto é comparado com
+          a meta do tipo da unidade e vira pontos. Os pontos são multiplicados pelo peso (o
+          quanto aquele item vale). A soma de tudo, dividida pelo máximo possível, dá a nota de
+          0 a 100.
         </p>
 
         <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-xs">
@@ -87,8 +89,18 @@ export function MemoriaDeCalculo({ avaliacao }: { avaliacao: Avaliacao }) {
                     <span className="font-sans">{passo.indicador}</span>
                     <span className="mt-0.5 block text-[0.65rem] text-apagado">
                       {passo.direcao === 'maior_melhor' ? 'maior é melhor' : 'menor é melhor'} ·{' '}
-                      {passo.unidade}
+                      {passo.unidadeMedida}
                     </span>
+                    {passo.subPassos.length > 0 ? (
+                      <ul className="mt-1.5 space-y-0.5 border-l border-linha pl-2">
+                        {passo.subPassos.map((sub) => (
+                          <li key={sub.subindicadorId} className="text-[0.65rem] text-apagado">
+                            <span className="font-sans">{sub.subindicador}</span>:{' '}
+                            {descreverSubPasso(sub)}
+                          </li>
+                        ))}
+                      </ul>
+                    ) : null}
                   </td>
                   <td className="px-2 py-1.5 whitespace-nowrap">
                     {passo.valor === null ? (
@@ -154,7 +166,24 @@ export function MemoriaDeCalculo({ avaliacao }: { avaliacao: Avaliacao }) {
   )
 }
 
-export function CartaoScore({ avaliacao }: { avaliacao: Avaliacao }) {
+/** A conta de um subindicador, numa linha: valor direto ou numerador ÷ denominador. */
+function descreverSubPasso(sub: PassoSubindicador): string {
+  if (sub.aviso) return sub.aviso
+  if (sub.tipo === 'razao') {
+    return `${sub.numerador} ÷ ${sub.denominador} = ${sub.valor}%`
+  }
+  return String(sub.valor)
+}
+
+/**
+ * O cartão da nota. Aceita também a avaliação distrital: os três campos que
+ * ele mostra (score, faixa e avisos) existem nas duas.
+ */
+export function CartaoScore({
+  avaliacao,
+}: {
+  avaliacao: Pick<Avaliacao, 'score' | 'faixa' | 'avisos'>
+}) {
   return (
     <div className="flex flex-wrap items-end justify-between gap-4 rounded-xl border border-linha bg-superficie p-5">
       <div>

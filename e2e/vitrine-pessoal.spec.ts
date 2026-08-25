@@ -29,7 +29,7 @@ test.describe('vitrine pessoal', () => {
     // Um ciclo que o visitante de hoje NÃO vê está no registro.
     expect(await page.content()).toContain(marcador(CICLO_OCULTO))
 
-    // E o sistema mostra as 8 telas (o perfil padrão, CAM, enxerga todas).
+    // E o sistema mostra as 8 telas (o perfil padrão, SEAB, enxerga todas).
     await page.goto('/sistema')
     await expect(page.locator('#sumario li')).toHaveCount(8)
   })

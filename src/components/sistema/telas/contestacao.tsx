@@ -26,16 +26,27 @@ const ROTULO: Record<StatusContestacao, string> = {
 
 export async function TelaContestacao({ ctx }: PropsTela) {
   const { ok, erro } = mensagemDe(ctx, 'contestacao')
-  const { cont_gestor: gestorParam, cont_ciclo: cicloParam } = ctx.params
+  const { cont_gerente: gerenteParam, cont_ciclo: cicloParam } = ctx.params
 
   const dados = await carregarDados()
-  const gestor = dados.gestores.find((g) => g.id === gestorParam) ?? dados.gestores[0]
+  const gerente = dados.gerentes.find((g) => g.id === gerenteParam) ?? dados.gerentes[0]
   const fechados = dados.ciclosFechados()
-  const indicadoresDoGestor = dados.indicadoresDaArea(gestor.areaId)
+
+  // O "sobre o quê" lista o que vale para quem contesta: os indicadores do tipo
+  // da unidade do gerente. Para o distrital, cuja nota é a média, vale o
+  // catálogo inteiro — a divergência dele pode estar em qualquer unidade.
+  const regraReferencia = dados.regraPorId(fechados[fechados.length - 1]?.regraId ?? '')
+  const unidadeDoGerente = gerente.unidadeId ? dados.unidadePorId(gerente.unidadeId) : undefined
+  const contestaveis =
+    unidadeDoGerente && regraReferencia
+      ? dados
+          .indicadoresDoTipo(unidadeDoGerente.tipoId, regraReferencia)
+          .map(({ indicador }) => indicador)
+      : dados.indicadores
 
   const todas = await repositorio().contestacoes()
-  const minhas = todas.filter((c) => c.gestorId === gestor.id)
-  const podeAbrir = ctx.perfil === 'gestor' || ctx.perfil === 'cam'
+  const minhas = todas.filter((c) => c.gerenteId === gerente.id)
+  const podeAbrir = ctx.perfil !== 'administrador'
 
   return (
     <>
@@ -58,16 +69,16 @@ export async function TelaContestacao({ ctx }: PropsTela) {
         <form action="/api/sistema/contestacao" method="post" className="space-y-3">
           <div className="grid gap-3 sm:grid-cols-3">
             <div>
-              <label htmlFor="gestorId" className="rotulo">
-                Gestor
+              <label htmlFor="gerenteId" className="rotulo">
+                Gerente
               </label>
               <select
-                id="gestorId"
-                name="gestorId"
-                defaultValue={gestor.id}
+                id="gerenteId"
+                name="gerenteId"
+                defaultValue={gerente.id}
                 className="mt-1 w-full border border-linha px-2 py-1.5 text-sm"
               >
-                {dados.gestores.map((g) => (
+                {dados.gerentes.map((g) => (
                   <option key={g.id} value={g.id}>
                     {g.nome}
                   </option>
@@ -104,7 +115,7 @@ export async function TelaContestacao({ ctx }: PropsTela) {
                 className="mt-1 w-full border border-linha px-2 py-1.5 text-sm"
               >
                 <option value="">a nota como um todo</option>
-                {indicadoresDoGestor.map((i) => (
+                {contestaveis.map((i) => (
                   <option key={i.id} value={i.id}>
                     {i.nome}
                   </option>
@@ -136,7 +147,7 @@ export async function TelaContestacao({ ctx }: PropsTela) {
           </Botao>
           {!podeAbrir ? (
             <p className="text-xs text-apagado">
-              Só o gestor avaliado (ou a comissão em nome dele) pede revisão. Este perfil só
+              Só quem é avaliado (ou a SEAB em nome dele) pede revisão. Este perfil só
               acompanha.
             </p>
           ) : null}
@@ -145,8 +156,8 @@ export async function TelaContestacao({ ctx }: PropsTela) {
 
       <Painel
         alvo="cont-lista"
-        titulo={`Contestações de ${gestor.nome}`} icone={MessagesSquare}
-        descricao={`Os pedidos deste gestor, com a situação de cada um. ${minhas.length} de ${todas.length} no sistema.`}
+        titulo={`Contestações de ${gerente.nome}`} icone={MessagesSquare}
+        descricao={`Os pedidos deste gerente, com a situação de cada um. ${minhas.length} de ${todas.length} no sistema.`}
       >
         {minhas.length === 0 ? (
           <p className="text-sm text-apagado">Nenhum pedido de revisão registrado.</p>
@@ -173,7 +184,7 @@ export async function TelaContestacao({ ctx }: PropsTela) {
                 ) : null}
                 {contestacao.resposta ? (
                   <p className="mt-2 border-l-2 border-acento bg-superficie px-3 py-2 text-sm">
-                    <span className="rotulo block">Resposta da comissão</span>
+                    <span className="rotulo block">Resposta da SEAB</span>
                     {contestacao.resposta}
                   </p>
                 ) : null}

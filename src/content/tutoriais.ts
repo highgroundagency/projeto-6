@@ -1,7 +1,8 @@
 import type { FeatureId, PerfilId } from '@/lib/features'
 
 /**
- * O aprendizado guiado, um por papel.
+ * O aprendizado guiado, um por papel — os papéis que o cliente nomeou na
+ * reunião de 22/08 (ADR-034).
  *
  * Cada passo é uma parada de um passeio DENTRO do sistema: com `?passo=N` a
  * página monta a tela do passo sozinha no palco e contorna o elemento que o
@@ -36,34 +37,34 @@ export interface Tutorial {
 }
 
 export const TUTORIAIS: Record<PerfilId, Tutorial> = {
-  cam: {
+  seab: {
     resumo:
-      'Você cuida do processo inteiro. Os passos abaixo seguem a ordem de um mês de verdade, do começo ao resultado.',
+      'Você coordena o processo inteiro. Os passos abaixo seguem a ordem de um mês de verdade, do começo ao resultado.',
     passos: [
       {
-        titulo: 'Veja o que será medido',
+        titulo: 'Veja a régua de cada tipo de unidade',
         oQueFazer:
-          'Esta tela é a lista do que conta ponto. Cada linha mostra um indicador, a meta dele e o peso: quanto maior o peso, mais ele vale na nota.',
+          'Esta tela mostra o que conta ponto: cada indicador, os subindicadores que o compõem, e a meta e o peso que valem para cada tipo de unidade, USF, CAPS, UPA ou policlínica.',
         porque:
-          'Antes de alguém informar número, todo mundo precisa conhecer a régua. Régua que muda no meio do caminho é o que faz as pessoas desconfiarem do resultado.',
+          'Foi o que a reunião com o cliente deixou claro: a régua depende do tipo da unidade. Régua que muda no meio do caminho é o que faz as pessoas desconfiarem do resultado.',
         tela: 'indicadores',
-        alvo: 'ind-catalogo',
+        alvo: 'ind-regua',
       },
       {
         titulo: 'Veja quem já mandou os números',
         oQueFazer:
-          'Cada barra mostra quantos números aquela área já informou no mês. Barra cheia: área em dia. Logo abaixo, a lista de quem ainda falta.',
+          'Cada barra mostra quantos subindicadores aquela unidade já informou no mês. Barra cheia: unidade em dia. Logo abaixo, a lista de quem ainda falta.',
         porque:
-          'Hoje essa informação só existe cobrando por e-mail. Aqui ela aparece na tela, na hora.',
-        tela: 'painel-cam',
-        alvo: 'cam-funil',
+          'Hoje essa informação só existe cobrando por e-mail. Aqui ela aparece na tela, na hora, unidade por unidade.',
+        tela: 'painel-seab',
+        alvo: 'seab-funil',
       },
       {
-        titulo: 'Lance por uma área, se precisar',
+        titulo: 'Lance por uma unidade, se precisar',
         oQueFazer:
-          'Escolha a área e digite o valor e a origem dele. A comissão pode fazer isso no lugar de uma área atrasada.',
+          'Escolha a unidade e preencha os subindicadores: valor direto, ou numerador e denominador. A SEAB pode fazer isso no lugar de uma unidade atrasada.',
         porque:
-          'O mês não pode travar por causa de uma área. E fica registrado que foi você quem lançou, não a área.',
+          'O mês não pode travar por causa de uma unidade. E fica registrado que foi você quem lançou, não a unidade.',
         tela: 'lancamento',
         alvo: 'lanc-formularios',
       },
@@ -73,13 +74,13 @@ export const TUTORIAIS: Record<PerfilId, Tutorial> = {
           'O trilho no topo mostra em que etapa o mês está, e o quadro logo abaixo explica cada uma. Quando o prazo acabar, marque a confirmação e clique no botão laranja.',
         porque:
           'O mês anda uma etapa por vez, e cada avanço fica anotado no histórico. Assim ninguém tem dúvida se um número ainda pode mudar.',
-        tela: 'painel-cam',
-        alvo: 'cam-estado',
+        tela: 'painel-seab',
+        alvo: 'seab-estado',
       },
       {
         titulo: 'Confira uma nota antes de divulgar',
         oQueFazer:
-          'Escolha um gestor e abra a conta dele, linha por linha. É a mesma tela que ele vai ver.',
+          'Escolha um gerente e abra a conta dele, linha por linha, com os subindicadores dentro de cada indicador. É a mesma tela que ele vai ver.',
         porque:
           'Olhar a nota com os olhos de quem recebe evita a pergunta sem resposta na reunião.',
         tela: 'meu-resultado',
@@ -88,18 +89,18 @@ export const TUTORIAIS: Record<PerfilId, Tutorial> = {
       {
         titulo: 'Veja o resumo geral',
         oQueFazer:
-          'Escolha o mês, ligue "esconder os nomes" se for apresentar em público, e baixe a planilha se precisar.',
+          'Escolha o mês e o distrito, ligue "esconder os nomes" se for apresentar em público, e baixe a planilha se precisar.',
         porque:
-          'O resumo é o que vai para a reunião de gestão. Esconder os nomes deixa comparar as áreas sem expor pessoas.',
+          'O resumo é o que vai para a reunião de gestão. A nota de cada distrito é a média das unidades dele, que é a nota do gerente distrital.',
         tela: 'painel-gestao',
         alvo: 'gest-ranking',
       },
       {
         titulo: 'Descubra onde olhar no próximo mês',
         oQueFazer:
-          'Esta tela aponta as áreas com resultado mais baixo e os números que parecem erro de digitação.',
+          'Esta tela aponta as unidades com resultado mais baixo e os números que parecem erro de digitação.',
         porque:
-          'Nada daqui muda a nota de ninguém. Serve para a comissão saber onde ajudar primeiro.',
+          'Nada daqui muda a nota de ninguém. Serve para a SEAB saber onde ajudar primeiro.',
         tela: 'analytics',
         alvo: 'ana-risco',
       },
@@ -124,54 +125,134 @@ export const TUTORIAIS: Record<PerfilId, Tutorial> = {
     ],
   },
 
-  area_tecnica: {
+  administrador: {
     resumo:
-      'Seu papel é simples e é o mais importante de todos: informar o número certo, dizer de onde ele veio, e dentro do prazo.',
+      'Você cuida da plataforma, não das notas. O caminho abaixo confere se a ferramenta está em ordem, do cadastro à trilha.',
     passos: [
       {
-        titulo: 'Escolha a sua área',
+        titulo: 'Confira os cadastros',
         oQueFazer:
-          'Use a caixa de seleção. A lista abaixo muda e passa a mostrar só os indicadores da área escolhida.',
-        porque: 'Cada área responde pelos próprios números, e só pelos próprios.',
-        tela: 'lancamento',
-        alvo: 'lanc-area',
+          'Esta tela lista o catálogo inteiro: indicadores, subindicadores e a régua de cada tipo de unidade. É o que você mantém em dia.',
+        porque:
+          'Cadastro errado vira nota errada. A régua é da SEAB, mas quem garante que ela está carregada certa é você.',
+        tela: 'indicadores',
+        alvo: 'ind-catalogo',
       },
       {
-        titulo: 'Digite o valor e diga de onde veio',
+        titulo: 'Acompanhe o andamento do mês',
         oQueFazer:
-          'Preencha o número e, ao lado, a origem dele: o relatório ou o sistema de onde você tirou. Os dois campos são obrigatórios.',
+          'O painel mostra a etapa do mês e o funil de lançamento por unidade. Você acompanha; quem avança a etapa é a SEAB.',
         porque:
-          'Número sem origem não dá para conferir depois. A origem é o que protege você se alguém duvidar.',
+          'Quando uma unidade liga dizendo que "não consegue lançar", a resposta começa aqui: ou o prazo fechou, ou é chamado de suporte.',
+        tela: 'painel-seab',
+        alvo: 'seab-funil',
+      },
+      {
+        titulo: 'Veja o conjunto pelos painéis',
+        oQueFazer:
+          'O painel da gestão soma tudo: média, ranking das unidades e a nota de cada distrito.',
+        porque:
+          'Para dar suporte é preciso ver o que cada perfil vê. Este é o retrato que a gestão olha.',
+        tela: 'painel-gestao',
+        alvo: 'gest-numeros',
+      },
+      {
+        titulo: 'Confira os sinais de analytics',
+        oQueFazer:
+          'Veja os números que parecem erro de digitação e as unidades em risco. Nada daqui muda nota.',
+        porque:
+          'É o lugar onde um problema de dado aparece primeiro, antes de virar contestação.',
+        tela: 'analytics',
+        alvo: 'ana-suspeitos',
+      },
+      {
+        titulo: 'Percorra a trilha de auditoria',
+        oQueFazer:
+          'Filtre o histórico por tipo ou por mês e leia os registros: quem fez, quando, antes e depois.',
+        porque:
+          'A trilha só cresce, nunca encolhe, e ninguém a edita, nem você. É isso que faz dela prova.',
+        tela: 'auditoria',
+        alvo: 'aud-linha',
+      },
+    ],
+  },
+
+  gerente_distrital: {
+    resumo:
+      'Você responde pelo distrito: acompanha as unidades, revisa números na janela de revisão, e a sua nota é a média delas.',
+    passos: [
+      {
+        titulo: 'Veja o retrato do seu distrito',
+        oQueFazer:
+          'O painel abre já recortado no seu distrito: a média, o ranking das suas unidades e quem está com aviso.',
+        porque:
+          'O seu resultado nasce daqui: a nota do distrito é a média das notas das unidades dele.',
+        tela: 'painel-gestao',
+        alvo: 'gest-ranking',
+      },
+      {
+        titulo: 'Revise um lançamento na janela',
+        oQueFazer:
+          'Escolha a unidade e confira os subindicadores lançados. Nos dias finais do prazo, a janela de revisão, dá para corrigir: o valor antigo fica guardado.',
+        porque:
+          'Foi um pedido do cliente: cinco dias no fim do mês para revisão, com histórico. Corrigir às claras é diferente de apagar.',
         tela: 'lancamento',
         alvo: 'lanc-formularios',
       },
       {
-        titulo: 'Repare no aviso laranja',
+        titulo: 'Veja a sua nota e a composição dela',
         oQueFazer:
-          'Se o valor ficar muito longe da meta, aparece um aviso embaixo do campo. Ele não trava o envio: só pede que você confira.',
+          'Escolha o seu nome no seletor. O cartão mostra a média do distrito, e o quadro abaixo abre a nota de cada unidade que entrou na conta.',
         porque:
-          'O erro mais comum é a vírgula no lugar errado. O sistema avisa, e quem decide é você, que tem o dado na mão.',
+          'Uma média sem composição é um número solto. Aqui dá para ver de onde cada décimo veio.',
+        tela: 'meu-resultado',
+        alvo: 'res-composicao',
+      },
+      {
+        titulo: 'Discorde, se for o caso',
+        oQueFazer:
+          'Abra uma contestação, diga qual indicador (ou a nota toda) e escreva o motivo.',
+        porque:
+          'Discordar deixa de ser telefonema e vira pedido registrado, com prazo e resposta escrita.',
+        tela: 'contestacao',
+        alvo: 'cont-abrir',
+      },
+    ],
+  },
+
+  gerente_unidade: {
+    resumo:
+      'Você preenche os subindicadores da sua unidade e recebe a nota dela. O caminho abaixo é o seu mês inteiro.',
+    passos: [
+      {
+        titulo: 'Escolha a sua unidade',
+        oQueFazer:
+          'Use a caixa de seleção. A lista abaixo muda e mostra só o que o TIPO da sua unidade preenche: um CAPS não vê os indicadores de pré-natal de uma USF.',
+        porque:
+          'Cada unidade responde pelos próprios números, e a régua dela depende do tipo. Foi o que o cliente explicou na reunião.',
+        tela: 'lancamento',
+        alvo: 'lanc-unidade',
+      },
+      {
+        titulo: 'Preencha cada subindicador',
+        oQueFazer:
+          'Alguns pedem um valor direto; outros pedem numerador e denominador, por exemplo, gestantes com consulta em dia sobre gestantes cadastradas. Diga sempre de onde o número veio.',
+        porque:
+          'O indicador é calculado a partir do que você preenche. Número sem origem não dá para conferir depois, e a origem é o que protege você.',
         tela: 'lancamento',
         alvo: 'lanc-formularios',
       },
       {
-        titulo: 'Errou? Corrija sem medo',
+        titulo: 'Errou? Corrija na janela de revisão',
         oQueFazer:
-          'Envie de novo com o valor certo. O campo já mostra o que foi enviado antes.',
+          'Envie de novo com o valor certo, até o fim do prazo. Os dias finais são a janela de revisão; o campo já mostra o que foi enviado antes.',
         porque:
           'A correção entra como registro novo e o valor antigo fica guardado. Corrigir às claras é diferente de apagar.',
         tela: 'lancamento',
         alvo: 'lanc-formularios',
       },
-    ],
-  },
-
-  gestor: {
-    resumo:
-      'Você é quem recebe a nota. Aqui dá para entender a conta inteira, e discordar dela por escrito se for o caso.',
-    passos: [
       {
-        titulo: 'Veja a sua nota',
+        titulo: 'Veja a nota da sua unidade',
         oQueFazer:
           'Escolha o mês. O cartão do topo mostra a nota, de 0 a 100, e a faixa de pagamento que ela dá.',
         porque: 'Hoje a nota chega pronta, sem explicação. Aqui ela chega com a régua junto.',
@@ -181,18 +262,11 @@ export const TUTORIAIS: Record<PerfilId, Tutorial> = {
       {
         titulo: 'Abra a conta inteira',
         oQueFazer:
-          'Clique em "memória de cálculo". É o extrato da nota: cada linha mostra um indicador, o valor informado, a meta e os pontos que ele rendeu. No fim, a soma que vira a nota.',
+          'Clique em "memória de cálculo". Cada linha é um indicador, com os subindicadores que você preencheu dentro dela, a meta do seu tipo de unidade e os pontos que rendeu.',
         porque:
           'É a resposta para "por que a minha nota deu isso?". A conta fica aberta para você conferir, sem depender de ninguém.',
         tela: 'meu-resultado',
         alvo: 'res-memoria',
-      },
-      {
-        titulo: 'Compare com os meses anteriores',
-        oQueFazer: 'As barras mostram a sua nota mês a mês.',
-        porque: 'Um número sozinho diz pouco. A sequência mostra para onde você está indo.',
-        tela: 'meu-resultado',
-        alvo: 'res-evolucao',
       },
       {
         titulo: 'Discorde, se for o caso',
@@ -202,79 +276,6 @@ export const TUTORIAIS: Record<PerfilId, Tutorial> = {
           'Discordar deixa de ser telefonema e vira pedido registrado, com prazo e resposta escrita. É um direito seu.',
         tela: 'contestacao',
         alvo: 'cont-abrir',
-      },
-    ],
-  },
-
-  auditoria: {
-    resumo:
-      'Você pode ver tudo e não mexe em nada. O caminho abaixo confere um mês do fim para o começo, que é como se audita.',
-    passos: [
-      {
-        titulo: 'Comece pelo resultado divulgado',
-        oQueFazer: 'Escolha um mês fechado e olhe o ranking.',
-        porque: 'Toda conferência começa pelo que foi divulgado: é a afirmação a testar.',
-        tela: 'painel-gestao',
-        alvo: 'gest-ranking',
-      },
-      {
-        titulo: 'Refaça a conta de alguém',
-        oQueFazer: 'Escolha um gestor e abra a conta dele, linha por linha.',
-        porque:
-          'A regra é sempre a mesma: a mesma entrada tem de dar a mesma nota. Se não der, há um problema.',
-        tela: 'meu-resultado',
-        alvo: 'res-memoria',
-      },
-      {
-        titulo: 'Confira qual régua valia naquele mês',
-        oQueFazer:
-          'Veja as versões da regra e o quadro do que mudou de uma versão para a outra.',
-        porque:
-          'Mês antigo se confere com a regra da época. Por isso regra antiga nunca é apagada, só substituída.',
-        tela: 'indicadores',
-        alvo: 'ind-regras',
-      },
-      {
-        titulo: 'Volte aos números de origem',
-        oQueFazer:
-          'Escolha a área e compare o valor informado com a origem declarada ao lado dele.',
-        porque: 'A nota só é boa se o número que entrou for bom.',
-        tela: 'lancamento',
-        alvo: 'lanc-formularios',
-      },
-      {
-        titulo: 'Cheque a condução do mês',
-        oQueFazer: 'Veja em que etapa o mês está e quais áreas ficaram devendo.',
-        porque:
-          'Mês fechado com área faltando é um achado de auditoria, e aqui isso aparece na tela.',
-        tela: 'painel-cam',
-        alvo: 'cam-funil',
-      },
-      {
-        titulo: 'Veja se quem discordou foi respondido',
-        oQueFazer: 'Percorra os pedidos de revisão e confira se cada um tem resposta.',
-        porque:
-          'Pedido sem resposta é o problema mais comum nesse tipo de processo. Aqui ele fica visível.',
-        tela: 'contestacao',
-        alvo: 'cont-lista',
-      },
-      {
-        titulo: 'Percorra o histórico completo',
-        oQueFazer:
-          'Filtre pelo mês e leia os registros em ordem: quem fez, quando, antes e depois.',
-        porque:
-          'O histórico não pode ser editado por ninguém. É por isso que ele serve de prova.',
-        tela: 'auditoria',
-        alvo: 'aud-linha',
-      },
-      {
-        titulo: 'Confira o que o robô não faz',
-        oQueFazer:
-          'Na tela de sinais, veja que cada modelo mostra o método e o acerto, comparado com um palpite simples.',
-        porque:
-          'Nenhum resultado de modelo entra na nota de ninguém. Ele só aponta onde olhar, e isso está escrito na tela.',
-        tela: 'analytics',
-        alvo: 'ana-modelos',
       },
     ],
   },

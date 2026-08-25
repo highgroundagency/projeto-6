@@ -3,7 +3,8 @@ import { exigirPerfil } from '@/lib/sistema'
 import { ancoraDaTela } from '@/lib/sistema/parametros'
 
 /**
- * Dashboard da CAM — rota histórica, hoje um redirecionamento (ADR-023).
+ * Painel da SEAB — rota histórica (do tempo do nome CAM), hoje um
+ * redirecionamento (ADR-023).
  *
  * A tela virou uma sanfona dentro de `/sistema`. A rota continua existindo
  * porque links antigos existem, e desemboca na página nova, já com a sanfona
@@ -17,6 +18,6 @@ import { ancoraDaTela } from '@/lib/sistema/parametros'
 export const dynamic = 'force-dynamic'
 
 export default async function RotaCam() {
-  await exigirPerfil('painel-cam')
-  redirect(`/sistema?abrir=painel-cam${ancoraDaTela('painel-cam')}`)
+  await exigirPerfil('painel-seab')
+  redirect(`/sistema?abrir=painel-seab${ancoraDaTela('painel-seab')}`)
 }

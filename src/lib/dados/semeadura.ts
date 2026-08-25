@@ -1,14 +1,16 @@
-import type { BaseSintetica } from '@/lib/seed/gerar'
 import { ORDEM_ESTADOS, type EstadoCiclo } from '@/lib/calculo/tipos'
+import { BASE_V1, type BaseV1 } from './dominio-v1'
 import { deAvaliacao, deCiclo, deIndicador, deLancamento, deRegra } from './mapeadores'
 
 /**
- * Plano de semeadura da base sintética num PostgreSQL com o schema de
+ * Plano de semeadura da base V1 num PostgreSQL com o schema de
  * `supabase/migrations/` aplicado.
  *
  * O app não usa banco (ver ADR-011); isto existe para que o schema guardado
- * continue utilizável — e para provar, em `semeadura.test.ts`, que a base
- * sintética cabe nele.
+ * continue utilizável — e para provar, em `semeadura.test.ts`, que uma base
+ * na forma dele cabe nele. Desde a remodelagem pós-reunião (ADR-034) o schema
+ * modela o domínio ANTERIOR, então quem entra aqui é a fotografia congelada de
+ * `dominio-v1.ts`, não a base viva — a pendência está em docs/banco.md.
  *
  * Separado da execução de propósito: o plano é uma função pura, então dá para
  * conferi-lo contra um PostgreSQL real sem subir infraestrutura.
@@ -58,7 +60,7 @@ function caminhoDeEstados(alvo: EstadoCiclo): EstadoCiclo[] {
   return ORDEM_ESTADOS.slice(1, destino + 1)
 }
 
-export function montarPlano(base: BaseSintetica): PlanoDeSemeadura {
+export function montarPlano(base: BaseV1 = BASE_V1): PlanoDeSemeadura {
   const passos: Passo[] = []
 
   passos.push({
@@ -147,52 +149,3 @@ export function montarPlano(base: BaseSintetica): PlanoDeSemeadura {
   return { passos, resumo }
 }
 
-/**
- * Contas de demonstração, uma por perfil.
- *
- * Existem para que a banca consiga entrar e ver as quatro visões do RBAC. São
- * contas de dados sintéticos: não há nada real por trás delas.
- */
-export interface ContaDemonstracao {
-  email: string
-  perfil: 'cam' | 'area_tecnica' | 'gestor' | 'auditoria'
-  nome: string
-  areaId: string | null
-  gestorId: string | null
-}
-
-export function contasDeDemonstracao(base: BaseSintetica): ContaDemonstracao[] {
-  const primeiraArea = base.areas[0]
-  const primeiroGestor = base.gestores[0]
-
-  return [
-    {
-      email: 'cam@prumo.exemplo',
-      perfil: 'cam',
-      nome: 'Comissão de Avaliação de Metas',
-      areaId: null,
-      gestorId: null,
-    },
-    {
-      email: 'area@prumo.exemplo',
-      perfil: 'area_tecnica',
-      nome: `Área técnica: ${primeiraArea.sigla}`,
-      areaId: primeiraArea.id,
-      gestorId: null,
-    },
-    {
-      email: 'gestor@prumo.exemplo',
-      perfil: 'gestor',
-      nome: primeiroGestor.nome,
-      areaId: null,
-      gestorId: primeiroGestor.id,
-    },
-    {
-      email: 'auditoria@prumo.exemplo',
-      perfil: 'auditoria',
-      nome: 'Auditoria',
-      areaId: null,
-      gestorId: null,
-    },
-  ]
-}

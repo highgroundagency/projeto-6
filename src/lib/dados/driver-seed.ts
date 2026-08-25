@@ -15,6 +15,7 @@ import type {
   EntradaContestacao,
   EntradaLancamento,
   FiltroAvaliacao,
+  FiltroAvaliacaoDistrital,
   Panorama,
   RepositorioDados,
   Resultado,
@@ -33,9 +34,12 @@ export function driverSeed(): RepositorioDados {
 
     async panorama(): Promise<Panorama> {
       return {
-        areas: BASE.areas,
-        gestores: BASE.gestores,
+        distritos: BASE.distritos,
+        tiposUnidade: BASE.tiposUnidade,
+        unidades: BASE.unidades,
+        gerentes: BASE.gerentes,
         indicadores: BASE.indicadores,
+        subindicadores: BASE.subindicadores,
         regras: BASE.regras,
         ciclos: ciclosDoOverlay(),
       }
@@ -49,14 +53,22 @@ export function driverSeed(): RepositorioDados {
     async avaliacoes(filtro: FiltroAvaliacao = {}) {
       return BASE.avaliacoes.filter(
         (a) =>
-          (!filtro.gestorId || a.gestorId === filtro.gestorId) &&
+          (!filtro.unidadeId || a.unidadeId === filtro.unidadeId) &&
           (!filtro.cicloId || a.cicloId === filtro.cicloId),
       )
     },
 
-    async contestacoes(gestorId?: string) {
+    async avaliacoesDistritais(filtro: FiltroAvaliacaoDistrital = {}) {
+      return BASE.avaliacoesDistritais.filter(
+        (a) =>
+          (!filtro.distritoId || a.distritoId === filtro.distritoId) &&
+          (!filtro.cicloId || a.cicloId === filtro.cicloId),
+      )
+    },
+
+    async contestacoes(gerenteId?: string) {
       const todas = contestacoesDoOverlay()
-      return gestorId ? todas.filter((c) => c.gestorId === gestorId) : todas
+      return gerenteId ? todas.filter((c) => c.gerenteId === gerenteId) : todas
     },
 
     async eventos(limite = 200) {
@@ -66,9 +78,12 @@ export function driverSeed(): RepositorioDados {
     async registrarLancamento(entrada: EntradaLancamento, agora: string): Promise<Resultado> {
       return registrarNoOverlay(
         {
-          indicadorId: entrada.indicadorId,
+          subindicadorId: entrada.subindicadorId,
+          unidadeId: entrada.unidadeId,
           cicloId: entrada.cicloId,
           valor: entrada.valor,
+          numerador: entrada.numerador,
+          denominador: entrada.denominador,
           evidencia: entrada.evidencia,
           autor: entrada.autor,
           registradoEm: agora,
@@ -86,7 +101,7 @@ export function driverSeed(): RepositorioDados {
       abrirContestacao({ ...entrada, abertaEm: agora })
       return {
         ok: true,
-        mensagem: 'Contestação registrada. A comissão responde dentro do prazo do ciclo.',
+        mensagem: 'Contestação registrada. A SEAB responde dentro do prazo do ciclo.',
       }
     },
   }

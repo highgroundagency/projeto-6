@@ -17,13 +17,13 @@ export interface ContextoTela {
   /** Telas liberadas E do perfil, para que uma tela possa apontar para a outra. */
   readonly disponiveis: readonly FeatureId[]
   /**
-   * Gestor da sessão. Hoje sempre `null`, e é de propósito.
+   * Gerente da sessão. Hoje sempre `null`, e é de propósito.
    *
    * É a costura por onde o login de verdade entra: quando existir sessão, "meu
    * resultado" abre no próprio avaliado em vez de no primeiro da lista, sem que
    * a tela precise mudar.
    */
-  readonly gestorId: string | null
+  readonly gerenteId: string | null
 }
 
 export interface PropsTela {

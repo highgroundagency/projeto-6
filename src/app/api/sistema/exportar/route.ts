@@ -7,18 +7,25 @@ export async function GET(requisicao: NextRequest) {
   await exigirPerfil('painel-gestao')
 
   const cicloId = requisicao.nextUrl.searchParams.get('ciclo') ?? ''
+  const distritoId = requisicao.nextUrl.searchParams.get('distrito') ?? ''
   const anonimo = requisicao.nextUrl.searchParams.get('anonimo') === '1'
 
   const dados = await carregarDados()
   const ciclo = dados.cicloPorId(cicloId)
   if (!ciclo) return new Response('Ciclo não encontrado.', { status: 404 })
 
-  const avaliacoes = [...(await avaliacoesDoCiclo(ciclo.id))].sort((a, b) => b.score - a.score)
+  const todas = await avaliacoesDoCiclo(ciclo.id)
+  const avaliacoes = [...todas]
+    .filter(
+      (a) => !distritoId || dados.unidadePorId(a.unidadeId)?.distritoId === distritoId,
+    )
+    .sort((a, b) => b.score - a.score)
 
   const cabecalho = [
     'posicao',
-    'gestor',
-    'area',
+    'unidade',
+    'tipo',
+    'distrito',
     'score',
     'faixa',
     'percentual_gratificacao',
@@ -28,12 +35,14 @@ export async function GET(requisicao: NextRequest) {
   ]
 
   const linhas = avaliacoes.map((avaliacao, i) => {
-    const gestor = dados.gestorPorId(avaliacao.gestorId)
-    const area = gestor ? dados.areaPorId(gestor.areaId) : undefined
+    const unidade = dados.unidadePorId(avaliacao.unidadeId)
+    const tipo = unidade ? dados.tipoUnidadePorId(unidade.tipoId) : undefined
+    const distrito = unidade ? dados.distritoPorId(unidade.distritoId) : undefined
     return [
       String(i + 1),
-      anonimo ? `gestor ${String(i + 1).padStart(2, '0')}` : (gestor?.nome ?? ''),
-      anonimo ? '' : (area?.nome ?? ''),
+      anonimo ? `unidade ${String(i + 1).padStart(2, '0')}` : (unidade?.nome ?? ''),
+      tipo?.sigla ?? '',
+      anonimo ? '' : (distrito?.nome ?? ''),
       avaliacao.score.toFixed(2),
       avaliacao.faixa?.rotulo ?? '',
       String(avaliacao.faixa?.percentual ?? ''),

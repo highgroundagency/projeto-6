@@ -4,9 +4,13 @@ import { Etiqueta } from '@/components/base/selo'
 import { Aviso, Painel } from '@/components/sistema/base'
 import { arredondar, calcularAtingimento } from '@/lib/calculo/motor'
 import { repositorio } from '@/lib/dados'
-import { carregarDados, pareceErroDeDigitacao } from '@/lib/dados/consultas'
+import {
+  carregarDados,
+  pareceErroDeDigitacao,
+  type DadosDoSistema,
+} from '@/lib/dados/consultas'
 import { ML, ROTULO_MODELO } from '@/lib/ml'
-import type { Area, Indicador, Lancamento } from '@/lib/calculo/tipos'
+import type { Lancamento, Subindicador } from '@/lib/calculo/tipos'
 
 /**
  * Tela de analytics (§10.3).
@@ -18,6 +22,9 @@ import type { Area, Indicador, Lancamento } from '@/lib/calculo/tipos'
  *    mostra método, métrica E a linha de base, porque acurácia sem referência
  *    engana: num alvo desbalanceado, chutar a classe majoritária já acerta a
  *    maioria. Um modelo que não supera a referência é publicado dizendo isso.
+ *    ATENÇÃO: o treino atual é anterior à remodelagem pós-reunião (ADR-034) e
+ *    fala de "áreas"; o re-treino no domínio novo está no marco de ML do
+ *    cronograma. A tela avisa em vez de esconder.
  *
  * 2. HEURÍSTICAS EXPLICÁVEIS sobre a base atual, que respondem "onde olhar
  *    agora" com o dado que está na tela, sem depender do treino.
@@ -26,25 +33,47 @@ import type { Area, Indicador, Lancamento } from '@/lib/calculo/tipos'
  * saída daqui entra no cálculo da gratificação.
  */
 
-function atingimentoMedioPorArea(
-  areas: readonly Area[],
-  indicadoresTodos: readonly Indicador[],
+/** O valor apurado de um lançamento, na escala da meta do indicador. */
+function apurado(sub: Subindicador, lancamento: Lancamento): number | null {
+  if (sub.tipo === 'indice') return lancamento.valor
+  if (lancamento.numerador === null || !lancamento.denominador) return null
+  return (lancamento.numerador / lancamento.denominador) * 100
+}
+
+/** A meta que vale para um lançamento: a da aplicabilidade do tipo da unidade. */
+function metaDoLancamento(
+  dados: DadosDoSistema,
+  lancamento: Lancamento,
+): { meta: number; direcao: 'maior_melhor' | 'menor_melhor'; indicador: string } | null {
+  const sub = dados.subindicadorPorId(lancamento.subindicadorId)
+  const unidade = dados.unidadePorId(lancamento.unidadeId)
+  const ciclo = dados.cicloPorId(lancamento.cicloId)
+  const regra = ciclo ? dados.regraPorId(ciclo.regraId) : undefined
+  if (!sub || !unidade || !regra) return null
+
+  const aplicabilidade = regra.aplicabilidades.find(
+    (a) => a.tipoUnidadeId === unidade.tipoId && a.indicadorId === sub.indicadorId,
+  )
+  const indicador = dados.indicadorPorId(sub.indicadorId)
+  if (!aplicabilidade || !indicador) return null
+  return { meta: aplicabilidade.meta, direcao: indicador.direcao, indicador: indicador.nome }
+}
+
+function atingimentoMedioPorUnidade(
+  dados: DadosDoSistema,
   lancamentos: readonly Lancamento[],
 ) {
-  return areas.map((area) => {
-    const indicadores = indicadoresTodos.filter((i) => i.areaId === area.id)
+  return dados.unidades.map((unidade) => {
     const valores: number[] = []
 
-    for (const indicador of indicadores) {
-      for (const lancamento of lancamentos.filter((l) => l.indicadorId === indicador.id)) {
-        const { comTeto } = calcularAtingimento(
-          lancamento.valor,
-          indicador.meta,
-          indicador.direcao,
-          1.5,
-        )
-        valores.push(comTeto)
-      }
+    for (const lancamento of lancamentos.filter((l) => l.unidadeId === unidade.id)) {
+      const sub = dados.subindicadorPorId(lancamento.subindicadorId)
+      if (!sub) continue
+      const regua = metaDoLancamento(dados, lancamento)
+      const valor = apurado(sub, lancamento)
+      if (!regua || valor === null) continue
+      const { comTeto } = calcularAtingimento(valor, regua.meta, regua.direcao, 1.5)
+      valores.push(comTeto)
     }
 
     const media = valores.length ? valores.reduce((s, v) => s + v, 0) / valores.length : 0
@@ -52,7 +81,7 @@ function atingimentoMedioPorArea(
       ? Math.sqrt(valores.reduce((s, v) => s + (v - media) ** 2, 0) / valores.length)
       : 0
 
-    return { area, media, desvio, amostras: valores.length }
+    return { unidade, media, desvio, amostras: valores.length }
   })
 }
 
@@ -60,24 +89,25 @@ export async function TelaAnalytics() {
   const dados = await carregarDados()
   const lancamentos = await repositorio().lancamentos()
 
-  const porArea = atingimentoMedioPorArea(dados.areas, dados.indicadores, lancamentos)
-  const risco = [...porArea].sort((a, b) => a.media - b.media).slice(0, 5)
+  const porUnidade = atingimentoMedioPorUnidade(dados, lancamentos)
+  const risco = [...porUnidade].sort((a, b) => a.media - b.media).slice(0, 5)
 
   const suspeitos = lancamentos
-    .map((lancamento) => ({
-      lancamento,
-      indicador: dados.indicadorPorId(lancamento.indicadorId)!,
-    }))
-    .filter((item) => item.indicador)
-    .filter(({ lancamento, indicador }) =>
-      pareceErroDeDigitacao(lancamento.valor, indicador.meta),
-    )
+    .flatMap((lancamento) => {
+      const sub = dados.subindicadorPorId(lancamento.subindicadorId)
+      if (!sub) return []
+      const regua = metaDoLancamento(dados, lancamento)
+      const valor = apurado(sub, lancamento)
+      if (!regua || valor === null) return []
+      if (!pareceErroDeDigitacao(valor, regua.meta)) return []
+      return [{ lancamento, sub, valor, ...regua }]
+    })
     .slice(0, 12)
 
   // Perfil por regularidade: alta média com baixo desvio é diferente de alta
-  // média instável — é a intuição que o clustering da F4 vai formalizar.
-  const perfis = porArea.map(({ area, media, desvio }) => ({
-    area,
+  // média instável — é a intuição que o clustering formaliza.
+  const perfis = porUnidade.map(({ unidade, media, desvio }) => ({
+    unidade,
     perfil:
       media >= 0.95 && desvio < 0.12
         ? 'consistente acima da meta'
@@ -90,7 +120,13 @@ export async function TelaAnalytics() {
 
   return (
     <>
-      <div className="mb-5">
+      <div className="mb-5 space-y-3">
+        <Aviso tom="alerta">
+          Os modelos abaixo foram treinados ANTES da remodelagem que a reunião com o cliente
+          pediu: eles falam de áreas técnicas, e a base de hoje fala de unidades e
+          subindicadores. O re-treino no domínio novo está no marco de ML do cronograma. Os
+          painéis de heurística logo abaixo já usam a base nova.
+        </Aviso>
         <Aviso>
           {ML.aviso} Base <strong>{ML.base}</strong>. Treino de <Num>{ML.gerado_em}</Num>,
           semente <Num>{ML.semente}</Num>, scikit-learn <Num>{ML.versao_sklearn}</Num>, commit{' '}
@@ -200,18 +236,16 @@ export async function TelaAnalytics() {
 
       <Painel
         alvo="ana-risco"
-        titulo="Áreas com risco de não bater a meta" icone={TrendingDown}
-        descricao="Como é calculado: a média do que cada área atingiu nos meses anteriores. Quanto menor a média, maior o risco."
+        titulo="Unidades com risco de não bater a meta" icone={TrendingDown}
+        descricao="Como é calculado: a média do que cada unidade atingiu nos meses anteriores, contra a meta do tipo dela. Quanto menor a média, maior o risco."
       >
         <ul className="divide-y divide-linha border-y border-linha">
-          {risco.map(({ area, media, desvio, amostras }) => (
+          {risco.map(({ unidade, media, desvio, amostras }) => (
             <li
-              key={area.id}
+              key={unidade.id}
               className="flex flex-wrap items-baseline justify-between gap-2 py-2.5"
             >
-              <span className="text-sm">
-                <Num className="text-xs text-apagado">{area.sigla}</Num> {area.nome}
-              </span>
+              <span className="text-sm">{unidade.nome}</span>
               <span className="flex items-baseline gap-3 text-sm">
                 <Num>{(media * 100).toFixed(1)}%</Num>
                 <span className="text-xs text-apagado">
@@ -229,16 +263,16 @@ export async function TelaAnalytics() {
       <Painel
         alvo="ana-suspeitos"
         titulo="Números que parecem erro de digitação" icone={SearchCheck}
-        descricao="Como é achado: valor 5 vezes maior ou 5 vezes menor que a meta. O sistema só avisa; quem decide é gente."
+        descricao="Como é achado: valor apurado 5 vezes maior ou 5 vezes menor que a meta do tipo. O sistema só avisa; quem decide é gente."
       >
         {suspeitos.length === 0 ? (
           <Aviso tom="ok">Nenhum número fora do padrão esperado.</Aviso>
         ) : (
           <div className="overflow-x-auto border border-linha">
-            <table className="w-full min-w-[36rem] border-collapse text-sm">
+            <table className="w-full min-w-[40rem] border-collapse text-sm">
               <thead>
                 <tr className="border-b border-linha bg-superficie">
-                  {['Ciclo', 'Indicador', 'Valor', 'Meta', 'Razão'].map((c) => (
+                  {['Ciclo', 'Unidade', 'Subindicador', 'Apurado', 'Meta', 'Razão'].map((c) => (
                     <th key={c} className="rotulo px-3 py-2 text-left">
                       {c}
                     </th>
@@ -246,17 +280,20 @@ export async function TelaAnalytics() {
                 </tr>
               </thead>
               <tbody>
-                {suspeitos.map(({ lancamento, indicador }) => (
+                {suspeitos.map(({ lancamento, sub, valor, meta }) => (
                   <tr key={lancamento.id} className="border-b border-linha last:border-0">
                     <td className="numero px-3 py-1.5">
                       {lancamento.cicloId.replace('ciclo-', '')}
                     </td>
-                    <td className="px-3 py-1.5">{indicador.nome}</td>
-                    <td className="numero px-3 py-1.5 text-alerta">{lancamento.valor}</td>
-                    <td className="numero px-3 py-1.5">{indicador.meta}</td>
-                    <td className="numero px-3 py-1.5">
-                      {arredondar(lancamento.valor / indicador.meta, 1)}×
+                    <td className="px-3 py-1.5">
+                      {dados.unidadePorId(lancamento.unidadeId)?.nome}
                     </td>
+                    <td className="px-3 py-1.5">{sub.nome}</td>
+                    <td className="numero px-3 py-1.5 text-alerta">
+                      {arredondar(valor, 1)}
+                    </td>
+                    <td className="numero px-3 py-1.5">{meta}</td>
+                    <td className="numero px-3 py-1.5">{arredondar(valor / meta, 1)}×</td>
                   </tr>
                 ))}
               </tbody>
@@ -267,16 +304,16 @@ export async function TelaAnalytics() {
 
       <Painel
         alvo="ana-perfis"
-        titulo="O jeito de cada área" icone={Shapes}
-        descricao="Como é feito: com a média e a variação do resultado de cada área, mês a mês."
+        titulo="O jeito de cada unidade" icone={Shapes}
+        descricao="Como é feito: com a média e a variação do resultado de cada unidade, mês a mês."
       >
         <ul className="grid gap-px border border-linha bg-linha sm:grid-cols-2">
-          {perfis.map(({ area, perfil }) => (
+          {perfis.map(({ unidade, perfil }) => (
             <li
-              key={area.id}
+              key={unidade.id}
               className="flex items-baseline justify-between gap-3 bg-cartao px-3 py-2 text-sm"
             >
-              <span>{area.nome}</span>
+              <span>{unidade.nome}</span>
               <span className="rotulo shrink-0">{perfil}</span>
             </li>
           ))}

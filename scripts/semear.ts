@@ -1,5 +1,5 @@
 /**
- * Semeia a base sintética num PostgreSQL com o schema de
+ * Semeia a base sintética V1 num PostgreSQL com o schema de
  * `supabase/migrations/` aplicado.
  *
  * Uso:
@@ -21,7 +21,6 @@
  */
 
 import { Client } from 'pg'
-import { gerarBase } from '../src/lib/seed/gerar'
 import { montarPlano, TABELAS_PARA_LIMPAR } from '../src/lib/dados/semeadura'
 
 const url = process.env.DATABASE_URL?.trim()
@@ -56,8 +55,9 @@ async function limparBase(): Promise<void> {
 }
 
 async function semear(): Promise<void> {
-  const base = gerarBase()
-  const { passos, resumo } = montarPlano(base)
+  // A fotografia V1: o schema guardado ainda modela o domínio anterior à
+  // reunião de 22/08 (ADR-034). A pendência está declarada em docs/banco.md.
+  const { passos, resumo } = montarPlano()
 
   console.log('\nPlano de semeadura:')
   for (const [tabela, total] of Object.entries(resumo)) {

@@ -62,7 +62,7 @@ export interface ResultadoTransicao {
 
 /**
  * Avança o ciclo para o próximo estado, sempre gravando na trilha.
- * Só a CAM pode fazer isso — o perfil é conferido por quem chama.
+ * Só a SEAB pode fazer isso — o perfil é conferido por quem chama.
  */
 export function avancarCiclo(
   cicloId: string,
@@ -81,7 +81,7 @@ export function avancarCiclo(
   registrar({
     quando: agora,
     autor,
-    perfil: 'cam',
+    perfil: 'seab',
     tipo: 'ciclo_estado_alterado',
     entidade: cicloId,
     descricao: `Ciclo ${alvo.competencia}: ${ROTULO_ESTADO[alvo.estado]} → ${ROTULO_ESTADO[seguinte]}.`,
@@ -106,7 +106,10 @@ export function registrarLancamento(
   }
 
   const anterior = lancamentos().find(
-    (l) => l.cicloId === lancamento.cicloId && l.indicadorId === lancamento.indicadorId,
+    (l) =>
+      l.cicloId === lancamento.cicloId &&
+      l.subindicadorId === lancamento.subindicadorId &&
+      l.unidadeId === lancamento.unidadeId,
   )
 
   const novo: Lancamento = {
@@ -118,12 +121,24 @@ export function registrarLancamento(
   registrar({
     quando: agora,
     autor: lancamento.autor,
-    perfil: 'area_tecnica',
+    perfil: 'gerente_unidade',
     tipo: anterior ? 'lancamento_alterado' : 'lancamento_registrado',
     entidade: novo.id,
-    descricao: `${anterior ? 'Correção' : 'Lançamento'} de ${lancamento.indicadorId} no ciclo ${lancamento.cicloId}.`,
-    antes: anterior ? { valor: anterior.valor, status: anterior.status } : null,
-    depois: { valor: novo.valor, status: novo.status },
+    descricao: `${anterior ? 'Correção' : 'Lançamento'} de ${lancamento.subindicadorId} pela ${lancamento.unidadeId} no ciclo ${lancamento.cicloId}.`,
+    antes: anterior
+      ? {
+          valor: anterior.valor,
+          numerador: anterior.numerador,
+          denominador: anterior.denominador,
+          status: anterior.status,
+        }
+      : null,
+    depois: {
+      valor: novo.valor,
+      numerador: novo.numerador,
+      denominador: novo.denominador,
+      status: novo.status,
+    },
   })
 
   return {
@@ -134,12 +149,18 @@ export function registrarLancamento(
   }
 }
 
-/** Lançamento vigente de um indicador num ciclo: o último registrado vence. */
+/** Lançamento vigente de um subindicador numa unidade: o último registrado vence. */
 export function lancamentoVigente(
   cicloId: string,
-  indicadorId: string,
+  subindicadorId: string,
+  unidadeId: string,
 ): Lancamento | undefined {
   return [...lancamentos()]
     .reverse()
-    .find((l) => l.cicloId === cicloId && l.indicadorId === indicadorId)
+    .find(
+      (l) =>
+        l.cicloId === cicloId &&
+        l.subindicadorId === subindicadorId &&
+        l.unidadeId === unidadeId,
+    )
 }

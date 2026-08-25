@@ -1,10 +1,4 @@
-import type {
-  Avaliacao,
-  CicloAvaliacao,
-  Indicador,
-  Lancamento,
-  RegraDePontuacao,
-} from '@/lib/calculo/tipos'
+import type { AvaliacaoV1, CicloV1, IndicadorV1, LancamentoV1, RegraV1 } from './dominio-v1'
 
 /**
  * Tradução domínio → banco, usada pelo script de semeadura.
@@ -13,9 +7,13 @@ import type {
  * aqui evita que cada lugar invente a própria — e é onde uma divergência com
  * `supabase/migrations/` aparece primeiro, porque `semeadura.test.ts` executa
  * estas funções contra o schema real.
+ *
+ * Os tipos vêm de `dominio-v1.ts` de propósito: o schema guardado ainda modela
+ * o domínio anterior à reunião de 22/08 (ADR-034). A pendência de remodelar o
+ * SQL está declarada em docs/banco.md.
  */
 
-export const deIndicador = (indicador: Indicador) => ({
+export const deIndicador = (indicador: IndicadorV1) => ({
   id: indicador.id,
   area_id: indicador.areaId,
   nome: indicador.nome,
@@ -27,7 +25,7 @@ export const deIndicador = (indicador: Indicador) => ({
   peso: indicador.peso,
 })
 
-export const deRegra = (regra: RegraDePontuacao) => ({
+export const deRegra = (regra: RegraV1) => ({
   id: regra.id,
   versao: regra.versao,
   descricao: regra.descricao,
@@ -41,7 +39,7 @@ export const deRegra = (regra: RegraDePontuacao) => ({
   sem_lancamento: regra.semLancamento,
 })
 
-export const deCiclo = (ciclo: CicloAvaliacao) => ({
+export const deCiclo = (ciclo: CicloV1) => ({
   id: ciclo.id,
   competencia: ciclo.competencia,
   janela_lancamento_inicio: ciclo.janelaLancamentoInicio,
@@ -49,7 +47,7 @@ export const deCiclo = (ciclo: CicloAvaliacao) => ({
   regra_id: ciclo.regraId,
 })
 
-export const deLancamento = (lancamento: Lancamento) => ({
+export const deLancamento = (lancamento: LancamentoV1) => ({
   indicador_id: lancamento.indicadorId,
   ciclo_id: lancamento.cicloId,
   valor: lancamento.valor,
@@ -59,7 +57,7 @@ export const deLancamento = (lancamento: Lancamento) => ({
   status: lancamento.status,
 })
 
-export const deAvaliacao = (avaliacao: Avaliacao) => ({
+export const deAvaliacao = (avaliacao: AvaliacaoV1) => ({
   gestor_id: avaliacao.gestorId,
   ciclo_id: avaliacao.cicloId,
   score: avaliacao.score,

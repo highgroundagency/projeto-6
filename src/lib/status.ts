@@ -23,7 +23,13 @@ export interface Status {
   dataSimulada: string | null
   ciclosNoCronograma: number
   funcionalidades: number
-  registros: { areas: number; indicadores: number; ciclos: number; lancamentos: number }
+  registros: {
+    unidades: number
+    indicadores: number
+    subindicadores: number
+    ciclos: number
+    lancamentos: number
+  }
   latenciaMs: number
   ok: boolean
 }
@@ -60,8 +66,9 @@ export async function coletarStatus(): Promise<Status> {
     ciclosNoCronograma: CRONOGRAMA.length,
     funcionalidades: FEATURES.length,
     registros: {
-      areas: panorama.areas.length,
+      unidades: panorama.unidades.length,
       indicadores: panorama.indicadores.length,
+      subindicadores: panorama.subindicadores.length,
       ciclos: panorama.ciclos.length,
       lancamentos: lancamentos.length,
     },

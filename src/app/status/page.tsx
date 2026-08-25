@@ -30,7 +30,10 @@ export default async function PaginaStatus() {
     ['Data simulada', status.dataSimulada ?? 'nenhuma (data real)'],
     ['Ciclos no cronograma', String(status.ciclosNoCronograma)],
     ['Funcionalidades mapeadas', String(status.funcionalidades)],
-    ['Áreas · indicadores', `${status.registros.areas} · ${status.registros.indicadores}`],
+    [
+      'Unidades · indicadores · subindicadores',
+      `${status.registros.unidades} · ${status.registros.indicadores} · ${status.registros.subindicadores}`,
+    ],
     ['Ciclos · lançamentos', `${status.registros.ciclos} · ${status.registros.lancamentos}`],
     ['Latência de coleta', `${status.latenciaMs} ms`],
   ]

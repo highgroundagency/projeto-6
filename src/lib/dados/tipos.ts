@@ -1,47 +1,63 @@
 import type {
-  Area,
   Avaliacao,
+  AvaliacaoDistrital,
   CicloAvaliacao,
   Contestacao,
+  Distrito,
   EventoAuditoria,
-  Gestor,
+  Gerente,
   Indicador,
   Lancamento,
   RegraDePontuacao,
+  Subindicador,
+  TipoUnidade,
+  Unidade,
 } from '@/lib/calculo/tipos'
 
 /**
  * Camada de dados do sistema.
  *
  * Existe para que as telas não saibam de onde os dados vêm. Hoje o driver é o
- * seed em memória. O schema de banco está escrito e testado em
- * `supabase/migrations/`, então ligar uma fonte persistente depois é
- * acrescentar um driver, não reescrever tela.
+ * seed em memória. O schema de banco guardado em `supabase/migrations/` ainda
+ * modela o domínio anterior (pendência em docs/banco.md), então ligar uma
+ * fonte persistente depois é acrescentar um driver e atualizar o SQL — não
+ * reescrever tela.
  */
 
 export interface Panorama {
-  readonly areas: readonly Area[]
-  readonly gestores: readonly Gestor[]
+  readonly distritos: readonly Distrito[]
+  readonly tiposUnidade: readonly TipoUnidade[]
+  readonly unidades: readonly Unidade[]
+  readonly gerentes: readonly Gerente[]
   readonly indicadores: readonly Indicador[]
+  readonly subindicadores: readonly Subindicador[]
   readonly regras: readonly RegraDePontuacao[]
   readonly ciclos: readonly CicloAvaliacao[]
 }
 
 export interface FiltroAvaliacao {
-  gestorId?: string
+  unidadeId?: string
+  cicloId?: string
+}
+
+export interface FiltroAvaliacaoDistrital {
+  distritoId?: string
   cicloId?: string
 }
 
 export interface EntradaLancamento {
-  indicadorId: string
+  subindicadorId: string
+  unidadeId: string
   cicloId: string
-  valor: number
+  valor: number | null
+  numerador: number | null
+  denominador: number | null
   evidencia: string
   autor: string
 }
 
 export interface EntradaContestacao {
-  gestorId: string
+  gerenteId: string
   cicloId: string
   indicadorId: string | null
   motivo: string
@@ -61,7 +77,8 @@ export interface RepositorioDados {
   panorama(): Promise<Panorama>
   lancamentos(cicloId?: string): Promise<Lancamento[]>
   avaliacoes(filtro?: FiltroAvaliacao): Promise<Avaliacao[]>
-  contestacoes(gestorId?: string): Promise<Contestacao[]>
+  avaliacoesDistritais(filtro?: FiltroAvaliacaoDistrital): Promise<AvaliacaoDistrital[]>
+  contestacoes(gerenteId?: string): Promise<Contestacao[]>
   eventos(limite?: number): Promise<EventoAuditoria[]>
 
   registrarLancamento(entrada: EntradaLancamento, agora: string): Promise<Resultado>

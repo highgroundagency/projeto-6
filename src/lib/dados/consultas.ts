@@ -1,11 +1,16 @@
 import 'server-only'
 import type {
-  Area,
+  Aplicabilidade,
   Avaliacao,
+  AvaliacaoDistrital,
   CicloAvaliacao,
-  Gestor,
+  Distrito,
+  Gerente,
   Indicador,
   RegraDePontuacao,
+  Subindicador,
+  TipoUnidade,
+  Unidade,
 } from '@/lib/calculo/tipos'
 import { ORDEM_ESTADOS, type EstadoCiclo } from '@/lib/calculo/tipos'
 import { repositorio } from './index'
@@ -19,12 +24,21 @@ import type { Panorama } from './tipos'
  * trinta consultas.
  */
 export interface DadosDoSistema extends Panorama {
-  areaPorId(id: string): Area | undefined
-  gestorPorId(id: string): Gestor | undefined
+  distritoPorId(id: string): Distrito | undefined
+  tipoUnidadePorId(id: string): TipoUnidade | undefined
+  unidadePorId(id: string): Unidade | undefined
+  gerentePorId(id: string): Gerente | undefined
   indicadorPorId(id: string): Indicador | undefined
+  subindicadorPorId(id: string): Subindicador | undefined
   cicloPorId(id: string): CicloAvaliacao | undefined
   regraPorId(id: string): RegraDePontuacao | undefined
-  indicadoresDaArea(areaId: string): Indicador[]
+  unidadesDoDistrito(distritoId: string): Unidade[]
+  subindicadoresDoIndicador(indicadorId: string): Subindicador[]
+  /** Indicadores que valem para um tipo de unidade sob uma regra, na ordem do catálogo. */
+  indicadoresDoTipo(
+    tipoUnidadeId: string,
+    regra: RegraDePontuacao,
+  ): { indicador: Indicador; aplicabilidade: Aplicabilidade }[]
   ciclosFechados(): CicloAvaliacao[]
   cicloEmLancamento(): CicloAvaliacao | undefined
   cicloMaisRecenteFechado(): CicloAvaliacao | undefined
@@ -38,12 +52,25 @@ export async function carregarDados(): Promise<DadosDoSistema> {
 
   return {
     ...panorama,
-    areaPorId: (id) => panorama.areas.find((a) => a.id === id),
-    gestorPorId: (id) => panorama.gestores.find((g) => g.id === id),
+    distritoPorId: (id) => panorama.distritos.find((d) => d.id === id),
+    tipoUnidadePorId: (id) => panorama.tiposUnidade.find((t) => t.id === id),
+    unidadePorId: (id) => panorama.unidades.find((u) => u.id === id),
+    gerentePorId: (id) => panorama.gerentes.find((g) => g.id === id),
     indicadorPorId: (id) => panorama.indicadores.find((i) => i.id === id),
+    subindicadorPorId: (id) => panorama.subindicadores.find((s) => s.id === id),
     cicloPorId: (id) => panorama.ciclos.find((c) => c.id === id),
     regraPorId: (id) => panorama.regras.find((r) => r.id === id),
-    indicadoresDaArea: (areaId) => panorama.indicadores.filter((i) => i.areaId === areaId),
+    unidadesDoDistrito: (distritoId) =>
+      panorama.unidades.filter((u) => u.distritoId === distritoId),
+    subindicadoresDoIndicador: (indicadorId) =>
+      panorama.subindicadores.filter((s) => s.indicadorId === indicadorId),
+    indicadoresDoTipo: (tipoUnidadeId, regra) =>
+      panorama.indicadores.flatMap((indicador) => {
+        const aplicabilidade = regra.aplicabilidades.find(
+          (a) => a.tipoUnidadeId === tipoUnidadeId && a.indicadorId === indicador.id,
+        )
+        return aplicabilidade ? [{ indicador, aplicabilidade }] : []
+      }),
     ciclosFechados: () => panorama.ciclos.filter((c) => ESTADOS_FECHADOS.includes(c.estado)),
     cicloEmLancamento: () => panorama.ciclos.find((c) => c.estado === 'lancamento_aberto'),
     cicloMaisRecenteFechado: () =>
@@ -61,23 +88,35 @@ export async function lancamentosDoCiclo(cicloId: string) {
   return repositorio().lancamentos(cicloId)
 }
 
-/** Lançamento vigente de um indicador num ciclo: o último registrado vence. */
-export function vigente<T extends { indicadorId: string; registradoEm: string }>(
-  lancamentos: readonly T[],
-  indicadorId: string,
-): T | undefined {
+/** Lançamento vigente de um subindicador numa unidade: o último registrado vence. */
+export function vigente<
+  T extends { subindicadorId: string; unidadeId: string; registradoEm: string },
+>(lancamentos: readonly T[], subindicadorId: string, unidadeId: string): T | undefined {
   return [...lancamentos]
-    .filter((l) => l.indicadorId === indicadorId)
+    .filter((l) => l.subindicadorId === subindicadorId && l.unidadeId === unidadeId)
     .sort((a, b) => (a.registradoEm < b.registradoEm ? 1 : -1))[0]
 }
 
-export async function avaliacoesDoGestor(gestorId: string): Promise<Avaliacao[]> {
-  const avaliacoes = await repositorio().avaliacoes({ gestorId })
+export async function avaliacoesDaUnidade(unidadeId: string): Promise<Avaliacao[]> {
+  const avaliacoes = await repositorio().avaliacoes({ unidadeId })
   return [...avaliacoes].sort((a, b) => a.cicloId.localeCompare(b.cicloId))
 }
 
 export async function avaliacoesDoCiclo(cicloId: string): Promise<Avaliacao[]> {
   return repositorio().avaliacoes({ cicloId })
+}
+
+export async function avaliacoesDistritaisDoDistrito(
+  distritoId: string,
+): Promise<AvaliacaoDistrital[]> {
+  const avaliacoes = await repositorio().avaliacoesDistritais({ distritoId })
+  return [...avaliacoes].sort((a, b) => a.cicloId.localeCompare(b.cicloId))
+}
+
+export async function avaliacoesDistritaisDoCiclo(
+  cicloId: string,
+): Promise<AvaliacaoDistrital[]> {
+  return repositorio().avaliacoesDistritais({ cicloId })
 }
 
 /**

@@ -71,7 +71,7 @@ export async function TelaAuditoria({ ctx }: PropsTela) {
       <div className="mb-5">
         <Aviso>
           Este histórico só recebe registros novos: ninguém edita nem apaga o que já aconteceu,
-          nem mesmo a comissão. Correção entra como registro novo, com o valor antigo guardado
+          nem mesmo a SEAB. Correção entra como registro novo, com o valor antigo guardado
           ao lado. É isso que faz o histórico servir de prova.
         </Aviso>
       </div>

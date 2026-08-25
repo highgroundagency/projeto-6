@@ -2,16 +2,20 @@ import { readFile, readdir } from 'node:fs/promises'
 import { join } from 'node:path'
 import { Pool } from 'pg'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
-import { gerarBase } from '@/lib/seed/gerar'
+import { BASE_V1 } from './dominio-v1'
 import { montarPlano, TABELAS_PARA_LIMPAR } from './semeadura'
 
 /**
  * Executa o plano de semeadura inteiro contra um PostgreSQL real.
  *
- * É o que prova que a migração do seed funciona de ponta a ponta: as 171
- * linhas de lançamento, as transições de estado e as avaliações passam pelas
- * mesmas constraints e gatilhos que valeriam em produção. O que fica de fora é
- * só o transporte HTTP do supabase-js.
+ * É o que prova que a semeadura funciona de ponta a ponta: os lançamentos, as
+ * transições de estado e as avaliações passam pelas mesmas constraints e
+ * gatilhos que valeriam em produção. O que fica de fora é só o transporte HTTP
+ * do supabase-js.
+ *
+ * A base é a fotografia V1 de `dominio-v1.ts`: o schema guardado ainda modela
+ * o domínio anterior à reunião de 22/08 (ADR-034), e a pendência está
+ * declarada em docs/banco.md.
  *
  * Roda quando `DATABASE_URL_TESTE` aponta para um Postgres descartável.
  */
@@ -20,7 +24,7 @@ const URL_TESTE = process.env.DATABASE_URL_TESTE
 const temBanco = Boolean(URL_TESTE)
 
 let pool: Pool
-const base = gerarBase()
+const base = BASE_V1
 
 beforeAll(async () => {
   if (!temBanco) return

@@ -23,7 +23,7 @@ import type { FeatureId } from '@/lib/features'
  * do laranja na tela, e por isso ele é o único elemento colorido do sumário.
  */
 export const ICONE_DA_TELA: Record<FeatureId, LucideIcon> = {
-  'painel-cam': LayoutDashboard,
+  'painel-seab': LayoutDashboard,
   indicadores: Ruler,
   lancamento: PencilLine,
   'meu-resultado': Target,

@@ -7,21 +7,34 @@ import { mensagemDe, type PropsTela } from '@/components/sistema/telas/tipos'
 import { EXPLICACAO_ESTADO, ORDEM_ESTADOS, ROTULO_ESTADO } from '@/lib/calculo/tipos'
 import { carregarDados, lancamentosDoCiclo } from '@/lib/dados/consultas'
 
-export async function TelaCam({ ctx }: PropsTela) {
-  const { ok, erro } = mensagemDe(ctx, 'painel-cam')
+export async function TelaPainelSeab({ ctx }: PropsTela) {
+  const { ok, erro } = mensagemDe(ctx, 'painel-seab')
 
   const dados = await carregarDados()
   const todos = dados.ciclos
   const emAndamento = dados.cicloEmLancamento() ?? todos[todos.length - 1]
+  const regra = dados.regraPorId(emAndamento.regraId)
   const lancados = await lancamentosDoCiclo(emAndamento.id)
 
-  const porArea = dados.areas.map((area) => {
-    const indicadores = dados.indicadoresDaArea(area.id)
-    const enviados = indicadores.filter((i) => lancados.some((l) => l.indicadorId === i.id))
-    return { area, total: indicadores.length, enviados: enviados.length }
+  // O funil agora é por UNIDADE: cada uma preenche os subindicadores que a
+  // regra aplica ao tipo dela, então o total esperado varia de tipo para tipo.
+  const porUnidade = dados.unidades.map((unidade) => {
+    const aplicaveis = regra ? dados.indicadoresDoTipo(unidade.tipoId, regra) : []
+    const subsEsperados = aplicaveis.flatMap(({ indicador }) =>
+      dados.subindicadoresDoIndicador(indicador.id),
+    )
+    const enviados = subsEsperados.filter((sub) =>
+      lancados.some((l) => l.subindicadorId === sub.id && l.unidadeId === unidade.id),
+    )
+    return {
+      unidade,
+      distrito: dados.distritoPorId(unidade.distritoId),
+      total: subsEsperados.length,
+      enviados: enviados.length,
+    }
   })
 
-  const pendentes = porArea.filter((linha) => linha.enviados < linha.total)
+  const pendentes = porUnidade.filter((linha) => linha.enviados < linha.total)
   const seguinte = dados.proximoEstado(emAndamento.estado)
 
   /**
@@ -32,7 +45,7 @@ export async function TelaCam({ ctx }: PropsTela) {
    * um clique de qualquer pessoa mudaria a demonstração para as outras. Quem não
    * é admin não vê o formulário nem qualquer menção a ele.
    */
-  const podeAgir = ctx.perfil === 'cam'
+  const podeAgir = ctx.perfil === 'seab'
 
   return (
     <>
@@ -55,9 +68,9 @@ export async function TelaCam({ ctx }: PropsTela) {
       ) : null}
 
       <Painel
-        alvo="cam-estado"
+        alvo="seab-estado"
         titulo={`Mês ${emAndamento.competencia}`} icone={CalendarClock}
-        descricao={`Regra em uso: ${emAndamento.regraId}. Prazo para informar os números: até ${emAndamento.janelaLancamentoFim.slice(0, 10)}.`}
+        descricao={`Regra em uso: ${emAndamento.regraId}. Prazo para informar os números: até ${emAndamento.janelaLancamentoFim.slice(0, 10)}; revisão a partir de ${emAndamento.revisaoInicio}.`}
       >
         <TrilhoEstados estado={emAndamento.estado} />
 
@@ -116,25 +129,26 @@ export async function TelaCam({ ctx }: PropsTela) {
                 : `Avançar para ${ROTULO_ESTADO[seguinte]}`}
             </Botao>
             {!podeAgir ? (
-              <p className="mt-2 text-xs text-apagado">Só o perfil CAM avança a etapa.</p>
+              <p className="mt-2 text-xs text-apagado">Só a SEAB avança a etapa.</p>
             ) : null}
           </form>
         ) : null}
       </Painel>
 
       <Painel
-        alvo="cam-funil"
-        titulo="Funil de lançamento por área" icone={BarChart3}
-        descricao="Quantos números cada área já informou neste mês. Barra cheia: área em dia."
+        alvo="seab-funil"
+        titulo="Funil de lançamento por unidade" icone={BarChart3}
+        descricao="Quantos subindicadores cada unidade já informou neste mês. Barra cheia: unidade em dia. O total varia com o tipo da unidade."
       >
         <ul className="divide-y divide-linha border-y border-linha">
-          {porArea.map((linha) => (
+          {porUnidade.map((linha) => (
             <li
-              key={linha.area.id}
-              className="grid gap-2 py-2.5 sm:grid-cols-[14rem_1fr] sm:items-center sm:gap-4"
+              key={linha.unidade.id}
+              className="grid gap-2 py-2.5 sm:grid-cols-[16rem_1fr] sm:items-center sm:gap-4"
             >
               <span className="text-sm">
-                <Num className="text-xs text-apagado">{linha.area.sigla}</Num> {linha.area.nome}
+                {linha.unidade.nome}
+                <Num className="block text-xs text-apagado">{linha.distrito?.nome}</Num>
               </span>
               <Barra valor={linha.enviados} total={linha.total} />
             </li>
@@ -143,18 +157,18 @@ export async function TelaCam({ ctx }: PropsTela) {
       </Painel>
 
       <Painel
-        alvo="cam-pendencias"
+        alvo="seab-pendencias"
         titulo="Pendências" icone={CircleAlert}
-        descricao="Áreas que ainda não informaram tudo neste mês."
+        descricao="Unidades que ainda não informaram tudo neste mês."
       >
         {pendentes.length === 0 ? (
-          <Aviso tom="ok">Todas as áreas já informaram tudo neste mês.</Aviso>
+          <Aviso tom="ok">Todas as unidades já informaram tudo neste mês.</Aviso>
         ) : (
           <ul className="space-y-1.5 text-sm">
             {pendentes.map((linha) => (
-              <li key={linha.area.id} className="flex flex-wrap items-baseline gap-2">
+              <li key={linha.unidade.id} className="flex flex-wrap items-baseline gap-2">
                 <span aria-hidden className="mt-2 h-px w-3 shrink-0 bg-alerta" />
-                <span className="font-medium">{linha.area.nome}</span>
+                <span className="font-medium">{linha.unidade.nome}</span>
                 <Num className="text-xs text-apagado">
                   faltam {linha.total - linha.enviados} de {linha.total}
                 </Num>

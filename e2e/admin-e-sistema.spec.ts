@@ -114,21 +114,21 @@ test.describe('gate das funcionalidades', () => {
 
   test('tela de outro perfil não existe, mesmo já liberada', async ({ page }) => {
     // Entra como admin (modo completo: as oito telas liberadas) e troca para
-    // Área técnica, que só lança indicadores. As outras sete devem sumir de
-    // verdade, não ficar apagadas — ver `exigirPerfil` em src/lib/sistema.ts.
+    // gerente de unidade, que lança e vê o próprio resultado. As outras devem
+    // sumir de verdade, não ficar apagadas — ver `exigirPerfil`.
     await entrarNoPainel(page)
     await page.goto('/sistema')
     // Escolher já troca: não existe mais botão de confirmar (ADR-024).
-    await page.getByLabel('Estou usando como').selectOption('area_tecnica')
-    await expect(page.getByRole('link', { name: 'Lançamento' })).toBeVisible()
-    for (const rotulo of ['Auditoria', 'Analytics', 'Painel da gestão']) {
+    await page.getByLabel('Estou usando como').selectOption('gerente_unidade')
+    await expect(page.getByRole('link', { name: 'Lançamento da unidade' })).toBeVisible()
+    for (const rotulo of ['Trilha de auditoria', 'Analytics', 'Painel da gestão']) {
       await expect(page.getByRole('link', { name: rotulo })).toHaveCount(0)
     }
 
     // E a URL direta também não abre: o filtro não é só de menu.
     for (const rota of ['/sistema/auditoria', '/sistema/analytics', '/sistema/gestao']) {
       const resposta = await page.request.get(rota, { headers: await comSessao(page) })
-      expect(resposta.status(), `${rota} deveria ser 404 para a área técnica`).toBe(404)
+      expect(resposta.status(), `${rota} deveria ser 404 para o gerente de unidade`).toBe(404)
     }
   })
 })
@@ -155,18 +155,18 @@ test.describe('avanço de ciclo', () => {
     await entrarNoPainel(page)
 
     await page.goto('/sistema/cam')
-    await expect(page).toHaveURL(/\/sistema\?abrir=painel-cam#tela-painel-cam$/)
+    await expect(page).toHaveURL(/\/sistema\?abrir=painel-seab#tela-painel-seab$/)
     await expect(page.getByRole('button', { name: CONTROLE })).toBeVisible()
 
     await page.goto('/admin')
     await page.getByLabel('Ver como visitante').check()
-    // 19/09 é a data da s5: a tela da CAM já está liberada para o público.
+    // 19/09 é a data da s5: o painel da SEAB já está liberado para o público.
     await page.getByLabel('Data simulada').fill('2026-09-19')
     await page.getByRole('button', { name: 'Aplicar', exact: true }).click()
 
     await page.goto('/sistema/cam')
     await expect(
-      page.getByRole('heading', { name: 'Funil de lançamento por área' }),
+      page.getByRole('heading', { name: 'Funil de lançamento por unidade' }),
     ).toBeVisible()
     await expect(page.getByRole('button', { name: CONTROLE })).toHaveCount(0)
     // E nem a dica de que existe transição: o visitante não sabe que dá para agir.
@@ -225,12 +225,12 @@ test.describe('o sistema, visto pelo admin', () => {
 
   test('trocar o papel na lista já troca o personagem, sem botão', async ({ page }) => {
     await page.goto('/sistema')
-    await expect(page.getByText('Tutorial guiado para CAM')).toBeVisible()
+    await expect(page.getByText('Tutorial guiado para Coordenação da SEAB')).toBeVisible()
 
-    await page.getByLabel('Estou usando como').selectOption('gestor')
-    await expect(page.getByText('Tutorial guiado para Gestor avaliado')).toBeVisible()
-    // E o tutorial encolhe junto: o gestor tem menos telas que a CAM.
-    await expect(page.getByText(/4 passos/)).toBeVisible()
+    await page.getByLabel('Estou usando como').selectOption('gerente_unidade')
+    await expect(page.getByText('Tutorial guiado para Gerente de unidade')).toBeVisible()
+    // E o tutorial encolhe junto: o gerente tem menos telas que a SEAB.
+    await expect(page.getByText(/6 passos/)).toBeVisible()
   })
 
   /**
@@ -244,16 +244,16 @@ test.describe('o sistema, visto pelo admin', () => {
     await page.getByRole('link', { name: /começar o tutorial/ }).click()
 
     await expect(page).toHaveURL(/passo=1/)
-    // Passo 01 da CAM é o catálogo de indicadores.
-    await expect(page.locator('#alvo-ind-catalogo')).toBeVisible()
-    await expect(page.getByText('veja o que será medido')).toBeVisible()
+    // Passo 01 da SEAB é a régua por tipo de unidade.
+    await expect(page.locator('#alvo-ind-regua')).toBeVisible()
+    await expect(page.getByText('veja a régua de cada tipo de unidade')).toBeVisible()
     // Uma tela só: o sumário e as outras sanfonas saem de cena.
     await expect(page.locator('#tela-auditoria')).toHaveCount(0)
     await expect(page.getByRole('navigation', { name: 'Telas do sistema' })).toHaveCount(0)
 
     await page.getByRole('link', { name: /^próximo/ }).click()
-    await expect(page).toHaveURL(/passo=2#alvo-cam-funil$/)
-    await expect(page.locator('#alvo-cam-funil')).toBeInViewport()
+    await expect(page).toHaveURL(/passo=2#alvo-seab-funil$/)
+    await expect(page.locator('#alvo-seab-funil')).toBeInViewport()
   })
 
   test('sair do tutorial devolve o sistema inteiro', async ({ page }) => {
@@ -266,7 +266,7 @@ test.describe('o sistema, visto pelo admin', () => {
 
   test('passo fora da faixa cai no último em vez de quebrar', async ({ page }) => {
     await page.goto('/sistema?passo=999')
-    // A CAM tem 9 passos; o 999 digitado à mão vira o 09, não um 404.
+    // A SEAB tem 9 passos; o 999 digitado à mão vira o 09, não um 404.
     await expect(page.getByText(/passo 09 de 09/)).toBeVisible()
   })
 
@@ -307,11 +307,11 @@ test.describe('o sistema, visto pelo admin', () => {
     const resposta = await page.request.post('/api/sistema/lancamento', {
       headers: await comSessao(page),
       form: {
-        indicadorId: 'aps-cobertura-esf',
+        subindicadorId: 'absenteismo-taxa',
+        unidadeId: 'usf-sabia',
         cicloId: 'ciclo-2026-06',
         valor: '-5',
         evidencia: 'x',
-        area: 'aps',
       },
       maxRedirects: 0,
     })
@@ -321,11 +321,11 @@ test.describe('o sistema, visto pelo admin', () => {
 
   test('o painel da gestão anonimiza e exporta', async ({ page }) => {
     await page.goto('/sistema?abrir=painel-gestao')
-    await expect(page.getByRole('heading', { name: 'Ranking por área' })).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'Ranking das unidades' })).toBeVisible()
 
     await page.getByLabel('Esconder os nomes').check()
     await page.getByRole('button', { name: 'Aplicar' }).click()
-    await expect(page.getByText('gestor 01')).toBeVisible()
+    await expect(page.getByText('unidade 01')).toBeVisible()
 
     const csv = await page.request.get('/api/sistema/exportar?ciclo=ciclo-2026-04&anonimo=1', {
       headers: await comSessao(page),
