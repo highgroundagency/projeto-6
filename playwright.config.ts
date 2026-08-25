@@ -55,6 +55,8 @@ export default defineConfig({
     env: {
       ADMIN_COOKIE_SECRET: 'segredo-de-teste-e2e-com-tamanho-suficiente',
       ADMIN_SENHA: '0321',
+      // Chave do link da vitrine pessoal, só para a suíte exercitar a rota.
+      CHAVE_VITRINE: 'chave-de-teste-e2e-da-vitrine-pessoal',
       // Vitrine fechada: a suíte exercita o comportamento normal do site. Com a
       // vitrine aberta, todo ciclo fica visível e metade das asserções de gate
       // deixaria de medir qualquer coisa. Ver ADR-021.

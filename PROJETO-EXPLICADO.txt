@@ -270,6 +270,12 @@ Quem opera isso é o painel do dono (rota /admin, sem nenhum link no
 site, protegido por senha configurada fora do código). O painel decide
 QUANDO o que já existe fica visível; ele não edita texto nenhum.
 
+E para só OLHAR tudo pronto, sem senha e sem painel, existe o link da
+vitrine pessoal: uma URL com uma chave secreta que abre, só para aquele
+navegador, o site completo como se o semestre já tivesse acabado. A
+chave fica fora do código e a análise de segurança dela está em
+docs/seguranca.md.
+
 ------------------------------------------------------------
 10. O SISTEMA POR DENTRO: OS 4 PAPÉIS
 ------------------------------------------------------------

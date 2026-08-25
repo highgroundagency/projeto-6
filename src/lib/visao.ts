@@ -20,6 +20,7 @@ import {
   type ResumoRelease,
   type Travas,
 } from './releases'
+import { NOME_COOKIE_VITRINE, vitrineValida } from './vitrine-pessoal'
 
 const cicloIdSchema = z.enum(IDS_CICLOS as unknown as [CicloId, ...CicloId[]])
 
@@ -69,6 +70,11 @@ export interface Visao {
    * sozinho quando o prazo vence. Ver `janelaAberta` em releases.ts.
    */
   janelaAberta: boolean
+  /**
+   * Vitrine pessoal: ESTE visitante entrou pelo link com chave e vê o site
+   * inteiro com a data simulada, sem ser admin. Ver src/lib/vitrine-pessoal.ts.
+   */
+  vitrinePessoal: boolean
 }
 
 async function lerSessaoAdmin(): Promise<boolean> {
@@ -81,6 +87,18 @@ async function lerSessaoAdmin(): Promise<boolean> {
   }
   const cookieStore = await cookies()
   return sessaoValida(cookieStore.get(NOME_COOKIE_SESSAO)?.value, segredo)
+}
+
+async function lerVitrinePessoal(): Promise<boolean> {
+  let segredo: string
+  try {
+    segredo = obterSegredo()
+  } catch {
+    // Sem segredo de assinatura não há cookie confiável: vitrine fechada.
+    return false
+  }
+  const cookieStore = await cookies()
+  return vitrineValida(cookieStore.get(NOME_COOKIE_VITRINE)?.value, segredo)
 }
 
 async function lerOverlay(admin: boolean): Promise<Overlay | null> {
@@ -121,6 +139,11 @@ export async function obterVisao(agora: Date = new Date()): Promise<Visao> {
   // A janela abre para todo mundo, não só para quem tem sessão.
   const aberta = janelaAberta(process.env, agora)
 
+  // A vitrine pessoal abre o mesmo site inteiro, mas só para quem entrou pelo
+  // link com chave: mesmo efeito da janela, escopo de um navegador.
+  const vitrinePessoal = await lerVitrinePessoal()
+  const vitrineParaEsteVisitante = aberta || vitrinePessoal
+
   // Duas fontes de data simulada, com precedências diferentes:
   //
   //  - a da JANELA vale para todo visitante e move o calendário do site inteiro;
@@ -130,7 +153,7 @@ export async function obterVisao(agora: Date = new Date()): Promise<Visao> {
   // A da janela vem primeiro porque é um estado do ambiente: se o site está
   // sendo mostrado como se fosse dezembro, o admin também precisa ver dezembro,
   // senão ele confere uma coisa e o professor vê outra.
-  const dataDaJanela = aberta ? dataSimuladaDaJanela() : null
+  const dataDaJanela = vitrineParaEsteVisitante ? dataSimuladaDaJanela() : null
   const dataDoOverlay =
     overlay?.dataSimulada && ehDataISO(overlay.dataSimulada) ? overlay.dataSimulada : null
 
@@ -149,6 +172,7 @@ export async function obterVisao(agora: Date = new Date()): Promise<Visao> {
   return {
     admin,
     janelaAberta: aberta,
+    vitrinePessoal,
     modoCompleto,
     verComoVisitante,
     hoje,
@@ -160,7 +184,7 @@ export async function obterVisao(agora: Date = new Date()): Promise<Visao> {
     // "ver como visitante" continua vencendo o modo completo, mas NÃO vence a
     // janela — se o site está aberto ao público, a prévia tem que mostrar isso.
     visiveis:
-      modoCompleto || aberta
+      modoCompleto || vitrineParaEsteVisitante
         ? [...IDS_CICLOS]
         : ciclosVisiveis({ releaseAtual: release.releaseAtual, travas }),
     configGlobal,

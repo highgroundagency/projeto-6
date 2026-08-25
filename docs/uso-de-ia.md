@@ -47,6 +47,7 @@ Regras que a equipe adotou:
 | 16/08/2026 | s2 | Claude (Anthropic) | Implementação da identidade "folha de especificação" a partir de direção de arte escrita pela equipe: tokens, tipografia, blocos de borda colapsada, fluxo vertical e conferência de contraste (ADR-016 e ADR-017) | `src/app/globals.css`, `src/components/base/`, `src/app/page.tsx` | pendente |
 | 23/08/2026 | s3 | Claude (Anthropic) | Diagnóstico das falhas de CI a partir dos logs do Actions e correção das duas causas: fontes passam a ser arquivo versionado lido por `next/font/local` (ADR-028) e testes de ponta a ponta deixam de embutir data e id de ciclo (ADR-029) | `src/app/layout.tsx`, `src/fontes/`, `src/lib/fontes.test.ts`, `e2e/cronograma.ts`, `e2e/*.spec.ts`, `src/lib/cronograma.test.ts` | pendente |
 | 25/08/2026 | s3 | Claude (Anthropic) | Guia do projeto em linguagem simples para alinhamento da equipe, escrito a partir do conteúdo já versionado | `PROJETO-EXPLICADO.txt` | pendente |
+| 25/08/2026 | s3 | Claude (Anthropic) | Link da vitrine pessoal: visão completa por URL com chave, cookie assinado, faixa própria e análise de superfície de ataque (ADR-030) | `src/lib/vitrine-pessoal.ts`, `src/app/vitrine/`, `src/lib/visao.ts`, `src/components/base/faixa-admin.tsx`, `docs/seguranca.md`, `docs/releases.md` | pendente |
 
 ## O que a IA **não** fez
 

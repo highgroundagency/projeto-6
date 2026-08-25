@@ -108,6 +108,28 @@ A faixa do topo muda para laranja e mostra a data simulada.
 
 **Voltar tudo ao normal.** Painel → "Limpar simulação". O overlay da sessão é apagado.
 
+## O link da vitrine pessoal
+
+Para só OLHAR o projeto completo, senha e painel são atrito. Com `CHAVE_VITRINE`
+configurada no ambiente, o link
+
+```
+https://<site>/vitrine/<chave>
+```
+
+grava um cookie assinado nesse navegador e ele passa a ver o site inteiro com a data
+simulada da vitrine (2027, semestre encerrado), como se a janela da ADR-021 estivesse
+aberta só para ele. Uma faixa discreta no topo lembra que aquilo não é o recorte público,
+com o caminho de saída (`/vitrine/sair`). O cookie dura 150 dias.
+
+O que o link NÃO dá: painel, faixa de admin, avanço de ciclo. É visão, não operação. Chave
+errada, chave curta ou variável ausente respondem o mesmo 404 de rota inexistente, e as
+tentativas passam pelo mesmo limitador do login. A chave é o link: escolha um valor longo e
+aleatório e não a versione. Trocar `CHAVE_VITRINE` fecha a porta para quem tem o link
+antigo; cookies já emitidos continuam valendo até expirar, e a revogação imediata é trocar
+`ADMIN_COOKIE_SECRET` (que também derruba as sessões do painel). Ver ADR-030 e
+docs/seguranca.md.
+
 ## Conferir que nada vazou
 
 ```bash

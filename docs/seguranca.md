@@ -108,6 +108,35 @@ visitantes daquela instância. Três ações escrevem ali, e elas não são equi
 O risco residual é o de qualquer protótipo com escrita aberta: alguém polui a base sintética
 com lançamentos. Reseta no redeploy, aparece na auditoria e não expõe ninguém.
 
+## O link da vitrine pessoal como superfície de ataque
+
+A ADR-030 criou uma URL-capacidade: `/vitrine/<chave>` concede, a quem tem a chave, a visão
+do site inteiro com data simulada. Régua igual à do resto:
+
+- **O que a chave protege.** Só leitura antecipada de conteúdo acadêmico que será público ao
+  longo do semestre. Nenhum dado real, nenhuma escrita: o link não dá painel, não avança
+  ciclo, não edita nada. O pior cenário de vazamento do link é alguém ver as entregas antes
+  da data, que é exatamente o que a janela da vitrine já faz de propósito quando aberta.
+- **Formato e conferência.** A chave vem de `CHAVE_VITRINE` (mínimo 16 caracteres; ausente ou
+  curta, a rota falha fechada com 404). A conferência usa o mesmo caminho da senha do painel:
+  HMAC dos dois lados e comparação em tempo constante, então nem o conteúdo nem o comprimento
+  vazam pelo tempo de resposta. Chave errada passa pelo mesmo limitador de tentativas do
+  login e responde o mesmo 404 de rota inexistente.
+- **O cookie.** `prumo_vitrine`, httpOnly, validade de 150 dias, assinado com um segredo
+  DERIVADO de `ADMIN_COOKIE_SECRET`, e não com ele diretamente. A derivação é separação de
+  domínio: sem ela, o payload da vitrine satisfaria os campos que `sessaoValida` confere, e
+  copiar o valor de `prumo_vitrine` para `prumo_admin` viraria uma sessão administrativa.
+  Há teste de unidade provando a recusa nas duas direções. Presença de cookie sem
+  assinatura válida não concede nada.
+- **URL é lugar ruim para segredo, e está declarado.** A chave aparece no histórico do
+  navegador de quem a usa e pode aparecer em logs de acesso da plataforma. É um risco aceito
+  para este caso (capacidade de leitura, dados sintéticos); num sistema real, capacidade em
+  URL pediria expiração curta e uso único.
+- **Revogação em dois níveis.** Trocar `CHAVE_VITRINE` impede novos acessos pelo link antigo,
+  mas NÃO invalida cookies já emitidos, que valem até expirar. A revogação imediata é trocar
+  `ADMIN_COOKIE_SECRET`, que derruba junto as sessões do painel. A assimetria está aqui por
+  escrito para ninguém descobri-la durante um incidente.
+
 ## Limitações conhecidas
 
 1. O seletor de perfil não é autenticação. Está rotulado como tal no código e na tela, mas

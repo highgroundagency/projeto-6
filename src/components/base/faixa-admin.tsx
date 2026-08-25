@@ -39,6 +39,39 @@ export function FaixaAdmin({ visao }: { visao: Visao }) {
     )
   }
 
+  // Vitrine pessoal: quem entrou pelo link com chave. Vem antes da faixa de
+  // admin porque é ela que explica por que o calendário está em outra data —
+  // e só o dono do link chega a ver esta faixa.
+  if (visao.vitrinePessoal) {
+    return (
+      <div className="sem-impressao flex flex-wrap items-center justify-between gap-x-4 gap-y-1 border-b border-linha-alta bg-superficie px-4 py-1.5 text-xs text-apagado sm:px-8">
+        <span className="rotulo text-inherit">
+          Vitrine pessoal: o site como ficará depois da entrega final
+        </span>
+        <span className="flex flex-wrap items-center gap-x-3 gap-y-1 lowercase">
+          {visao.dataSimulada ? (
+            <span>
+              simulando <Num>{formatarBR(visao.dataSimulada)}</Num> · hoje é de fato{' '}
+              <Num>{formatarBR(visao.hojeReal)}</Num>
+            </span>
+          ) : (
+            <span>todos os ciclos visíveis</span>
+          )}
+          {/* Formulário, não `next/link`: a rota apaga cookie e redireciona,
+              e o roteador do cliente não tem o que fazer com isso. */}
+          <form action="/vitrine/sair" method="get" className="inline">
+            <button
+              type="submit"
+              className="cursor-pointer underline underline-offset-4 transition-colors hover:text-acento"
+            >
+              sair
+            </button>
+          </form>
+        </span>
+      </div>
+    )
+  }
+
   if (!visao.admin) return null
 
   const completo = visao.modoCompleto

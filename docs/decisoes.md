@@ -684,3 +684,39 @@ nada a quem lê.
 de calendário. O que sobrou embutido é deliberado: o teste da vitrine fixa `2026-10-03` porque
 o ponto dele é justamente simular uma data, e ali o número é o objeto do teste, não uma
 suposição sobre quando alguém vai rodá-lo.
+
+---
+
+## ADR-030 · Um link com chave abre a visão completa, sem senha e sem painel
+
+**Contexto.** Ver o projeto completo, com todas as entregas e o sistema inteiro como
+estarão depois do SR2, exigia o ritual do painel: abrir `/admin/entrar`, digitar a senha,
+marcar "ver como visitante", preencher uma data simulada. Para OPERAR o site esse ritual se
+justifica; para só olhar, que é o uso de todo dia, ele é atrito puro. O pedido foi direto:
+"um link separado, que só eu tenha, que dá para ver o sistema completo como se estivéssemos
+em 2027".
+
+**Decisão.** Uma URL-capacidade: `/vitrine/<chave>`. A chave vem de `CHAVE_VITRINE`, fora
+do código, porque o repositório é público e chave versionada seria um link público com
+outro nome. Chave certa grava um cookie assinado (`prumo_vitrine`, 150 dias) e aquele
+navegador passa a ver o site como se a janela da vitrine (ADR-021) estivesse aberta só para
+ele: todos os ciclos, todas as telas, com a mesma data simulada da vitrine. Uma faixa
+discreta no topo diz o que está acontecendo e dá a saída (`/vitrine/sair`).
+
+O link é deliberadamente MENOS que o painel: não dá sessão de admin, não mostra a faixa de
+modo completo, não avança ciclo. Visão, não operação. O painel continua existindo para
+operar.
+
+Reuso em vez de invenção: a conferência da chave é a mesma da senha (HMAC dos dois lados,
+comparação em tempo constante), o cookie usa a mesma assinatura da sessão, a rota passa pelo
+mesmo limitador de tentativas do login, e a visão reaproveita o caminho da janela da
+vitrine em `obterVisao`. O que a decisão acrescentou de novo são ~90 linhas de módulo e duas
+rotas.
+
+**Consequência.** Falha fechado três vezes: sem `CHAVE_VITRINE`, sem `ADMIN_COOKIE_SECRET`
+ou com chave errada, a resposta é o mesmo 404 de rota inexistente (§6.2: da porta, "não
+configurado", "não existe" e "não é seu" são indistinguíveis). O §6.3 fica suspenso só para
+o portador do cookie, como já ficava para todos com a janela aberta; o script de vazamento
+roda sem cookie e continua provando o comportamento público. A análise de superfície de
+ataque, incluindo a assimetria de revogação (trocar a chave não mata cookies já emitidos;
+trocar o segredo mata), está em docs/seguranca.md.
