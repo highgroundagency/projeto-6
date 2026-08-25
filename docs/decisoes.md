@@ -708,9 +708,10 @@ modo completo, não avança ciclo. Visão, não operação. O painel continua ex
 operar.
 
 Reuso em vez de invenção: a conferência da chave é a mesma da senha (HMAC dos dois lados,
-comparação em tempo constante), o cookie usa a mesma assinatura da sessão, a rota passa pelo
-mesmo limitador de tentativas do login, e a visão reaproveita o caminho da janela da
-vitrine em `obterVisao`. O que a decisão acrescentou de novo são ~90 linhas de módulo e duas
+comparação em tempo constante), o cookie usa a mesma assinatura da sessão, a rota usa o mesmo
+mecanismo de limite de tentativas do login (num balde próprio, para um não zerar nem
+bloquear o outro), e a visão reaproveita o caminho da janela da vitrine em `obterVisao`,
+com a sessão de admin vencendo o cookie para a prévia de visitante não mentir. O que a decisão acrescentou de novo são ~90 linhas de módulo e duas
 rotas.
 
 **Consequência.** Falha fechado três vezes: sem `CHAVE_VITRINE`, sem `ADMIN_COOKIE_SECRET`

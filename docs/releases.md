@@ -124,7 +124,7 @@ com o caminho de saída (`/vitrine/sair`). O cookie dura 150 dias.
 
 O que o link NÃO dá: painel, faixa de admin, avanço de ciclo. É visão, não operação. Chave
 errada, chave curta ou variável ausente respondem o mesmo 404 de rota inexistente, e as
-tentativas passam pelo mesmo limitador do login. A chave é o link: escolha um valor longo e
+tentativas passam por um limitador igual ao do login, num balde próprio. A chave é o link: escolha um valor longo e
 aleatório e não a versione. Trocar `CHAVE_VITRINE` fecha a porta para quem tem o link
 antigo; cookies já emitidos continuam valendo até expirar, e a revogação imediata é trocar
 `ADMIN_COOKIE_SECRET` (que também derruba as sessões do painel). Ver ADR-030 e

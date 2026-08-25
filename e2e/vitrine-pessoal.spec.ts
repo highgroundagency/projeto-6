@@ -43,6 +43,25 @@ test.describe('vitrine pessoal', () => {
     await expect(page.getByText('Vitrine pessoal', { exact: false })).toHaveCount(0)
   })
 
+  test('a sessão de admin vence o cookie: a prévia de visitante não mente', async ({
+    page,
+  }) => {
+    // Jornada real da equipe: clicou o link uma vez (cookie de 150 dias), depois
+    // abriu o painel para conferir o recorte público. Se o cookie vencesse, o
+    // "ver como visitante" mostraria 2027 enquanto o visitante real vê agosto.
+    await page.goto(`/vitrine/${CHAVE}`)
+    await expect(page.getByText('Vitrine pessoal', { exact: false })).toBeVisible()
+
+    await page.goto('/admin/entrar')
+    await page.getByLabel('Senha').fill('0321')
+    await page.getByRole('button', { name: 'Entrar' }).click()
+    await expect(page).toHaveURL(/\/admin$/)
+
+    await page.goto('/')
+    await expect(page.getByText('Modo completo: visível só para você')).toBeVisible()
+    await expect(page.getByText('Vitrine pessoal', { exact: false })).toHaveCount(0)
+  })
+
   test('sem o cookie, nada muda para o visitante comum', async ({ page }) => {
     await page.goto('/')
     expect(await page.content()).not.toContain(marcador(CICLO_OCULTO))

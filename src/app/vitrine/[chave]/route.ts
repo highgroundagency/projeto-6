@@ -23,8 +23,11 @@ import {
  * página; qualquer outra coisa é 404 igual ao de rota inexistente, sem
  * distinguir "chave errada" de "não configurado" (§6.2).
  *
- * O mesmo limitador de tentativas do login vale aqui: chave é credencial, e
- * credencial adivinhável em loop não é credencial.
+ * O limitador de tentativas usa o mesmo mecanismo do login, mas num BALDE
+ * PRÓPRIO por IP. Compartilhar o balde parecia reuso e era furo duplo: o
+ * acerto da chave zerava o contador de senhas erradas do painel (força bruta
+ * de senha intercalada com visitas ao link nunca atingiria o limite), e cinco
+ * chutes de chave por terceiros bloqueariam o login do admin naquele IP.
  */
 
 function naoExiste() {
@@ -46,23 +49,19 @@ export async function GET(
     return naoExiste()
   }
 
-  const ip = ipDaRequisicao(requisicao.headers)
-  if (!verificarLimite(ip).permitido) return naoExiste()
+  const balde = `vitrine:${ipDaRequisicao(requisicao.headers)}`
+  if (!verificarLimite(balde).permitido) return naoExiste()
 
+  // O Next já entrega o segmento percent-decodificado; decodificar de novo
+  // quebraria chave que contenha `%` seguido de dois dígitos hex.
   const { chave } = await params
-  let informada: string
-  try {
-    informada = decodeURIComponent(chave)
-  } catch {
-    informada = chave
-  }
 
-  if (!(await chaveVitrineConfere(informada, esperada))) {
-    registrarTentativa(ip)
+  if (!(await chaveVitrineConfere(chave, esperada))) {
+    registrarTentativa(balde)
     return naoExiste()
   }
 
-  limparTentativas(ip)
+  limparTentativas(balde)
   const resposta = redirecionar('/')
   resposta.cookies.set(
     NOME_COOKIE_VITRINE,

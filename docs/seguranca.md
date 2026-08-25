@@ -120,8 +120,10 @@ do site inteiro com data simulada. Régua igual à do resto:
 - **Formato e conferência.** A chave vem de `CHAVE_VITRINE` (mínimo 16 caracteres; ausente ou
   curta, a rota falha fechada com 404). A conferência usa o mesmo caminho da senha do painel:
   HMAC dos dois lados e comparação em tempo constante, então nem o conteúdo nem o comprimento
-  vazam pelo tempo de resposta. Chave errada passa pelo mesmo limitador de tentativas do
-  login e responde o mesmo 404 de rota inexistente.
+  vazam pelo tempo de resposta. Chave errada passa por um limitador de tentativas com o mesmo
+  mecanismo do login, mas num balde próprio por IP: balde compartilhado deixaria o acerto
+  da chave zerar o contador de senhas erradas do painel, e chutes de chave bloqueariam o
+  login do admin. A resposta é o mesmo 404 de rota inexistente.
 - **O cookie.** `prumo_vitrine`, httpOnly, validade de 150 dias, assinado com um segredo
   DERIVADO de `ADMIN_COOKIE_SECRET`, e não com ele diretamente. A derivação é separação de
   domínio: sem ela, o payload da vitrine satisfaria os campos que `sessaoValida` confere, e

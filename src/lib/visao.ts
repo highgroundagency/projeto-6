@@ -72,7 +72,8 @@ export interface Visao {
   janelaAberta: boolean
   /**
    * Vitrine pessoal: ESTE visitante entrou pelo link com chave e vê o site
-   * inteiro com a data simulada, sem ser admin. Ver src/lib/vitrine-pessoal.ts.
+   * inteiro com a data simulada. Sempre false com sessão de admin: a sessão
+   * vence o cookie, que fica inerte. Ver src/lib/vitrine-pessoal.ts.
    */
   vitrinePessoal: boolean
 }
@@ -141,7 +142,15 @@ export async function obterVisao(agora: Date = new Date()): Promise<Visao> {
 
   // A vitrine pessoal abre o mesmo site inteiro, mas só para quem entrou pelo
   // link com chave: mesmo efeito da janela, escopo de um navegador.
-  const vitrinePessoal = await lerVitrinePessoal()
+  //
+  // A SESSÃO DE ADMIN VENCE O COOKIE DA VITRINE. A janela pode vencer o
+  // overlay porque é estado global: o professor está vendo aquilo, então o
+  // admin precisa ver igual. O cookie da vitrine é o oposto, ninguém além
+  // deste navegador o tem; se ele vencesse, o "ver como visitante" de quem
+  // clicou o link uma vez mostraria o site de 2027 por 150 dias, enquanto o
+  // visitante real vê o recorte normal, e a prévia mentiria exatamente sobre
+  // o que ela existe para conferir. Para o admin, o cookie fica inerte.
+  const vitrinePessoal = (await lerVitrinePessoal()) && !admin
   const vitrineParaEsteVisitante = aberta || vitrinePessoal
 
   // Duas fontes de data simulada, com precedências diferentes:
