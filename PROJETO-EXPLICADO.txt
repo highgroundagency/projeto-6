@@ -1,0 +1,836 @@
+============================================================
+PRUMO, EXPLICADO DO ZERO
+um guia para a equipe, escrito para qualquer pessoa entender
+============================================================
+
+CESAR School, Sistemas de Informação, 2026.2, Projeto 6, Equipe 2.
+Caso: gratificação por desempenho da Secretaria de Saúde do Recife (SESAU).
+
+PARA QUE SERVE ESTE ARQUIVO
+
+Este texto explica o projeto inteiro: o problema, o que a pesquisa
+descobriu, o que foi construído, como cada parte funciona e por que cada
+decisão foi tomada. Foi escrito em linguagem simples de propósito, com
+comparações do dia a dia, para que qualquer pessoa da equipe consiga
+explicar o projeto sem decorar nada.
+
+Duas formas de usar:
+1. Ler de ponta a ponta (uns 25 minutos). Depois disso você consegue
+   apresentar qualquer parte do projeto.
+2. Colar este arquivo inteiro numa IA (Claude, ChatGPT, qualquer uma) e
+   perguntar o que quiser: "me explica a parte do cálculo", "o que eu
+   respondo se o professor perguntar X". O arquivo foi escrito também
+   para isso: ele é o contexto completo do projeto.
+
+Existe um irmão maior deste arquivo: o DOSSIE.txt, na mesma pasta. Ele é
+gerado automaticamente a partir do código e traz o conteúdo literal de
+tudo (cada semana, cada documento, cada tela). Este aqui explica; aquele
+lá transcreve.
+
+------------------------------------------------------------
+1. O PROJETO EM UM PARÁGRAFO
+------------------------------------------------------------
+
+Desde 2023, a Secretaria de Saúde do Recife paga um extra no salário de
+gestores quando as metas da saúde são batidas. A conta desse extra é
+feita à mão, em planilhas, por uma comissão pequena. Isso dá erro, dá
+retrabalho e ninguém consegue conferir de onde veio cada número. Nosso
+projeto é um sistema web que faz essa conta de um jeito que qualquer
+pessoa consegue conferir: a regra fica guardada com versão, cada número
+mostra o caminho que percorreu, e nada do histórico pode ser apagado.
+O nome do produto é Prumo.
+
+A pergunta que guia tudo (está no topo do site):
+
+  "Como tornar o cálculo da gratificação confiável, transparente,
+   sustentável e auditável?"
+
+------------------------------------------------------------
+2. O PROBLEMA, DO JEITO QUE ELE EXISTE HOJE
+------------------------------------------------------------
+
+Imagine a cena. Todo mês, dezenas de números chegam de várias áreas da
+saúde (vacinação, farmácia, urgência...). Uma comissão chamada CAM
+(Comissão de Avaliação de Metas) copia esses números para uma planilha
+gigante, aplica fórmulas e chega numa nota para cada gestor. Essa nota
+decide quanto de gratificação a pessoa recebe.
+
+O que quebra nesse processo, etapa por etapa (isso veio da nossa
+pesquisa da Semana 2):
+
+- COLETA: cada área manda os números por planilha ou e-mail, cada uma
+  num formato. Nada é validado na origem.
+- CONSOLIDAÇÃO: alguém copia tudo à mão para a planilha mestre. Erro de
+  digitação passa batido.
+- CÁLCULO: as fórmulas ficam escondidas dentro das células. A regra da
+  portaria (o documento oficial que define as metas) existe só
+  "traduzida" em fórmula, e ninguém garante que a tradução está certa.
+- CONFERÊNCIA: é feita no olho, lendo linha por linha. Não existe como
+  refazer o caminho de um número.
+- DIVULGAÇÃO: o resultado vai para o gestor. Se ele discorda, vira uma
+  troca de e-mails sem fim.
+
+E tem o problema humano: o processo inteiro mora na cabeça de poucas
+pessoas. Uma frase da nossa persona principal resume: "Se mexer numa
+fórmula, tenho que conferir a planilha inteira de novo." Uma tentativa
+anterior de automatizar isso foi abandonada por falta de recursos.
+
+Associação simples: é como uma conta de restaurante gigante feita a
+lápis, por uma pessoa só, sem mostrar os itens. Pode até estar certa,
+mas ninguém consegue conferir, e se a pessoa faltar, ninguém mais sabe
+fechar a conta.
+
+------------------------------------------------------------
+3. AS PESSOAS PARA QUEM O SISTEMA EXISTE (PERSONAS)
+------------------------------------------------------------
+
+A pesquisa definiu três personas (pessoas inventadas que representam
+quem vive o problema). Nenhuma é pessoa real.
+
+A ANALISTA DA CAM (persona principal)
+  Opera a planilha mestre há três ciclos, sabe as regras de cor, é quem
+  todo mundo procura quando há contestação. Precisa fechar o mês sem
+  medo de ter errado uma fórmula. O maior medo dela: descobrir um erro
+  depois do pagamento. Escolhemos ela como principal porque é quem
+  carrega o processo hoje: se a solução não servir para ela, não serve
+  para ninguém.
+
+O GESTOR DE ÁREA TÉCNICA
+  Responde por informar de 4 a 8 números da área dele, sempre em cima do
+  prazo. Precisa saber exatamente o que informar e até quando. Teme ser
+  cobrado por um dado que ele já enviou.
+
+A COORDENADORA AVALIADA
+  Recebe a gratificação e vê só o resultado final, sem o caminho.
+  Precisa entender por que o valor foi aquele. Teme ser avaliada por um
+  dado que ela não pôde conferir.
+
+Repare que as três dores são a mesma dor vista de ângulos diferentes:
+falta de rastro. É por isso que a funcionalidade central do produto é a
+memória de cálculo (seção 8).
+
+------------------------------------------------------------
+4. POR QUE CONSTRUIR EM VEZ DE USAR ALGO PRONTO
+------------------------------------------------------------
+
+Na Semana 2 a gente comparou cinco tipos de ferramenta que já existem
+(benchmarking):
+
+- Painéis públicos de indicadores: bonitos para divulgar, mas não
+  calculam dinheiro nem guardam trilha de decisão.
+- Sistemas de metas do SUS: usam o vocabulário certo, mas a regra de
+  cálculo é fixa; a nossa portaria muda, então a regra precisa ser
+  configurável.
+- Ferramentas de OKR (metas de empresa): boas para acompanhar objetivos,
+  mas score de empresa não é ato administrativo que vira dinheiro em
+  folha, e licença por usuário não cabe num órgão público.
+- A própria planilha da CAM: flexível e de graça, mas sem trilha, sem
+  versão, sem controle de acesso, e com o conhecimento preso em quem a
+  escreveu.
+
+Conclusão literal da pesquisa: "nenhuma ferramenta pronta cobre a
+combinação regra normativa versionada + memória de cálculo + trilha de
+auditoria". Essa combinação é o coração do problema. Por isso a decisão
+foi construir.
+
+O SWOT (forças, fraquezas, oportunidades e ameaças) registrou com
+honestidade: nossa força é ter um cliente real com regra explícita, que
+dá para modelar e testar; nossa fraqueza é não ter acesso à portaria
+vigente e ninguém da equipe conhecer o processo por dentro; a
+oportunidade é a demanda represada (já tentaram automatizar e falharam);
+a ameaça é a agenda da CAM não deixar a gente validar com o cliente.
+
+------------------------------------------------------------
+5. COMO A IDEIA FOI ESCOLHIDA (SEMANA 3)
+------------------------------------------------------------
+
+A gente não escolheu a ideia no grito. Primeiro fixamos os critérios
+(impacto, esforço, aderência ao órgão público), DEPOIS geramos as
+ideias. A ordem importa: critério definido depois tende a justificar a
+ideia de quem fala mais alto.
+
+Técnicas usadas: Brainwriting (18 ideias escritas em silêncio),
+Brainstorming (agrupou em 8 alternativas) e Crazy 8's (primeiras telas
+em papel, 8 minutos).
+
+As 8 alternativas, e o destino de cada uma:
+1. Planilha padronizada com travas............ linha de base (guardada
+   de propósito, para comparar na validação)
+2. Formulário de coleta + planilha............ descartada
+3. Sistema web com regra configurável e
+   memória de cálculo......................... ESCOLHIDA
+4. Painel de indicadores sem cálculo.......... descartada
+5. Robô que lê planilhas e consolida.......... descartada
+6. Módulo dentro de um ERP público............ descartada
+7. Aplicativo mobile para o gestor............ adiada
+8. Modelo preditivo de risco.................. incorporada na escolhida
+   (virou a tela de analytics, seção 12)
+
+Por que a 3 ganhou: ela ataca a CAUSA (a regra da portaria hoje só
+existe dentro de fórmulas de planilha) e não o sintoma (planilha
+bonita). E cabe no semestre porque é fatiável: lançamento, cálculo e
+memória até o SR1; auditoria e gestão nas sprints seguintes.
+
+------------------------------------------------------------
+6. A PROPOSTA EM UMA PÁGINA (SEMANA 4)
+------------------------------------------------------------
+
+O QUÊ: um sistema web que substitui a planilha de consolidação da
+gratificação por desempenho.
+
+PARA QUEM: a CAM, as áreas técnicas que informam dados, os gestores
+avaliados e a auditoria.
+
+COMO: indicadores e regras cadastrados pela interface; regra com versão;
+cálculo por função pura (seção 8); memória de cálculo junto de cada
+resultado; trilha de auditoria que não pode ser apagada.
+
+POR QUE AGORA: o processo depende de poucas pessoas e não tem rastro.
+Um erro só aparece depois do pagamento.
+
+COMO SABEMOS QUE DEU CERTO: qualquer número do resultado responde "de
+onde veio?" em um clique, e o mesmo mês recalculado dá sempre o mesmo
+valor.
+
+FORA DO ESCOPO (declarado desde o início): integração com a folha de
+pagamento, login corporativo da prefeitura, migração de dados históricos
+reais, aplicativo mobile. O sistema calcula o percentual devido; pagar é
+trabalho de outro sistema.
+
+O backlog nasceu com 25 histórias em 5 épicos (Ciclo, Indicadores,
+Lançamento, Resultado, Governança), priorizadas por MoSCoW, com os
+"Must" cabendo até o SR1.
+
+------------------------------------------------------------
+7. O NOME
+------------------------------------------------------------
+
+Prumo é aquele peso na ponta de um fio que o pedreiro usa para ver se a
+parede está reta. É isso que o projeto quer ser para essa conta: o jeito
+simples de ver se está tudo no lugar. O fio de prumo diz se algo está
+alinhado, que é exatamente o que falta ao cálculo hoje.
+
+------------------------------------------------------------
+8. O QUE EXISTE HOJE: UM SITE COM DUAS PARTES
+------------------------------------------------------------
+
+O site tem duas camadas, e é importante não confundir:
+
+A PÁGINA (rota /) é o diário do projeto. É o que o professor avalia
+toda semana, no lugar do Google Site. Tem o problema, a equipe, os
+marcos e o registro semanal: cada semana é uma sanfona que abre com um
+clique, com objetivo, avanços, decisões, bloqueios e evidências. Os
+documentos de entrega (SWOT, personas, backlog...) abrem DENTRO da
+própria página: quem avalia clica no título e lê ali, sem baixar PDF,
+sem trocar de aba, sem link que expira.
+
+O SISTEMA (rota /sistema) é o MVP: o produto funcionando, com dados
+100% inventados. É onde estão as 8 telas, os 4 papéis, o cálculo e a
+memória de cálculo.
+
+E como a gente trabalha nele: TODO CONTEÚDO VIVE NO CÓDIGO (no Git),
+não em formulário de admin. Escrever a semana 7 é editar um arquivo,
+revisar e dar merge. Isso dá histórico de graça: dá para provar quando
+cada coisa foi escrita.
+
+A CONTA DA NOTA DO SEMESTRE: cada semana tem um peso na matriz de
+avaliação (a soma dá 115, e sim, é 115 mesmo, o documento do professor
+soma 115 e a gente manteve fiel em vez de corrigir por conta própria).
+Os dois maiores pesos individuais são o SR1 (peso 15, dia 03/10) e o
+SR2 final (peso 18, dia 05/12).
+
+------------------------------------------------------------
+9. O TRUQUE DO CALENDÁRIO (COMO O SITE DECIDE O QUE MOSTRAR)
+------------------------------------------------------------
+
+Associação: o site funciona como um calendário do advento, aquele de
+chocolate em que cada janelinha só abre no dia certo.
+
+A equipe pode escrever o semestre inteiro com antecedência, mas o
+visitante só vê as semanas cuja data já chegou, com uma semana de
+adiantamento (o material entra no ar 7 dias antes, para estar pronto
+quando o professor abrir). Ninguém precisa "publicar" nada: o conteúdo
+entra no código quando fica pronto e aparece sozinho na data certa.
+
+O detalhe técnico que importa: o que ainda não foi liberado NÃO É
+ENVIADO ESCONDIDO para o navegador. Ele simplesmente não entra no HTML.
+Existe um script (npm run verificar-vazamento) que faz dezenas de
+checagens contra o site montado e quebra o build se uma única linha de
+conteúdo futuro vazar. Tela que ainda não existe responde erro 404
+(página não encontrada), nunca "em breve", porque "em breve" entregaria
+de graça o roteiro do que vem por aí.
+
+Existe também um modo demonstração (a "vitrine"): uma janela com hora
+marcada para fechar, tipo timer de forno. Enquanto está aberta, qualquer
+visitante vê o site completo como se o semestre tivesse acabado, com uma
+data simulada. Quando o prazo vence, o site volta sozinho ao recorte
+normal, sem ninguém precisar lembrar de fechar.
+
+Quem opera isso é o painel do dono (rota /admin, sem nenhum link no
+site, protegido por senha configurada fora do código). O painel decide
+QUANDO o que já existe fica visível; ele não edita texto nenhum.
+
+------------------------------------------------------------
+10. O SISTEMA POR DENTRO: OS 4 PAPÉIS
+------------------------------------------------------------
+
+O sistema tem quatro papéis, e um seletor no topo para você "vestir"
+cada um. Trocar o papel muda o que aparece: cada um vê só as telas que
+são dele. Importante: esse seletor é um login SIMULADO, de
+demonstração, e a tela diz isso. Serve para a banca experimentar os
+quatro pontos de vista sem criar conta.
+
+CAM (Comissão de Avaliação de Metas): a dona do processo. Cadastra o
+  que vai ser medido, abre e fecha o prazo do mês, faz a conta, aprova
+  e divulga. Não pode: mudar regra já usada num mês fechado (mudança
+  vira regra NOVA, a antiga fica guardada), pular etapa, apagar
+  histórico. Vê as 8 telas.
+
+ÁREA TÉCNICA: quem produz o dado (a equipe da vacinação, das
+  consultas...). Digita os números da própria área dentro do prazo e
+  diz de onde cada um veio. Não pode: informar fora do prazo, mudar
+  meta ou peso ("quem informa o resultado não escolhe a régua"), ver a
+  nota dos gestores. Vê 1 tela (Lançamento).
+
+GESTOR AVALIADO: quem recebe a nota. Vê a própria nota, abre a conta
+  inteira e, se discordar, pede revisão formal. Não pode: mudar número,
+  ver a nota dos colegas pelo nome, ter a nota decidida por robô. Vê 2
+  telas (Meu resultado e Contestação).
+
+AUDITORIA: o fiscal. Lê o histórico completo, refaz a conta de um mês
+  fechado e confere se dá o mesmo resultado. Não pode escrever NADA:
+  nenhuma tela dá botão de ação a esse perfil, de propósito. É o único
+  papel que enxerga todas as telas.
+
+Cada papel tem um TUTORIAL GUIADO: um passeio passo a passo que abre
+uma tela por vez, desenha um contorno laranja em volta do botão certo e
+explica o que fazer ali. É literalmente pegar na mão.
+
+------------------------------------------------------------
+11. O SISTEMA POR DENTRO: AS 8 TELAS
+------------------------------------------------------------
+
+1. DASHBOARD DA CAM: quem já mandou os números do mês, quem falta, e o
+   botão de avançar a etapa.
+2. INDICADORES E REGRAS: a lista do que é medido, com meta e peso de
+   cada item, e a tabela de pontos. Mostra o diff entre versões da
+   regra (o que mudou da v1 para a v2).
+3. LANÇAMENTO: onde cada área digita os números do mês e diz de onde
+   cada um veio. Recusa entrada inválida.
+4. MEU RESULTADO: a nota do gestor, a conta inteira aberta e a
+   comparação com os meses anteriores.
+5. AUDITORIA: o histórico de tudo. Quem fez o quê, quando, e como
+   estava antes.
+6. PAINEL DA GESTÃO: o resumo geral. Média, ranking das áreas, botão de
+   esconder os nomes (para projetar numa reunião sem constranger
+   ninguém) e exportação em CSV.
+7. ANALYTICS: os sinais dos modelos de machine learning. A tela avisa:
+   nada aqui muda nota.
+8. CONTESTAÇÃO: onde o gestor que discorda pede revisão e acompanha a
+   resposta.
+
+Tudo abre numa página só: você clica no título e a tela abre ali
+embaixo, sem sair do lugar. O índice com ícones fica grudado no topo.
+
+A VIDA DE UM MÊS (os 5 estados do ciclo)
+
+Associação: pense numa prova da escola.
+
+1. RASCUNHO: o mês está sendo preparado. Ninguém informa nada ainda.
+   (A professora está montando a prova.)
+2. LANÇAMENTO ABERTO: o prazo está aberto, cada área informa os números.
+   (A prova está acontecendo.)
+3. EM VALIDAÇÃO: o prazo acabou, a comissão confere antes de calcular.
+   (A professora está corrigindo.)
+4. HOMOLOGADO: a conta foi feita e aprovada.
+   (A nota foi fechada.)
+5. PUBLICADO: o resultado está no ar, cada gestor vê a própria nota.
+   (O boletim foi entregue.)
+
+O mês anda uma etapa por vez, nunca pula, nunca volta. Cada avanço fica
+gravado na trilha com quem fez e quando.
+
+------------------------------------------------------------
+12. A CONTA DA NOTA, COM EXEMPLO
+------------------------------------------------------------
+
+A fórmula que o sistema grava em cada memória de cálculo:
+
+  score = (soma de pontos x peso) / (soma de pesos x pontuação máxima) x 100
+
+Traduzindo em passos:
+
+1. Para cada indicador, calcula o ATINGIMENTO: quanto do combinado foi
+   feito. Se a meta era 100 consultas e teve 88, atingiu 88%. (Para
+   indicador do tipo "quanto menor, melhor", tipo fila de espera, a
+   conta inverte.)
+2. O atingimento cai numa FAIXA DE PONTOS. Na regra v1: menos de 70%
+   dá 0 ponto; de 70% a 85% dá 4; de 85% a 95% dá 7; de 95% a 100% dá
+   9; e 100% ou mais dá 10.
+3. Cada indicador contribui com pontos x peso. Soma tudo, divide pelo
+   máximo possível, multiplica por 100. O resultado é uma nota de 0 a
+   100.
+
+Exemplo com dois indicadores:
+  Indicador A: peso 3, atingiu 100% da meta = 10 pontos. Contribui 30.
+  Indicador B: peso 2, atingiu 88% = 7 pontos. Contribui 14.
+  Máximo possível: (3+2) pesos x 10 pontos = 50.
+  Score = (30+14) / 50 x 100 = 88.
+
+4. A nota cai numa FAIXA DE GRATIFICAÇÃO:
+   abaixo de 50: sem gratificação (0%)
+   50 a 69: parcial (50%)
+   70 a 89: integral (80%)   <- o exemplo acima cai aqui
+   90 ou mais: integral plena (100%)
+
+Duas coisas que fazem essa conta ser confiável:
+
+O MOTOR É UMA FUNÇÃO PURA. Associação: uma calculadora que não tem
+relógio, não tem internet e não joga dado. Mesma entrada, mesma saída,
+sempre. Ela não lê data do sistema, não sorteia nada, não busca nada
+fora. Isso permite à auditoria refazer a conta de 2026-03 daqui a cinco
+anos e chegar no MESMO número.
+
+A REGRA TEM VERSÃO, NUNCA É EDITADA. Associação: não se rabisca uma lei
+publicada; publica-se uma lei nova, e a antiga continua valendo para os
+fatos da época dela. No seed existem a regra-v1 (janeiro a março) e a
+regra-v2 (de abril em diante, com o patamar de entrada subindo de 70%
+para 75%). Um mês fechado com a v1 recalcula com a v1 para sempre.
+
+A MEMÓRIA DE CÁLCULO é o extrato disso tudo. Associação: o extrato do
+banco, ou a conta da padaria feita no papel na sua frente: item por
+item, cada valor, cada peso, cada faixa aplicada, até chegar no total.
+É a resposta permanente à pergunta "de onde veio esse número?".
+
+------------------------------------------------------------
+13. OS DADOS SÃO TODOS INVENTADOS (E ISSO É REGRA, NÃO ACASO)
+------------------------------------------------------------
+
+REGRA NÚMERO 1 DO PROJETO: nenhum dado real de pessoa ou da SESAU entra
+no repositório, nem em prompt de IA. Existe um teste automático que
+QUEBRA O BUILD se um CPF, e-mail ou telefone aparecer na base.
+
+Associação: boneco de crash test. Para testar o carro não se usa gente
+de verdade; para testar o sistema não se usa servidor de verdade.
+
+O que a base sintética simula:
+- 10 áreas da saúde com siglas verossímeis (APS, VIS, REG, AF, SM, URG,
+  SB, GP, PLAN, OUV), tipo Atenção Primária, Vigilância, Farmácia...
+- 10 gestores fictícios, um por área, só com iniciais ("A. Moraes").
+  A entidade Gestor nem TEM campo de CPF, matrícula ou endereço: o que
+  não existe não vaza.
+- 30 indicadores com nomes reais de saúde pública ("Crianças com
+  esquema vacinal em dia", "Tempo médio de regulação de consulta").
+- 6 meses de dados (janeiro a junho de 2026), em estados diferentes:
+  quatro publicados, um homologado, um com lançamento aberto (para o
+  funil da CAM ter pendência de verdade para mostrar).
+- 3 contestações de exemplo (uma em análise, uma acatada, uma recusada).
+- Uma correção de lançamento com antes e depois (uma "vírgula
+  deslocada": valor 10x maior, corrigido), para a auditoria ter uma
+  história real para contar.
+
+E o mais importante: a base é gerada com SEMENTE FIXA (o número 20262).
+Semente é o ponto de partida do gerador de números: mesma semente,
+mesmos dados, sempre. Qualquer pessoa que rodar o projeto vê exatamente
+os mesmos números que a banca viu.
+
+------------------------------------------------------------
+14. AS MATÉRIAS DENTRO DO PROJETO (AS "LENTES")
+------------------------------------------------------------
+
+A matriz do professor exige que o projeto seja analisado por três
+disciplinas: Segurança da Informação, Aprendizado de Máquina e
+Arquitetura Nativa na Nuvem. A equipe acrescentou uma quarta por conta
+própria: Direito (LGPD). Cada uma tem um documento em docs/.
+
+SEGURANÇA (docs/seguranca.md)
+  O sistema foi analisado com dois checklists de mercado: STRIDE (13
+  ameaças mapeadas, cada uma com mitigação e estado) e OWASP Top 10.
+  O mais honesto do documento: o próprio painel de admin é analisado
+  como superfície de ataque que a equipe criou para si mesma, com a
+  mesma régua do resto. Proteções reais implementadas: cookie de sessão
+  assinado com HMAC (uma assinatura criptográfica que denuncia
+  adulteração), comparação em tempo constante, limite de 5 tentativas
+  de senha por 10 minutos, cabeçalhos de segurança, e revalidação da
+  sessão dentro de cada página (não só na porta de entrada). Falha de
+  acesso responde 404 e não "sem permissão": porta que não existe, em
+  vez de porta trancada. Porta trancada conta ao ladrão que há algo
+  dentro.
+
+NUVEM (docs/nuvem.md)
+  O MVP roda em funções serverless. Associação: luz com sensor de
+  presença, que acende só quando alguém entra na sala, em vez de um
+  gerador ligado 24h. Por que isso serve ao caso: o gargalo do processo
+  é de calendário, todas as áreas lançam nos mesmos dois dias do mês.
+  Pico curto e vale longo é exatamente o que serverless resolve. O
+  documento confere os doze fatores (um checklist clássico de app
+  nativo de nuvem) um a um, e declara com todas as letras a ressalva:
+  NENHUMA métrica de produção foi medida; os números de escala são
+  raciocínio de capacidade, não benchmark. Dizer o contrário seria
+  inventar evidência.
+
+MACHINE LEARNING (pasta ml/, tela Analytics)
+  Ver seção 15, ela merece espaço próprio.
+
+DIREITO / LGPD (docs/privacidade.md)
+  Base legal: art. 7º, III da LGPD (execução de política pública). Não
+  se pede consentimento, e nem se deveria: consentimento numa relação
+  chefe-funcionário seria frágil. O artigo central para nós é o art.
+  20: quem é afetado por decisão automatizada tem direito à revisão.
+  Nosso sistema nasce em conformidade: o cálculo é determinístico e
+  aberto (a memória mostra cada passo), os alertas de ML sinalizam e
+  NUNCA decidem, e a decisão continua humana e contestável. Os direitos
+  do art. 18 têm endereço no produto: ver a própria nota (acesso),
+  contestar (correção), ranking sem nomes (anonimização), exportar CSV
+  (portabilidade).
+
+------------------------------------------------------------
+15. MACHINE LEARNING, SEM MISTÉRIO
+------------------------------------------------------------
+
+Regra de ouro, escrita no topo do código: NENHUMA saída dos modelos
+entra no cálculo da gratificação. O modelo informa, não decide. A conta
+que vira dinheiro segue a regra da portaria, determinística.
+
+Como funciona o fluxo: os modelos treinam OFFLINE (no computador de
+quem roda), o resultado vira um arquivo JSON versionado no Git, e o
+site apenas LÊ esse arquivo. Associação: o laboratório faz o exame e
+manda o laudo; o consultório só lê o laudo. O site não carrega nenhuma
+biblioteca de ML.
+
+São 4 modelos publicados, e aqui vem a parte que faz a gente parecer
+gente grande na banca:
+
+1. CLASSIFICAÇÃO "vai bater a meta?": FRACASSOU, e está publicado
+   assim mesmo. O modelo acerta 66,7%, mas chutar sempre "não vai
+   bater" acertaria 83,3%. Por quê? No mês de teste só 5 de 30
+   indicadores batem a meta; a pergunta é ruim para essa base, não o
+   modelo. Manter o fracasso publicado foi decisão: "esconder a que
+   falhou e mostrar só a que deu certo seria escolher a métrica depois
+   de ver o resultado."
+2. CLASSIFICAÇÃO "vai melhorar em relação ao mês passado?": funcionou.
+   76,7% de acerto contra 53,3% do chute. Serve para a CAM saber onde
+   olhar antes que piore.
+3. REGRESSÃO "qual atingimento esperar?": erra em média 0,105, um pouco
+   menos que chutar a média (0,118). Melhor que o chute, mas pouco, e o
+   arquivo diz isso.
+4. CLUSTERING "quais áreas se comportam parecido?": agrupa as 10 áreas
+   em 3 grupos de comportamento ("mais alto e estável", "intermediário
+   e oscilante", "mais baixo e oscilante"). Agrupa ÁREAS, nunca
+   pessoas: clusterizar servidor seria outra conversa jurídica, e não é
+   esta.
+
+Todo modelo é publicado ao lado de uma LINHA DE BASE: um "palpite bobo"
+(chutar sempre a resposta mais comum, ou chutar a média). Um modelo que
+não supera o palpite bobo não aprendeu nada, e é honesto publicar a
+comparação. O JSON de resultados carrega data, semente, commit e este
+aviso: "Nenhum resultado desta lista entra no cálculo da gratificação."
+
+Existem 6 notebooks na pasta ml/notebooks/ (análise exploratória,
+pré-processamento, classificação, regressão, clustering, conclusões),
+que são os cadernos da disciplina de ML.
+
+Detalhe fino que pode cair em pergunta: a separação treino/teste é
+TEMPORAL (treina nos 5 primeiros meses, testa no sexto). Sortear linhas
+misturaria passado e futuro, e o modelo "veria a resposta" antes da
+prova. Isso se chama vazamento temporal, e a gente evitou.
+
+------------------------------------------------------------
+16. O BANCO DE DADOS QUE EXISTE, MAS ESTÁ DESLIGADO
+------------------------------------------------------------
+
+Isso confunde todo mundo, então vale um bloco só para isso.
+
+O app NÃO usa banco de dados. Tudo roda em memória com a base sintética.
+Qualquer pessoa faz git clone && npm run dev e funciona, sem senha de
+nada.
+
+MAS existe um schema PostgreSQL completo, escrito e testado, guardado
+em supabase/migrations/. Ele tem:
+- Controle de acesso NO BANCO (RLS): cada perfil só enxerga as próprias
+  linhas. Associação: um armário onde cada gaveta tem a própria chave.
+  Mesmo alguém falando direto com o banco, sem passar pelo site, um
+  gestor só receberia as próprias notas.
+- 4 travas de aço (gatilhos) que valem até para o administrador do
+  banco: a trilha de auditoria não se apaga nem se edita (caderno de
+  caneta, sem borracha); o ciclo anda um estado por vez e nunca volta;
+  lançamento fora do prazo é recusado pelo próprio banco; regra vigente
+  é imutável, muda-se de versão.
+
+Por que está desligado? Numa fase o banco chegou a estar ligado, e a
+revisão mostrou que o custo não se pagava: exigia contas de
+demonstração para mostrar o que o seletor de perfil já mostrava sem
+login, e quase triplicava o peso do middleware. O critério registrado:
+o que não é rastreável a um requisito do professor é candidato a corte.
+Nada no briefing exige um banco específico.
+
+Associação: a gente construiu o cofre, testou a fechadura contra um
+banco de verdade (os testes rodam no CI contra um PostgreSQL real), e
+deixou o cofre na caixa, documentado. Se o professor pedir persistência,
+ligar é escrever um driver novo do lado do atual; a camada de dados foi
+desenhada para isso.
+
+------------------------------------------------------------
+17. COMO A GENTE SABE QUE FUNCIONA (QUALIDADE)
+------------------------------------------------------------
+
+Números atuais (todos verificáveis rodando npm run verificar):
+
+- 434 testes de unidade (Vitest). Cobrem o motor de cálculo com casos
+  de borda, o motor de releases, datas, seed, admin, contraste de
+  cores, e até coisas como "toda âncora de evidência tem destino" e
+  "nenhum CPF na base".
+- 78 jornadas de ponta a ponta (Playwright), rodadas em tela grande E
+  em celular de 360px. Elas abrem o site de verdade num navegador e
+  clicam: login do admin, os 4 perfis nas 8 telas, o tutorial guiado, a
+  troca de tema, a memória de cálculo, a exportação.
+- 94 checagens de vazamento contra o build de produção: prova de que
+  conteúdo futuro não chega ao navegador.
+- Testes do banco guardado rodam no CI contra um PostgreSQL real.
+- O CI (GitHub Actions) roda tudo isso a cada push.
+
+Uma história recente que vale saber contar: o CI quebrou seis vezes em
+agosto SEM nenhum defeito no código. Era o download das fontes do
+Google falhando na rede do runner durante o build. O mesmo commit
+passava numa branch e quebrava na outra, o que já denunciava: não era o
+código, era sorte de rede. A correção foi guardar as fontes dentro do
+próprio repositório (96 kB), e o build parou de depender de internet.
+Fica a lição, que também está registrada como decisão: build que
+depende de rede quebra por motivos que não são seus.
+
+------------------------------------------------------------
+18. O VISUAL (POR QUE O SITE TEM ESSA CARA)
+------------------------------------------------------------
+
+A identidade se chama "folha de especificação": escuro por padrão, tudo
+em fonte monoespaçada (aquela de código, em que todas as letras têm a
+mesma largura), minúsculas, blocos separados por linhas finas de 1px
+que se encostam como tabela, e UMA cor de destaque só: o laranja da
+CESAR, usado em no máximo três lugares por tela.
+
+Por quê? O produto é uma memória de cálculo auditável. A página PARECE
+o que o produto É: uma ficha técnica, não um panfleto.
+
+Tem modo claro ("papel") com um clique, e a escolha sobrevive à
+navegação. Regra interna: os dois temas mudam onze variáveis de cor e
+NADA mais, nenhum layout diferente. Todos os pares de cor foram
+conferidos por teste automático contra o mínimo de contraste de
+acessibilidade (WCAG AA). Até o tom do laranja muda no modo claro
+(escurece), porque o original não tinha contraste suficiente sobre
+fundo claro, e isso foi medido, não chutado.
+
+------------------------------------------------------------
+19. O CALENDÁRIO DO SEMESTRE
+------------------------------------------------------------
+
+18 ciclos, com data e peso na nota:
+
+  s1   08/08  Semana 1: Partida       peso 3
+  s2   15/08  Semana 2: Imersão       peso 7
+  s3   22/08  Semana 3: Ideação       peso 5   <- estamos aqui (25/08)
+  s4   29/08  Semana 4: Proposta      peso 5
+  i1   05/09  Imprensado              peso 0   (pausa, sem registro)
+  ko   12/09  Kick-off                peso 0   (pitch de 5 min, fala
+                                      dividida entre os 6)
+  s5   19/09  Semana 5: Arquitetura   peso 10
+  s6   26/09  Semana 6: Pré-SR1       peso 5
+  sr1  03/10  SR1                     peso 15  <- primeiro grande marco
+  i2   10/10  Imprensado              peso 0
+  s7   17/10  Semana 7: Sprint 1      peso 8
+  s8   24/10  Semana 8: Sprint 2      peso 8
+  i3   31/10  Imprensado              peso 0
+  s9   07/11  Semana 9: Sprint 3      peso 8
+  s10  14/11  Semana 10: Sprint 4     peso 8
+  s11  21/11  Semana 11: Validação    peso 10  <- entrevistas com a CAM
+  s12  28/11  Semana 12: Pré-SR2      peso 5
+  sr2  05/12  SR2: Final              peso 18  <- entrega final
+
+Soma: 115 (fiel ao documento do professor).
+
+Em paralelo correm os marcos de ML (entrega parcial 23/09, AV1 30/09,
+entrega final 18/11, AV2 02/12) e de Direito (AV1 02/10, AV2 27/11).
+
+As datas moram num arquivo só (src/lib/cronograma.ts). Se uma data
+mudar, muda ali e o site inteiro acompanha: cabeçalho, liberações,
+registro e checklist derivam todos desse arquivo.
+
+------------------------------------------------------------
+20. O QUE ESTÁ PRONTO E O QUE FALTA (SEM MAQUIAGEM)
+------------------------------------------------------------
+
+Existe uma auditoria versionada no código (src/content/auditoria.ts)
+que cruza cada exigência do professor com o lugar do repositório que a
+atende. Placar atual: 24 requisitos rastreados, 18 atendidos, 5
+parciais, 1 fora de escopo. Os parciais, com a ressalva honesta:
+
+- PERFIS DE ACESSO: o recorte por papel é real e roda no servidor, mas
+  quem escolhe o papel é o visitante (login simulado). O controle de
+  acesso de verdade está escrito e testado no schema do banco, que está
+  desligado.
+- REGRAS DA PORTARIA: a equipe não teve acesso à portaria vigente. Os
+  pesos e faixas da base são arbitrados e precisam de conferência com a
+  CAM. Isso está declarado como bloqueio no registro.
+- VALIDAÇÃO COM O CLIENTE: os instrumentos (roteiro de entrevista,
+  questionário) estão prontos; o resultado não existe porque a Semana
+  11 não chegou. Inventar fala de cliente seria fabricar evidência.
+- PLANEJADO x REALIZADO: a coluna "realizado" fica em aberto até o
+  semestre terminar, pelo mesmo motivo.
+- ACESSIBILIDADE: contraste, foco e semântica estão conferidos por
+  teste, mas não houve teste com leitor de tela real nem com pessoas
+  com deficiência. O que temos é um piso, não uma validação de uso.
+
+E o 1 fora de escopo: integração com folha de pagamento, declarada
+desde a Semana 4.
+
+Uma descoberta da auditoria que virou correção: o projeto se descrevia
+como "Projeto, Machine Learning e Direito Digital", mas a matriz nomeia
+as três disciplinas-alvo como Segurança, ML e NUVEM. A palavra
+"Direito" não aparece na matriz. A lente de Nuvem foi escrita e
+entrou; a de Direito ficou, porque sustenta metade dos critérios de
+Segurança e porque um sistema que decide remuneração cai no art. 20 da
+LGPD de qualquer jeito.
+
+------------------------------------------------------------
+21. QUEM FAZ O QUÊ NA EQUIPE
+------------------------------------------------------------
+
+  Gabriel Tenório de Lima Teixeira: Produto e PO. Escopo, backlog,
+    priorização e conversa com a CAM.
+  Matheus Lustosa: Pesquisa e validação. Personas, benchmarking,
+    entrevistas e instrumentos de validação.
+  João Henrique Micucci: Arquitetura e backend. Modelo de dados, motor
+    de cálculo e o schema com RLS.
+  João Pedro Mamede: Front-end e design system. Telas, tokens,
+    acessibilidade e a memória de cálculo na interface. (O nome Prumo
+    foi proposta dele.)
+  Rafael Serpa: Dados e machine learning. Gerador sintético, notebooks,
+    modelos e a tela de analytics.
+  Fernando Cavalcanti: Qualidade, documentação e governança. Testes,
+    documentação técnica, LGPD e registro de uso de IA.
+
+Sobre IA: o projeto usa IA no desenvolvimento e DECLARA isso numa
+página pública (/transparencia-ia) e num registro (docs/uso-de-ia.md)
+onde cada uso tem uma linha com o que foi gerado e QUEM VALIDOU. O lema
+é "gerado não é entregue": nada entra sem um humano da equipe revisar e
+assinar. Várias linhas estão com validação pendente; assinar essas
+linhas é tarefa de todos nós.
+
+------------------------------------------------------------
+22. PERGUNTAS QUE PODEM CAIR (E RESPOSTAS CURTAS)
+------------------------------------------------------------
+
+"Os dados são reais?"
+  Não, e isso é regra com teste automático. Tudo sintético, com semente
+  fixa: os mesmos números aparecem para qualquer pessoa. A entidade
+  Gestor nem tem campo de CPF.
+
+"Por que construir em vez de usar uma ferramenta pronta?"
+  Porque nenhuma ferramenta cobre a combinação regra versionada +
+  memória de cálculo + trilha imutável, e essa combinação É o problema.
+  OKR acompanha meta, não calcula ato administrativo que vira dinheiro.
+
+"O que é a memória de cálculo?"
+  O extrato da nota: cada número, peso e faixa aplicada, até o total.
+  Responde "de onde veio esse número?" em um clique. É a funcionalidade
+  central do produto, decidida na Semana 2.
+
+"A IA/ML decide a nota de alguém?"
+  Nunca. A nota sai de uma conta determinística e aberta. O ML só
+  aponta onde a comissão deveria olhar, e a tela diz isso. Isso também
+  nos deixa em linha com o art. 20 da LGPD.
+
+"Um dos modelos de vocês fracassou?"
+  Sim, e está publicado com o fracasso explicado. O modelo de "vai
+  bater a meta" perde para o chute; o de "vai melhorar" ganha. Esconder
+  o que falhou seria escolher a métrica depois de ver o resultado.
+
+"Cadê o banco de dados?"
+  Escrito, testado contra PostgreSQL real, e desligado por decisão de
+  escopo documentada. O app roda em memória. Religar é escrever um
+  driver, a camada de dados já espera por ele.
+
+"Vocês tiveram acesso à portaria?"
+  Não, e está declarado como bloqueio. Os indicadores são verossímeis e
+  fictícios; a conferência com a CAM está no plano da validação.
+
+"Por que tela sem permissão dá 404 e não 'acesso negado'?"
+  Porque 'acesso negado' confirma que a coisa existe. Da porta para
+  fora, "ainda não liberado" e "não é seu" são indistinguíveis, de
+  propósito.
+
+"Como o professor vê o andamento?"
+  Abrindo o site. A semana atual aparece sozinha na data certa, com uma
+  semana de antecedência. Os documentos abrem dentro da página, sem
+  PDF, sem link externo.
+
+"E se cair na pergunta 'o que falta'?"
+  Responder com a lista da seção 20, sem medo. O projeto declara os
+  parciais por escrito; isso é força, não fraqueza.
+
+------------------------------------------------------------
+23. MAPA RÁPIDO: ONDE ESTÁ CADA COISA
+------------------------------------------------------------
+
+O site publicado: o link da Vercel está no grupo da equipe (ele lê a
+branch main do repositório; todo merge na main atualiza o site).
+
+O repositório: github.com/highgroundagency/projeto-6
+
+Rotas do site:
+  /                  a página com tudo (registro, equipe, marcos)
+  /sistema           o MVP com as 8 telas e os 4 papéis
+  /transparencia-ia  a declaração de uso de IA
+  /status            health check
+
+Para rodar na sua máquina:
+  git clone <repo>
+  npm install
+  npm run dev        (abre em localhost:3000, sem precisar de senha
+                      nem banco de nada)
+
+Comandos úteis:
+  npm test                    testes de unidade
+  npm run e2e                 as jornadas no navegador
+  npm run verificar           a bateria completa (typecheck + testes +
+                              build + vazamento + dossiê)
+
+Documentos para ler depois deste:
+  DOSSIE.txt            o conteúdo literal de tudo, gerado do código
+  CLAUDE.md             as regras da casa (as 11 inegociáveis)
+  docs/decisoes.md      os porquês, decisão por decisão (29 ADRs)
+  docs/releases.md      como operar o que o professor vê
+  docs/seguranca.md     a lente de Segurança
+  docs/nuvem.md         a lente de Nuvem
+  docs/privacidade.md   a lente de Direito/LGPD
+  docs/banco.md         o schema guardado e como religar
+  ml/                   a lente de Machine Learning
+
+------------------------------------------------------------
+24. AS 11 REGRAS DA CASA (RESUMIDAS)
+------------------------------------------------------------
+
+Se você for mexer no repositório, o CLAUDE.md tem as regras completas.
+As onze, em uma linha cada:
+
+1.  Nenhum dado real. Tudo sintético, com teste que garante.
+2.  Data só muda em src/lib/cronograma.ts. Fonte única de verdade.
+3.  Conteúdo de ciclo nunca leva código de navegador ('use client'),
+    para conteúdo futuro não vazar no bundle.
+4.  Conteúdo vive no Git, não em formulário.
+5.  Documento de entrega é página, nunca PDF.
+6.  Data é texto AAAA-MM-DD, nunca objeto Date. O "hoje" é injetado.
+7.  O motor de cálculo é função pura. Sem relógio, sem sorteio.
+8.  Nada de travessão em texto de tela.
+9.  Toda tela do sistema passa por dois portões, nesta ordem: liberação
+    por data, depois perfil. Quem não pode ver recebe 404.
+10. Dois temas, um desenho. Cor nova entra nos dois blocos.
+11. Um acento só (o laranja), no máximo três usos por tela.
+
+------------------------------------------------------------
+FIM
+------------------------------------------------------------
+
+Última atualização: 25/08/2026. Este arquivo é escrito à mão e revisado
+pela equipe; quando o projeto mudar de forma relevante, atualize aqui
+também. Em caso de conflito entre este texto e o código, o código vence
+(e provavelmente este arquivo está desatualizado: avise no grupo).
