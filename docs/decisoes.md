@@ -793,6 +793,15 @@ nível), ganhou o quarto desenho, um diagrama de classes com os campos REAIS de
 inicial (seção "Arquitetura", com chamada). O conteúdo mudou-se para
 `src/components/arquitetura.tsx`, compartilhado.
 
+**Segundo adendo (25/08).** Os níveis 1 e 2 deixaram de ser cartões empilhados e viraram
+DIAGRAMAS ESPACIAIS de verdade, com a gramática do C4 clássico de ferramenta: caixas
+espalhadas, o tipo entre colchetes ([pessoa], [sistema], [contêiner]), setas com rótulo,
+fronteira tracejada, cilindro para banco (tracejado para o guardado e desligado). São SVG
+renderizados no servidor (`src/components/arquitetura-c4.tsx`), com posições em constantes
+calculadas à mão, deliberadamente: motor de layout seria dependência e aleatoriedade. As
+cores saem dos tokens, então os dois temas funcionam; em tela estreita o desenho rola na
+horizontal, como toda tabela larga do site.
+
 ---
 
 ## ADR-033 · O CSS da casa entrou em camada, e um bug de três meses apareceu

@@ -202,9 +202,11 @@ test.describe('arquitetura em desenhos', () => {
     await expect(page.getByRole('heading', { name: 'O caminho de um número' })).toBeVisible()
     await expect(page.getByRole('heading', { name: 'O que o sistema guarda' })).toBeVisible()
 
-    // O banco guardado aparece, e aparece como desligado: honestidade no desenho.
+    // O banco guardado aparece no desenho, e aparece como desligado.
     await expect(page.getByText('Schema PostgreSQL guardado')).toBeVisible()
-    await expect(page.getByText('não ligado', { exact: true })).toBeVisible()
+    await expect(
+      page.getByText('testado no CI contra um banco real; NÃO ligado ao aplicativo'),
+    ).toBeVisible()
 
     // O diagrama de classes usa campos reais e diz com quem cada classe se liga.
     await expect(page.getByText('Regra de pontuação', { exact: true })).toBeVisible()

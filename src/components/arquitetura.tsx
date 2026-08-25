@@ -1,32 +1,18 @@
-import type { ReactNode } from 'react'
 import {
-  AppWindow,
-  Archive,
   Building2,
   CalendarClock,
-  ClipboardList,
-  Cloud,
-  Database,
-  Eye,
-  FileJson,
-  FlaskConical,
-  FolderGit2,
   Gauge,
   GitBranch,
-  GraduationCap,
-  KeyRound,
   MessageSquareWarning,
   PencilLine,
   Ruler,
   Scale,
   ScrollText,
-  Shield,
   Sigma,
   UserRound,
-  Users,
-  Waypoints,
   type LucideIcon,
 } from 'lucide-react'
+import { DiagramaConteineres, DiagramaContexto } from '@/components/arquitetura-c4'
 import { AcaoDoFluxo, Conector, EstadoDoFluxo, Fluxo } from '@/components/base/fluxo'
 import { URL_REPOSITORIO } from '@/content/produto'
 
@@ -43,80 +29,6 @@ import { URL_REPOSITORIO } from '@/content/produto'
  * real: desenho que inventa atributo ensina errado.
  */
 
-const PESSOAS: readonly [LucideIcon, string, string][] = [
-  [Users, 'CAM', 'gere o mês: cadastra, abre o prazo, calcula, aprova e divulga'],
-  [ClipboardList, 'Área técnica', 'informa os números da própria área, com a origem de cada um'],
-  [UserRound, 'Gestor avaliado', 'vê a própria nota, a conta aberta, e contesta se discordar'],
-  [Eye, 'Auditoria', 'lê tudo, refaz a conta, não muda nada'],
-  [GraduationCap, 'Professor', 'acompanha o registro semanal público do projeto'],
-  [KeyRound, 'Dono do site', 'opera as liberações por um painel protegido por senha'],
-]
-
-const EXTERNOS: readonly [LucideIcon, string, string][] = [
-  [FolderGit2, 'GitHub', 'guarda o código; cada atualização vira deploy sozinha'],
-  [Cloud, 'Vercel', 'hospeda o site em funções que acordam por visita'],
-  [Archive, 'Google Drive', 'só um link para a pasta de documentos da equipe'],
-]
-
-interface Peca {
-  icone: LucideIcon
-  nome: string
-  tec: string
-  desc: string
-  desligada?: boolean
-}
-
-const PECAS_VERCEL: readonly Peca[] = [
-  {
-    icone: AppWindow,
-    nome: 'Aplicação Next.js',
-    tec: 'TypeScript · React Server Components',
-    desc: 'O site, as 8 telas do sistema, o painel e o motor de cálculo (função pura). Tudo desenhado no servidor.',
-  },
-  {
-    icone: Shield,
-    nome: 'Middleware',
-    tec: 'Edge runtime',
-    desc: 'A primeira porta da rota /admin.',
-  },
-  {
-    icone: Waypoints,
-    nome: 'Route handlers',
-    tec: 'Node runtime',
-    desc: 'Login, avanço de etapa, lançamento, contestação, exportar CSV, tema, perfil e health check.',
-  },
-]
-
-const PECAS_DADOS: readonly Peca[] = [
-  {
-    icone: Database,
-    nome: 'Base sintética em memória',
-    tec: 'TypeScript · semente fixa 20262',
-    desc: '10 áreas, 10 gestores fictícios, 30 indicadores, 6 meses e a trilha imutável. Zera a cada deploy, de propósito.',
-  },
-  {
-    icone: Archive,
-    nome: 'Schema PostgreSQL guardado',
-    tec: 'SQL versionado · RLS e 4 gatilhos',
-    desc: 'Escrito e testado contra um banco real no CI, e desligado do aplicativo por decisão de escopo. O cofre está pronto, na caixa.',
-    desligada: true,
-  },
-]
-
-const PECAS_OFFLINE: readonly Peca[] = [
-  {
-    icone: FlaskConical,
-    nome: 'Pipeline de machine learning',
-    tec: 'Python · scikit-learn',
-    desc: 'Treina classificação, regressão e clustering sobre a base sintética e compara com um palpite bobo.',
-  },
-  {
-    icone: FileJson,
-    nome: 'resultados.json versionado',
-    tec: 'JSON no repositório',
-    desc: 'O laudo que a tela de analytics apenas lê. Nenhuma predição entra no cálculo da nota.',
-  },
-]
 
 /** As classes do domínio, com os campos REAIS de src/lib/calculo/tipos.ts. */
 interface Classe {
@@ -231,91 +143,12 @@ descrição, sem travessão. Uma única cor de destaque, laranja #F7580B.
 Feche com uma legenda de 3 linhas explicando como ler C4 para quem
 nunca viu.`
 
-/** Seta vertical com rótulo: toda ligação do desenho diz o que passa por ela. */
-function Seta({ children }: { children: ReactNode }) {
-  return (
-    <div className="flex flex-col items-center gap-1.5 py-3">
-      <div aria-hidden className="h-5 w-px border-l border-dashed border-linha-alta" />
-      <span className="rotulo rounded-full bg-superficie px-3 py-0.5 text-xs">{children}</span>
-      <div aria-hidden className="h-5 w-px border-l border-dashed border-linha-alta" />
-      <span aria-hidden className="-mt-1.5 text-[0.6rem] text-linha-alta">
-        ▼
-      </span>
-    </div>
-  )
-}
-
 function Rotulado({ eyebrow, titulo }: { eyebrow: string; titulo: string }) {
   return (
     <header>
       <p className="rotulo text-acento">{eyebrow}</p>
       <h2 className="fonte-display mt-0.5 text-xl leading-snug">{titulo}</h2>
     </header>
-  )
-}
-
-/** Cartão de gente ou de sistema externo: ícone, nome e uma linha. */
-function Cartao({ icone: Icone, nome, desc }: { icone: LucideIcon; nome: string; desc: string }) {
-  return (
-    <div className="flex items-start gap-3 rounded-2xl border border-linha bg-cartao p-4 shadow-[0_1px_2px_var(--color-sombra)]">
-      <span
-        aria-hidden
-        className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-superficie text-apagado"
-      >
-        <Icone size={18} strokeWidth={1.7} />
-      </span>
-      <span className="min-w-0">
-        <span className="block text-[0.9rem] font-semibold text-texto">{nome}</span>
-        <span className="mt-0.5 block text-[0.8rem] leading-relaxed text-apagado">{desc}</span>
-      </span>
-    </div>
-  )
-}
-
-/** Caixa-fronteira de C4: um cabeçalho de grupo com as peças dentro. */
-function Fronteira({
-  rotulo,
-  nota,
-  pecas,
-}: {
-  rotulo: string
-  nota?: string
-  pecas: readonly Peca[]
-}) {
-  return (
-    <div className="overflow-hidden rounded-2xl border border-linha bg-cartao shadow-[0_1px_2px_var(--color-sombra)]">
-      <p className="flex flex-wrap items-baseline gap-x-3 border-b border-linha px-4 py-2.5">
-        <span className="text-[0.9rem] font-semibold text-texto">{rotulo}</span>
-        {nota ? <span className="text-xs text-apagado">{nota}</span> : null}
-      </p>
-      <div className="grid gap-3 p-3 sm:grid-cols-2">
-        {pecas.map((p) => (
-          <div
-            key={p.nome}
-            className={`flex items-start gap-3 rounded-xl p-3.5 ${
-              p.desligada
-                ? 'border border-dashed border-linha-alta'
-                : 'bg-superficie'
-            }`}
-          >
-            <p.icone
-              aria-hidden
-              size={18}
-              strokeWidth={1.7}
-              className="mt-0.5 shrink-0 text-apagado"
-            />
-            <span className="min-w-0">
-              <span className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
-                <span className="text-[0.85rem] font-semibold text-texto">{p.nome}</span>
-                {p.desligada ? <span className="pilula">não ligado</span> : null}
-              </span>
-              <span className="numero mt-0.5 block text-[0.68rem] text-apagado">{p.tec}</span>
-              <span className="mt-1 block text-xs leading-relaxed text-apagado">{p.desc}</span>
-            </span>
-          </div>
-        ))}
-      </div>
-    </div>
   )
 }
 
@@ -326,62 +159,27 @@ export function ConteudoArquitetura() {
       <section id="contexto" className="scroll-mt-6" aria-label="Desenho de contexto">
         <Rotulado eyebrow="C4 · nível 1 · contexto" titulo="O sistema visto de fora" />
         <p className="mt-2 max-w-prose text-sm leading-relaxed text-apagado">
-          Cada cartão é uma pessoa. Todas usam a mesma caixa laranja, e a caixa conversa com
-          três coisas de fora.
+          Como ler: caixa arredondada é pessoa, a caixa laranja é o nosso sistema, o
+          tracejado em volta é onde ele vive, e toda seta diz o que passa por ela. Em tela
+          estreita, o desenho rola para o lado.
         </p>
-
-        <div className="mt-5">
-          <div className="grid gap-3 sm:grid-cols-3">
-            {PESSOAS.map(([Icone, nome, desc]) => (
-              <Cartao key={nome} icone={Icone} nome={nome} desc={desc} />
-            ))}
-          </div>
-
-          <Seta>todas essas pessoas usam</Seta>
-
-          <div className="rounded-2xl border-2 border-acento bg-cartao px-5 py-5 text-center shadow-[0_1px_2px_var(--color-sombra)]">
-            <p className="fonte-display text-2xl">Prumo</p>
-            <p className="mt-1 text-sm text-apagado">uma aplicação só, com três portas</p>
-            <p className="mt-3 flex flex-wrap justify-center gap-2">
-              <span className="pilula">a página do projeto</span>
-              <span className="pilula">o sistema da gratificação</span>
-              <span className="pilula">o painel do dono</span>
-            </p>
-          </div>
-
-          <Seta>e o Prumo conversa com</Seta>
-
-          <div className="grid gap-3 sm:grid-cols-3">
-            {EXTERNOS.map(([Icone, nome, desc]) => (
-              <Cartao key={nome} icone={Icone} nome={nome} desc={desc} />
-            ))}
-          </div>
+        <div className="mt-5 rounded-2xl border border-linha bg-cartao p-3 shadow-[0_1px_2px_var(--color-sombra)] sm:p-5">
+          <DiagramaContexto />
         </div>
       </section>
 
-      {/* ---------------------------------------------------------------- */}
       <section id="conteineres" className="mt-12 scroll-mt-6" aria-label="Desenho de contêineres">
         <Rotulado eyebrow="C4 · nível 2 · contêineres" titulo="As peças da caixa" />
         <p className="mt-2 max-w-prose text-sm leading-relaxed text-apagado">
-          Abrindo a caixa laranja, estas são as peças, agrupadas por onde vivem. Como ler:
-          peça preenchida roda em produção; peça tracejada existe, está testada, e está
-          desligada de propósito.
+          Abrindo a caixa laranja: cada retângulo é um contêiner (uma peça que roda ou
+          guarda algo), o cilindro é base de dados, e o cilindro tracejado existe, está
+          testado, e está desligado de propósito.
         </p>
-
-        <div className="mt-5">
-          <Fronteira rotulo="Na Vercel" nota="acorda a cada visita, dorme depois" pecas={PECAS_VERCEL} />
-          <Seta>a aplicação lê os dados</Seta>
-          <Fronteira rotulo="Dados" nota="nenhum dado real, por regra da casa" pecas={PECAS_DADOS} />
-          <Seta>antes do deploy, o treino entrega o laudo</Seta>
-          <Fronteira
-            rotulo="Offline"
-            nota="roda no computador de quem treina, nunca em produção"
-            pecas={PECAS_OFFLINE}
-          />
+        <div className="mt-5 rounded-2xl border border-linha bg-cartao p-3 shadow-[0_1px_2px_var(--color-sombra)] sm:p-5">
+          <DiagramaConteineres />
         </div>
       </section>
 
-      {/* ---------------------------------------------------------------- */}
       <section id="fluxo" className="mt-12 scroll-mt-6" aria-label="O caminho de um número">
         <Rotulado eyebrow="o produto em um desenho" titulo="O caminho de um número" />
         <p className="mt-2 max-w-prose text-sm leading-relaxed text-apagado">
