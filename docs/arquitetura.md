@@ -46,7 +46,7 @@ C4Container
 
   Container_Boundary(offline, "Offline") {
     Container(notebooks, "Notebooks", "Python, scikit-learn, pandas", "EDA, classificação, regressão e clustering")
-    ContainerDb(artefatos, "src/data/ml/*.json", "JSON versionado", "Resultados e métricas exportados")
+    ContainerDb(artefatos, "src/content/ml/resultados.json", "JSON versionado", "Resultados e métricas exportados")
   }
 
   Rel(usuario, browser, "Acessa")
