@@ -1,6 +1,8 @@
 import 'server-only'
 import { BASE } from '@/lib/seed'
 import {
+  avaliacoes as avaliacoesDoOverlay,
+  avaliacoesDistritais as avaliacoesDistritaisDoOverlay,
   avancarCiclo as avancarNoOverlay,
   ciclos as ciclosDoOverlay,
   eventos as eventosDoOverlay,
@@ -51,7 +53,7 @@ export function driverSeed(): RepositorioDados {
     },
 
     async avaliacoes(filtro: FiltroAvaliacao = {}) {
-      return BASE.avaliacoes.filter(
+      return avaliacoesDoOverlay().filter(
         (a) =>
           (!filtro.unidadeId || a.unidadeId === filtro.unidadeId) &&
           (!filtro.cicloId || a.cicloId === filtro.cicloId),
@@ -59,7 +61,7 @@ export function driverSeed(): RepositorioDados {
     },
 
     async avaliacoesDistritais(filtro: FiltroAvaliacaoDistrital = {}) {
-      return BASE.avaliacoesDistritais.filter(
+      return avaliacoesDistritaisDoOverlay().filter(
         (a) =>
           (!filtro.distritoId || a.distritoId === filtro.distritoId) &&
           (!filtro.cicloId || a.cicloId === filtro.cicloId),
@@ -90,6 +92,7 @@ export function driverSeed(): RepositorioDados {
           status: 'enviado',
         },
         agora,
+        entrada.perfil,
       )
     },
 
@@ -98,7 +101,8 @@ export function driverSeed(): RepositorioDados {
     },
 
     async abrirContestacao(entrada: EntradaContestacao, agora: string): Promise<Resultado> {
-      abrirContestacao({ ...entrada, abertaEm: agora })
+      const { perfil, ...dados } = entrada
+      abrirContestacao({ ...dados, abertaEm: agora }, perfil)
       return {
         ok: true,
         mensagem: 'Contestação registrada. A SEAB responde dentro do prazo do ciclo.',

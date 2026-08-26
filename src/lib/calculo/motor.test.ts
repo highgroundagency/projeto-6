@@ -168,9 +168,11 @@ describe('arredondar', () => {
     expect(arredondar(-0.5, 0, 'meio_para_cima')).toBe(-1)
   })
 
-  it('meio para baixo aproxima do zero no empate', () => {
+  it('meio para baixo aproxima do zero no empate, nos dois sinais', () => {
     expect(arredondar(0.5, 0, 'meio_para_baixo')).toBe(0)
     expect(arredondar(1.5, 0, 'meio_para_baixo')).toBe(1)
+    expect(arredondar(-0.5, 0, 'meio_para_baixo')).toBe(-0)
+    expect(arredondar(-1.5, 0, 'meio_para_baixo')).toBe(-1)
   })
 
   it('truncar corta sem olhar o resto', () => {
@@ -495,6 +497,49 @@ describe('calcularAvaliacao', () => {
     const avaliacao = avaliar(indicadores, subindicadores, lancar([900, 900]), regra)
     expect(avaliacao.score).toBe(100)
     expect(avaliacao.memoria.passos.every((p) => p.aplicouTeto)).toBe(true)
+  })
+
+  it('na fronteira de faixa, a memória fecha na conta que ela mesma mostra', () => {
+    // 9562 ÷ 12500 = 76.496; contra meta 90, o atingimento bruto é 0.849955…
+    // A faixa é escolhida sobre o atingimento ARREDONDADO (0.85), o mesmo que
+    // a memória grava: mostrar 85% ao lado da faixa "70% a <85%" seria a
+    // memória se contradizendo no ponto mais sensível de uma gratificação.
+    const indicadores = [indicador({ id: 'i1' })]
+    const subindicadores = [sub('s1', 'i1', 'razao')]
+    const regra = { ...REGRA_V1, aplicabilidades: [aplic('i1', { meta: 90 })] }
+    const avaliacao = avaliar(indicadores, subindicadores, [lancRazao('s1', 9562, 12500)], regra)
+
+    const passo = avaliacao.memoria.passos[0]
+    expect(passo.atingimento).toBe(0.85)
+    expect(passo.faixa).toBe('85% a <95%')
+    expect(passo.pontos).toBe(7)
+  })
+
+  it('com "ignora" e nada lançado, a memória diz a verdade: faltou lançamento', () => {
+    const { indicadores, subindicadores, regra } = cenarioSimples(['i1', 'i2'])
+    const avaliacao = avaliar(indicadores, subindicadores, [], {
+      ...regra,
+      semLancamento: 'ignora',
+    })
+
+    expect(avaliacao.score).toBe(0)
+    expect(avaliacao.memoria.formula).toContain('Sem lançamento em nenhum indicador aplicável')
+    expect(avaliacao.avisos[0]).toContain('Ignorados: Indicador i1; Indicador i2.')
+    // O caso é DIFERENTE de um tipo sem aplicabilidade, que continua com a
+    // mensagem própria dele.
+    const semAplicavel = avaliar(indicadores, subindicadores, [], {
+      ...regra,
+      aplicabilidades: [],
+      semLancamento: 'ignora',
+    })
+    expect(semAplicavel.avisos[0]).toContain('Nenhum indicador aplicável')
+  })
+
+  it('o modo de arredondamento da regra alcança a apuração da razão', () => {
+    const comTruncar = apurarSubindicador(sub('s1', 'i1', 'razao'), lancRazao('s1', 2, 3), 'truncar')
+    const comMeioParaCima = apurarSubindicador(sub('s1', 'i1', 'razao'), lancRazao('s1', 2, 3))
+    expect(comTruncar.valor).toBe(66.6666)
+    expect(comMeioParaCima.valor).toBe(66.6667)
   })
 
   it('é determinística: mesma entrada, mesmo resultado', () => {

@@ -282,7 +282,7 @@ function lancamento(
     cicloId,
     valor,
     evidencia: `Extração sintética da competência ${competencia}`,
-    autor: 'gestor-aps',
+    autor: indicadorId.startsWith('vis-') ? 'gestor-vis' : 'gestor-aps',
     registradoEm: `${competencia}-12T12:00:00.000Z`,
     status,
   }

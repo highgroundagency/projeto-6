@@ -34,7 +34,7 @@ export const registro = {
       },
       {
         decisao:
-          'Quatro perfis de acesso desde o protótipo: CAM, área técnica, gestor avaliado e auditoria.',
+          'Quatro perfis de acesso desde o protótipo, com os papéis que o cliente nomeou na reunião de 22/08: coordenação da SEAB, administrador, gerente distrital e gerente de unidade.',
         porque:
           'O controle de acesso é parte do problema de confiabilidade, não um enfeite para depois.',
       },
@@ -112,8 +112,8 @@ export const registro = {
     selo: 'validado',
     validadoPor: 'fernando',
     conteudo: [
-      { tipo: 'documento', rotulo: 'Proposta e escopo', url: '/registro#s4' },
-      { tipo: 'documento', rotulo: 'Backlog inicial', url: '/registro#s4' },
+      { tipo: 'documento', rotulo: 'Proposta e escopo', url: '/#ciclo-s4' },
+      { tipo: 'documento', rotulo: 'Backlog inicial', url: '/#ciclo-s4' },
     ],
   },
 } satisfies RegistroSemana

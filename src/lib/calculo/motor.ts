@@ -49,7 +49,8 @@ export function arredondar(
     case 'truncar':
       return Math.trunc(escalado) / fator
     case 'meio_para_baixo':
-      return -Math.round(-escalado) / fator
+      // Aproxima-se do zero no empate, para os dois sinais.
+      return (Math.sign(escalado) * -Math.round(-Math.abs(escalado))) / fator
     case 'meio_para_cima':
     default:
       // Meio para cima no sentido contábil: afasta-se do zero no empate.
@@ -140,6 +141,7 @@ export function aplicabilidadeDe(
 export function apurarSubindicador(
   subindicador: Subindicador,
   lancamento: Lancamento | undefined,
+  modo: ModoArredondamento = 'meio_para_cima',
 ): PassoSubindicador {
   const base = {
     subindicadorId: subindicador.id,
@@ -178,7 +180,12 @@ export function apurarSubindicador(
     }
   }
 
-  return { ...base, numerador, denominador, valor: arredondar((numerador / denominador) * 100, 4) }
+  return {
+    ...base,
+    numerador,
+    denominador,
+    valor: arredondar((numerador / denominador) * 100, 4, modo),
+  }
 }
 
 /** O lançamento vigente de um subindicador: o último registrado vence. */
@@ -258,7 +265,7 @@ export function calcularAvaliacao({
 
     const subs = subindicadores.filter((s) => s.indicadorId === indicador.id)
     const subPassos = subs.map((sub) =>
-      apurarSubindicador(sub, lancamentoVigenteDoSub(lancamentosDaUnidade, sub.id)),
+      apurarSubindicador(sub, lancamentoVigenteDoSub(lancamentosDaUnidade, sub.id), modo),
     )
 
     const apurados = subPassos.filter((p) => p.valor !== null)
@@ -281,6 +288,10 @@ export function calcularAvaliacao({
   const somaPesos = considerados.reduce((soma, c) => soma + c.aplicabilidade.peso, 0)
 
   if (somaPesos <= 0) {
+    // Dois estados diferentes merecem explicações diferentes: um tipo sem
+    // aplicabilidade na regra NÃO é uma unidade que deixou de lançar.
+    const ignorados = composicoes.filter((c) => c.valor === null)
+    const semAplicaveis = composicoes.length === 0
     return {
       unidadeId: unidade.id,
       cicloId,
@@ -294,15 +305,23 @@ export function calcularAvaliacao({
         somaContribuicoes: 0,
         pontuacaoMaxima: regra.pontuacaoMaxima,
         score: 0,
-        formula: 'Sem indicadores aplicáveis com peso: score 0.',
+        formula: semAplicaveis
+          ? 'Sem indicadores aplicáveis com peso: score 0.'
+          : 'Sem lançamento em nenhum indicador aplicável, e a regra manda ignorá-los: score 0.',
       },
-      avisos: ['Nenhum indicador aplicável com peso positivo para o tipo desta unidade neste ciclo.'],
+      avisos: semAplicaveis
+        ? ['Nenhum indicador aplicável com peso positivo para o tipo desta unidade neste ciclo.']
+        : [
+            `Nenhum dos ${ignorados.length} indicadores aplicáveis teve lançamento neste ciclo; a regra manda ignorá-los. Ignorados: ${ignorados
+              .map((c) => c.indicador.nome)
+              .join('; ')}.`,
+          ],
     }
   }
 
   const passos: PassoMemoria[] = considerados.map(
     ({ indicador, aplicabilidade, subPassos, valor, avisoComposicao }) => {
-      const pesoNormalizado = arredondar(aplicabilidade.peso / somaPesos, 6, 'meio_para_cima')
+      const pesoNormalizado = arredondar(aplicabilidade.peso / somaPesos, 6, modo)
       const base = {
         indicadorId: indicador.id,
         indicador: indicador.nome,
@@ -362,14 +381,19 @@ export function calcularAvaliacao({
         indicador.direcao,
         regra.tetoAtingimento,
       )
-      const faixa = faixaDoAtingimento(comTeto, regra)
+      // A faixa é escolhida sobre o MESMO atingimento que a memória grava e
+      // exibe. Escolher sobre o valor bruto e mostrar o arredondado faria a
+      // memória se contradizer na fronteira de faixa, que é exatamente o ponto
+      // sensível de uma gratificação.
+      const atingimento = arredondar(comTeto, 4, modo)
+      const faixa = faixaDoAtingimento(atingimento, regra)
       const pontos = faixa?.pontos ?? 0
 
       const passo: PassoMemoria = {
         ...base,
         valor,
         atingimentoBruto: arredondar(bruto, 4, modo),
-        atingimento: arredondar(comTeto, 4, modo),
+        atingimento,
         aplicouTeto,
         faixa: faixa ? descreverFaixa(faixa.de, faixa.ate) : 'sem faixa correspondente',
         pontos,
@@ -378,7 +402,7 @@ export function calcularAvaliacao({
         ...(faixa
           ? {}
           : {
-              aviso: `Atingimento de ${Math.round(comTeto * 100)}% não caiu em nenhuma faixa da regra ${regra.id}.`,
+              aviso: `Atingimento de ${Math.round(atingimento * 100)}% não caiu em nenhuma faixa da regra ${regra.id}.`,
             }),
       }
 

@@ -54,8 +54,18 @@ export async function POST(requisicao: NextRequest) {
   const dados = analisado.data
   const panorama = await carregarDados()
 
-  if (!panorama.gerentePorId(dados.gerenteId) || !panorama.cicloPorId(dados.cicloId)) {
+  const ciclo = panorama.cicloPorId(dados.cicloId)
+  if (!panorama.gerentePorId(dados.gerenteId) || !ciclo) {
     return redirecionar(deVolta(undefined, { erro: 'Gerente ou ciclo desconhecido.' }))
+  }
+  // Contesta-se um RESULTADO, e resultado só existe em mês fechado.
+  if (ciclo.estado !== 'homologado' && ciclo.estado !== 'publicado') {
+    return redirecionar(
+      deVolta(dados.gerenteId, { erro: 'Só dá para contestar um mês já fechado.' }),
+    )
+  }
+  if (dados.indicadorId && !panorama.indicadorPorId(dados.indicadorId)) {
+    return redirecionar(deVolta(dados.gerenteId, { erro: 'Indicador desconhecido.' }))
   }
 
   const resultado = await repositorio().abrirContestacao(
@@ -64,6 +74,7 @@ export async function POST(requisicao: NextRequest) {
       cicloId: dados.cicloId,
       indicadorId: dados.indicadorId ?? null,
       motivo: dados.motivo,
+      perfil,
     },
     new Date().toISOString(),
   )

@@ -28,10 +28,10 @@ export const registro = {
     selo: 'rascunho',
     validadoPor: null,
     conteudo: [
-      'Modelo de dados fechado: áreas, indicadores, regras versionadas, ciclos, lançamentos e trilha de auditoria.',
+      'Modelo de dados fechado no domínio da reunião com o cliente: distritos, tipos de unidade, unidades, indicadores compostos por subindicadores, regras versionadas com a régua por tipo, ciclos, lançamentos e trilha de auditoria.',
       'Motor de cálculo implementado como função pura, com a memória de cálculo saindo do mesmo cálculo que a interface exibe.',
       'Diagramas C4 de contexto e de contêiner publicados em docs/arquitetura.md.',
-      'Base sintética com semente fixa gerando as dez áreas e os trinta indicadores.',
+      'Base sintética com semente fixa gerando os 3 distritos, as 12 unidades de 4 tipos e os 7 indicadores com seus 11 subindicadores.',
     ],
   },
 
@@ -56,7 +56,7 @@ export const registro = {
     selo: 'rascunho',
     validadoPor: null,
     conteudo: [
-      'Sem acesso à portaria vigente, os pesos dos indicadores da base são arbitrados pela equipe e precisam de conferência com a CAM.',
+      'Sem acesso à planilha real prometida na reunião, as metas e pesos da régua por tipo são arbitrados pela equipe e precisam de conferência com o cliente.',
     ],
   },
 
@@ -152,14 +152,14 @@ export const documentos = [
 
         <Secao
           titulo="O fluxo de dados, ponta a ponta"
-          descricao="O caminho de um número, do teclado da área técnica até a folha do gestor."
+          descricao="O caminho de um número, do teclado da unidade até a folha do gerente."
         >
           <Lista
             itens={[
-              'A área técnica envia valor e evidência num POST comum de formulário; zod valida na entrada e recusa com motivo.',
+              'A unidade envia cada subindicador (valor direto, ou numerador e denominador) com evidência, num POST comum de formulário; zod valida na entrada e recusa com motivo.',
               'A camada de dados grava o lançamento e ESCREVE UM EVENTO na trilha, no mesmo passo. Não há caminho que grave sem registrar.',
-              'A CAM fecha a janela; o estado do ciclo avança um passo, e a transição também vira evento.',
-              'O motor puro recebe lançamentos, indicadores e a versão da regra vigente na competência, e devolve score, faixa e memória de cálculo.',
+              'A SEAB fecha a janela; o estado do ciclo avança um passo, e a transição também vira evento.',
+              'O motor puro compõe cada indicador dos subindicadores lançados, aplica a régua do tipo da unidade na versão da regra vigente, e devolve score, faixa e memória de cálculo com os sub-passos.',
               'A tela exibe a memória que saiu do mesmo cálculo, nunca uma recontagem paralela.',
               'O painel da gestão agrega e exporta em CSV; a auditoria lê a trilha, e escreve nada.',
             ]}
@@ -263,7 +263,7 @@ export const documentos = [
             ],
             [
               'Dados (lib/dados/)',
-              'De onde vêm áreas, indicadores e lançamentos',
+              'De onde vêm unidades, indicadores e lançamentos',
               'Isola as telas da fonte: trocar seed por banco não reescreve tela',
             ],
             [
@@ -285,37 +285,56 @@ export const documentos = [
   {
     id: 'modelo',
     titulo: 'Modelo de dados',
-    resumo: 'as sete entidades do MVP e o que cada uma guarda.',
+    resumo: 'as entidades do MVP, no domínio da reunião de 22/08, e o que cada uma guarda.',
     Conteudo: () => (
       <>
         <Tabela
           colunas={['Entidade', 'Guarda', 'Observação']}
           linhas={[
-            ['Área', 'Sigla e nome da unidade responsável', 'Dez áreas na base sintética'],
+            [
+              'Distrito sanitário',
+              'Nome',
+              'Três na base sintética; cada um tem uma gerência distrital, também avaliada',
+            ],
+            [
+              'Tipo de unidade',
+              'Nome e sigla (USF, CAPS, UPA, POLI)',
+              'É o tipo que decide quais indicadores valem, com que meta e peso',
+            ],
+            [
+              'Unidade',
+              'Nome, distrito e tipo',
+              'Doze na base sintética; é quem lança e quem recebe a nota',
+            ],
             [
               'Indicador',
-              'Meta, unidade, peso e área dona',
-              'Trinta indicadores; o peso é o que entra na conta',
+              'Nome, unidade de medida, direção e fonte',
+              'Sete no catálogo; SEM meta e peso próprios: isso mora na régua da regra',
+            ],
+            [
+              'Subindicador',
+              'Nome e tipo (índice, ou razão com numerador e denominador)',
+              'Onze; é o que a unidade de fato preenche, e o indicador é a composição',
             ],
             [
               'Regra',
-              'Faixas de pontuação, vigência e versão',
+              'Faixas de pontuação, régua por tipo (aplicabilidades), vigência e versão',
               'Alterar cria versão nova; a vigente é escolhida pela competência',
             ],
             [
               'Ciclo',
-              'Competência, estado e janela de lançamento',
-              'Máquina de estados: só avança um passo por vez',
+              'Competência, estado, janela de lançamento e início da revisão',
+              'Máquina de estados: só avança um passo por vez; os dias finais são a janela de revisão',
             ],
             [
               'Lançamento',
-              'Valor informado, evidência, autor e data',
+              'Valor OU numerador e denominador, evidência, autor e data',
               'Correção entra como novo lançamento, não sobrescreve',
             ],
             [
               'Avaliação',
-              'Score, faixa e memória de cálculo do gestor no ciclo',
-              'Reproduzível: recalcular o ciclo antigo dá o mesmo número',
+              'Score, faixa e memória de cálculo da unidade no ciclo, com sub-passos',
+              'Reproduzível: recalcular o ciclo antigo dá o mesmo número; a distrital é a média das unidades',
             ],
             [
               'Evento de auditoria',

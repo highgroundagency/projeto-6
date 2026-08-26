@@ -1,8 +1,11 @@
 import 'server-only'
 import { BASE } from '@/lib/seed'
+import { calcularAvaliacao, calcularAvaliacaoDistrital } from '@/lib/calculo/motor'
 import {
   ORDEM_ESTADOS,
   ROTULO_ESTADO,
+  type Avaliacao,
+  type AvaliacaoDistrital,
   type CicloAvaliacao,
   type EstadoCiclo,
   type EventoAuditoria,
@@ -25,6 +28,8 @@ import {
 const estadosAlterados = new Map<string, EstadoCiclo>()
 const lancamentosNovos: Lancamento[] = []
 const eventosNovos: EventoAuditoria[] = []
+const avaliacoesNovas: Avaliacao[] = []
+const avaliacoesDistritaisNovas: AvaliacaoDistrital[] = []
 let sequencia = 0
 
 export function ciclos(): CicloAvaliacao[] {
@@ -48,6 +53,81 @@ export function eventos(): EventoAuditoria[] {
 
 function registrar(evento: Omit<EventoAuditoria, 'id'>): void {
   eventosNovos.unshift({ id: `ev-app-${String(++sequencia).padStart(4, '0')}`, ...evento })
+}
+
+/**
+ * A porta de escrita da trilha para as outras camadas do overlay.
+ *
+ * Existe para a contestação entrar na trilha como tudo o mais: caminho de
+ * escrita que não passa pela trilha é exatamente o buraco que o produto
+ * critica na planilha.
+ */
+export function registrarEvento(evento: Omit<EventoAuditoria, 'id'>): void {
+  registrar(evento)
+}
+
+/** Avaliações calculadas pela interface (ciclos homologados no overlay). */
+export function avaliacoes(): Avaliacao[] {
+  return [...BASE.avaliacoes, ...avaliacoesNovas]
+}
+
+export function avaliacoesDistritais(): AvaliacaoDistrital[] {
+  return [...BASE.avaliacoesDistritais, ...avaliacoesDistritaisNovas]
+}
+
+/**
+ * Homologar é fazer a conta: ao chegar em 'homologado', o ciclo ganha as
+ * avaliações de todas as unidades e as distritais, sobre os lançamentos
+ * vigentes daquele momento. Sem isto, avançar o ciclo aberto numa
+ * demonstração produzia um mês "fechado" sem nota nenhuma.
+ */
+function calcularAvaliacoesDoCiclo(cicloId: string, agora: string, autor: string): void {
+  const jaTem =
+    BASE.avaliacoes.some((a) => a.cicloId === cicloId) ||
+    avaliacoesNovas.some((a) => a.cicloId === cicloId)
+  if (jaTem) return
+
+  const alvo = ciclo(cicloId)
+  const regra = BASE.regras.find((r) => r.id === alvo?.regraId)
+  if (!alvo || !regra) return
+
+  const todosLancamentos = lancamentos()
+  const doCiclo = BASE.unidades.map((unidade) =>
+    calcularAvaliacao({
+      unidade,
+      cicloId,
+      indicadores: BASE.indicadores,
+      subindicadores: BASE.subindicadores,
+      lancamentos: todosLancamentos,
+      regra,
+    }),
+  )
+  avaliacoesNovas.push(...doCiclo)
+
+  for (const distrito of BASE.distritos) {
+    const unidadesDoDistrito = new Set(
+      BASE.unidades.filter((u) => u.distritoId === distrito.id).map((u) => u.id),
+    )
+    avaliacoesDistritaisNovas.push(
+      calcularAvaliacaoDistrital({
+        distritoId: distrito.id,
+        cicloId,
+        avaliacoesDasUnidades: doCiclo.filter((a) => unidadesDoDistrito.has(a.unidadeId)),
+        regra,
+      }),
+    )
+  }
+
+  registrar({
+    quando: agora,
+    autor,
+    perfil: 'seab',
+    tipo: 'avaliacao_calculada',
+    entidade: cicloId,
+    descricao: `Avaliações do ciclo ${alvo.competencia} calculadas: ${doCiclo.length} unidades e ${BASE.distritos.length} distritos.`,
+    antes: null,
+    depois: { unidades: doCiclo.length, distritos: BASE.distritos.length },
+  })
 }
 
 export function proximoEstado(atual: EstadoCiclo): EstadoCiclo | null {
@@ -89,12 +169,15 @@ export function avancarCiclo(
     depois: { estado: seguinte },
   })
 
+  if (seguinte === 'homologado') calcularAvaliacoesDoCiclo(cicloId, agora, autor)
+
   return { ok: true, mensagem: `Ciclo avançado para ${ROTULO_ESTADO[seguinte]}.` }
 }
 
 export function registrarLancamento(
   lancamento: Omit<Lancamento, 'id'>,
   agora: string,
+  perfil = 'gerente_unidade',
 ): ResultadoTransicao {
   const cicloAlvo = ciclo(lancamento.cicloId)
   if (!cicloAlvo) return { ok: false, mensagem: 'Ciclo não encontrado.' }
@@ -105,11 +188,30 @@ export function registrarLancamento(
     }
   }
 
-  const anterior = lancamentos().find(
-    (l) =>
-      l.cicloId === lancamento.cicloId &&
-      l.subindicadorId === lancamento.subindicadorId &&
-      l.unidadeId === lancamento.unidadeId,
+  // O que não vale para o tipo da unidade não entra: a régua da regra do
+  // ciclo decide, também no caminho de escrita.
+  const subindicador = BASE.subindicadores.find((s) => s.id === lancamento.subindicadorId)
+  const unidade = BASE.unidades.find((u) => u.id === lancamento.unidadeId)
+  const regra = BASE.regras.find((r) => r.id === cicloAlvo.regraId)
+  const aplicavel =
+    subindicador &&
+    unidade &&
+    regra?.aplicabilidades.some(
+      (a) => a.tipoUnidadeId === unidade.tipoId && a.indicadorId === subindicador.indicadorId,
+    )
+  if (!aplicavel) {
+    return {
+      ok: false,
+      mensagem: 'Este indicador não vale para o tipo desta unidade na regra deste ciclo.',
+    }
+  }
+
+  // O "antes" do diff é o lançamento VIGENTE, não o primeiro da lista: numa
+  // segunda correção, comparar com o original mentiria sobre o que mudou.
+  const anterior = lancamentoVigente(
+    lancamento.cicloId,
+    lancamento.subindicadorId,
+    lancamento.unidadeId,
   )
 
   const novo: Lancamento = {
@@ -121,7 +223,7 @@ export function registrarLancamento(
   registrar({
     quando: agora,
     autor: lancamento.autor,
-    perfil: 'gerente_unidade',
+    perfil,
     tipo: anterior ? 'lancamento_alterado' : 'lancamento_registrado',
     entidade: novo.id,
     descricao: `${anterior ? 'Correção' : 'Lançamento'} de ${lancamento.subindicadorId} pela ${lancamento.unidadeId} no ciclo ${lancamento.cicloId}.`,

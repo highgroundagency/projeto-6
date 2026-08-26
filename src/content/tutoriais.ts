@@ -105,9 +105,9 @@ export const TUTORIAIS: Record<PerfilId, Tutorial> = {
         alvo: 'ana-risco',
       },
       {
-        titulo: 'Responda quem discordou',
+        titulo: 'Acompanhe quem discordou',
         oQueFazer:
-          'Aqui ficam os pedidos de revisão. Leia o motivo de cada um e responda por escrito.',
+          'Aqui ficam os pedidos de revisão, com a situação e a resposta de cada um. No protótipo as respostas vêm da base de exemplo; o formulário de responder entra com a persistência real.',
         porque:
           'Pedido sem resposta escrita é caixa de sugestões. A resposta fica guardada junto do pedido, para sempre.',
         tela: 'contestacao',
@@ -202,11 +202,11 @@ export const TUTORIAIS: Record<PerfilId, Tutorial> = {
       {
         titulo: 'Veja a sua nota e a composição dela',
         oQueFazer:
-          'Escolha o seu nome no seletor. O cartão mostra a média do distrito, e o quadro abaixo abre a nota de cada unidade que entrou na conta.',
+          'Escolha um gerente distrital no seletor. O cartão mostra a média do distrito, e o quadro "como a média foi composta" abre a nota de cada unidade que entrou na conta.',
         porque:
           'Uma média sem composição é um número solto. Aqui dá para ver de onde cada décimo veio.',
         tela: 'meu-resultado',
-        alvo: 'res-composicao',
+        alvo: 'res-seletor',
       },
       {
         titulo: 'Discorde, se for o caso',

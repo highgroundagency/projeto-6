@@ -136,7 +136,7 @@ export const REQUISITOS: readonly Requisito[] = [
     pedido: 'E painéis de acompanhamento para a gestão.',
     estado: 'atendido',
     onde: [
-      'src/components/sistema/telas/cam.tsx: funil por área e pendências do ciclo corrente',
+      'src/components/sistema/telas/painel-seab.tsx: funil por unidade e pendências do ciclo corrente',
       'src/components/sistema/telas/gestao.tsx: agregados, ranking anonimizável e exportação em CSV',
     ],
   },
@@ -269,8 +269,8 @@ export const REQUISITOS: readonly Requisito[] = [
     pedido: 'Evidências de testes; registros de testes e evolução do backlog.',
     estado: 'atendido',
     onde: [
-      '420 testes de unidade em Vitest, 72 end-to-end em Playwright',
-      'scripts/verificar-vazamento.ts: 98 checagens contra o build de produção',
+      '503 casos em Vitest (480 rodam localmente; 23 exigem um PostgreSQL real e rodam no CI), 92 jornadas em Playwright',
+      'scripts/verificar-vazamento.ts: 122 checagens contra o build de produção',
     ],
   },
 
@@ -281,7 +281,7 @@ export const REQUISITOS: readonly Requisito[] = [
       'Qualidade da solução e adequação às necessidades dos usuários (critério de validação do SR2).',
     estado: 'parcial',
     onde: [
-      'src/lib/contraste.test.ts: 19 checagens de contraste AA, nos dois temas, lidas do próprio globals.css',
+      'src/lib/contraste.test.ts: 35 checagens de contraste AA, nos dois temas e nas duas peles, lidas do próprio globals.css',
       'Modo claro e escuro com botão, tema no cookie e aplicado pelo servidor (ADR-027)',
       'Navegação por teclado: sanfonas nativas, foco visível com anel de acento, link de pular para o conteúdo',
       'e2e roda em 1280px e em 360px, e falha se a página estourar a largura',

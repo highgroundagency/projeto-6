@@ -1,13 +1,4 @@
 import { gerarBase, SEMENTE_PADRAO, type BaseSintetica } from './gerar'
-import type {
-  Avaliacao,
-  AvaliacaoDistrital,
-  CicloAvaliacao,
-  Gerente,
-  Indicador,
-  Subindicador,
-  Unidade,
-} from '@/lib/calculo/tipos'
 
 /**
  * Base sintética do MVP, calculada uma vez por processo.
@@ -19,84 +10,9 @@ import type {
  */
 export const BASE: BaseSintetica = gerarBase(SEMENTE_PADRAO)
 
-export function distritoPorId(id: string) {
-  return BASE.distritos.find((d) => d.id === id)
-}
-
-export function tipoUnidadePorId(id: string) {
-  return BASE.tiposUnidade.find((t) => t.id === id)
-}
-
-export function unidadePorId(id: string): Unidade | undefined {
-  return BASE.unidades.find((u) => u.id === id)
-}
-
-export function unidadesDoDistrito(distritoId: string): Unidade[] {
-  return BASE.unidades.filter((u) => u.distritoId === distritoId)
-}
-
-export function gerentePorId(id: string): Gerente | undefined {
-  return BASE.gerentes.find((g) => g.id === id)
-}
-
-export function indicadorPorId(id: string): Indicador | undefined {
-  return BASE.indicadores.find((i) => i.id === id)
-}
-
-export function subindicadorPorId(id: string): Subindicador | undefined {
-  return BASE.subindicadores.find((s) => s.id === id)
-}
-
-export function subindicadoresDoIndicador(indicadorId: string): Subindicador[] {
-  return BASE.subindicadores.filter((s) => s.indicadorId === indicadorId)
-}
-
-export function cicloPorId(id: string): CicloAvaliacao | undefined {
-  return BASE.ciclos.find((c) => c.id === id)
-}
-
-export function lancamentosDoCiclo(cicloId: string) {
-  return BASE.lancamentos.filter((l) => l.cicloId === cicloId)
-}
-
-export function avaliacaoDe(unidadeId: string, cicloId: string): Avaliacao | undefined {
-  return BASE.avaliacoes.find((a) => a.unidadeId === unidadeId && a.cicloId === cicloId)
-}
-
-export function avaliacoesDaUnidade(unidadeId: string): Avaliacao[] {
-  return BASE.avaliacoes
-    .filter((a) => a.unidadeId === unidadeId)
-    .sort((a, b) => a.cicloId.localeCompare(b.cicloId))
-}
-
-export function avaliacoesDoCiclo(cicloId: string): Avaliacao[] {
-  return BASE.avaliacoes.filter((a) => a.cicloId === cicloId)
-}
-
-export function avaliacaoDistritalDe(
-  distritoId: string,
-  cicloId: string,
-): AvaliacaoDistrital | undefined {
-  return BASE.avaliacoesDistritais.find(
-    (a) => a.distritoId === distritoId && a.cicloId === cicloId,
-  )
-}
-
-export function regraPorId(id: string) {
-  return BASE.regras.find((r) => r.id === id)
-}
-
-/** Ciclo mais recente que já tem resultado publicado ou homologado. */
-export function cicloMaisRecenteFechado(): CicloAvaliacao | undefined {
-  return [...BASE.ciclos]
-    .reverse()
-    .find((c) => c.estado === 'publicado' || c.estado === 'homologado')
-}
-
-/** Ciclo em lançamento, se houver. */
-export function cicloEmLancamento(): CicloAvaliacao | undefined {
-  return BASE.ciclos.find((c) => c.estado === 'lancamento_aberto')
-}
+// A API de consulta das telas mora em src/lib/dados/consultas.ts, que enxerga
+// também o overlay de escrita. Este módulo exporta só a base congelada: uma
+// segunda API com os mesmos nomes, cega ao overlay, era convite a bug.
 
 /**
  * Sinaliza lançamento suspeito de erro de digitação (§10.3).

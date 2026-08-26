@@ -105,7 +105,7 @@ export const registro = {
   evidencias: {
     selo: 'validado',
     validadoPor: 'fernando',
-    conteudo: [{ tipo: 'documento', rotulo: 'Roteiro do pitch', url: '/registro#ko' }],
+    conteudo: [{ tipo: 'documento', rotulo: 'Roteiro do pitch', url: '/#ciclo-ko' }],
   },
 } satisfies RegistroSemana
 

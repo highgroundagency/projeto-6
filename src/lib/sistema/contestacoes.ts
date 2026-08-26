@@ -1,6 +1,7 @@
 import 'server-only'
 import { BASE } from '@/lib/seed'
 import type { Contestacao } from '@/lib/calculo/tipos'
+import { registrarEvento } from './estado'
 
 /**
  * Contestações abertas pela interface, somadas às do seed.
@@ -17,6 +18,7 @@ export function contestacoes(): Contestacao[] {
 
 export function abrirContestacao(
   dados: Omit<Contestacao, 'id' | 'status' | 'resposta'>,
+  perfil = 'gerente_unidade',
 ): Contestacao {
   const contestacao: Contestacao = {
     ...dados,
@@ -25,5 +27,19 @@ export function abrirContestacao(
     resposta: null,
   }
   novas.unshift(contestacao)
+
+  // Contestação também é trilha: pedido de revisão sem rastro seria a caixa
+  // de sugestões que o produto existe para substituir.
+  registrarEvento({
+    quando: dados.abertaEm,
+    autor: dados.gerenteId,
+    perfil,
+    tipo: 'contestacao_aberta',
+    entidade: contestacao.id,
+    descricao: `Contestação aberta por ${dados.gerenteId} sobre o ciclo ${dados.cicloId}.`,
+    antes: null,
+    depois: { status: 'aberta', indicadorId: dados.indicadorId },
+  })
+
   return contestacao
 }

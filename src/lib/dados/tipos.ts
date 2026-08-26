@@ -54,6 +54,8 @@ export interface EntradaLancamento {
   denominador: number | null
   evidencia: string
   autor: string
+  /** Perfil de quem lançou, para a trilha dizer a verdade (SEAB também lança). */
+  perfil: string
 }
 
 export interface EntradaContestacao {
@@ -61,6 +63,8 @@ export interface EntradaContestacao {
   cicloId: string
   indicadorId: string | null
   motivo: string
+  /** Perfil de quem abriu, para a trilha. */
+  perfil: string
 }
 
 export interface Resultado {

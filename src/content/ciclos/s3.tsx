@@ -131,7 +131,7 @@ export const registro = {
       {
         tipo: 'documento',
         rotulo: 'Matriz de priorização',
-        url: '/registro#s3',
+        url: '/#ciclo-s3',
       },
       {
         tipo: 'documento',

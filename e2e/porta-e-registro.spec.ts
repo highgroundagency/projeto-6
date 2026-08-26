@@ -264,6 +264,9 @@ test.describe('tema claro e escuro', () => {
     const escuro = await page.evaluate(() => getComputedStyle(document.body).backgroundColor)
 
     await page.getByRole('button', { name: /modo claro/i }).click()
+    // O clique é um POST com redirecionamento: espera o documento novo chegar
+    // antes de ler o estilo, senão a leitura corre contra a navegação.
+    await expect(page.locator('html')).toHaveAttribute('data-tema', 'claro')
     const claro = await page.evaluate(() => getComputedStyle(document.body).backgroundColor)
 
     expect(claro).not.toBe(escuro)

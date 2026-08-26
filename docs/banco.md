@@ -80,7 +80,7 @@ DATABASE_URL=postgresql://... npm run semear -- --limpar
 esse passo.
 
 A semeadura respeita a ordem que os gatilhos exigem: os ciclos entram em rascunho, sobem para
-lançamento aberto, recebem os 171 lançamentos e só então avançam um estado por vez.
+lançamento aberto, recebem os lançamentos da fotografia V1 (8 linhas, por desenho) e só então avançam um estado por vez.
 Consequência boa — a trilha de auditoria nasce com os eventos reais, não fabricados.
 
 ## Como testar as políticas

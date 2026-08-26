@@ -407,7 +407,7 @@ feedback de professor ou de cliente seria fabricar evidência.
 
   Evidências  [validado, validado por fernando]
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  - [documento] Matriz de priorização -> /registro#s3
+  - [documento] Matriz de priorização -> /#ciclo-s3
   - [documento] Reunião com o cliente registrada -> #doc-s3-reuniao-cliente
 
   Documentos de entrega desta semana (4)
@@ -504,8 +504,9 @@ feedback de professor ou de cliente seria fabricar evidência.
   - Folha de pagamento fica fora do escopo.
       por quê: O sistema calcula e publica o resultado; integrar com folha exige acesso e
       homologação que o semestre não comporta.
-  - Quatro perfis de acesso desde o protótipo: CAM, área técnica, gestor avaliado e
-    auditoria.
+  - Quatro perfis de acesso desde o protótipo, com os papéis que o cliente nomeou na
+    reunião de 22/08: coordenação da SEAB, administrador, gerente distrital e gerente de
+    unidade.
       por quê: O controle de acesso é parte do problema de confiabilidade, não um enfeite
       para depois.
   - Auditoria é append-only: nada se apaga.
@@ -539,8 +540,8 @@ feedback de professor ou de cliente seria fabricar evidência.
 
   Evidências  [validado, validado por fernando]
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  - [documento] Proposta e escopo -> /registro#s4
-  - [documento] Backlog inicial -> /registro#s4
+  - [documento] Proposta e escopo -> /#ciclo-s4
+  - [documento] Backlog inicial -> /#ciclo-s4
 
   Documentos de entrega desta semana (3)
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -667,7 +668,7 @@ feedback de professor ou de cliente seria fabricar evidência.
 
   Evidências  [validado, validado por fernando]
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  - [documento] Roteiro do pitch -> /registro#ko
+  - [documento] Roteiro do pitch -> /#ciclo-ko
 
   Documentos de entrega desta semana (3)
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -717,12 +718,14 @@ feedback de professor ou de cliente seria fabricar evidência.
 
   Avanços  [rascunho]
   ~~~~~~~~~~~~~~~~~~~
-  - Modelo de dados fechado: áreas, indicadores, regras versionadas, ciclos, lançamentos e
-    trilha de auditoria.
+  - Modelo de dados fechado no domínio da reunião com o cliente: distritos, tipos de
+    unidade, unidades, indicadores compostos por subindicadores, regras versionadas com a
+    régua por tipo, ciclos, lançamentos e trilha de auditoria.
   - Motor de cálculo implementado como função pura, com a memória de cálculo saindo do
     mesmo cálculo que a interface exibe.
   - Diagramas C4 de contexto e de contêiner publicados em docs/arquitetura.md.
-  - Base sintética com semente fixa gerando as dez áreas e os trinta indicadores.
+  - Base sintética com semente fixa gerando os 3 distritos, as 12 unidades de 4 tipos e os
+    7 indicadores com seus 11 subindicadores.
 
   Decisões  [rascunho]
   ~~~~~~~~~~~~~~~~~~~~
@@ -735,8 +738,8 @@ feedback de professor ou de cliente seria fabricar evidência.
 
   Bloqueios  [rascunho]
   ~~~~~~~~~~~~~~~~~~~~~
-  - Sem acesso à portaria vigente, os pesos dos indicadores da base são arbitrados pela
-    equipe e precisam de conferência com a CAM.
+  - Sem acesso à planilha real prometida na reunião, as metas e pesos da régua por tipo são
+    arbitrados pela equipe e precisam de conferência com o cliente.
 
   Feedback recebido  [rascunho]
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -783,12 +786,12 @@ feedback de professor ou de cliente seria fabricar evidência.
        Persistência prevista | Postgres gerenciado, com RLS no banco | Autorização que mora no banco vale para qualquer caminho de escrita, inclusive um que ainda não existe
 
       O fluxo de dados, ponta a ponta
-      O caminho de um número, do teclado da área técnica até a folha do gestor.
+      O caminho de um número, do teclado da unidade até a folha do gerente.
 
-       - A área técnica envia valor e evidência num POST comum de formulário; zod valida na entrada e recusa com motivo.
+       - A unidade envia cada subindicador (valor direto, ou numerador e denominador) com evidência, num POST comum de formulário; zod valida na entrada e recusa com motivo.
        - A camada de dados grava o lançamento e ESCREVE UM EVENTO na trilha, no mesmo passo. Não há caminho que grave sem registrar.
-       - A CAM fecha a janela; o estado do ciclo avança um passo, e a transição também vira evento.
-       - O motor puro recebe lançamentos, indicadores e a versão da regra vigente na competência, e devolve score, faixa e memória de cálculo.
+       - A SEAB fecha a janela; o estado do ciclo avança um passo, e a transição também vira evento.
+       - O motor puro compõe cada indicador dos subindicadores lançados, aplica a régua do tipo da unidade na versão da regra vigente, e devolve score, faixa e memória de cálculo com os sub-passos.
        - A tela exibe a memória que saiu do mesmo cálculo, nunca uma recontagem paralela.
        - O painel da gestão agrega e exporta em CSV; a auditoria lê a trilha, e escreve nada.
       O pipeline é síncrono de propósito. Fila e processamento em lote resolveriam volume que este caso não tem: são dezenas de indicadores por competência mensal, não milhões de eventos por minuto. Escolher a arquitetura pelo volume que se sonha ter é como comprar caminhão para carregar feira.
@@ -828,7 +831,7 @@ feedback de professor ou de cliente seria fabricar evidência.
 
        Conteúdo (content/) | Registro semanal e documentos, versionados em TSX | Entra no Git com histórico; o painel decide quando aparece, não o que diz
        Regra (lib/calculo/) | Score, faixa e memória de cálculo | Função pura: testável nos casos-limite sem subir nada
-       Dados (lib/dados/) | De onde vêm áreas, indicadores e lançamentos | Isola as telas da fonte: trocar seed por banco não reescreve tela
+       Dados (lib/dados/) | De onde vêm unidades, indicadores e lançamentos | Isola as telas da fonte: trocar seed por banco não reescreve tela
        Release (lib/releases.ts) | O que está visível hoje | Cálculo puro sobre o cronograma, com o "hoje" injetado de fora
 
        - Nenhuma camada acima chama a de baixo pulando a do meio: a tela fala com dados, dados falam com a fonte.
@@ -836,16 +839,19 @@ feedback de professor ou de cliente seria fabricar evidência.
 
   >>> MODELO DE DADOS
       âncora no site: #doc-s5-modelo
-      as sete entidades do MVP e o que cada uma guarda.
+      as entidades do MVP, no domínio da reunião de 22/08, e o que cada uma guarda.
 
       Entidade | Guarda | Observação
 
-       Área | Sigla e nome da unidade responsável | Dez áreas na base sintética
-       Indicador | Meta, unidade, peso e área dona | Trinta indicadores; o peso é o que entra na conta
-       Regra | Faixas de pontuação, vigência e versão | Alterar cria versão nova; a vigente é escolhida pela competência
-       Ciclo | Competência, estado e janela de lançamento | Máquina de estados: só avança um passo por vez
-       Lançamento | Valor informado, evidência, autor e data | Correção entra como novo lançamento, não sobrescreve
-       Avaliação | Score, faixa e memória de cálculo do gestor no ciclo | Reproduzível: recalcular o ciclo antigo dá o mesmo número
+       Distrito sanitário | Nome | Três na base sintética; cada um tem uma gerência distrital, também avaliada
+       Tipo de unidade | Nome e sigla (USF, CAPS, UPA, POLI) | É o tipo que decide quais indicadores valem, com que meta e peso
+       Unidade | Nome, distrito e tipo | Doze na base sintética; é quem lança e quem recebe a nota
+       Indicador | Nome, unidade de medida, direção e fonte | Sete no catálogo; SEM meta e peso próprios: isso mora na régua da regra
+       Subindicador | Nome e tipo (índice, ou razão com numerador e denominador) | Onze; é o que a unidade de fato preenche, e o indicador é a composição
+       Regra | Faixas de pontuação, régua por tipo (aplicabilidades), vigência e versão | Alterar cria versão nova; a vigente é escolhida pela competência
+       Ciclo | Competência, estado, janela de lançamento e início da revisão | Máquina de estados: só avança um passo por vez; os dias finais são a janela de revisão
+       Lançamento | Valor OU numerador e denominador, evidência, autor e data | Correção entra como novo lançamento, não sobrescreve
+       Avaliação | Score, faixa e memória de cálculo da unidade no ciclo, com sub-passos | Reproduzível: recalcular o ciclo antigo dá o mesmo número; a distrital é a média das unidades
        Evento de auditoria | Quem, quando, o quê, antes e depois | Append-only: a trilha não é editada, só recebe
 
 --- S6 · Semana 6: Pré-SR1 · 26/09/2026 ----------------------------------------------------
@@ -1875,9 +1881,10 @@ própria. Passos que apontam para tela ainda não liberada são descartados.
       primeiro.
       tela: analytics · alvo: ana-risco
 
-  08. Responda quem discordou
-      o que fazer: Aqui ficam os pedidos de revisão. Leia o motivo de cada um e responda
-      por escrito.
+  08. Acompanhe quem discordou
+      o que fazer: Aqui ficam os pedidos de revisão, com a situação e a resposta de cada
+      um. No protótipo as respostas vêm da base de exemplo; o formulário de responder entra
+      com a persistência real.
       por quê: Pedido sem resposta escrita é caixa de sugestões. A resposta fica guardada
       junto do pedido, para sempre.
       tela: contestacao · alvo: cont-lista
@@ -1951,11 +1958,12 @@ própria. Passos que apontam para tela ainda não liberada são descartados.
       tela: lancamento · alvo: lanc-formularios
 
   03. Veja a sua nota e a composição dela
-      o que fazer: Escolha o seu nome no seletor. O cartão mostra a média do distrito, e o
-      quadro abaixo abre a nota de cada unidade que entrou na conta.
+      o que fazer: Escolha um gerente distrital no seletor. O cartão mostra a média do
+      distrito, e o quadro "como a média foi composta" abre a nota de cada unidade que
+      entrou na conta.
       por quê: Uma média sem composição é um número solto. Aqui dá para ver de onde cada
       décimo veio.
-      tela: meu-resultado · alvo: res-composicao
+      tela: meu-resultado · alvo: res-seletor
 
   04. Discorde, se for o caso
       o que fazer: Abra uma contestação, diga qual indicador (ou a nota toda) e escreva o
@@ -2091,8 +2099,8 @@ histórico de quem mudou o quê e quando, que é exatamente o que o projeto defe
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   - [feito] Pesquisa estruturada (Matheus Lustosa)
   - [feito] Problema contextualizado (Matheus Lustosa)
-  - [feito] Personas e stakeholders (Matheus Lustosa) -> /registro#ciclo-s2
-  - [feito] Mapa de empatia (Matheus Lustosa) -> /registro#ciclo-s2
+  - [feito] Personas e stakeholders (Matheus Lustosa) -> /#ciclo-s2
+  - [feito] Mapa de empatia (Matheus Lustosa) -> /#ciclo-s2
   - [feito] Benchmarking (Fernando Cavalcanti)
   - [feito] SWOT (Gabriel Tenório de Lima Teixeira)
   - [feito] Objetivos (Gabriel Tenório de Lima Teixeira)
@@ -2104,7 +2112,7 @@ histórico de quem mudou o quê e quando, que é exatamente o que o projeto defe
   - [feito] Alternativas levantadas (João Pedro Mamede)
   - [feito] Critérios de decisão (Gabriel Tenório de Lima Teixeira)
   - [feito] Ideia escolhida com justificativa (Gabriel Tenório de Lima Teixeira)
-  - [feito] Reunião com o cliente registrada (Matheus Lustosa) -> /registro#s3
+  - [feito] Reunião com o cliente registrada (Matheus Lustosa) -> /#ciclo-s3
 
   S4 · Semana 4: Proposta · 29/08/2026
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -2313,7 +2321,8 @@ banca pergunte. Auditoria que só encontra acerto não auditou nada.
   pedido: "E painéis de acompanhamento para a gestão."
 
   onde está:
-    - src/components/sistema/telas/cam.tsx: funil por área e pendências do ciclo corrente
+    - src/components/sistema/telas/painel-seab.tsx: funil por unidade e pendências do ciclo
+      corrente
     - src/components/sistema/telas/gestao.tsx: agregados, ranking anonimizável e exportação
       em CSV
 
@@ -2452,8 +2461,9 @@ banca pergunte. Auditoria que só encontra acerto não auditou nada.
   pedido: "Evidências de testes; registros de testes e evolução do backlog."
 
   onde está:
-    - 420 testes de unidade em Vitest, 72 end-to-end em Playwright
-    - scripts/verificar-vazamento.ts: 98 checagens contra o build de produção
+    - 503 casos em Vitest (480 rodam localmente; 23 exigem um PostgreSQL real e rodam no
+      CI), 92 jornadas em Playwright
+    - scripts/verificar-vazamento.ts: 122 checagens contra o build de produção
 
   [parcial] acessibilidade
   ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -2461,8 +2471,8 @@ banca pergunte. Auditoria que só encontra acerto não auditou nada.
   validação do SR2)."
 
   onde está:
-    - src/lib/contraste.test.ts: 19 checagens de contraste AA, nos dois temas, lidas do
-      próprio globals.css
+    - src/lib/contraste.test.ts: 35 checagens de contraste AA, nos dois temas e nas duas
+      peles, lidas do próprio globals.css
     - Modo claro e escuro com botão, tema no cookie e aplicado pelo servidor (ADR-027)
     - Navegação por teclado: sanfonas nativas, foco visível com anel de acento, link de
       pular para o conteúdo

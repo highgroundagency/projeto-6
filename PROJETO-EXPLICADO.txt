@@ -637,15 +637,17 @@ desenhada para isso.
 
 Números atuais (todos verificáveis rodando npm run verificar):
 
-- 434 testes de unidade (Vitest). Cobrem o motor de cálculo com casos
-  de borda, o motor de releases, datas, seed, admin, contraste de
-  cores, e até coisas como "toda âncora de evidência tem destino" e
+- 480 testes de unidade (Vitest) rodando localmente, mais 23 que
+  exigem um PostgreSQL real e rodam no CI. Cobrem o motor de cálculo
+  com casos de borda (subindicadores, fronteiras de faixa,
+  arredondamento), o motor de releases, datas, seed, admin, contraste
+  de cores, e até coisas como "toda âncora de evidência tem destino" e
   "nenhum CPF na base".
-- 78 jornadas de ponta a ponta (Playwright), rodadas em tela grande E
+- 92 jornadas de ponta a ponta (Playwright), rodadas em tela grande E
   em celular de 360px. Elas abrem o site de verdade num navegador e
   clicam: login do admin, os 4 perfis nas 8 telas, o tutorial guiado, a
   troca de tema, a memória de cálculo, a exportação.
-- 94 checagens de vazamento contra o build de produção: prova de que
+- 122 checagens de vazamento contra o build de produção: prova de que
   conteúdo futuro não chega ao navegador.
 - Testes do banco guardado rodam no CI contra um PostgreSQL real.
 - O CI (GitHub Actions) roda tudo isso a cada push.
@@ -863,7 +865,7 @@ Comandos úteis:
 Documentos para ler depois deste:
   DOSSIE.txt            o conteúdo literal de tudo, gerado do código
   CLAUDE.md             as regras da casa (as 11 inegociáveis)
-  docs/decisoes.md      os porquês, decisão por decisão (29 ADRs)
+  docs/decisoes.md      os porquês, decisão por decisão (34 ADRs)
   docs/releases.md      como operar o que o professor vê
   docs/seguranca.md     a lente de Segurança
   docs/nuvem.md         a lente de Nuvem

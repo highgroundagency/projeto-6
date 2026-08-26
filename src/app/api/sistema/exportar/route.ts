@@ -4,15 +4,22 @@ import { exigirPerfil } from '@/lib/sistema'
 
 /** Exportação dos resultados de um ciclo em CSV (§8.4, tela 5). */
 export async function GET(requisicao: NextRequest) {
-  await exigirPerfil('painel-gestao')
+  const contexto = await exigirPerfil('painel-gestao')
 
   const cicloId = requisicao.nextUrl.searchParams.get('ciclo') ?? ''
-  const distritoId = requisicao.nextUrl.searchParams.get('distrito') ?? ''
   const anonimo = requisicao.nextUrl.searchParams.get('anonimo') === '1'
 
   const dados = await carregarDados()
   const ciclo = dados.cicloPorId(cicloId)
   if (!ciclo) return new Response('Ciclo não encontrado.', { status: 404 })
+
+  // O MESMO recorte da tela: o gerente distrital exporta o próprio distrito,
+  // nunca a rede inteira, e a URL não contorna isso.
+  let distritoId = requisicao.nextUrl.searchParams.get('distrito') ?? ''
+  if (contexto.perfil === 'gerente_distrital') {
+    const valido = dados.distritos.some((d) => d.id === distritoId)
+    distritoId = valido ? distritoId : (dados.distritos[0]?.id ?? '')
+  }
 
   const todas = await avaliacoesDoCiclo(ciclo.id)
   const avaliacoes = [...todas]

@@ -415,6 +415,10 @@ function gerarEventos(
       'homologado',
       'publicado',
     ]
+    // A cronologia respeita a janela: lançamentos acontecem até o dia 20,
+    // então validação, homologação e publicação vêm DEPOIS. Uma trilha com
+    // em_validacao antes do último lançamento seria prova contra si mesma.
+    const diaDaTransicao = [1, 21, 24, 27]
     let anterior: EstadoCiclo = 'rascunho'
     for (const [i, estado] of transicoes.entries()) {
       const alcancado =
@@ -425,7 +429,7 @@ function gerarEventos(
 
       eventos.push({
         id: proximoId(),
-        quando: carimbo(ciclo.competencia, Math.min(1 + i * 8, 28), 10),
+        quando: carimbo(ciclo.competencia, diaDaTransicao[i], 10),
         autor: 'seab',
         perfil: 'seab',
         tipo: 'ciclo_estado_alterado',

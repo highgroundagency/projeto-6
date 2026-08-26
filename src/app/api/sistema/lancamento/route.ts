@@ -93,6 +93,10 @@ export async function POST(requisicao: NextRequest) {
   }
 
   const agora = new Date().toISOString()
+  // O autor da trilha diz quem de fato lançou: o gerente da unidade quando é
+  // ele; o próprio papel quando a SEAB ou a gerência distrital lança por ela.
+  const autor =
+    identidade.perfil === 'gerente_unidade' ? `ger-${dados.unidadeId}` : identidade.perfil
   const resultado = await repositorio().registrarLancamento(
     {
       subindicadorId: dados.subindicadorId,
@@ -102,8 +106,8 @@ export async function POST(requisicao: NextRequest) {
       numerador: subindicador.tipo === 'razao' ? (dados.numerador ?? null) : null,
       denominador: subindicador.tipo === 'razao' ? (dados.denominador ?? null) : null,
       evidencia: dados.evidencia,
-      autor:
-        identidade.nome !== 'Perfil simulado' ? identidade.nome : `ger-${dados.unidadeId}`,
+      autor,
+      perfil: identidade.perfil,
     },
     agora,
   )
