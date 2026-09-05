@@ -14,11 +14,21 @@ function porcentagem(valor: number | null): string {
   return valor === null ? ', ' : `${(valor * 100).toFixed(1)}%`
 }
 
-export function MemoriaDeCalculo({ avaliacao }: { avaliacao: Avaliacao }) {
+export function MemoriaDeCalculo({
+  avaliacao,
+  aberta = false,
+}: {
+  avaliacao: Avaliacao
+  /** Já aberta ao carregar. O pitch usa; a tela "meu resultado" deixa fechada. */
+  aberta?: boolean
+}) {
   const { memoria } = avaliacao
 
   return (
-    <details className="group overflow-hidden rounded-xl border border-linha bg-cartao">
+    <details
+      open={aberta || undefined}
+      className="group overflow-hidden rounded-xl border border-linha bg-cartao"
+    >
       <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-4 py-3 hover:bg-superficie">
         <span>
           <span className="fonte-display text-base">Memória de cálculo</span>

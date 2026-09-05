@@ -73,6 +73,7 @@ src/
 ├── app/                 rotas (App Router)
 ├── components/
 │   ├── base/            botão, selo, marca, rodapé, cabeçalho, fluxo, faixa do admin
+│   ├── pitch/           o deck do Kick-off: slides no servidor, teclado no cliente
 │   ├── registro/        topo, trilhas, cartão do registro semanal
 │   ├── sistema/         primitivos, ícones, sanfona da tela, tutorial, perfis
 │   │   └── telas/       o corpo das 8 telas, sem gate por dentro (ADR-023)
@@ -82,6 +83,7 @@ src/
 │   ├── ciclos/          um arquivo por ciclo + registry server-only
 │   ├── equipe.ts        os 6 integrantes e seus papéis
 │   ├── checklist.ts     status das evidências da matriz
+│   ├── pitch.ts         fonte única do pitch: slides, tempos, quem fala, notas
 │   ├── tutoriais.ts     o aprendizado guiado de cada perfil
 │   └── produto.ts       nome, problema, pergunta do projeto
 └── lib/
@@ -128,6 +130,7 @@ execução.
 | `npm test` | Vitest |
 | `npm run typecheck` | `tsc --noEmit` — quebra se um ciclo publicado estiver incompleto |
 | `npm run verificar-vazamento` | Prova que conteúdo futuro não vaza (exige `npm run build` antes) |
+| `npm run pitch-pdf` | Gera `docs/pitch-kickoff.pdf` e as capturas de `public/pitch/` a partir de `/pitch` (exige `npm run build` antes) |
 | `npm run e2e` | Playwright |
 | `npm run testar-rls` | Políticas do schema guardado contra um Postgres real (exige `DATABASE_URL_TESTE`) |
 | `npm run semear` | Semeia a base sintética num Postgres com o schema aplicado (exige `DATABASE_URL`) |

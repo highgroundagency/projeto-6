@@ -45,3 +45,12 @@ export const URL_DRIVE = process.env.NEXT_PUBLIC_DRIVE_URL ?? ''
 /** Repositório do projeto — usado como evidência de código nos ciclos. */
 export const URL_REPOSITORIO =
   process.env.NEXT_PUBLIC_REPO_URL ?? 'https://github.com/highgroundagency/projeto-6'
+
+/**
+ * O endereço público do site: o que o slide de fechamento do pitch mostra e o
+ * que a banca digita depois. O padrão é o deploy da Vercel a partir de `main`.
+ */
+export const URL_SITE = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://projeto6-si.vercel.app'
+
+/** O mesmo endereço sem o protocolo, para caber numa tela e ser lido em voz alta. */
+export const ENDERECO_SITE = URL_SITE.replace(/^https?:\/\//, '').replace(/\/$/, '')

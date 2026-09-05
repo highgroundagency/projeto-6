@@ -513,7 +513,7 @@ privacidade sustenta metade dos critérios de Segurança da Informação.
 
 **Consequência.** A auditoria virou dado versionado em `src/content/auditoria.ts`: cada
 exigência do professor com o texto literal, o estado e o caminho no repositório onde ela está
-atendida. Vinte e três requisitos rastreados, dezoito atendidos, quatro parciais e um fora de
+atendida. Vinte e quatro requisitos rastreados, dezoito atendidos, cinco parciais e um fora de
 escopo declarado. O dossiê renderiza essa tabela, então a auditoria envelhece junto com o
 código em vez de virar uma conversa perdida.
 
@@ -865,3 +865,44 @@ treinados no recorte antigo, com aviso na própria tela de analytics e re-treino
 "ML: entrega parcial" do cronograma. Renomear os ids de perfil invalida cookies antigos do
 seletor simulado, que caem no padrão sem erro. O custo de remodelar cedo foi um fim de
 semana de refatoração; o custo de adiar seria pago com juros a cada tela nova.
+
+## ADR-035 · A régua oficial chegou, e o pitch virou uma rota do site
+
+**Contexto.** Em 05/09 o órgão enviou dois arquivos: o Diário Oficial de 21/09/2024 com a
+Portaria Conjunta nº 001/2024, que regulamenta a gratificação, e uma planilha anonimizada de
+um ciclo real, para a equipe conferir a régua. Sete dias antes do Kick-off, o roteiro do pitch
+que existia no registro estava escrito no vocabulário anterior à ADR-034, e o briefing do
+pitch trazia afirmações que o repositório não sustentava: que a comissão "não existe mais",
+que o ML usa fonte pública, que há um registro de riscos numerado, que as personas têm nome.
+
+**Decisão.** Três coisas, na ordem em que custam menos para desfazer. (1) A portaria entra no
+repositório, transcrita em `docs/portaria-001-2024.md`, porque é ato público; a planilha NÃO
+entra, porque tem gente, mesmo com o nome trocado, e o repositório é público. Ela fica como
+referência privada da equipe. Os nomes dos membros da comissão, publicados nas portarias nº
+002 e nº 003 do mesmo Diário, também ficaram fora. (2) O pitch é conteúdo do projeto e vive
+onde o conteúdo vive: `src/content/pitch.ts` é a fonte única (slides, tempos, quem fala,
+notas), a rota `/pitch` renderiza os nove slides e o registro do ciclo `ko` mostra a mesma
+tabela. É a primeira rota protegida por ciclo, e não por funcionalidade: `podeVer(visao,
+'ko')` decide, e oculto é 404, como nas telas. O deck é aprimoramento progressivo: sem
+JavaScript é uma pilha imprimível; com JavaScript, o segundo componente cliente do projeto
+mostra um slide por vez e escuta o teclado, recebendo só o total de slides, nunca texto, para
+nada do Kick-off chegar ao bundle antes da hora. A demonstração do slide 4 é o componente real
+da memória de cálculo, com o motor real, e uma captura estática de reserva no mesmo slide.
+O PDF e as capturas saem da própria rota, por Playwright, na identidade do site. (3) O motor
+não muda agora. A portaria confirma o núcleo do modelo (subindicadores com fórmula, régua por
+tipo de unidade, nota do distrito como média das unidades) e diverge em dois pontos: manda
+tirar a média das NOTAS dos subindicadores, cada uma já graduada, onde o motor tira a média dos
+valores e gradua depois; e o art. 8º manda desconsiderar o que não pôde ser aferido e
+REDISTRIBUIR o peso, onde o seed usa `zera_com_aviso`. As duas viram `regra-v3` na Semana 5,
+com o prazo de recurso do art. 9º, e o slide 7 diz isso em voz alta, porque honestidade no
+palco vale mais do que um motor remendado a sete dias do pitch.
+
+**Consequência.** Uma bomba-relógio desarmada de passagem: `scripts/verificar-vazamento.ts`
+testava `perfis.includes('cam')`, perfil extinto na ADR-034, e a comparação era sempre falsa;
+quando a s5 fosse liberada (12/09, pelo adiantamento de sete dias), três telas responderiam
+3xx onde o script exigia 404 e o `npm run verificar` quebraria no dia do Kick-off.
+`PERFIL_PADRAO` passou a morar em `features.ts`, que Node puro consegue importar. Cada número
+dito no pitch é conferido por teste contra o arquivo de onde vem, para o número da tela e o
+número do repositório não se separarem. As 39 linhas de `docs/uso-de-ia.md` que estavam
+pendentes foram assinadas por quem as validou. E o nome de cada integrante aparece no pitch
+como quem fala, nunca como quem construiu: a equipe construiu.

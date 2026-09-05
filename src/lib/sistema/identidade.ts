@@ -1,9 +1,9 @@
 import 'server-only'
 import { cookies } from 'next/headers'
-import type { PerfilId } from '@/lib/features'
+import { PERFIL_PADRAO, type PerfilId } from '@/lib/features'
 
+export { PERFIL_PADRAO }
 export const NOME_COOKIE_PERFIL = 'prumo_perfil'
-export const PERFIL_PADRAO: PerfilId = 'seab'
 
 const PERFIS_VALIDOS: readonly PerfilId[] = [
   'seab',

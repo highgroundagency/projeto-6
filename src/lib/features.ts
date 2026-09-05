@@ -24,6 +24,18 @@ export interface Feature {
  */
 export type PerfilId = 'seab' | 'administrador' | 'gerente_distrital' | 'gerente_unidade'
 
+/**
+ * O perfil de quem chega sem escolher nenhum.
+ *
+ * Mora AQUI, e não em `sistema/identidade.ts`, porque aquele módulo é
+ * `server-only` e o script de verificação de vazamento roda em Node puro. Ele
+ * testava `includes('cam')`, um perfil que deixou de existir na ADR-034, e a
+ * comparação era sempre falsa: no dia em que a s5 fosse liberada, três telas
+ * responderiam 3xx onde o script exigia 404 e o `npm run verificar` quebraria
+ * sem ninguém ter tocado no código. Uma constante só, importada dos dois lados.
+ */
+export const PERFIL_PADRAO: PerfilId = 'seab'
+
 export const FEATURES = [
   {
     id: 'painel-seab',

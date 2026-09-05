@@ -617,95 +617,143 @@ feedback de professor ou de cliente seria fabricar evidência.
 --- KO · Kick-off · 12/09/2026 -------------------------------------------------------------
 
 
-  Objetivo da semana  [validado, validado por fernando]
-  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  Objetivo da semana  [validado, validado por gabriel]
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   Apresentar em 5 minutos o problema, sua relevância, a ideia priorizada e o direcionamento
-  do projeto, com fala distribuída entre os seis.
+  do projeto, com fala distribuída entre os seis, direto do site.
 
-  Avanços  [validado, validado por fernando]
+  Avanços  [validado, validado por gabriel]
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  - Roteiro conferido linha a linha contra o repositório: quem consolida e homologa, os
+    quatro papéis, as oito telas, os estados do mês e cada número dito no palco. As
+    correções estão na tabela do documento abaixo.
+  - Os slides viraram uma rota do próprio site, /pitch, liberada pelo mesmo motor de
+    releases do registro: nove telas, uma ideia por tela, setas do teclado, notas do
+    apresentador e a memória de cálculo real dentro do slide da demonstração.
+  - A régua oficial chegou: a Portaria Conjunta nº 001/2024, publicada no Diário Oficial de
+    21/09/2024, foi transcrita para o repositório e comparada com o motor. Ela confirma o
+    modelo e corrige dois pontos.
+  - PDF e capturas gerados a partir da própria rota, na identidade do site, versionados
+    para o caso de a rede falhar no dia.
+
+  Decisões  [validado, validado por gabriel]
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  - Roteiro do pitch fechado, cronometrado em blocos de aproximadamente 45 segundos por
-    integrante.
-  - Estrutura de slides definida: oito telas, uma ideia por tela.
-  - Demonstração ao vivo da memória de cálculo escolhida como momento central da
-    apresentação.
-
-  Decisões  [validado, validado por fernando]
-  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  - Mostrar a memória de cálculo ao vivo em vez de descrevê-la em slide.
+  - Apresentar direto do site, não de um arquivo de slides.
+      por quê: O pitch é conteúdo do projeto como qualquer outro: entra no Git, passa pelo
+      release e pelo teste de vazamento, e a banca acessa depois pelo mesmo endereço. O PDF
+      é a reserva, não o original.
+  - Mostrar a memória de cálculo ao vivo, com captura estática de reserva no mesmo slide.
       por quê: É o argumento do projeto contra a planilha; ver o número se explicar sozinho
-      vale mais que ouvir sobre isso.
-  - Cada integrante fala de uma parte que ele mesmo construiu.
-      por quê: A diretriz pede fala distribuída, e o domínio real do assunto aparece na
-      hora das perguntas.
+      vale mais que ouvir sobre isso. A captura existe para a demonstração falhar sem parar
+      o roteiro.
+  - Dividir a apresentação por bloco do roteiro, não por quem construiu o quê.
+      por quê: A diretriz pede fala distribuída; a equipe construiu tudo em conjunto, e o
+      pitch é da equipe. Cada bloco tem uma voz para a fala ter ritmo, e as perguntas
+      qualquer um responde.
+  - A portaria entra no repositório; a planilha anonimizada que veio junto, não.
+      por quê: A portaria é ato público. A planilha tem gente, mesmo com o nome trocado, e
+      o repositório é público: dado real da SESAU ali é irreversível. Ela fica como
+      referência privada da equipe para validar a régua.
   - Abrir pelo problema, não pela solução.
       por quê: A relevância do case é o que sustenta o projeto; a tecnologia é
       consequência.
 
-  Bloqueios  [validado, validado por fernando]
-  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  - Ensaio cronometrado com os seis integrantes ainda não realizado.
+  Bloqueios  [validado, validado por gabriel]
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  - Ensaio cronometrado com os seis integrantes ainda não realizado. A rota /pitch mostra o
+    tempo de cada slide nas notas para isso.
+  - O motor ainda calcula pela régua deduzida na reunião de 22/08, não pela portaria: a
+    média das notas dos subindicadores e a redistribuição de peso do art. 8º entram como
+    regra versão 3 na Semana 5.
 
-  Feedback recebido  [validado, validado por fernando]
-  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  Feedback recebido  [validado, validado por gabriel]
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   - (equipe) Primeira versão do roteiro passava de 7 minutos. O corte foi tirar arquitetura
     do pitch e deixá-la para a arguição.
+  - (cliente) O órgão enviou a portaria que regulamenta a gratificação e uma planilha
+    anonimizada de um ciclo real, para a equipe conferir a régua. Só a portaria entra no
+    repositório.
 
-  Próximos passos  [validado, validado por fernando]
-  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  - Ensaiar com cronômetro e ajustar os blocos que estourarem.
-  - Preparar respostas para as três perguntas mais prováveis da banca.
-  - Entrar na Semana 5 com o diagrama de arquitetura e o fluxo de dados prontos.
+  Próximos passos  [validado, validado por gabriel]
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  - Ensaiar com cronômetro em /pitch e ajustar os blocos que estourarem.
+  - Preparar as respostas das perguntas prováveis da banca, listadas no documento abaixo.
+  - Entrar na Semana 5 com a régua oficial carregada no motor como regra versão 3, e com o
+    diagrama de arquitetura pronto.
 
-  Responsáveis  [validado, validado por fernando]
-  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  - Gabriel Tenório de Lima Teixeira: Abertura: problema e contexto do cliente.
-  - Matheus Lustosa: Relevância: quem sofre e o que a pesquisa mostrou.
-  - João Henrique Micucci: Causa raiz: por que a planilha não escala.
-  - João Pedro Mamede: Demonstração da ideia priorizada e da memória de cálculo.
-  - Rafael Serpa: Onde entram os modelos e o que eles respondem.
-  - Fernando Cavalcanti: Governança, privacidade e direcionamento até o SR1.
+  Responsáveis  [validado, validado por gabriel]
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  - Gabriel Tenório de Lima Teixeira: Fala: capa, o problema e o fechamento.
+  - Matheus Lustosa: Fala: quem sofre com o problema.
+  - João Pedro Mamede: Fala: a ideia priorizada, com a demonstração ao vivo.
+  - João Henrique Micucci: Fala: como funciona, regra como dado.
+  - Rafael Serpa: Fala: os dados e o que os modelos respondem.
+  - Fernando Cavalcanti: Fala: riscos, transparência e o caminho até o SR1.
 
-  Evidências  [validado, validado por fernando]
-  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  - [documento] Roteiro do pitch -> /#ciclo-ko
+  Evidências  [validado, validado por gabriel]
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  - [prototipo] Os slides do pitch, no site -> /pitch
+  - [documento] A régua oficial -> #doc-ko-regua-oficial
+  - [documento] Roteiro do pitch -> #doc-ko-roteiro-pitch
+  - [codigo] Roteiro, PDF e portaria transcrita ->
+    https://github.com/highgroundagency/projeto-6/tree/main/docs
 
   Documentos de entrega desta semana (3)
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-  >>> ROTEIRO DO PITCH: 5 MINUTOS
+  >>> ROTEIRO DO PITCH: 4 MINUTOS E 55 SEGUNDOS
       âncora no site: #doc-ko-roteiro-pitch
-      os cinco minutos minuto a minuto, com o que dizer em cada um.
+      os nove slides, com o tempo, quem fala e o que a tela mostra em cada um.
 
-      Tempo | Quem | O que diz | Slide
+      Começa em | Slide | Quem fala | O que a tela mostra | Tempo
 
-       0:00–0:45 | Gabriel | A SESAU paga gratificação variável desde 2023 com base em indicadores de portaria. A consolidação é manual, em planilha, feita por uma comissão pequena. | 1–2
-       0:45–1:30 | Matheus | Quem sofre: a analista que fecha o ciclo com medo de ter errado, a área que não sabe o que informar, o gestor que recebe um número sem explicação. | 3
-       1:30–2:15 | João Henrique | A causa não é a planilha ser ruim: é a regra da portaria existir apenas dentro de fórmulas. Mudou a portaria, muda tudo à mão. | 4
-       2:15–3:15 | João Pedro | A ideia priorizada, ao vivo: lançamento validado, cálculo e a memória mostrando de onde veio cada número. | 5–6
-       3:15–4:00 | Rafael | Com o histórico de indicadores dá para prever risco de não-atingimento e sinalizar erro provável de digitação. Sinaliza, não bloqueia: a decisão continua humana. | 7
-       4:00–4:45 | Fernando | Trilha de auditoria imutável, dados sintéticos no MVP e base legal mapeada. Direcionamento até o SR1. | 8
+       0:00 | 1. prumo | Gabriel | Wordmark, uma linha, e a pílula do marco: kick-off, data e equipe. | 0:05
+       0:05 | 2. todo mês, uma conta feita à mão | Gabriel | O fluxo da portaria em cinco etapas, com o ponto de quebra marcado na consolidação. | 0:35
+       0:40 | 3. três pessoas, o mesmo número | Matheus | Três cartões, um por papel: quem consolida, quem informa, quem é avaliada. Uma frase de cada. | 0:40
+       1:20 | 4. a nota com a conta aberta | João | O cartão da nota e a memória de cálculo reais, do motor do Prumo, para uma unidade sintética. Captura estática de reserva logo abaixo. | 0:45
+       2:05 | 5. regra é dado, não fórmula | João | O caminho de um número em quatro passos, os quatro papéis e as etapas do mês. | 0:45
+       2:50 | 6. nenhum dado real. ainda. | Rafael | Os números da base sintética, e a linha de base publicada ao lado de cada modelo. | 0:40
+       3:30 | 7. o que pode dar errado, dito antes | Fernando | Quatro contagens: ameaças STRIDE, itens OWASP, princípios de privacidade e usos de IA assinados. | 0:40
+       4:10 | 8. de hoje ao sr1: três semanas | Fernando | Uma linha do tempo com os três marcos e um compromisso em cada. | 0:30
+       4:40 | 9. prumo | Gabriel | Wordmark, o endereço do site e a pergunta para a banca. | 0:15
 
-  >>> ESTRUTURA DE SLIDES
-      âncora no site: #doc-ko-slides
-      a sequência de telas do pitch.
+      Soma: 4:55. A fala de cada slide está nas notas do apresentador, em /pitch, com a tecla n. Quem fala não opera: uma pessoa fica na tela o tempo todo, avançando com as setas. Se a demonstração do slide 4 falhar, a captura estática está no próprio slide.
 
-      - Slide 1: Prumo, uma linha: o cálculo da gratificação que se explica sozinho.
-       - Slide 2: O processo hoje, em cinco etapas, com o ponto de quebra marcado.
-       - Slide 3: As três pessoas afetadas, com uma frase de cada.
-       - Slide 4: A causa raiz: a regra vive dentro da fórmula.
-       - Slide 5: A ideia: regra como dado, versionada.
-       - Slide 6: Demonstração ao vivo da memória de cálculo.
-       - Slide 7: O que os modelos respondem, com a métrica ao lado.
-       - Slide 8: Direcionamento até o SR1 e o que estará pronto lá.
+  >>> A RÉGUA OFICIAL: PORTARIA CONJUNTA Nº 001/2024
+      âncora no site: #doc-ko-regua-oficial
+      o que a norma publicada confirma no modelo do Prumo, e os dois pontos em que ela o
+      corrige.
+
+      Publicada no Diário Oficial do Recife nº 131, de 21/09/2024, com efeito desde 01/09/2024. É o ato que detalha os indicadores e subindicadores do Decreto nº 36.482/2023 e institui a Comissão de Avaliação de Metas. A transcrição está em docs/portaria-001-2024.md; abaixo, o que importa para o motor.
+      A Comissão de Avaliação de Metas (CAM) é a responsável por consolidar, analisar, deliberar e divulgar os resultados da avaliação do cumprimento dos indicadores de gestão e dos recursos interpostos.
+      Art. 6º
+
+       Tema | O motor hoje (regra v2) | A portaria | Estado
+
+       O que se preenche | Subindicador: valor direto ou numerador e denominador | Cada subindicador tem fórmula numerador ÷ denominador × 100, ou contagem direta | Confirmado
+       Régua por tipo de unidade | Aplicabilidade tipo × indicador → meta e peso, na regra versionada | O Indicador 4 muda inteiro por tipo (USF, CAPS, UBT, UCIS, CECON, MAC) e os pesos mudam por função | Confirmado
+       Nota do distrito | Média simples das unidades | Média das notas das unidades, em todos os indicadores distritais | Confirmado
+       Composição do indicador | Média dos valores apurados, graduada depois contra a meta | Média simples das notas dos subindicadores, cada uma já graduada; o Indicador 4 usa média ponderada | Diverge: regra v3 na Semana 5
+       Indicador sem lançamento | zera com aviso | Art. 8º: desconsidera e redistribui o peso proporcionalmente | Diverge: regra v3 na Semana 5
+       Quem homologa | Coordenação da SEAB, no sistema | A CAM, com apoio da SECOGE, quórum de 4 (arts. 5º e 6º) | O perfil do sistema é operacional; a CAM homologa fora dele
+       Contestação | Tela sem prazo | Art. 9º: 10 dias corridos para recorrer, 5 dias úteis para responder | Prazo entra na regra v3
+
+       - Fluxo do art. 7º: cada secretaria executiva coleta e envia à SECOGE até o dia 20; a CAM valida e publica até o último dia útil; a SEGTES pede a implantação na folha até o 6º dia útil do segundo mês.
+       - A comissão tem sete áreas: SECOGE, SEAB, SEAF, SEGTES, SERMAC, SEVS e SEPLAGTD, com titular e suplente cada. Os nomes ficaram fora do repositório de propósito.
+       - Cinco indicadores: registro de medicamentos e MMH; gestão do trabalho; satisfação do usuário; desempenho das unidades; e vigilância em saúde, este só para funções distritais. Pesos de 20%, 20%, 20%, 40% e 30%, variando por função.
+
+      A demonstração do pitch usa a unidade sintética usf-canario na regra v2, a deduzida em 22/08. A régua oficial vira a regra v3 na Semana 5, e o slide 7 diz isso em voz alta.
 
   >>> PERGUNTAS PROVÁVEIS DA BANCA
       âncora no site: #doc-ko-perguntas
-      o que esperamos ouvir e a resposta preparada.
+      o que esperamos ouvir e a resposta que o repositório sustenta.
 
-      - “Por que não usar uma ferramenta pronta?”, Nenhuma versiona regra normativa nem produz memória de cálculo; a resposta está no benchmarking da Semana 2.
-       - “E se a portaria mudar?”: Regra é dado, não código: cria-se uma nova versão, e os ciclos já homologados continuam reproduzindo o resultado antigo.
-       - “Vocês usam dados reais de servidores?”, Não. O MVP roda com dados sintéticos gerados por script com semente fixa, e isso está documentado.
+      - "Vocês já falaram com o cliente?" Sim. Reunião em 22/08 com a SECOGE, ata sintetizada na Semana 3; e em 05/09 o órgão enviou a portaria e uma planilha anonimizada. A validação formal da régua com a SEAB está marcada para o caminho até o SR1.
+       - "E se a portaria mudar?" Regra é dado versionado, não código. Cria-se uma versão nova; os meses já homologados continuam reproduzindo o resultado antigo, porque cada ciclo aponta para a versão que usou. A própria chegada da portaria oficial é o primeiro caso real disso: vira a regra v3.
+       - "Qual o diferencial em relação à planilha?" A memória de cálculo: cada número responde de onde veio, com o subindicador, a meta e o peso que o geraram. E a trilha: toda escrita tem autor, data, antes e depois. Nenhuma ferramenta pronta do benchmarking da Semana 2 versiona regra normativa nem produz memória de cálculo.
+       - "Onde entra o machine learning, e por que ele não decide?" Fora do cálculo. Os modelos treinam offline e publicam sinais na tela de analytics, cada um com a linha de base ao lado; o classificador de meta perde para o palpite majoritário e isso está escrito. A portaria é determinística; o modelo diz onde olhar, não quanto alguém recebe.
+       - "Por que o banco está desligado?" Porque o MVP não precisa dele para provar a tese, e ligar um banco a um repositório público com dado de servidor seria o risco errado na hora errada. O schema PostgreSQL com RLS e gatilhos está escrito e testado contra um banco real; a camada de dados isola as telas para ele entrar sem reescrever tela.
+       - "Como garantem que não há dado real?" A base é gerada por script com semente fixa, e há teste que falha se um CPF, e-mail ou telefone aparecer nela. A planilha anonimizada do cliente não entrou no repositório, e nenhum dado real entra em prompt de IA.
       O Kick-off tem peso formativo na matriz: a nota não vem daqui, mas o direcionamento que sai da arguição orienta tudo até o SR1.
 
 --- S5 · Semana 5: Arquitetura · 19/09/2026 ------------------------------------------------
@@ -2580,6 +2628,7 @@ Os porquês completos estão em `docs/decisoes.md`. Os títulos, aqui:
   - ADR-032 · A arquitetura ganhou página no site, com o prompt que a redesenha
   - ADR-033 · O CSS da casa entrou em camada, e um bug de três meses apareceu
   - ADR-034 · A reunião com o cliente remodelou o domínio, e o MVP acompanhou já
+  - ADR-035 · A régua oficial chegou, e o pitch virou uma rota do site
 
 ============================================================================================
 13.  COMO RODAR E COMO CONFERIR
@@ -2596,6 +2645,7 @@ Os porquês completos estão em `docs/decisoes.md`. Os títulos, aqui:
   npm run semear                 tsx scripts/semear.ts
   npm run testar-rls             vitest run src/lib/supabase/rls.test.ts src/lib/dados/semeadura.test.ts
   npm run verificar-vazamento    tsx scripts/verificar-vazamento.ts
+  npm run pitch-pdf              tsx scripts/pitch-pdf.ts
   npm run dossie                 tsx --tsconfig scripts/tsconfig.dossie.json scripts/dossie.ts
   npm run conferir-dossie        tsx --tsconfig scripts/tsconfig.dossie.json scripts/dossie.ts --conferir
   npm run verificar              npm run typecheck && npm run test && npm run build && npm run verificar-vazamento && npm run conferir-dossie

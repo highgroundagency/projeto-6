@@ -39,6 +39,8 @@ cada build.
   sem registro" — uma decisão explícita, nunca um esquecimento.
 - **Funcionalidades do sistema:** `src/lib/features.ts` amarra cada tela ao ciclo que a
   libera. Rota não liberada devolve **404**, não uma tela de "em breve".
+- **O pitch do Kick-off:** `/pitch` é a primeira rota protegida por ciclo, e não por
+  funcionalidade: aparece quando o release libera `ko`, e antes disso é 404 como as telas.
 
 ## Painel administrativo
 

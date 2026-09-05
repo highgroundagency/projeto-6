@@ -9,6 +9,9 @@
  *   4. Rota de funcionalidade não liberada responde 404, não "em breve".
  *   5. O admin, com sessão válida, continua vendo tudo (se não, o gate está
  *      escondendo demais e o painel não serve para nada).
+ *   6. `/pitch`, a primeira rota protegida por CICLO e não por funcionalidade,
+ *      responde 404 enquanto o Kick-off estiver oculto e 200 para o admin; e
+ *      nenhum texto de slide chega ao bundle do cliente.
  *
  * Uso: npm run verificar-vazamento    (exige `npm run build` antes)
  */
@@ -18,7 +21,8 @@ import { readdir, readFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import { IDS_CICLOS, type CicloId } from '../src/lib/cronograma'
 import { hojeEmRecife } from '../src/lib/datas'
-import { FEATURES } from '../src/lib/features'
+import { FEATURES, PERFIL_PADRAO, type PerfilId } from '../src/lib/features'
+import { SLIDES } from '../src/content/pitch'
 import { ciclosVisiveis, calcularReleaseAtual, ADIANTAMENTO_PADRAO } from '../src/lib/releases'
 import { criarTokenSessao, NOME_COOKIE_SESSAO } from '../src/lib/admin/sessao'
 
@@ -36,6 +40,22 @@ function conferir(condicao: boolean, mensagem: string) {
 
 function marcador(id: CicloId): string {
   return `PRUMO-MARCADOR-CICLO-${id}`
+}
+
+/**
+ * A porta precisa estar livre ANTES de subir o servidor. Se um servidor
+ * antigo ainda estiver no ar, ele responde primeiro, o novo morre ao tentar a
+ * mesma porta e o script passa a medir um build velho, com CSS e JS em 404.
+ */
+async function exigirPortaLivre(): Promise<void> {
+  try {
+    await fetch(BASE, { signal: AbortSignal.timeout(1500) })
+  } catch {
+    return
+  }
+  throw new Error(
+    `A porta ${PORTA} já responde. Derrube o servidor antigo (pkill -f "next[-]server") antes de rodar.`,
+  )
 }
 
 async function esperarServidor(processo: ChildProcess): Promise<void> {
@@ -61,7 +81,17 @@ async function arquivosDe(pasta: string): Promise<string[]> {
     .map((e) => join(e.parentPath ?? pasta, e.name))
 }
 
+function derrubar(servidor: ChildProcess): void {
+  if (servidor.pid === undefined) return
+  try {
+    process.kill(-servidor.pid, 'SIGTERM')
+  } catch {
+    servidor.kill('SIGTERM')
+  }
+}
+
 async function main() {
+  await exigirPortaLivre()
   const hoje = hojeEmRecife()
   const release = calcularReleaseAtual({ hoje, adiantamentoDias: ADIANTAMENTO_PADRAO })
   const visiveis = ciclosVisiveis({ releaseAtual: release })
@@ -88,6 +118,9 @@ async function main() {
     // 'ignore' e não 'pipe': ninguém lê essa saída, e um pipe cheio trava o
     // servidor no meio da verificação.
     stdio: 'ignore',
+    // Grupo de processos próprio: `npx` cria o `next-server` como neto, e um
+    // SIGTERM só no filho deixava o servidor vivo, segurando a porta.
+    detached: true,
   })
 
   try {
@@ -133,7 +166,7 @@ async function main() {
     // não liberada é 404, liberada é 3xx apontando para a sanfona certa.
     for (const feature of FEATURES) {
       const liberada = visiveis.includes(feature.ciclo)
-      const doPerfilPadrao = (feature.perfis as readonly string[]).includes('cam')
+      const doPerfilPadrao = (feature.perfis as readonly PerfilId[]).includes(PERFIL_PADRAO)
       const resposta = await fetch(`${BASE}${feature.rota}`, { redirect: 'manual' })
       const status = resposta.status
 
@@ -156,12 +189,13 @@ async function main() {
     }
 
     // ---- 4b: o sistema não anuncia tela que o perfil não tem ----
-    // O visitante chega como CAM (PERFIL_PADRAO). Nenhuma tela exclusiva de
-    // outro perfil pode aparecer no sumário, nem no HTML da página.
+    // O visitante chega com o PERFIL_PADRAO (a coordenação da SEAB). Nenhuma
+    // tela exclusiva de outro perfil pode aparecer no sumário, nem no HTML.
     const paginaDoSistema = await (await fetch(`${BASE}/sistema`)).text()
     for (const feature of FEATURES) {
       const deveAparecer =
-        visiveis.includes(feature.ciclo) && (feature.perfis as readonly string[]).includes('cam')
+        visiveis.includes(feature.ciclo) &&
+        (feature.perfis as readonly PerfilId[]).includes(PERFIL_PADRAO)
       if (deveAparecer) continue
       conferir(
         !paginaDoSistema.includes(`tela-${feature.id}`),
@@ -196,8 +230,43 @@ async function main() {
       !comoVisitante.includes('Modo completo'),
       'visitante não vê a faixa de modo completo',
     )
+
+    // ---- 6: o pitch é conteúdo do ciclo `ko`, e o gate é por ciclo ----
+    // Mesmo contrato das telas: oculto é 404 (nunca "em breve"), liberado é
+    // 200. O admin vê sempre. A expectativa deriva do cronograma, então o
+    // bloco não apodrece no dia em que o Kick-off virar público.
+    const koVisivel = visiveis.includes('ko')
+    const pitchVisitante = await fetch(`${BASE}/pitch`, { redirect: 'manual' })
+    conferir(
+      pitchVisitante.status === (koVisivel ? 200 : 404),
+      `/pitch para o visitante responde ${koVisivel ? '200 (ko liberado)' : '404 (ko oculto)'} — recebeu ${pitchVisitante.status}`,
+    )
+    const pitchAdmin = await fetch(`${BASE}/pitch`, {
+      headers: { cookie: `${NOME_COOKIE_SESSAO}=${token}` },
+      redirect: 'manual',
+    })
+    conferir(pitchAdmin.status === 200, `/pitch para o admin responde 200 — recebeu ${pitchAdmin.status}`)
+    const htmlDoPitch = await pitchAdmin.text()
+    conferir(
+      SLIDES.every((slide) => htmlDoPitch.includes(slide.titulo)),
+      'admin recebe os nove slides no HTML do /pitch',
+    )
+
+    // O deck tem um componente cliente para as setas do teclado. Ele recebe só
+    // índices: se algum título de slide aparecer em `.next/static`, alguém
+    // passou o conteúdo por props e o texto do Kick-off virou público antes
+    // da hora, por baixo do gate.
+    for (const slide of SLIDES) {
+      const vazando = conteudos.filter((a) => a.texto.includes(slide.titulo))
+      conferir(
+        vazando.length === 0,
+        `bundle do cliente sem o título do slide ${slide.numero}${
+          vazando.length ? ` (encontrado em ${vazando.map((v) => v.caminho).join(', ')})` : ''
+        }`,
+      )
+    }
   } finally {
-    servidor.kill('SIGTERM')
+    derrubar(servidor)
   }
 
   console.log(`\n${sucessos.length} verificações passaram.`)

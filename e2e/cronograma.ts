@@ -42,6 +42,9 @@ const RECORTE = recorte()
 /** Um ciclo que o visitante JÁ vê. O primeiro, que é o mais estável. */
 export const CICLO_PUBLICO: CicloId = RECORTE.visiveis[0]
 
+/** Todos os ciclos que o visitante vê hoje: para um teste perguntar por um específico. */
+export const CICLOS_PUBLICOS: readonly CicloId[] = RECORTE.visiveis
+
 /** O primeiro ciclo que o visitante AINDA não vê: o alvo natural do teste de vazamento. */
 export const CICLO_OCULTO: CicloId = RECORTE.ocultos[0]
 

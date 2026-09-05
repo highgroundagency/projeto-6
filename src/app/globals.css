@@ -581,3 +581,288 @@ body {
 [data-pele='sistema'] :where(div, section, form, ol, ul, details, p)[class~='border'] {
   border-radius: 14px;
 }
+
+/* ---------------------------------------------------------------------------
+   O DECK DO PITCH (/pitch)
+
+   Uma pilha de slides que vira apresentação quando o JavaScript liga o modo
+   deck. Mesmos tokens, mesmas hairlines: cada slide é um .bloco que ocupa a
+   tela inteira. Sem JavaScript, e no papel, a pilha continua legível.
+--------------------------------------------------------------------------- */
+
+.cromo {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.75rem 1.5rem;
+  border-bottom: 1px solid var(--color-linha);
+  background: color-mix(in srgb, var(--color-fundo) 85%, transparent);
+  backdrop-filter: blur(12px);
+}
+
+.slide {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  /* `safe`: quando o conteúdo passa da altura, ele cresce para baixo em vez
+     de sumir por cima do topo, onde ninguém consegue rolar. */
+  justify-content: safe center;
+  min-height: 100dvh;
+  border: 1px solid var(--color-linha);
+  margin-top: -1px;
+  padding: 48px 24px 64px;
+}
+
+@media (min-width: 768px) {
+  .slide {
+    padding: 48px 72px 72px;
+  }
+}
+
+/* Numa coluna flex, tudo estica na horizontal por padrão; imagem e link
+   esticados viram borrão. Cada filho ocupa só a própria largura. */
+.slide-corpo > * {
+  align-self: flex-start;
+}
+
+.slide-corpo > ol,
+.slide-corpo > ul,
+.slide-corpo > dl,
+.slide-corpo > div,
+.slide-corpo > details {
+  align-self: stretch;
+}
+
+.slide-titulo {
+  max-width: 34ch;
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 3.6vw, 2.6rem);
+  font-weight: 600;
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+  color: var(--color-texto);
+  text-transform: lowercase;
+}
+
+.slide-apoio {
+  max-width: 70ch;
+  margin-top: 0.9rem;
+  font-size: clamp(1rem, 1.35vw, 1.1rem);
+  line-height: 1.6;
+}
+
+.slide-rodape {
+  position: absolute;
+  right: 24px;
+  bottom: 20px;
+  left: 24px;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  color: var(--color-apagado);
+  text-transform: lowercase;
+}
+
+@media (min-width: 768px) {
+  .slide-rodape {
+    right: 72px;
+    left: 72px;
+  }
+}
+
+/* As notas do apresentador: um <details> nativo, aberto pela tecla `n`. */
+.notas {
+  margin-top: 1.5rem;
+  border: 1px solid var(--color-linha);
+  font-size: 0.85rem;
+}
+
+.notas summary {
+  display: flex;
+  gap: 0.75rem;
+  align-items: baseline;
+  padding: 0.5rem 0.75rem;
+  cursor: pointer;
+  list-style: none;
+  text-transform: lowercase;
+}
+
+.notas summary::-webkit-details-marker {
+  display: none;
+}
+
+.notas ol {
+  padding: 0.75rem 0.75rem 0.75rem 2rem;
+  border-top: 1px solid var(--color-linha);
+  list-style: decimal;
+  color: var(--color-texto);
+}
+
+.notas li + li {
+  margin-top: 0.4rem;
+}
+
+.ajuda-deck {
+  padding: 1rem 1.5rem 2rem;
+  font-size: 0.75rem;
+  color: var(--color-apagado);
+  text-transform: lowercase;
+}
+
+/* Modo deck: um slide por vez, ocupando exatamente o que sobra abaixo do
+   cromo, para a página não rolar. As notas só aparecem com a tecla `n`, já
+   abertas. O slide da demonstração rola por dentro, para a memória de
+   cálculo inteira caber num projetor de 720 linhas. */
+[data-modo='deck'] .slide {
+  display: none;
+  min-height: calc(100dvh - 3.3rem);
+  border-color: transparent;
+}
+
+html:fullscreen [data-modo='deck'] .slide {
+  min-height: 100dvh;
+}
+
+[data-modo='deck'] .slide[data-ativo] {
+  display: flex;
+}
+
+[data-modo='deck']:not([data-notas]) .notas {
+  display: none;
+}
+
+body:has([data-modo='deck']) .ajuda-deck {
+  display: none;
+}
+
+[data-modo='deck'] .slide-demo .slide-titulo {
+  font-size: clamp(1.4rem, 2.6vw, 2rem);
+}
+
+[data-modo='deck'] .slide-demo .demo {
+  max-height: calc(100dvh - 21rem);
+  overflow: auto;
+}
+
+/* Com as notas abertas no ensaio, a demonstração cede espaço para elas. */
+[data-modo='deck'][data-notas] .slide-demo .demo {
+  max-height: calc(100dvh - 30rem);
+}
+
+/* Embaixo, no centro: o rodapé do slide já ocupa os dois cantos. */
+.deck-controles {
+  position: fixed;
+  bottom: 0.9rem;
+  left: 50%;
+  z-index: 40;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 0.6rem;
+  border: 1px solid var(--color-linha);
+  background: color-mix(in srgb, var(--color-fundo) 88%, transparent);
+  font-size: 0.8rem;
+  color: var(--color-apagado);
+}
+
+.deck-controles button {
+  padding: 0.1rem 0.5rem;
+  border: 1px solid var(--color-linha);
+  color: var(--color-texto);
+}
+
+.deck-controles button:hover {
+  border-color: var(--color-acento);
+  color: var(--color-acento);
+}
+
+.deck-controles button:disabled {
+  opacity: 0.35;
+}
+
+.deck-controles button[aria-pressed='true'] {
+  border-color: var(--color-acento);
+  background: var(--color-acento);
+  color: var(--color-ink);
+}
+
+html:fullscreen .cromo,
+html:fullscreen .ajuda-deck {
+  display: none;
+}
+
+/* No papel: uma página por slide, 16:9, sem cromo e sem notas. É daqui que
+   sai docs/pitch-kickoff.pdf, por `npm run pitch-pdf`. */
+@media print {
+  @page {
+    size: 13.333in 7.5in;
+    margin: 0;
+  }
+
+  html,
+  body {
+    background: var(--color-fundo) !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* O grão é um filtro SVG de ruído; no PDF ele vira um bitmap de 300 ppi
+     por página e o arquivo passa de 50 MB. O gradiente fica; o ruído sai. */
+  .grao::after {
+    display: none;
+  }
+
+  .slide {
+    display: flex !important;
+    height: 7.5in;
+    min-height: 0;
+    overflow: hidden;
+    border: 0;
+    padding: 0.55in 0.7in 0.7in;
+    break-after: page;
+    break-inside: avoid;
+  }
+
+  .slide:last-of-type {
+    break-after: auto;
+  }
+
+  .slide-rodape {
+    right: 0.7in;
+    bottom: 0.32in;
+    left: 0.7in;
+  }
+
+  /* O slide da demonstração: a memória inteira numa página, sem a caixa de
+     rolagem do modo deck e sem o parágrafo "como ler", que a fala cobre. */
+  .slide-demo .slide-titulo {
+    font-size: 1.6rem;
+  }
+
+  .slide-demo .slide-apoio {
+    display: none;
+  }
+
+  .slide-demo .demo {
+    max-height: none !important;
+    overflow: visible !important;
+    zoom: 0.6;
+  }
+
+  .slide-demo .demo details > div > p:first-child {
+    display: none;
+  }
+
+  .cromo,
+  .deck-controles,
+  .notas,
+  .ajuda-deck {
+    display: none !important;
+  }
+}
