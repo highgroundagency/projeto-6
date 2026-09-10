@@ -633,8 +633,8 @@ feedback de professor ou de cliente seria fabricar evidência.
   - A régua oficial chegou: a Portaria Conjunta nº 001/2024, publicada no Diário Oficial de
     21/09/2024, foi transcrita para o repositório e comparada com o motor. Ela confirma o
     modelo e corrige dois pontos.
-  - PDF e capturas gerados a partir da própria rota, na identidade do site, versionados
-    para o caso de a rede falhar no dia.
+  - PDF e capturas gerados a partir da própria rota, na identidade do site. O PDF é
+    baixável pelo próprio deck, para o caso de a sala não ter rede.
 
   Decisões  [validado, validado por gabriel]
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -642,10 +642,11 @@ feedback de professor ou de cliente seria fabricar evidência.
       por quê: O pitch é conteúdo do projeto como qualquer outro: entra no Git, passa pelo
       release e pelo teste de vazamento, e a banca acessa depois pelo mesmo endereço. O PDF
       é a reserva, não o original.
-  - Mostrar a memória de cálculo ao vivo, com captura estática de reserva no mesmo slide.
+  - Mostrar a memória de cálculo ao vivo, e não uma imagem dela.
       por quê: É o argumento do projeto contra a planilha; ver o número se explicar sozinho
-      vale mais que ouvir sobre isso. A captura existe para a demonstração falhar sem parar
-      o roteiro.
+      vale mais que ouvir sobre isso. A memória é renderizada no servidor junto com o
+      slide, então não há serviço externo que possa cair no meio: a reserva contra sala sem
+      rede é o PDF, que o próprio deck baixa.
   - Dividir a apresentação por bloco do roteiro, não por quem construiu o quê.
       por quê: A diretriz pede fala distribuída; a equipe construiu tudo em conjunto, e o
       pitch é da equipe. Cada bloco tem uma voz para a fala ter ritmo, e as perguntas
@@ -710,14 +711,14 @@ feedback de professor ou de cliente seria fabricar evidência.
        0:00 | 1. prumo | Gabriel | Wordmark, uma linha, e a pílula do marco: kick-off, data e equipe. | 0:05
        0:05 | 2. todo mês, uma conta feita à mão | Gabriel | O fluxo da portaria em cinco etapas, com o ponto de quebra marcado na consolidação. | 0:35
        0:40 | 3. três pessoas, o mesmo número | Matheus | Três cartões, um por papel: quem consolida, quem informa, quem é avaliada. Uma frase de cada. | 0:40
-       1:20 | 4. a nota com a conta aberta | João | O cartão da nota e a memória de cálculo reais, do motor do Prumo, para uma unidade sintética. Captura estática de reserva logo abaixo. | 0:45
+       1:20 | 4. a nota com a conta aberta | João | O cartão da nota e a memória de cálculo reais, do motor do Prumo, para uma unidade sintética. A conta inteira cabe na tela, sem rolagem. | 0:45
        2:05 | 5. regra é dado, não fórmula | João | O caminho de um número em quatro passos, os quatro papéis e as etapas do mês. | 0:45
        2:50 | 6. nenhum dado real. ainda. | Rafael | Os números da base sintética, e a linha de base publicada ao lado de cada modelo. | 0:40
        3:30 | 7. o que pode dar errado, dito antes | Fernando | Quatro contagens: ameaças STRIDE, itens OWASP, princípios de privacidade e usos de IA assinados. | 0:40
        4:10 | 8. de hoje ao sr1: três semanas | Fernando | Uma linha do tempo com os três marcos e um compromisso em cada. | 0:30
        4:40 | 9. prumo | Gabriel | Wordmark, o endereço do site e a pergunta para a banca. | 0:15
 
-      Soma: 4:55. A fala de cada slide está nas notas do apresentador, em /pitch, com a tecla n. Quem fala não opera: uma pessoa fica na tela o tempo todo, avançando com as setas. Se a demonstração do slide 4 falhar, a captura estática está no próprio slide.
+      Soma: 4:55. A fala de cada slide está nas notas do apresentador, em /pitch, com a tecla n. Quem fala não opera: uma pessoa fica na tela o tempo todo, avançando com as setas. O deck baixa o PDF de reserva pelo próprio cabeçalho, para o caso de a sala não ter rede.
 
   >>> A RÉGUA OFICIAL: PORTARIA CONJUNTA Nº 001/2024
       âncora no site: #doc-ko-regua-oficial
@@ -2629,6 +2630,8 @@ Os porquês completos estão em `docs/decisoes.md`. Os títulos, aqui:
   - ADR-033 · O CSS da casa entrou em camada, e um bug de três meses apareceu
   - ADR-034 · A reunião com o cliente remodelou o domínio, e o MVP acompanhou já
   - ADR-035 · A régua oficial chegou, e o pitch virou uma rota do site
+  - ADR-036 · O deck ficou usável: teclado que sobrevive ao clique, tela que cabe, texto
+    que a fala carrega
 
 ============================================================================================
 13.  COMO RODAR E COMO CONFERIR

@@ -22,7 +22,10 @@ export function MarcaPrumo({
       {prefixo ? (
         <span
           className={cn(
-            'mr-1.5 text-apagado',
+            // Some no celular: com ele, a marca mais os links do cabeçalho
+            // estouram 360px, e há teste que mede isso. O wordmark sozinho
+            // continua sendo a marca.
+            'mr-1.5 hidden text-apagado sm:inline',
             tamanho === 'grande' && 'text-2xl sm:text-3xl',
             tamanho === 'medio' && 'text-base',
             tamanho === 'pequeno' && 'text-sm',

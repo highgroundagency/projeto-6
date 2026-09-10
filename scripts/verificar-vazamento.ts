@@ -22,7 +22,7 @@ import { join } from 'node:path'
 import { IDS_CICLOS, type CicloId } from '../src/lib/cronograma'
 import { hojeEmRecife } from '../src/lib/datas'
 import { FEATURES, PERFIL_PADRAO, type PerfilId } from '../src/lib/features'
-import { SLIDES } from '../src/content/pitch'
+import { SLIDES, textoNaTela } from '../src/content/pitch'
 import { ciclosVisiveis, calcularReleaseAtual, ADIANTAMENTO_PADRAO } from '../src/lib/releases'
 import { criarTokenSessao, NOME_COOKIE_SESSAO } from '../src/lib/admin/sessao'
 
@@ -252,15 +252,64 @@ async function main() {
       'admin recebe os nove slides no HTML do /pitch',
     )
 
+    // NENHUM ARTEFATO DO DECK É ESTÁTICO. As nove capturas moraram em
+    // `public/pitch/` e ali entregavam os slides em imagem mesmo nos dias em
+    // que a rota respondia 404: o portão protege rota, e arquivo em `public/`
+    // não passa por rota. Hoje moram em `docs/`, e estas provas impedem a
+    // volta — inclusive a do PDF, que é a tentação mais óbvia.
+    for (const caminho of ['/pitch/slide-01.png', '/pitch/slide-09.png', '/pitch-kickoff.pdf']) {
+      const estatico = await fetch(`${BASE}${caminho}`, { redirect: 'manual' })
+      conferir(
+        estatico.status === 404,
+        `${caminho} não é servido como estático — recebeu ${estatico.status}`,
+      )
+    }
+
+    // O PDF sai por rota, com o MESMO portão da página: 404 enquanto o
+    // Kick-off estiver oculto, e o arquivo para quem pode ver.
+    const pdfVisitante = await fetch(`${BASE}/pitch/pdf`, { redirect: 'manual' })
+    conferir(
+      pdfVisitante.status === (koVisivel ? 200 : 404),
+      `/pitch/pdf para o visitante responde ${koVisivel ? '200' : '404'} — recebeu ${pdfVisitante.status}`,
+    )
+    const pdfAdmin = await fetch(`${BASE}/pitch/pdf`, {
+      headers: { cookie: `${NOME_COOKIE_SESSAO}=${token}` },
+      redirect: 'manual',
+    })
+    conferir(
+      pdfAdmin.status === 200 &&
+        (pdfAdmin.headers.get('content-type') ?? '').includes('pdf'),
+      `/pitch/pdf entrega o arquivo para o admin — recebeu ${pdfAdmin.status} ${pdfAdmin.headers.get('content-type')}`,
+    )
+
+    // A home não anuncia rota fechada: se o Kick-off estiver oculto, nenhum
+    // link para /pitch pode aparecer no topo do site.
+    if (!koVisivel) {
+      const home = await (await fetch(`${BASE}/`)).text()
+      conferir(
+        !home.includes('href="/pitch"'),
+        'a home não oferece o pitch enquanto o Kick-off está oculto',
+      )
+    }
+
     // O deck tem um componente cliente para as setas do teclado. Ele recebe só
     // índices: se algum título de slide aparecer em `.next/static`, alguém
     // passou o conteúdo por props e o texto do Kick-off virou público antes
     // da hora, por baixo do gate.
     for (const slide of SLIDES) {
-      const vazando = conteudos.filter((a) => a.texto.includes(slide.titulo))
+      // Todo o texto da tela, e não só o título: depois que a copy virou dado
+      // em `pitch.ts`, passar `ETAPAS_DO_MES` por props para o componente
+      // cliente seria tão grave quanto passar o título, e igualmente invisível.
+      // Só FRASES: quatro palavras ou mais. Rótulo de uma palavra como
+      // "subindicadores" também existe na tela do sistema, e acusaria
+      // vazamento onde só há vocabulário comum ao projeto inteiro.
+      const textos = [slide.titulo, ...textoNaTela(slide.id)].filter(
+        (t) => t.length >= 20 && t.split(/\s+/).length >= 4,
+      )
+      const vazando = conteudos.filter((a) => textos.some((t) => a.texto.includes(t)))
       conferir(
         vazando.length === 0,
-        `bundle do cliente sem o título do slide ${slide.numero}${
+        `bundle do cliente sem o texto do slide ${slide.numero}${
           vazando.length ? ` (encontrado em ${vazando.map((v) => v.caminho).join(', ')})` : ''
         }`,
       )

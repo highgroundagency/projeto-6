@@ -256,7 +256,17 @@ export function RegistroSemana({
   )
 }
 
-export function CicloSemRegistro({ ciclo }: { ciclo: CicloId }) {
+/**
+ * O cartão de um ciclo sem registro próprio: imprensado, ou semana ainda não
+ * publicada.
+ *
+ * ELE TAMBÉM RECEBE A PÍLULA "esta semana", e isso conserta um buraco real: na
+ * semana imprensada, nenhum cartão da página estava marcado como o da vez,
+ * porque só as semanas com registro tinham a pílula. Quem chegava entre 05/09
+ * e 11/09 não achava onde estava, e a suíte de ponta a ponta ficava vermelha
+ * exigindo uma pílula que a página não tinha como mostrar.
+ */
+export function CicloSemRegistro({ ciclo, atual = false }: { ciclo: CicloId; atual?: boolean }) {
   const dados = cicloPorId(ciclo)
   return (
     <article
@@ -266,6 +276,11 @@ export function CicloSemRegistro({ ciclo }: { ciclo: CicloId }) {
     >
       <span className="fonte-display text-texto">{dados.rotulo}</span>{' '}
       <Num className="text-xs">{formatarBR(dados.data)}</Num>
+      {atual ? (
+        <Etiqueta tom="acento" className="ml-2 align-middle">
+          esta semana
+        </Etiqueta>
+      ) : null}
       <p className="mt-1">
         {dados.tipo === 'pausa'
           ? 'Semana imprensada: as entregas são acumuladas na semana seguinte.'

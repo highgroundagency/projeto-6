@@ -1,6 +1,7 @@
 'use client'
 
 import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react'
+import { acaoDaTecla, impedePadrao } from './teclado'
 
 /**
  * O deck: um slide por vez, setas do teclado, notas com `n`.
@@ -21,7 +22,28 @@ import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react'
  * pontas; `n` abre e fecha as notas; `f` alterna tela cheia; `r` zera o
  * cronômetro. A posição vai para o hash da URL, então recarregar não perde o
  * slide.
+ *
+ * O TECLADO NÃO DEPENDE DE ONDE ESTÁ O FOCO, e isso custou um pitch quase
+ * perdido. A primeira versão ignorava a tecla quando o foco estivesse em
+ * `button`, `a` ou `summary` — o que parecia educado e era fatal: clicar uma
+ * vez na seta da tela, no botão de tema ou na memória de cálculo deixava o
+ * foco naquele controle, e a partir dali NENHUMA tecla funcionava até alguém
+ * clicar no fundo da página. Quem apresenta clica; e o script que gera o PDF
+ * nunca clicava, então os testes não viam. Agora só campo de texto engole
+ * tecla, e os controles devolvem o foco ao corpo depois do clique.
  */
+/**
+ * Devolve o foco ao corpo depois de um clique de MOUSE.
+ *
+ * `detail` é a contagem de cliques: vale 0 quando o botão foi acionado pelo
+ * teclado. Sem essa distinção, quem navega de Tab e aperta Enter perde o
+ * lugar na página a cada avanço, que é trocar um problema de acessibilidade
+ * por outro. Com o mouse, soltar o foco mantém a barra de espaço previsível.
+ */
+function soltarFoco(evento: { detail: number; currentTarget: HTMLElement }): void {
+  if (evento.detail > 0) evento.currentTarget.blur()
+}
+
 export function Deck({ total, children }: { total: number; children: ReactNode }) {
   const raiz = useRef<HTMLDivElement>(null)
   const [atual, setAtual] = useState(1)
@@ -75,49 +97,43 @@ export function Deck({ total, children }: { total: number; children: ReactNode }
 
   useEffect(() => {
     function aoTeclar(evento: KeyboardEvent) {
-      if (evento.metaKey || evento.ctrlKey || evento.altKey) return
-      const alvo = evento.target as HTMLElement | null
-      // Dentro de campo, botão ou sumário, o teclado é deles.
-      if (alvo?.closest('input, select, textarea, button, a, summary')) return
+      const acao = acaoDaTecla(evento, evento.target as Element | null)
+      if (!acao) return
+      if (impedePadrao(acao)) evento.preventDefault()
 
-      switch (evento.key) {
-        case 'ArrowRight':
-        case 'ArrowDown':
-        case 'PageDown':
-        case ' ':
-        case 'j':
-          evento.preventDefault()
+      switch (acao) {
+        case 'avancar':
           ir(atual + 1)
           break
-        case 'ArrowLeft':
-        case 'ArrowUp':
-        case 'PageUp':
-        case 'Backspace':
-        case 'k':
-          evento.preventDefault()
+        case 'voltar':
           ir(atual - 1)
           break
-        case 'Home':
-          evento.preventDefault()
+        case 'inicio':
           ir(1)
           break
-        case 'End':
-          evento.preventDefault()
+        case 'fim':
           ir(total)
           break
-        case 'n':
+        case 'notas':
           setNotas((v) => !v)
           break
-        case 'r':
+        case 'zerar':
           inicio.current = null
           setDecorrido(0)
           break
-        case 'f':
+        case 'tela-cheia':
           if (document.fullscreenElement) void document.exitFullscreen()
           else void document.documentElement.requestFullscreen?.()
           break
+        case 'imprimir':
+          // A folha de impressão já entrega uma página por slide, 16:9, sem
+          // cromo e sem notas. Imprimir para PDF no navegador dá a versão do
+          // que está na tela agora, e não a do último build.
+          window.print()
+          break
       }
     }
+
     window.addEventListener('keydown', aoTeclar)
     return () => window.removeEventListener('keydown', aoTeclar)
   }, [atual, ir, total])
@@ -146,18 +162,24 @@ export function Deck({ total, children }: { total: number; children: ReactNode }
           ) : null}
           <button
             type="button"
-            onClick={() => ir(atual - 1)}
+            onClick={(evento) => {
+              soltarFoco(evento)
+              ir(atual - 1)
+            }}
             disabled={atual <= 1}
             aria-label="Slide anterior"
           >
             ←
           </button>
-          <span className="numero">
+          <span className="numero" aria-live="polite">
             {atual}/{total}
           </span>
           <button
             type="button"
-            onClick={() => ir(atual + 1)}
+            onClick={(evento) => {
+              soltarFoco(evento)
+              ir(atual + 1)
+            }}
             disabled={atual >= total}
             aria-label="Próximo slide"
           >
@@ -165,13 +187,35 @@ export function Deck({ total, children }: { total: number; children: ReactNode }
           </button>
           <button
             type="button"
-            onClick={() => setNotas((v) => !v)}
+            onClick={(evento) => {
+              soltarFoco(evento)
+              setNotas((v) => !v)
+            }}
             aria-pressed={notas}
             title="notas do apresentador (n)"
           >
             n
           </button>
+          <button
+            type="button"
+            onClick={(evento) => {
+              soltarFoco(evento)
+              window.print()
+            }}
+            title="imprimir ou salvar em PDF (p)"
+          >
+            imprimir
+          </button>
         </nav>
+      ) : null}
+
+      {/* A ajuda mora AQUI, e não na página, porque ela descreve teclas: sem
+          JavaScript nenhuma delas funciona, e a versão anterior anunciava
+          quatro atalhos mortos justamente para quem não podia usá-los. */}
+      {montado ? (
+        <p className="ajuda-deck sem-impressao">
+          ← → passam o slide · n abre as notas · f tela cheia · r zera o tempo · p imprime
+        </p>
       ) : null}
     </div>
   )

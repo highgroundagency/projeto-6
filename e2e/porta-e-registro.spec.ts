@@ -1,5 +1,11 @@
 import { expect, test } from '@playwright/test'
-import { CICLO_OCULTO, CICLO_PUBLICO, marcador } from './cronograma'
+import {
+  CICLO_DA_SEMANA,
+  CICLO_OCULTO,
+  CICLO_PUBLICO,
+  DEVE_OFERECER_PITCH,
+  marcador,
+} from './cronograma'
 
 test.describe('página inicial', () => {
   test('a chamada e o hero cabem acima da dobra', async ({ page }) => {
@@ -101,6 +107,20 @@ test.describe('registro do projeto', () => {
     }
   })
 
+  test('o topo oferece o pitch enquanto ele é a entrega da vez', async ({ page }) => {
+    await page.goto('/')
+    const link = page.getByRole('link', { name: 'pitch', exact: true })
+
+    if (DEVE_OFERECER_PITCH) {
+      await expect(link).toBeVisible()
+      await expect(link).toHaveAttribute('href', '/pitch')
+    } else {
+      // Fora da janela o botão some sozinho: destaque sem prazo vira entulho,
+      // e antes do release ele apontaria para um 404.
+      await expect(link).toHaveCount(0)
+    }
+  })
+
   test('todas as semanas chegam recolhidas, e a setinha abre uma', async ({ page }) => {
     await page.goto('/')
 
@@ -120,7 +140,19 @@ test.describe('registro do projeto', () => {
     // Os dois contêm "esta semana", os dois vivem dentro de sanfona fechada, e
     // era um deles que o `.first()` pegava — invisível, teste vermelho, pílula
     // funcionando o tempo todo.
-    await expect(page.getByText('esta semana', { exact: true })).toBeVisible()
+    // A expectativa vem do cronograma, não de um palpite: nas semanas
+    // imprensadas o cartão da vez é o do imprensado, e depois que o semestre
+    // acaba não há nenhum. Fixar "sempre visível" deixava o teste vermelho de
+    // 05/09 a 11/09 sem ninguém ter tocado no código.
+    const pilula = page.getByText('esta semana', { exact: true })
+    if (CICLO_DA_SEMANA) {
+      // No cartão certo, e em um só: duas semanas correntes seria pior que
+      // nenhuma.
+      await expect(page.locator(`[data-ciclo="${CICLO_DA_SEMANA}"]`).getByText('esta semana')).toBeVisible()
+      await expect(pilula).toHaveCount(1)
+    } else {
+      await expect(pilula).toHaveCount(0)
+    }
 
     // A setinha abre as entregas daquela semana — sem JavaScript nosso.
     const escolhida = semanas.first()

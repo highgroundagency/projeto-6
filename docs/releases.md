@@ -40,7 +40,9 @@ cada build.
 - **Funcionalidades do sistema:** `src/lib/features.ts` amarra cada tela ao ciclo que a
   libera. Rota não liberada devolve **404**, não uma tela de "em breve".
 - **O pitch do Kick-off:** `/pitch` é a primeira rota protegida por ciclo, e não por
-  funcionalidade: aparece quando o release libera `ko`, e antes disso é 404 como as telas.
+  funcionalidade: aparece quando o release libera `ko`, e antes disso é 404 como as telas. O
+  PDF dos slides sai por `/pitch/pdf`, com o mesmo portão; nada do deck é servido como arquivo
+  estático, porque `public/` não passa pelo gate (ADR-036).
 
 ## Painel administrativo
 

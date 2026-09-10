@@ -26,6 +26,19 @@ const csp = [
 
 const nextConfig: NextConfig = {
   poweredByHeader: false,
+
+  /**
+   * Arquivos de `docs/` que o servidor lê em tempo de execução.
+   *
+   * O rastreador do Next segue `import`, não `readFile(join(process.cwd(),
+   * ...))`. Sem esta lista, `/transparencia-ia` (que renderiza
+   * `docs/uso-de-ia.md`) e `/pitch/pdf` funcionam no repositório e somem no
+   * deploy, porque os arquivos não entram no pacote da função.
+   */
+  outputFileTracingIncludes: {
+    '/transparencia-ia': ['./docs/*.md'],
+    '/pitch/pdf': ['./docs/pitch-kickoff.pdf'],
+  },
   async headers() {
     return [
       {

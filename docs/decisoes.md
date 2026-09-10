@@ -906,3 +906,63 @@ dito no pitch é conferido por teste contra o arquivo de onde vem, para o númer
 número do repositório não se separarem. As 39 linhas de `docs/uso-de-ia.md` que estavam
 pendentes foram assinadas por quem as validou. E o nome de cada integrante aparece no pitch
 como quem fala, nunca como quem construiu: a equipe construiu.
+
+## ADR-036 · O deck ficou usável: teclado que sobrevive ao clique, tela que cabe, texto que a fala carrega
+
+**Contexto.** O deck do Kick-off subiu no dia 09/09 e foi usado de verdade no dia seguinte. O
+uso derrubou quatro coisas que os testes não pegavam. **A seta não passava o slide:** o guard
+de teclado ignorava a tecla sempre que o foco estivesse num `button`, `a` ou `summary`, e
+como quem apresenta clica, o primeiro clique na seta da tela, no botão de tema ou na memória
+de cálculo desligava setas, notas, tela cheia e cronômetro até alguém clicar no fundo da
+página. O script que gera o PDF navega sem nunca clicar, então a suíte inteira passava por
+cima do defeito. **O slide da demonstração mostrava 38% do que tinha:** 1008px de conteúdo
+numa caixa de 384px, com a tabela e a linha `(104) ÷ (12 × 10) × 100 = 86.67` abaixo da linha
+d'água, num slide chamado "a nota com a conta aberta". **A tela tinha 1.127 palavras** para
+4:55 de fala, e a auditoria mostrou que quase todas eram a nota do apresentador transcrita: as
+três personas repetiam as notas quase palavra por palavra, e o slide dos marcos dizia a mesma
+coisa três vezes. **E não havia caminho até o pitch:** o único link vivia dentro de uma
+sanfona fechada, três rolagens abaixo da dobra.
+
+**Decisão.** Cinco mudanças, cada uma com a sua rede.
+
+A regra do teclado saiu do `useEffect` e virou `src/components/pitch/teclado.ts`, função pura
+sobre a tecla e o elemento em foco, com tabela de testes: só campo de texto engole tecla, a
+barra de espaço respeita o controle focado (senão daria dois passos numa tecla só) e os botões
+devolvem o foco ao corpo, mas só no clique de mouse, para não roubar o lugar de quem navega
+com Tab.
+
+O texto de tela virou dado em `src/content/pitch.ts`, com teto de palavras por slide imposto
+em teste. O componente escolhe a forma do visual; as palavras vêm do conteúdo, e um segundo
+teste falha se alguém escrever prosa dentro do JSX. Passou de 1.127 para menos de 400 palavras.
+O que saiu da tela não sumiu: já estava nas notas.
+
+A demonstração passou a caber, copiando o que a folha de impressão já fazia certo: esconde o
+que a fala cobre e reduz a escala. `zoom` e não `transform: scale`, porque zoom participa do
+layout e a caixa encolhe de verdade. O `overflow` continua ali como rede, para o navegador que
+ignora `zoom` e para o dia em que a memória ganhar uma linha, e há teste de ponta a ponta
+provando que, no caminho normal, nem a caixa nem a página rolam em 1280x720 e em 1366x768.
+
+O topo do site ganhou um botão para `/pitch` **com prazo**: dez dias depois do Kick-off ele
+some sozinho, por uma função pura que lê a data do cronograma. O começo da janela é o próprio
+portão do ciclo, senão o botão apontaria para um 404. Destaque sem prazo vira entulho, e
+ninguém lembra de tirar. No celular ele fica só com o ícone, porque com a palavra o cabeçalho
+estourava 360px.
+
+**E o PDF virou rota, não arquivo.** Aqui a decisão foi contra a saída mais fácil. Gravar
+`public/pitch-kickoff.pdf` era uma linha e entregava o download sem risco de runtime, mas
+`public/` não passa por `obterVisao()`: o deck inteiro, num arquivo só, responderia 200 nos
+dias em que `/pitch` responde 404. Descobrimos que **as nove capturas já faziam exatamente
+isso** desde que existiam. Então as capturas voltaram para `docs/`, o PDF é servido por
+`/pitch/pdf` com o mesmo portão da página, e o verificador de vazamento passou a provar as
+duas coisas, além de varrer o bundle atrás de qualquer frase de slide, e não só do título.
+
+**Consequência.** O custo honesto da rota é que ela lê o arquivo do disco em tempo de
+execução, e o rastreador da Vercel não enxerga `readFile(join(process.cwd(), ...))`: sem a
+linha em `outputFileTracingIncludes`, funciona no repositório e devolve 404 no deploy. Um
+teste confere que a linha existe, e a falha degrada para 404, nunca para erro de servidor. A
+mesma linha cobriu `docs/*.md`, que `/transparencia-ia` já lia daquele jeito havia semanas sem
+ninguém ter notado o risco. De quebra, dois defeitos velhos caíram: a pílula "esta semana"
+nunca aparecia nas semanas imprensadas, o que deixava a suíte vermelha de 05/09 a 11/09 e
+teria voltado ao verde sozinha no sábado, escondendo o problema; e a linha de ajuda das teclas
+aparecia justamente para quem estava sem JavaScript, anunciando quatro atalhos mortos.
+

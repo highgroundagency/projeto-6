@@ -28,7 +28,7 @@ export const registro = {
       'Roteiro conferido linha a linha contra o repositório: quem consolida e homologa, os quatro papéis, as oito telas, os estados do mês e cada número dito no palco. As correções estão na tabela do documento abaixo.',
       'Os slides viraram uma rota do próprio site, /pitch, liberada pelo mesmo motor de releases do registro: nove telas, uma ideia por tela, setas do teclado, notas do apresentador e a memória de cálculo real dentro do slide da demonstração.',
       'A régua oficial chegou: a Portaria Conjunta nº 001/2024, publicada no Diário Oficial de 21/09/2024, foi transcrita para o repositório e comparada com o motor. Ela confirma o modelo e corrige dois pontos.',
-      'PDF e capturas gerados a partir da própria rota, na identidade do site, versionados para o caso de a rede falhar no dia.',
+      'PDF e capturas gerados a partir da própria rota, na identidade do site. O PDF é baixável pelo próprio deck, para o caso de a sala não ter rede.',
     ],
   },
 
@@ -42,9 +42,9 @@ export const registro = {
           'O pitch é conteúdo do projeto como qualquer outro: entra no Git, passa pelo release e pelo teste de vazamento, e a banca acessa depois pelo mesmo endereço. O PDF é a reserva, não o original.',
       },
       {
-        decisao: 'Mostrar a memória de cálculo ao vivo, com captura estática de reserva no mesmo slide.',
+        decisao: 'Mostrar a memória de cálculo ao vivo, e não uma imagem dela.',
         porque:
-          'É o argumento do projeto contra a planilha; ver o número se explicar sozinho vale mais que ouvir sobre isso. A captura existe para a demonstração falhar sem parar o roteiro.',
+          'É o argumento do projeto contra a planilha; ver o número se explicar sozinho vale mais que ouvir sobre isso. A memória é renderizada no servidor junto com o slide, então não há serviço externo que possa cair no meio: a reserva contra sala sem rede é o PDF, que o próprio deck baixa.',
       },
       {
         decisao: 'Dividir a apresentação por bloco do roteiro, não por quem construiu o quê.',
@@ -149,8 +149,8 @@ export const documentos = [
           <Nota>
             Soma: {formatarTempo(DURACAO_PITCH_SEGUNDOS)}. A fala de cada slide está nas notas do
             apresentador, em /pitch, com a tecla n. Quem fala não opera: uma pessoa fica na
-            tela o tempo todo, avançando com as setas. Se a demonstração do slide 4 falhar, a
-            captura estática está no próprio slide.
+            tela o tempo todo, avançando com as setas. O deck baixa o PDF de reserva pelo
+            próprio cabeçalho, para o caso de a sala não ter rede.
           </Nota>
         </div>
       </>

@@ -5,7 +5,7 @@ import { BotaoTema } from '@/components/base/botao-tema'
 import { MarcaPrumo } from '@/components/base/marca'
 import { Deck } from '@/components/pitch/deck'
 import { Slides } from '@/components/pitch/slides'
-import { SLIDES } from '@/content/pitch'
+import { ARQUIVO_PDF, SLIDES } from '@/content/pitch'
 import { cicloPorId } from '@/lib/cronograma'
 import { formatarBR } from '@/lib/datas'
 import { temaAtual } from '@/lib/tema'
@@ -47,6 +47,17 @@ export default async function PaginaPitch() {
           <span className="pilula hidden sm:inline-flex">
             {ko.rotulo.toLowerCase()} · {formatarBR(ko.data)}
           </span>
+          {/* Âncora comum, com `download`: baixar um arquivo não é navegação
+              de aplicação, e assim funciona sem JavaScript, que é o caso em
+              que baixar o PDF mais importa. O botão de imprimir, que depende
+              de script, fica na barra do deck. */}
+          <a
+            href={ARQUIVO_PDF}
+            download
+            className="underline decoration-linha-alta underline-offset-4 transition-colors hover:text-acento hover:decoration-acento"
+          >
+            baixar pdf
+          </a>
           <BotaoTema tema={tema} voltarPara="/pitch" />
         </span>
       </header>
@@ -57,10 +68,6 @@ export default async function PaginaPitch() {
         </Deck>
       </main>
 
-      <p className="ajuda-deck sem-impressao">
-        ← → avançam e voltam · n abre as notas · f tela cheia · r zera o cronômetro · imprimir
-        gera uma página por slide
-      </p>
     </>
   )
 }

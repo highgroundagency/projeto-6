@@ -68,15 +68,15 @@ end-to-end fica em `npm run e2e`.
 
 O que está coberto:
 
-- **488 testes de unidade** — aritmética de data no fuso do projeto, motor de releases,
+- **504 testes de unidade** — aritmética de data no fuso do projeto, motor de releases,
   config store, sessão do admin, completude do registro, motor de cálculo, base sintética e
   os números ditos no pitch, conferidos contra os documentos de onde vêm.
 - **23 verificações do schema guardado** — políticas de RLS por perfil e invariantes de
   gatilho, aplicando as migrações reais num PostgreSQL descartável (`npm run testar-rls`).
   Puladas automaticamente sem `DATABASE_URL_TESTE`.
-- **128 verificações de vazamento** — nenhum conteúdo de release futuro no HTML, no payload
+- **127 verificações de vazamento** — nenhum conteúdo de release futuro no HTML, no payload
   RSC ou no bundle do cliente; rota não liberada responde 404, inclusive `/pitch`.
-- **98 testes end-to-end** — jornadas críticas em desktop e em 360px, o deck do pitch incluído.
+- **108 testes end-to-end** — jornadas críticas em desktop e em 360px, o deck do pitch incluído.
 - **Tipagem como portão** — um ciclo publicado sem responsáveis, com lista vazia ou com
   integrante inexistente **não compila**.
 

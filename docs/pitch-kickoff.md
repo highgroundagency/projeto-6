@@ -4,7 +4,8 @@
 ciclo `ko` (público desde 05/09, pelo adiantamento de sete dias), tem os nove slides, as setas
 do teclado, as notas do apresentador com a tecla `n` e a memória de cálculo real dentro do
 slide da demonstração. Este documento é a versão para ler e ensaiar longe do navegador;
-`docs/pitch-kickoff.pdf` e `public/pitch/` são a reserva para o dia em que a rede falhar.
+`public/pitch-kickoff.pdf`, baixável pelo próprio deck, é a reserva para o dia em que a rede
+falhar; as capturas ficam em `docs/pitch/`.
 
 A fonte única do que está aqui é `src/content/pitch.ts`. Um teste confere que este arquivo
 contém o título e a fala de cada slide: mudou lá, muda aqui, ou o teste avisa.
@@ -36,9 +37,13 @@ subindicadores (o motor tira a média dos valores e gradua depois), e o art. 8º
 Nomes aparecem só como quem fala. Quem construiu o quê não é assunto do pitch: a equipe
 construiu. As falas abaixo são as notas do apresentador da rota `/pitch`, na íntegra.
 
+**A tela leva o mínimo e a fala leva o resto.** O deck começou com 1.127 palavras na tela para
+4:55 de apresentação, quase todas repetindo estas notas: a plateia lia em vez de ouvir. Hoje
+são menos de 400, com teto por slide imposto em teste. O que sumiu da tela está aqui embaixo.
+
 ### Slide 1: prumo
 
-- **Começa em** 0:00 · **dura** 0:05 · **quem fala:** Gabriel
+- **Começa em** 0:00 · **dura** 0:05 · **quem fala:** Gabriel · **9 palavras na tela**
 - **Frase da tela:** o cálculo da gratificação que se explica sozinho
 - **O que a tela mostra:** Wordmark, uma linha, e a pílula do marco: kick-off, data e equipe.
 - **A fala:**
@@ -47,7 +52,7 @@ construiu. As falas abaixo são as notas do apresentador da rota `/pitch`, na í
 
 ### Slide 2: todo mês, uma conta feita à mão
 
-- **Começa em** 0:05 · **dura** 0:35 · **quem fala:** Gabriel
+- **Começa em** 0:05 · **dura** 0:35 · **quem fala:** Gabriel · **55 palavras na tela**
 - **Frase da tela:** Desde 2023 a Secretaria de Saúde do Recife paga gratificação por metas. A régua está na portaria. A conta está numa planilha.
 - **O que a tela mostra:** O fluxo da portaria em cinco etapas, com o ponto de quebra marcado na consolidação.
 - **A fala:**
@@ -57,7 +62,7 @@ construiu. As falas abaixo são as notas do apresentador da rota `/pitch`, na í
 
 ### Slide 3: três pessoas, o mesmo número
 
-- **Começa em** 0:40 · **dura** 0:40 · **quem fala:** Matheus
+- **Começa em** 0:40 · **dura** 0:40 · **quem fala:** Matheus · **55 palavras na tela**
 - **Frase da tela:** Ninguém responde "de onde veio esse número?" sem abrir a planilha de outra pessoa.
 - **O que a tela mostra:** Três cartões, um por papel: quem consolida, quem informa, quem é avaliada. Uma frase de cada.
 - **A fala:**
@@ -68,18 +73,18 @@ construiu. As falas abaixo são as notas do apresentador da rota `/pitch`, na í
 
 ### Slide 4: a nota com a conta aberta
 
-- **Começa em** 1:20 · **dura** 0:45 · **quem fala:** João
+- **Começa em** 1:20 · **dura** 0:45 · **quem fala:** João · **10 palavras na tela**
 - **Frase da tela:** A ideia priorizada: cada número responde "de onde veio?" em um clique. Isto é o sistema rodando agora, não uma imagem.
-- **O que a tela mostra:** O cartão da nota e a memória de cálculo reais, do motor do Prumo, para uma unidade sintética. Captura estática de reserva logo abaixo.
+- **O que a tela mostra:** O cartão da nota e a memória de cálculo reais, do motor do Prumo, para uma unidade sintética. A conta inteira cabe na tela, sem rolagem.
 - **A fala:**
   1. O que está na tela é o componente real do sistema, com o motor real e dados sintéticos: a USF Canário, competência de maio, régua versão 2.
   1. Cada linha é um indicador. Dentro dela, os subindicadores que a unidade preencheu: valor direto, ou numerador dividido por denominador.
   1. O valor composto é comparado com a meta do tipo da unidade e vira pontos; os pontos multiplicam o peso. A soma dividida pelo máximo dá a nota de 0 a 100 e a faixa de pagamento.
-  1. Se a demonstração falhar, abra a captura estática logo abaixo e siga o roteiro sem parar.
+  1. A memória é renderizada junto com o slide, não depende de rede nem de serviço: se a página abriu, ela está aqui. O PDF baixado antes cobre a sala sem rede.
 
 ### Slide 5: regra é dado, não fórmula
 
-- **Começa em** 2:05 · **dura** 0:45 · **quem fala:** João
+- **Começa em** 2:05 · **dura** 0:45 · **quem fala:** João · **68 palavras na tela**
 - **Frase da tela:** A portaria vira uma versão da regra. O ciclo guarda qual versão usou. O resultado antigo continua reproduzível.
 - **O que a tela mostra:** O caminho de um número em quatro passos, os quatro papéis e as etapas do mês.
 - **A fala:**
@@ -90,8 +95,8 @@ construiu. As falas abaixo são as notas do apresentador da rota `/pitch`, na í
 
 ### Slide 6: nenhum dado real. ainda.
 
-- **Começa em** 2:50 · **dura** 0:40 · **quem fala:** Rafael
-- **Frase da tela:** Hoje: base sintética com semente fixa, reproduzível por qualquer pessoa. A régua oficial chegou em 05/09 e é a próxima.
+- **Começa em** 2:50 · **dura** 0:40 · **quem fala:** Rafael · **55 palavras na tela**
+- **Frase da tela:** Hoje: base sintética com semente fixa, reproduzível por qualquer pessoa. A régua oficial já chegou, e é a próxima.
 - **O que a tela mostra:** Os números da base sintética, e a linha de base publicada ao lado de cada modelo.
 - **A fala:**
   1. Tudo que o sistema mostra vem de um gerador com semente fixa: os distritos, os tipos de unidade, as unidades, os indicadores e as competências que estão na tela.
@@ -101,7 +106,7 @@ construiu. As falas abaixo são as notas do apresentador da rota `/pitch`, na í
 
 ### Slide 7: o que pode dar errado, dito antes
 
-- **Começa em** 3:30 · **dura** 0:40 · **quem fala:** Fernando
+- **Começa em** 3:30 · **dura** 0:40 · **quem fala:** Fernando · **48 palavras na tela**
 - **Frase da tela:** O que não fizemos está escrito: login simulado, banco desligado, modelos no recorte antigo, motor ainda na régua deduzida.
 - **O que a tela mostra:** Quatro contagens: ameaças STRIDE, itens OWASP, princípios de privacidade e usos de IA assinados.
 - **A fala:**
@@ -112,7 +117,7 @@ construiu. As falas abaixo são as notas do apresentador da rota `/pitch`, na í
 
 ### Slide 8: de hoje ao sr1: três semanas
 
-- **Começa em** 4:10 · **dura** 0:30 · **quem fala:** Fernando
+- **Começa em** 4:10 · **dura** 0:30 · **quem fala:** Fernando · **47 palavras na tela**
 - **Frase da tela:** Semana 5: a régua oficial vira a versão 3 da regra. Semana 6: as quatro primeiras telas no ar. SR1: a régua conferida com a SEAB.
 - **O que a tela mostra:** Uma linha do tempo com os três marcos e um compromisso em cada.
 - **A fala:**
@@ -122,14 +127,14 @@ construiu. As falas abaixo são as notas do apresentador da rota `/pitch`, na í
 
 ### Slide 9: prumo
 
-- **Começa em** 4:40 · **dura** 0:15 · **quem fala:** Gabriel
+- **Começa em** 4:40 · **dura** 0:15 · **quem fala:** Gabriel · **11 palavras na tela**
 - **Frase da tela:** o registro, o sistema e este pitch estão no ar.
 - **O que a tela mostra:** Wordmark, o endereço do site e a pergunta para a banca.
 - **A fala:**
   1. Tudo que mostramos está no endereço da tela: o registro semanal, o sistema e este pitch, com o roteiro e a portaria.
   1. Obrigado. Ficamos para as perguntas.
 
-Soma: 4:55. Por pessoa:
+Soma: 4:55, e 358 palavras na tela no deck inteiro. Por pessoa:
 
 | Quem fala | Slides | Tempo |
 | --- | --- | --- |
@@ -139,7 +144,6 @@ Soma: 4:55. Por pessoa:
 | João | 5 | 0:45 |
 | Rafael | 6 | 0:40 |
 | Fernando | 7, 8 | 1:10 |
-
 
 ## 3. O roteiro-base, com os espaços preenchidos
 
@@ -167,7 +171,8 @@ O roteiro-base, preenchido, é a seção 2 acima.
 
 - Abra `/pitch`, aperte `n` para ver as notas e `f` para tela cheia. O cronômetro começa no
   primeiro avanço e zera com `r`. Cada nota diz quanto dura o slide e em que segundo ele
-  começa.
+  começa. As setas passam o slide venha o foco de onde vier, inclusive depois de você clicar
+  num botão da tela; `p` imprime.
 - Ensaiar três vezes: uma lendo as notas, uma sem ler, uma com a demonstração do slide 4
   feita por quem vai operar. A meta é terminar entre 4:40 e 4:55.
 - Se um bloco estourar, o corte vem da fala, nunca do slide: o slide já tem só título, uma
@@ -180,10 +185,11 @@ O roteiro-base, preenchido, é a seção 2 acima.
 - **Uma pessoa opera, e quem fala não opera.** O operador fica na tela o tempo todo e avança
   com a seta quando ouvir a última frase de cada bloco (está nas notas).
 - Abrir `/pitch` no navegador antes de começar, em tela cheia, no tema escuro (é o padrão).
-  Conferir que o slide 4 carrega a memória de cálculo. Se a rede cair, abrir
-  `docs/pitch-kickoff.pdf`.
-- Se a demonstração falhar ao vivo, o próprio slide 4 tem a captura estática dobrada logo
-  abaixo: clicar em "reserva" e seguir.
+  Conferir que o slide 4 carrega a memória de cálculo inteira, sem barra de rolagem. Baixe o
+  PDF antes pelo botão do próprio deck: se a rede cair no dia, ele é a apresentação.
+- A demonstração do slide 4 é renderizada no servidor junto com a página: se o slide abriu,
+  a memória está lá, e não há serviço externo que possa cair no meio. A reserva contra sala
+  sem rede é o PDF baixado antes.
 - O endereço do slide 9 é o mesmo que a banca vai digitar depois. Deixar o slide 9 na tela
   durante as perguntas.
 

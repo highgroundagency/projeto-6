@@ -4,8 +4,13 @@
  * banca vê no navegador.
  *
  *   docs/pitch-kickoff.pdf     uma página por slide, 16:9, tema escuro
- *   public/pitch/slide-NN.png  a captura de cada slide, 1280 × 720
- *   public/pitch/memoria.png   a memória de cálculo, usada como reserva no slide 4
+ *   docs/pitch/slide-NN.png    a captura de cada slide, 1280 × 720
+ *
+ * NADA DISTO VAI PARA `public/`, e é decisão, não descuido. Arquivo estático
+ * não passa por `obterVisao()`: enquanto as capturas moraram em `public/`,
+ * elas entregavam o deck inteiro em imagem nos dias em que `/pitch` respondia
+ * 404. O PDF é servido pela rota `/pitch/pdf`, que confere o release antes de
+ * ler o arquivo daqui.
  *
  * Uso: npm run pitch-pdf    (exige `npm run build` antes)
  *
@@ -25,7 +30,7 @@ const BASE = `http://127.0.0.1:${PORTA}`
 const SEGREDO = 'pitch-pdf-segredo-longo-o-suficiente'
 const CHROMIUM_DO_AMBIENTE = '/opt/pw-browsers/chromium'
 const RAIZ = process.cwd()
-const PASTA_CAPTURAS = join(RAIZ, 'public', 'pitch')
+const PASTA_CAPTURAS = join(RAIZ, 'docs', 'pitch')
 const PDF = join(RAIZ, 'docs', 'pitch-kickoff.pdf')
 
 /**
@@ -117,19 +122,6 @@ async function main() {
       const caminho = join(PASTA_CAPTURAS, `slide-${String(slide.numero).padStart(2, '0')}.png`)
       await pagina.screenshot({ path: caminho, fullPage: false })
       console.log(`  ${caminho}`)
-
-      if (slide.id === 'ideia') {
-        const demo = pagina.locator('[data-captura="memoria"]')
-        // A reserva é a tela inteira, sem a barra de rolagem do modo deck e
-        // sem o cromo nem os controles flutuantes por cima da tabela.
-        const estilo = await pagina.addStyleTag({
-          content:
-            '.cromo, .deck-controles { display: none !important } [data-captura="memoria"] { max-height: none !important; overflow: visible !important }',
-        })
-        await demo.screenshot({ path: join(PASTA_CAPTURAS, 'memoria.png') })
-        await estilo.evaluate((el) => (el as Element).remove())
-        console.log(`  ${join(PASTA_CAPTURAS, 'memoria.png')}`)
-      }
 
       if (slide.numero < SLIDES.length) await pagina.keyboard.press('ArrowRight')
     }

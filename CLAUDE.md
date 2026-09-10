@@ -130,7 +130,7 @@ execução.
 | `npm test` | Vitest |
 | `npm run typecheck` | `tsc --noEmit` — quebra se um ciclo publicado estiver incompleto |
 | `npm run verificar-vazamento` | Prova que conteúdo futuro não vaza (exige `npm run build` antes) |
-| `npm run pitch-pdf` | Gera `docs/pitch-kickoff.pdf` e as capturas de `public/pitch/` a partir de `/pitch` (exige `npm run build` antes) |
+| `npm run pitch-pdf` | Gera `public/pitch-kickoff.pdf` e as capturas de `docs/pitch/` a partir de `/pitch` (exige `npm run build` antes) |
 | `npm run e2e` | Playwright |
 | `npm run testar-rls` | Políticas do schema guardado contra um Postgres real (exige `DATABASE_URL_TESTE`) |
 | `npm run semear` | Semeia a base sintética num Postgres com o schema aplicado (exige `DATABASE_URL`) |

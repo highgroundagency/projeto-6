@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { Presentation } from 'lucide-react'
 import { BotaoTema } from './botao-tema'
 import { MarcaPrumo } from './marca'
 import type { Tema } from '@/lib/tema'
@@ -15,15 +16,15 @@ import type { Tema } from '@/lib/tema'
  * para revelar quatro links — e exigiria JavaScript numa página que não usa
  * nenhum. Os links ficam à mostra e somem no mobile, onde o espaço não dá.
  */
-export function Cabecalho({ tema }: { tema: Tema }) {
+export function Cabecalho({ tema, pitch = false }: { tema: Tema; pitch?: boolean }) {
   return (
     <header className="sem-impressao sticky top-0 z-50 bg-fundo/80 backdrop-blur-md">
-      <div className="mx-auto flex max-w-[1100px] items-center justify-between gap-4 px-6 py-3.5 sm:px-8">
+      <div className="mx-auto flex max-w-[1100px] items-center justify-between gap-3 px-5 py-3.5 sm:gap-4 sm:px-8">
         <Link href="/" aria-label="Início">
           <MarcaPrumo tamanho="pequeno" prefixo="website do" />
         </Link>
 
-        <nav aria-label="Seções" className="flex items-center gap-5 text-xs lowercase">
+        <nav aria-label="Seções" className="flex items-center gap-3.5 text-xs lowercase sm:gap-5">
           <a href="#equipe" className="hidden transition-colors hover:text-acento sm:inline">
             equipe
           </a>
@@ -33,6 +34,25 @@ export function Cabecalho({ tema }: { tema: Tema }) {
           <Link href="/sistema" className="transition-colors hover:text-acento">
             sistema
           </Link>
+          {/* O caminho para a apresentação, enquanto ela for a entrega da vez.
+              Some sozinho dez dias depois do Kick-off: um destaque sem prazo
+              vira entulho, e ninguém lembra de tirar. Quem decide é a página,
+              que já resolveu a visão; aqui o componente só desenha. Borda em
+              vez de laranja porque o orçamento de acento da home está no
+              limite (regra 11). */}
+          {pitch ? (
+            <Link
+              href="/pitch"
+              title="Pitch do Kick-off"
+              className="inline-flex items-center gap-1.5 border border-linha-alta px-1.5 py-1 text-texto transition-colors hover:border-acento hover:text-acento sm:px-2"
+            >
+              <Presentation aria-hidden size={13} strokeWidth={1.5} />
+              {/* No mobile fica só o ícone: com a palavra, a marca mais três
+                  links e o botão de tema estouram 360px, e há teste que mede
+                  isso. O nome acessível vem do texto, que continua no DOM. */}
+              <span className="sr-only sm:not-sr-only">pitch</span>
+            </Link>
+          ) : null}
           <BotaoTema tema={tema} voltarPara="/" />
         </nav>
       </div>

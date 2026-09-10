@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest'
 import {
   ADIANTAMENTO_PADRAO,
+  DIAS_DE_DESTAQUE_DO_PITCH,
+  pitchEmDestaque,
   calcularReleaseAtual,
   cicloCorrente,
   cicloVisivel,
@@ -14,6 +16,7 @@ import {
   type Travas,
 } from './releases'
 import { CRONOGRAMA, cicloPorId } from './cronograma'
+import { somarDias } from './datas'
 
 // Vitrine fechada injetada: os casos abaixo medem a REGRA, não o valor que
 // `src/content/vitrine.ts` estiver carregando hoje.
@@ -253,5 +256,34 @@ describe('ehSemanaCorrente', () => {
     // qualquer data depois de 05/12, e a pílula "esta semana" ficava lá presa.
     expect(cicloCorrente('2027-01-15')).toBe('sr2')
     expect(ehSemanaCorrente('2027-01-15', 'sr2')).toBe(false)
+  })
+})
+
+describe('destaque do pitch no topo do site', () => {
+  const kickOff = cicloPorId('ko').data
+
+  it('vale no dia do Kick-off e nos dias que antecedem', () => {
+    expect(pitchEmDestaque('2026-09-05')).toBe(true)
+    expect(pitchEmDestaque(kickOff)).toBe(true)
+  })
+
+  it('vale no último dia da janela e acaba no dia seguinte', () => {
+    // Sem empate a favor: 22/09 ainda mostra, 23/09 não. A mesma disciplina da
+    // janela da vitrine, que também não arredonda a fronteira para o lado
+    // confortável.
+    expect(pitchEmDestaque(somarDias(kickOff, DIAS_DE_DESTAQUE_DO_PITCH))).toBe(true)
+    expect(pitchEmDestaque(somarDias(kickOff, DIAS_DE_DESTAQUE_DO_PITCH + 1))).toBe(false)
+  })
+
+  it('a janela anda com o cronograma, não com uma data escrita à mão', () => {
+    const adiado = CRONOGRAMA.map((c) => (c.id === 'ko' ? { ...c, data: '2026-10-01' } : c))
+    expect(pitchEmDestaque('2026-10-11', adiado)).toBe(true)
+    expect(pitchEmDestaque('2026-10-12', adiado)).toBe(false)
+  })
+
+  it('não conhece o portão do ciclo: quem chama confere podeVer antes', () => {
+    // Em janeiro de 2026 o Kick-off ainda não tinha acontecido e a função já
+    // diz que sim. É correto: o começo da janela é o release, não a data.
+    expect(pitchEmDestaque('2026-01-01')).toBe(true)
   })
 })

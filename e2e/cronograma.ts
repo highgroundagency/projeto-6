@@ -1,6 +1,12 @@
 import { CRONOGRAMA, type CicloId } from '@/lib/cronograma'
 import { hojeEmRecife } from '@/lib/datas'
-import { ADIANTAMENTO_PADRAO, calcularReleaseAtual, ciclosVisiveis } from '@/lib/releases'
+import {
+  ADIANTAMENTO_PADRAO,
+  calcularReleaseAtual,
+  ciclosVisiveis,
+  ehSemanaCorrente,
+  pitchEmDestaque,
+} from '@/lib/releases'
 
 /**
  * Que ciclos o visitante enxerga HOJE, derivado do cronograma real.
@@ -34,6 +40,8 @@ function recorte() {
   return {
     visiveis: comRegistro.filter((id) => visiveis.includes(id)),
     ocultos: comRegistro.filter((id) => !visiveis.includes(id)),
+    /** Inclui os imprensados: eles aparecem como cartão, só não têm registro. */
+    todosVisiveis: CRONOGRAMA.map((c) => c.id as CicloId).filter((id) => visiveis.includes(id)),
   }
 }
 
@@ -44,6 +52,22 @@ export const CICLO_PUBLICO: CicloId = RECORTE.visiveis[0]
 
 /** Todos os ciclos que o visitante vê hoje: para um teste perguntar por um específico. */
 export const CICLOS_PUBLICOS: readonly CicloId[] = RECORTE.visiveis
+
+/**
+ * Qual cartão deve estar marcado como "esta semana" hoje, se algum.
+ *
+ * Nas semanas imprensadas é um cartão SEM registro, e depois que o cronograma
+ * acaba não é nenhum. Derivar isto é o que impede o teste de exigir uma
+ * pílula que a página não tem como mostrar: ele ficou vermelho de 05/09 a
+ * 11/09 exatamente por isso, e teria voltado ao verde sozinho no sábado,
+ * escondendo o defeito em vez de expô-lo.
+ */
+export const CICLO_DA_SEMANA: CicloId | null =
+  RECORTE.todosVisiveis.find((id) => ehSemanaCorrente(hojeEmRecife(), id)) ?? null
+
+/** O topo do site deve oferecer o pitch hoje? Mesma conta que a home faz. */
+export const DEVE_OFERECER_PITCH: boolean =
+  RECORTE.todosVisiveis.includes('ko') && pitchEmDestaque(hojeEmRecife())
 
 /** O primeiro ciclo que o visitante AINDA não vê: o alvo natural do teste de vazamento. */
 export const CICLO_OCULTO: CicloId = RECORTE.ocultos[0]

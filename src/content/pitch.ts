@@ -13,6 +13,13 @@ import type { IntegranteId } from '@/content/equipe'
  * roda em Node puro. E NUNCA por componente cliente: o texto do Kick-off é
  * conteúdo de ciclo, e chegaria ao bundle antes da hora.
  *
+ * TODO TEXTO QUE APARECE NA TELA MORA AQUI, inclusive rótulo de cartão. Não é
+ * organização: é o que permite `pitch.test.ts` contar as palavras de cada
+ * slide e falhar quando passarem do teto. A primeira versão tinha 1.127
+ * palavras na tela para 4:55 de fala, quase todas repetindo a nota do
+ * apresentador — a plateia lia em vez de ouvir. O componente só escolhe a
+ * forma do visual; as palavras vêm daqui.
+ *
  * Nomes aparecem aqui só como QUEM FALA. Quem construiu o quê não é assunto do
  * pitch: a equipe construiu, e o registro semanal diz como.
  */
@@ -33,6 +40,28 @@ export interface Slide {
 
 /** 4:55. Os cinco segundos que sobram são a margem para o "obrigado". */
 export const DURACAO_PITCH_SEGUNDOS = 295
+
+/**
+ * O PDF de reserva, para quem apresenta sem rede.
+ *
+ * É uma ROTA, não um arquivo em `public/`: assim ele passa pelo mesmo portão
+ * de release da página (ver `src/app/pitch/pdf/route.ts`). Baixar continua
+ * funcionando sem JavaScript, que é justamente o cenário em que baixar o PDF
+ * importa. Gerado por `npm run pitch-pdf` a partir desta mesma rota.
+ */
+export const ARQUIVO_PDF = '/pitch/pdf'
+
+/**
+ * Teto de palavras POR SLIDE, contando tudo que o autor escreveu na tela:
+ * título, frase de apoio e cada rótulo dos cartões. Não conta as notas do
+ * apresentador (escondidas) nem a memória de cálculo do slide 4, que é a
+ * interface real do sistema e não texto nosso.
+ *
+ * Setenta é a conta de quem fala: um slide dura 40 segundos e a plateia lê a
+ * uma velocidade que não dá para competir com a voz. Passou disso, a tela
+ * virou teleprompter.
+ */
+export const TETO_DE_PALAVRAS_POR_SLIDE = 70
 
 /**
  * A unidade e a competência da demonstração ao vivo. Sintéticas, como tudo na
@@ -58,7 +87,7 @@ export const CONTAGENS_PITCH = {
   /** Linhas de "Privacy by Design: onde está no código" em docs/privacidade.md. */
   principiosPrivacidade: 6,
   /** Linhas do registro semanal em docs/uso-de-ia.md. */
-  usosDeIa: 40,
+  usosDeIa: 41,
 } as const
 
 export const SLIDES = [
@@ -112,14 +141,14 @@ export const SLIDES = [
     apoio:
       'A ideia priorizada: cada número responde "de onde veio?" em um clique. Isto é o sistema rodando agora, não uma imagem.',
     visual:
-      'O cartão da nota e a memória de cálculo reais, do motor do Prumo, para uma unidade sintética. Captura estática de reserva logo abaixo.',
+      'O cartão da nota e a memória de cálculo reais, do motor do Prumo, para uma unidade sintética. A conta inteira cabe na tela, sem rolagem.',
     segundos: 45,
     quemFala: 'joao-pedro',
     notas: [
       'O que está na tela é o componente real do sistema, com o motor real e dados sintéticos: a USF Canário, competência de maio, régua versão 2.',
       'Cada linha é um indicador. Dentro dela, os subindicadores que a unidade preencheu: valor direto, ou numerador dividido por denominador.',
       'O valor composto é comparado com a meta do tipo da unidade e vira pontos; os pontos multiplicam o peso. A soma dividida pelo máximo dá a nota de 0 a 100 e a faixa de pagamento.',
-      'Se a demonstração falhar, abra a captura estática logo abaixo e siga o roteiro sem parar.',
+      'A memória é renderizada junto com o slide, não depende de rede nem de serviço: se a página abriu, ela está aqui. O PDF baixado antes cobre a sala sem rede.',
     ],
   },
   {
@@ -143,7 +172,7 @@ export const SLIDES = [
     numero: 6,
     titulo: 'nenhum dado real. ainda.',
     apoio:
-      'Hoje: base sintética com semente fixa, reproduzível por qualquer pessoa. A régua oficial chegou em 05/09 e é a próxima.',
+      'Hoje: base sintética com semente fixa, reproduzível por qualquer pessoa. A régua oficial já chegou, e é a próxima.',
     visual: 'Os números da base sintética, e a linha de base publicada ao lado de cada modelo.',
     segundos: 40,
     quemFala: 'rafael',
@@ -202,12 +231,167 @@ export const SLIDES = [
 
 export type SlideId = (typeof SLIDES)[number]['id']
 
+/* -------------------------------------------------------------------------
+   O TEXTO DE CADA VISUAL
+
+   Curto de propósito. O que foi cortado daqui não sumiu: está nas `notas` do
+   slide correspondente, que é onde a explicação sempre deveria ter morado.
+------------------------------------------------------------------------- */
+
+/** Slide 2: o fluxo do art. 7º da portaria, com o ponto de quebra marcado. */
+export interface EtapaDoMes {
+  readonly quem: string
+  readonly oQue: string
+  /** A etapa em que o processo quebra hoje. Uma só, e ela ganha o acento. */
+  readonly quebra?: boolean
+}
+
+export const ETAPAS_DO_MES: readonly EtapaDoMes[] = [
+  { quem: 'unidades', oQue: 'mandam os números' },
+  { quem: 'SECOGE', oQue: 'recebe até o dia 20' },
+  { quem: 'comissão', oQue: 'consolida à mão, em planilha', quebra: true },
+  { quem: 'SEGTES', oQue: 'pede o pagamento' },
+  { quem: 'SEPLAGTD', oQue: 'paga na folha' },
+]
+
+/** Slide 3: as três personas da Semana 2. Papéis, nunca pessoas. */
+export const PESSOAS = [
+  {
+    papel: 'quem consolida',
+    quem: 'analista da comissão',
+    dor: 'teme achar o erro depois do pagamento',
+  },
+  {
+    papel: 'quem informa',
+    quem: 'gerente de unidade',
+    dor: 'é cobrada por dado que já enviou',
+  },
+  {
+    papel: 'quem é avaliada',
+    quem: 'coordenadora',
+    dor: 'recebe o valor sem o caminho até ele',
+  },
+] as const
+
+/** Slide 5: os quatro passos de um número até virar nota. */
+export const CAMINHO_DO_NUMERO = [
+  { nome: 'subindicador', como: 'o que a unidade preenche' },
+  { nome: 'indicador', como: 'a composição, feita pelo motor' },
+  { nome: 'meta e peso', como: 'da regra vigente' },
+  { nome: 'nota e faixa', como: 'de 0 a 100' },
+] as const
+
+/** Slide 5: o que cada papel faz, em três palavras. A tela não é o manual. */
+export const PAPEIS_EM_UMA_LINHA = [
+  { papel: 'seab', faz: 'fecha o mês' },
+  { papel: 'administrador', faz: 'cadastros e trilha' },
+  { papel: 'gerente distrital', faz: 'revisa o distrito' },
+  { papel: 'gerente de unidade', faz: 'lança os números' },
+] as const
+
+/**
+ * Slide 6: o rótulo e a legenda de cada número da base. O NÚMERO vem dos dados
+ * reais, na hora de renderizar; aqui ficam só as palavras.
+ *
+ * Os números que aparecem dentro da legenda (quantos distritos, quantos
+ * indicadores) são conferidos contra o seed em `pitch.test.ts`. Escrever "3
+ * distritos" e a base ter quatro é mentir no palco com cara de precisão.
+ */
+export const ROTULOS_DA_BASE = {
+  unidades: 'unidades',
+  subindicadores: 'subindicadores',
+  competencias: 'competências',
+} as const
+
+export const LEGENDAS_DA_BASE = {
+  unidades: '3 distritos, 4 tipos',
+  subindicadores: 'em 7 indicadores, 2 versões da regra',
+  competencias: 'semente fixa, qualquer um confere',
+} as const
+
+/** Slide 7: as quatro contagens, com a legenda mais curta que sustenta cada uma. */
+export const ROTULOS_DE_RISCO = {
+  stride: 'ameaças STRIDE',
+  owasp: 'itens OWASP',
+  privacidade: 'princípios de privacidade',
+  ia: 'usos de IA',
+} as const
+
+export const LEGENDAS_DE_RISCO = {
+  stride: 'mapeadas, com mitigação',
+  // Interpolado, e não escrito: o número já é conferido contra docs/seguranca.md.
+  owasp: `${CONTAGENS_PITCH.owaspParciais} parciais, declarados`,
+  privacidade: 'apontam para o código',
+  ia: 'todos assinados',
+} as const
+
 /** Os compromissos do slide 8, um por marco. Datas vêm do cronograma, nunca daqui. */
 export const COMPROMISSOS_ATE_O_SR1 = [
-  { ciclo: 's5', compromisso: 'a régua oficial no motor, como regra versão 3' },
-  { ciclo: 's6', compromisso: 'as quatro primeiras telas no ar para o visitante' },
-  { ciclo: 'sr1', compromisso: 'a régua conferida com a SEAB, fora do repositório' },
+  { ciclo: 's5', compromisso: 'a régua oficial no motor' },
+  { ciclo: 's6', compromisso: 'as telas no ar' },
+  { ciclo: 'sr1', compromisso: 'a régua conferida com a SEAB' },
 ] as const
+
+/** Slide 4: quem é a unidade da demonstração, numa linha. */
+export const ROTULO_DA_DEMO = 'base sintética, competência fechada'
+
+/**
+ * Tudo que o autor escreveu na tela daquele slide, para o teste contar.
+ *
+ * Se um texto aparece na tela e NÃO passa por aqui, o teto deixa de valer e o
+ * slide volta a engordar sem ninguém perceber. É por isso que o componente
+ * não tem literal de conteúdo.
+ */
+export function textoNaTela(id: SlideId): readonly string[] {
+  const slide = SLIDES.find((s) => s.id === id)
+  if (!slide) throw new Error(`Slide desconhecido: ${id}`)
+  const base = [slide.titulo, slide.apoio]
+
+  switch (id) {
+    case 'problema':
+      return [
+        ...base,
+        ...ETAPAS_DO_MES.flatMap((e) => (e.quebra ? [e.quem, e.oQue, 'aqui quebra'] : [e.quem, e.oQue])),
+      ]
+    case 'quem-sofre':
+      return [...base, ...PESSOAS.flatMap((p) => [p.papel, p.quem, p.dor])]
+    case 'ideia':
+      // A frase de apoio não aparece neste slide: a demonstração ocupa a tela.
+      return [slide.titulo, ROTULO_DA_DEMO]
+    case 'como-funciona':
+      return [
+        ...base,
+        ...CAMINHO_DO_NUMERO.flatMap((p) => [p.nome, p.como]),
+        'quem',
+        ...PAPEIS_EM_UMA_LINHA.flatMap((p) => [p.papel, p.faz]),
+      ]
+    case 'dados':
+      return [
+        ...base,
+        ...Object.values(ROTULOS_DA_BASE),
+        ...Object.values(LEGENDAS_DA_BASE),
+        FRASE_DO_MODELO,
+      ]
+    case 'riscos':
+      return [...base, ...Object.values(ROTULOS_DE_RISCO), ...Object.values(LEGENDAS_DE_RISCO)]
+    case 'ate-o-sr1':
+      return [...base, ...COMPROMISSOS_ATE_O_SR1.map((c) => c.compromisso)]
+    default:
+      return base
+  }
+}
+
+/** Slide 6: a comparação que o modelo perde, dita em uma linha. */
+export const FRASE_DO_MODELO =
+  'o classificador de meta perde para o palpite majoritário, e isso está publicado'
+
+/** Quantas palavras aquele slide põe na tela. */
+export function palavrasNaTela(id: SlideId): number {
+  return textoNaTela(id)
+    .join(' ')
+    .split(/\s+/)
+    .filter((palavra) => /[a-zA-Zà-úÀ-Ú0-9]/.test(palavra)).length
+}
 
 /** `0:35`, `4:55`. Sem hora: o pitch não chega lá. */
 export function formatarTempo(segundos: number): string {

@@ -45,7 +45,7 @@ export function MemoriaDeCalculo({
       <div className="border-t border-linha px-4 py-4">
         {/* Antes da tabela, o modo de ler. Sem isto a tela mostrava a conta e
             não dizia para que ela serve, e quem não é da área ficava perdido. */}
-        <p className="max-w-prose text-sm leading-relaxed">
+        <p className="como-ler max-w-prose text-sm leading-relaxed">
           Como ler: cada linha é um indicador, e o valor dele nasce dos subindicadores que a
           unidade preencheu, listados dentro da própria linha. O valor composto é comparado com
           a meta do tipo da unidade e vira pontos. Os pontos são multiplicados pelo peso (o

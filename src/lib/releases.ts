@@ -234,6 +234,35 @@ export function dataSimuladaDaJanela(
 const DIAS_DA_SEMANA = 7
 
 /**
+ * Por quantos dias depois do Kick-off o topo do site aponta para a apresentação.
+ *
+ * Dez: cobre o dia, a semana da arguição e a seguinte, e depois o site volta
+ * ao normal sozinho. Um destaque sem prazo vira entulho de interface, e
+ * ninguém lembra de tirar.
+ */
+export const DIAS_DE_DESTAQUE_DO_PITCH = 10
+
+/**
+ * O topo do site deve apontar para `/pitch` nesta data?
+ *
+ * SÓ O FIM DA JANELA MORA AQUI. O começo é o portão do ciclo: quem chama isto
+ * confere `podeVer(visao, 'ko')` antes, porque enquanto o Kick-off não estiver
+ * liberado a rota responde 404 e o botão levaria a lugar nenhum. Separar as
+ * duas condições mantém esta função pura e testável por data, sem cookie.
+ *
+ * A data do marco vem do cronograma, nunca escrita à mão (regra 2 da casa):
+ * mudou a data do Kick-off, a janela anda junto.
+ */
+export function pitchEmDestaque(
+  hoje: DataISO,
+  ciclos: readonly Ciclo[] = CRONOGRAMA,
+): boolean {
+  const kickOff = ciclos.find((c) => c.id === 'ko')
+  if (!kickOff) return false
+  return hoje <= somarDias(kickOff.data, DIAS_DE_DESTAQUE_DO_PITCH)
+}
+
+/**
  * `hoje` cai DENTRO da semana deste ciclo?
  *
  * Diferente de `cicloCorrente`, que devolve o último ciclo já vencido e por isso

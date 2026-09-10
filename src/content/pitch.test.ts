@@ -3,13 +3,18 @@ import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
 import { EQUIPE } from './equipe'
 import {
+  ARQUIVO_PDF,
   CONTAGENS_PITCH,
   DEMO_PITCH,
+  LEGENDAS_DA_BASE,
   DURACAO_PITCH_SEGUNDOS,
   SLIDES,
+  TETO_DE_PALAVRAS_POR_SLIDE,
   formatarTempo,
   inicioDoSlide,
+  palavrasNaTela,
   tempoPorIntegrante,
+  textoNaTela,
 } from './pitch'
 import { BASE } from '@/lib/seed'
 
@@ -57,9 +62,48 @@ describe('o pitch do Kick-off', () => {
     }
   })
 
+  it('cabe no teto de palavras: a tela não é teleprompter', () => {
+    // A primeira versão do deck tinha 1.127 palavras na tela para 4:55 de
+    // fala, e quase todas repetiam a nota do apresentador. Este teste existe
+    // para o corte não voltar sozinho na próxima edição.
+    for (const slide of SLIDES) {
+      const palavras = palavrasNaTela(slide.id)
+      expect(palavras, `slide ${slide.numero} (${slide.titulo})`).toBeLessThanOrEqual(
+        TETO_DE_PALAVRAS_POR_SLIDE,
+      )
+    }
+    const total = SLIDES.reduce((soma, slide) => soma + palavrasNaTela(slide.id), 0)
+    expect(total).toBeLessThan(450)
+  })
+
+  it('todo texto de tela sai de pitch.ts, e não do componente', () => {
+    // O teto acima só vale se o componente não escrever texto por conta
+    // própria. Nenhum literal de conteúdo em slides.tsx: o que ele tem são
+    // classes, nomes de campo e o rótulo dos elementos estruturais.
+    const componente = ler('src/components/pitch/slides.tsx')
+    const frasesLongas = componente
+      .split('\n')
+      .map((linha) => linha.trim())
+      // Nó de texto JSX é uma linha sem código: sem atributo, sem chave, sem
+      // aspas e sem tag. Sobra prosa, e prosa aqui é conteúdo fora do lugar.
+      .filter((linha) => !/[=<>{}"'`]/.test(linha))
+      .filter((linha) => !linha.startsWith('*') && !linha.startsWith('//'))
+      .filter((linha) => !linha.startsWith('/*') && !linha.endsWith('*/'))
+      .filter((linha) => linha.split(/\s+/).filter(Boolean).length >= 5)
+    expect(frasesLongas, `mova para src/content/pitch.ts: ${frasesLongas.join(' | ')}`).toEqual([])
+  })
+
+  it('a tela do slide da demonstração não repete a explicação da fala', () => {
+    // O que aparece ali é a interface real do sistema; a explicação de como
+    // ler a memória é da fala, e o CSS esconde o parágrafo no deck e no papel.
+    const naTela = textoNaTela('ideia').join(' ')
+    expect(naTela).not.toContain('Como ler')
+    expect(palavrasNaTela('ideia')).toBeLessThan(20)
+  })
+
   it('não usa travessão em texto de tela (regra 8 da casa)', () => {
     for (const slide of SLIDES) {
-      const textos = [slide.titulo, slide.apoio, slide.visual, ...slide.notas]
+      const textos = [slide.titulo, slide.apoio, slide.visual, ...slide.notas, ...textoNaTela(slide.id)]
       for (const texto of textos) {
         expect(texto, `slide ${slide.numero}`).not.toMatch(/[—–]/)
         expect(texto.trim().length, `slide ${slide.numero}`).toBeGreaterThan(0)
@@ -111,10 +155,30 @@ describe('o pitch do Kick-off', () => {
     }
   })
 
+  it('as legendas do slide de dados não mentem sobre a base', () => {
+    expect(LEGENDAS_DA_BASE.unidades).toBe(
+      `${BASE.distritos.length} distritos, ${BASE.tiposUnidade.length} tipos`,
+    )
+    expect(LEGENDAS_DA_BASE.subindicadores).toBe(
+      `em ${BASE.indicadores.length} indicadores, ${BASE.regras.length} versões da regra`,
+    )
+  })
+
+  it('o PDF do pitch está no rastreamento de arquivos, senão some no deploy', () => {
+    // `readFile(join(process.cwd(), ...))` é invisível para o rastreador do
+    // Next: sem esta linha a rota funciona no repositório e devolve 404 em
+    // produção, justamente no dia em que alguém precisa do PDF.
+    const config = ler('next.config.ts')
+    expect(config).toContain(ARQUIVO_PDF)
+    expect(config).toContain('docs/pitch-kickoff.pdf')
+  })
+
   it('o componente cliente do deck não importa conteúdo (regra 3 da casa)', () => {
-    const deck = ler('src/components/pitch/deck.tsx')
-    expect(deck.startsWith("'use client'")).toBe(true)
-    expect(deck).not.toMatch(/@\/content\//)
-    expect(deck).not.toMatch(/ciclos\//)
+    for (const caminho of ['src/components/pitch/deck.tsx', 'src/components/pitch/teclado.ts']) {
+      const fonte = ler(caminho)
+      expect(fonte, caminho).not.toMatch(/@\/content\//)
+      expect(fonte, caminho).not.toMatch(/ciclos\//)
+    }
+    expect(ler('src/components/pitch/deck.tsx').startsWith("'use client'")).toBe(true)
   })
 })

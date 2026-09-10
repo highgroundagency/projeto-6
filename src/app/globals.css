@@ -707,11 +707,26 @@ body {
   margin-top: 0.4rem;
 }
 
+/* A ajuda das teclas.
+   FIXA, e não no fluxo: ela vive dentro do deck, depois de um slide que ocupa
+   a tela inteira, então no fluxo ela somava 68px e fazia a página rolar —
+   justo no modo que promete um slide por tela. Centralizada porque o rodapé
+   do slide já ocupa os dois cantos. Quem renderiza é o componente cliente,
+   só quando o JavaScript está de pé: sem ele, nenhuma dessas teclas existe. */
 .ajuda-deck {
-  padding: 1rem 1.5rem 2rem;
+  position: fixed;
+  bottom: 3.6rem;
+  left: 50%;
+  z-index: 39;
+  transform: translateX(-50%);
+  pointer-events: none;
   font-size: 0.75rem;
   color: var(--color-apagado);
   text-transform: lowercase;
+}
+
+html:fullscreen .ajuda-deck {
+  display: none;
 }
 
 /* Modo deck: um slide por vez, ocupando exatamente o que sobra abaixo do
@@ -736,22 +751,48 @@ html:fullscreen [data-modo='deck'] .slide {
   display: none;
 }
 
-body:has([data-modo='deck']) .ajuda-deck {
-  display: none;
-}
-
 [data-modo='deck'] .slide-demo .slide-titulo {
   font-size: clamp(1.4rem, 2.6vw, 2rem);
 }
 
+/* A DEMONSTRAÇÃO CABE INTEIRA, e isso não é preciosismo de layout.
+   A versão anterior limitava a altura e deixava rolar: em 1280x720 a caixa
+   tinha 384px para 1008px de conteúdo, então 62% ficava fora da tela,
+   incluindo a tabela e a linha "(104) ÷ (12 × 10) × 100 = 86.67". O slide se
+   chama "a nota com a conta aberta" e a conta era justamente o que não
+   aparecia. Pior: rolar exigia focar algo dentro da caixa, e focar desligava
+   as setas.
+
+   A folha de impressão já resolvia isso do jeito certo — esconder o que a
+   fala cobre e reduzir a escala. Aqui é a mesma receita.
+
+   A conta, em 1280x720: 720 − 53 (cromo) − 120 (padding do slide) − 36
+   (título) − 16 (respiro) = 495px de espaço. Sem o parágrafo "como ler" o
+   conteúdo mede ~898px, e 898 × 0,52 = 467px. Cabe, com folga de 28px. Em
+   1366x768 sobram mais 48px, e em tela cheia o cromo devolve outros 53, por
+   isso a escala sobe lá embaixo.
+
+   `zoom` e não `transform: scale` de propósito: zoom participa do layout, e a
+   caixa realmente encolhe. Com `scale` o elemento continuaria ocupando 898px
+   e empurraria o rodapé do slide para fora. */
+[data-modo='deck'] .slide-demo .slide-apoio,
+[data-modo='deck'] .slide-demo .como-ler,
+[data-modo='deck'] .slide-demo .demo summary {
+  display: none;
+}
+
 [data-modo='deck'] .slide-demo .demo {
-  max-height: calc(100dvh - 21rem);
+  zoom: 0.6;
+  /* Rede, não muleta: com o zoom valendo, a conta cabe e nada rola — e há
+     teste de ponta a ponta provando isso em 1280x720 e em 1366x768. A rede
+     existe para o navegador que ignora `zoom` (Firefox anterior ao 126) e
+     para o dia em que a memória ganhar uma linha: melhor rolar dentro da
+     caixa do que empurrar o rodapé do slide para fora da tela. */
   overflow: auto;
 }
 
-/* Com as notas abertas no ensaio, a demonstração cede espaço para elas. */
-[data-modo='deck'][data-notas] .slide-demo .demo {
-  max-height: calc(100dvh - 30rem);
+html:fullscreen [data-modo='deck'] .slide-demo .demo {
+  zoom: 0.66;
 }
 
 /* Embaixo, no centro: o rodapé do slide já ocupa os dois cantos. */
@@ -855,7 +896,8 @@ html:fullscreen .ajuda-deck {
     zoom: 0.6;
   }
 
-  .slide-demo .demo details > div > p:first-child {
+  .slide-demo .como-ler,
+  .slide-demo .demo summary {
     display: none;
   }
 
