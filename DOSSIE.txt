@@ -709,13 +709,13 @@ feedback de professor ou de cliente seria fabricar evidência.
       Começa em | Slide | Quem fala | O que a tela mostra | Tempo
 
        0:00 | 1. prumo | Gabriel | Wordmark, uma linha, e a pílula do marco: kick-off, data e equipe. | 0:05
-       0:05 | 2. todo mês, uma conta feita à mão | Gabriel | O fluxo da portaria em cinco etapas, com o ponto de quebra marcado na consolidação. | 0:35
-       0:40 | 3. três pessoas, o mesmo número | Matheus | Três cartões, um por papel: quem consolida, quem informa, quem é avaliada. Uma frase de cada. | 0:40
-       1:20 | 4. a nota com a conta aberta | João | O cartão da nota e a memória de cálculo reais, do motor do Prumo, para uma unidade sintética. A conta inteira cabe na tela, sem rolagem. | 0:45
-       2:05 | 5. regra é dado, não fórmula | João | O caminho de um número em quatro passos, os quatro papéis e as etapas do mês. | 0:45
-       2:50 | 6. nenhum dado real. ainda. | Rafael | Os números da base sintética, e a linha de base publicada ao lado de cada modelo. | 0:40
-       3:30 | 7. o que pode dar errado, dito antes | Fernando | Quatro contagens: ameaças STRIDE, itens OWASP, princípios de privacidade e usos de IA assinados. | 0:40
-       4:10 | 8. de hoje ao sr1: três semanas | Fernando | Uma linha do tempo com os três marcos e um compromisso em cada. | 0:30
+       0:05 | 2. todo mês, uma conta feita à mão | Gabriel | O caminho do dinheiro em cinco passos, com o ponto que quebra em destaque. | 0:35
+       0:40 | 3. três pessoas, o mesmo número | Matheus | Três cartões, um por pessoa afetada, com o medo de cada uma. | 0:40
+       1:20 | 4. a nota com a conta aberta | João | A nota e a conta inteira, do sistema de verdade, para uma unidade de teste. | 0:45
+       2:05 | 5. cada mês guarda a regra que usou | João | O caminho de um número em quatro passos, e quem faz o quê. | 0:45
+       2:50 | 6. nenhum dado real. ainda. | Rafael | O tamanho da base de teste, e o que os modelos acertam e erram. | 0:40
+       3:30 | 7. o que pode dar errado, dito antes | Fernando | Quatro contagens do que já foi mapeado, cada uma com o estado dela. | 0:40
+       4:10 | 8. de hoje ao sr1: três semanas | Fernando | Os três marcos até o SR1, com data e compromisso. | 0:30
        4:40 | 9. prumo | Gabriel | Wordmark, o endereço do site e a pergunta para a banca. | 0:15
 
       Soma: 4:55. A fala de cada slide está nas notas do apresentador, em /pitch, com a tecla n. Quem fala não opera: uma pessoa fica na tela o tempo todo, avançando com as setas. O deck baixa o PDF de reserva pelo próprio cabeçalho, para o caso de a sala não ter rede.

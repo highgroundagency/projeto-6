@@ -101,6 +101,28 @@ describe('o pitch do Kick-off', () => {
     expect(palavrasNaTela('ideia')).toBeLessThan(20)
   })
 
+  it('não usa palavra difícil na tela nem na fala', () => {
+    // Quem apresenta são os seis, e nem todos estão dentro de cada parte do
+    // projeto: a pessoa precisa entender o slide enquanto lê. Termo técnico
+    // que vale ponto com a banca entra entre parênteses, depois da palavra
+    // simples, e por isso a checagem ignora o que está entre parênteses.
+    const DIFICEIS =
+      /\b(consolida\w*|régua|aplicabilidade|homologa\w*|memória de cálculo|subindicador\w*|competência|gradação|atingimento|reproduzív\w*|sintétic\w*|instância|parametriz\w*)\b/i
+
+    for (const slide of SLIDES) {
+      const naTela = textoNaTela(slide.id)
+        .join(' ')
+        .replace(/\([^)]*\)/g, ' ')
+      expect(naTela, `slide ${slide.numero} na tela`).not.toMatch(DIFICEIS)
+
+      for (const nota of slide.notas) {
+        expect(nota.replace(/\([^)]*\)/g, ' '), `slide ${slide.numero} na fala`).not.toMatch(
+          DIFICEIS,
+        )
+      }
+    }
+  })
+
   it('não usa travessão em texto de tela (regra 8 da casa)', () => {
     for (const slide of SLIDES) {
       const textos = [slide.titulo, slide.apoio, slide.visual, ...slide.notas, ...textoNaTela(slide.id)]
@@ -157,10 +179,10 @@ describe('o pitch do Kick-off', () => {
 
   it('as legendas do slide de dados não mentem sobre a base', () => {
     expect(LEGENDAS_DA_BASE.unidades).toBe(
-      `${BASE.distritos.length} distritos, ${BASE.tiposUnidade.length} tipos`,
+      `em ${BASE.distritos.length} distritos, de ${BASE.tiposUnidade.length} tipos`,
     )
     expect(LEGENDAS_DA_BASE.subindicadores).toBe(
-      `em ${BASE.indicadores.length} indicadores, ${BASE.regras.length} versões da regra`,
+      `dentro de ${BASE.indicadores.length} indicadores`,
     )
   })
 

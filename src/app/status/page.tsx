@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 
+import { AtalhoDoPitch } from '@/components/base/atalho-pitch'
 import { Etiqueta } from '@/components/base/selo'
 import { Rodape } from '@/components/base/rodape'
 import { coletarStatus } from '@/lib/status'
@@ -45,7 +46,10 @@ export default async function PaginaStatus() {
           <h1 className="fonte-display text-2xl">Status</h1>
           <p className="mt-1 text-sm text-apagado">Health check da aplicação.</p>
         </div>
-        <Etiqueta tom="ok">operacional</Etiqueta>
+        <span className="flex items-center gap-3">
+          <AtalhoDoPitch className="text-apagado" />
+          <Etiqueta tom="ok">operacional</Etiqueta>
+        </span>
       </header>
 
       <dl className="mt-6 divide-y divide-linha border-y border-linha">

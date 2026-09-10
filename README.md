@@ -68,7 +68,7 @@ end-to-end fica em `npm run e2e`.
 
 O que está coberto:
 
-- **504 testes de unidade** — aritmética de data no fuso do projeto, motor de releases,
+- **505 testes de unidade** — aritmética de data no fuso do projeto, motor de releases,
   config store, sessão do admin, completude do registro, motor de cálculo, base sintética e
   os números ditos no pitch, conferidos contra os documentos de onde vêm.
 - **23 verificações do schema guardado** — políticas de RLS por perfil e invariantes de

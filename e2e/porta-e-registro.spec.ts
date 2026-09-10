@@ -107,17 +107,23 @@ test.describe('registro do projeto', () => {
     }
   })
 
-  test('o topo oferece o pitch enquanto ele é a entrega da vez', async ({ page }) => {
-    await page.goto('/')
-    const link = page.getByRole('link', { name: 'pitch', exact: true })
+  test('o topo de TODA página oferece o pitch enquanto ele é a entrega da vez', async ({
+    page,
+  }) => {
+    // Não só a inicial: a primeira versão do atalho ficou lá, e quem abrisse o
+    // sistema ou a arquitetura não tinha caminho nenhum até os slides.
+    for (const rota of ['/', '/sistema', '/arquitetura', '/transparencia-ia', '/status']) {
+      await page.goto(rota)
+      const link = page.getByRole('link', { name: 'pitch', exact: true })
 
-    if (DEVE_OFERECER_PITCH) {
-      await expect(link).toBeVisible()
-      await expect(link).toHaveAttribute('href', '/pitch')
-    } else {
-      // Fora da janela o botão some sozinho: destaque sem prazo vira entulho,
-      // e antes do release ele apontaria para um 404.
-      await expect(link).toHaveCount(0)
+      if (DEVE_OFERECER_PITCH) {
+        await expect(link, rota).toBeVisible()
+        await expect(link, rota).toHaveAttribute('href', '/pitch')
+      } else {
+        // Fora da janela o botão some sozinho: destaque sem prazo vira
+        // entulho, e antes do release ele apontaria para um 404.
+        await expect(link, rota).toHaveCount(0)
+      }
     }
   })
 

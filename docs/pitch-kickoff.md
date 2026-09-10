@@ -41,89 +41,101 @@ construiu. As falas abaixo são as notas do apresentador da rota `/pitch`, na í
 4:55 de apresentação, quase todas repetindo estas notas: a plateia lia em vez de ouvir. Hoje
 são menos de 400, com teto por slide imposto em teste. O que sumiu da tela está aqui embaixo.
 
+**E nada de palavra difícil, na tela ou na fala.** Quem apresenta são os seis, e nem todos
+estão dentro de cada parte do projeto: a pessoa precisa entender o slide enquanto lê. Por isso
+saíram "consolidar", "régua", "homologar", "memória de cálculo" e "subindicador". Onde a sigla
+vale ponto com a banca, ela entra entre parênteses depois da palavra simples, como em
+"ameaças de segurança listadas uma a uma (STRIDE)". Há teste que recusa a volta delas.
+
 ### Slide 1: prumo
 
-- **Começa em** 0:00 · **dura** 0:05 · **quem fala:** Gabriel · **9 palavras na tela**
-- **Frase da tela:** o cálculo da gratificação que se explica sozinho
+- **Começa em** 0:00 · **dura** 0:05 · **quem fala:** Gabriel · **10 palavras na tela**
+- **Frase da tela:** o cálculo da gratificação, aberto para qualquer um conferir
 - **O que a tela mostra:** Wordmark, uma linha, e a pílula do marco: kick-off, data e equipe.
 - **A fala:**
-  1. Bom dia. Somos a Equipe 2 e este é o Prumo.
-  1. Cinco minutos: o problema, quem sofre com ele, a ideia que priorizamos e para onde vamos até o SR1.
+  1. Bom dia. Somos a Equipe 2, e este é o Prumo.
+  1. Em cinco minutos: qual é o problema, quem sofre com ele, o que já construímos e para onde vamos.
 
 ### Slide 2: todo mês, uma conta feita à mão
 
-- **Começa em** 0:05 · **dura** 0:35 · **quem fala:** Gabriel · **55 palavras na tela**
-- **Frase da tela:** Desde 2023 a Secretaria de Saúde do Recife paga gratificação por metas. A régua está na portaria. A conta está numa planilha.
-- **O que a tela mostra:** O fluxo da portaria em cinco etapas, com o ponto de quebra marcado na consolidação.
+- **Começa em** 0:05 · **dura** 0:35 · **quem fala:** Gabriel · **64 palavras na tela**
+- **Frase da tela:** A prefeitura paga um extra no salário de quem bate as metas da saúde. A regra está num documento oficial. A conta está numa planilha.
+- **O que a tela mostra:** O caminho do dinheiro em cinco passos, com o ponto que quebra em destaque.
 - **A fala:**
-  1. A Portaria Conjunta 001/2024 fixa cinco indicadores, com subindicadores, metas mensais e pesos que mudam por tipo de unidade e por função.
-  1. O fluxo é da própria norma: cada secretaria executiva coleta, manda à SECOGE até o dia 20, a Comissão de Avaliação de Metas consolida e valida, e a SEGTES leva para a folha.
-  1. O ponto de quebra é a consolidação: dezenas de números viram uma nota por gestor, à mão, em planilha. A régua está escrita; a conta não está.
+  1. Desde 2023, quem dirige uma unidade de saúde no Recife pode receber um extra no salário quando bate as metas do mês.
+  1. As metas estão numa portaria, que é o documento oficial da prefeitura. Ela diz o que medir, quanto vale cada coisa e qual é o alvo.
+  1. O caminho é este da tela: as unidades mandam os números, a secretaria junta, uma comissão confere, e o pagamento entra na folha.
+  1. O problema está no meio: a conferência é feita à mão, numa planilha. A regra está escrita; a conta, não.
 
 ### Slide 3: três pessoas, o mesmo número
 
-- **Começa em** 0:40 · **dura** 0:40 · **quem fala:** Matheus · **55 palavras na tela**
-- **Frase da tela:** Ninguém responde "de onde veio esse número?" sem abrir a planilha de outra pessoa.
-- **O que a tela mostra:** Três cartões, um por papel: quem consolida, quem informa, quem é avaliada. Uma frase de cada.
+- **Começa em** 0:40 · **dura** 0:40 · **quem fala:** Matheus · **60 palavras na tela**
+- **Frase da tela:** Ninguém consegue dizer de onde veio esse número sem abrir a planilha de outra pessoa.
+- **O que a tela mostra:** Três cartões, um por pessoa afetada, com o medo de cada uma.
 - **A fala:**
-  1. As três personas são papéis, não pessoas: construídas a partir do case e confirmadas na reunião com o cliente em 22/08. Nenhum dado real.
-  1. Quem consolida fecha o ciclo com medo de ter errado uma fórmula, e é procurada sempre que alguém contesta um resultado.
-  1. Quem informa preenche em cima do prazo, entre outras dez prioridades, e é cobrado por dado que já enviou.
-  1. Quem é avaliada recebe o valor sem o caminho que levou até ele. É quem mais precisa da conta aberta.
+  1. Essas três pessoas não são inventadas por nós: saíram do caso e foram confirmadas na conversa com o cliente, em agosto. São papéis, não gente de verdade.
+  1. A primeira fecha a conta do mês. Ela mexe na planilha há três ciclos e é quem todo mundo procura quando alguém reclama do resultado.
+  1. A segunda manda os números da unidade dela, sempre em cima do prazo, no meio de outras dez tarefas.
+  1. A terceira recebe o valor no fim. Ela vê quanto ganhou e não vê como chegaram naquele número. É por ela que este projeto existe.
 
 ### Slide 4: a nota com a conta aberta
 
-- **Começa em** 1:20 · **dura** 0:45 · **quem fala:** João · **10 palavras na tela**
-- **Frase da tela:** A ideia priorizada: cada número responde "de onde veio?" em um clique. Isto é o sistema rodando agora, não uma imagem.
-- **O que a tela mostra:** O cartão da nota e a memória de cálculo reais, do motor do Prumo, para uma unidade sintética. A conta inteira cabe na tela, sem rolagem.
+- **Começa em** 1:20 · **dura** 0:45 · **quem fala:** João · **15 palavras na tela**
+- **Frase da tela:** Isto é o sistema rodando agora, não uma imagem.
+- **O que a tela mostra:** A nota e a conta inteira, do sistema de verdade, para uma unidade de teste.
 - **A fala:**
-  1. O que está na tela é o componente real do sistema, com o motor real e dados sintéticos: a USF Canário, competência de maio, régua versão 2.
-  1. Cada linha é um indicador. Dentro dela, os subindicadores que a unidade preencheu: valor direto, ou numerador dividido por denominador.
-  1. O valor composto é comparado com a meta do tipo da unidade e vira pontos; os pontos multiplicam o peso. A soma dividida pelo máximo dá a nota de 0 a 100 e a faixa de pagamento.
-  1. A memória é renderizada junto com o slide, não depende de rede nem de serviço: se a página abriu, ela está aqui. O PDF baixado antes cobre a sala sem rede.
+  1. O que está na tela é o sistema mesmo, rodando agora, com dados de teste. Nenhuma pessoa real aparece aqui.
+  1. Em cima, a nota do mês: 86,67. Do lado, quanto isso vale em dinheiro.
+  1. Embaixo, a conta inteira. Cada linha é uma coisa que a unidade informou, com o alvo dela, quanto ela vale e quanto entrou na nota.
+  1. A última linha fecha a conta na frente de todo mundo. Qualquer pessoa consegue refazer essa continha no papel. É isso que a planilha não dá.
+  1. Se faltar internet no dia, o PDF que a gente baixou antes tem esta mesma tela.
 
-### Slide 5: regra é dado, não fórmula
+### Slide 5: cada mês guarda a regra que usou
 
-- **Começa em** 2:05 · **dura** 0:45 · **quem fala:** João · **68 palavras na tela**
-- **Frase da tela:** A portaria vira uma versão da regra. O ciclo guarda qual versão usou. O resultado antigo continua reproduzível.
-- **O que a tela mostra:** O caminho de um número em quatro passos, os quatro papéis e as etapas do mês.
+- **Começa em** 2:05 · **dura** 0:45 · **quem fala:** João · **67 palavras na tela**
+- **Frase da tela:** Se a regra mudar, o mês antigo continua igual.
+- **O que a tela mostra:** O caminho de um número em quatro passos, e quem faz o quê.
 - **A fala:**
-  1. O motor é função pura: sem banco, sem relógio, sem aleatoriedade. Mesma entrada, mesma nota, hoje e daqui a um ano.
-  1. Mudou a portaria? Cria-se uma versão nova da regra. Os meses já homologados continuam reproduzindo o resultado antigo, porque cada ciclo aponta para a versão que usou.
-  1. Quatro papéis, os que o cliente nomeou: o gerente de unidade lança, o gerente distrital revisa, a coordenação da SEAB fecha o mês, o administrador cuida dos cadastros e da trilha.
-  1. Toda escrita gera evento com autor, data, antes e depois. A trilha só cresce.
+  1. A regra não está escondida dentro do código: ela é um dado, com versão, igual a um documento.
+  1. Quando a prefeitura mudar a portaria, a gente cria uma versão nova. Os meses que já fecharam continuam mostrando o mesmo resultado de antes, porque cada mês aponta para a versão que usou.
+  1. O caminho de um número é o da tela: a unidade digita, o sistema calcula, a regra do mês diz qual é o alvo e quanto vale, e sai a nota de 0 a 100.
+  1. São quatro pessoas no processo, e cada uma só faz a parte dela. Quem manda o número não escolhe o alvo.
+  1. Toda mudança fica gravada com autor, data e o valor de antes. Nada é apagado.
 
 ### Slide 6: nenhum dado real. ainda.
 
-- **Começa em** 2:50 · **dura** 0:40 · **quem fala:** Rafael · **55 palavras na tela**
-- **Frase da tela:** Hoje: base sintética com semente fixa, reproduzível por qualquer pessoa. A régua oficial já chegou, e é a próxima.
-- **O que a tela mostra:** Os números da base sintética, e a linha de base publicada ao lado de cada modelo.
+- **Começa em** 2:50 · **dura** 0:40 · **quem fala:** Rafael · **56 palavras na tela**
+- **Frase da tela:** Hoje o sistema roda com dados inventados por um programa. Qualquer pessoa roda de novo e vê os mesmos números.
+- **O que a tela mostra:** O tamanho da base de teste, e o que os modelos acertam e erram.
 - **A fala:**
-  1. Tudo que o sistema mostra vem de um gerador com semente fixa: os distritos, os tipos de unidade, as unidades, os indicadores e as competências que estão na tela.
-  1. A lente de aprendizado de máquina treina fora do app e publica quatro modelos, cada um com a linha de base ao lado. O classificador de meta perde para o palpite majoritário, e isso está na tela, não escondido.
-  1. Nada que sai dos modelos entra no cálculo. O modelo diz onde olhar; a portaria diz quanto alguém recebe.
-  1. A portaria pública entra no repositório. A planilha anonimizada que o cliente enviou fica fora dele, porque o repositório é público, e serve para validar a régua.
+  1. Tudo que vocês viram na tela anterior veio de um gerador que a gente escreveu. Ele usa sempre a mesma semente, então quem rodar de novo vê exatamente os mesmos números.
+  1. Isso é de propósito: o repositório é público, e dado de servidor da prefeitura não entra nele.
+  1. Na parte de inteligência artificial, treinamos quatro modelos fora do sistema. Publicamos cada um ao lado do resultado do chute mais simples possível.
+  1. Um deles perde para o chute. A gente deixou publicado do mesmo jeito, porque esconder isso seria enganar.
+  1. E nada do que o modelo diz entra na conta do dinheiro. A conta é a da portaria, sempre.
 
 ### Slide 7: o que pode dar errado, dito antes
 
-- **Começa em** 3:30 · **dura** 0:40 · **quem fala:** Fernando · **48 palavras na tela**
-- **Frase da tela:** O que não fizemos está escrito: login simulado, banco desligado, modelos no recorte antigo, motor ainda na régua deduzida.
-- **O que a tela mostra:** Quatro contagens: ameaças STRIDE, itens OWASP, princípios de privacidade e usos de IA assinados.
+- **Começa em** 3:30 · **dura** 0:40 · **quem fala:** Fernando · **63 palavras na tela**
+- **Frase da tela:** O login é de faz de conta, o banco de dados está desligado e a conta ainda usa a regra que deduzimos.
+- **O que a tela mostra:** Quatro contagens do que já foi mapeado, cada uma com o estado dela.
 - **A fala:**
-  1. Segurança: as ameaças mapeadas em STRIDE têm cada uma um estado; os dez itens do OWASP foram conferidos, e os parciais estão declarados.
-  1. Privacidade: um sistema que decide remuneração cai no artigo 20 da LGPD. Os princípios de privacy by design apontam para o arquivo onde estão no código.
-  1. Uso de IA: cada uso está registrado com o que foi gerado, onde entrou e quem validou. Gerado não é entregue.
-  1. A honestidade que custa mais: a portaria manda tirar a média das notas dos subindicadores e redistribuir o peso do que não pôde ser aferido. Nosso motor ainda não faz as duas coisas. É trabalho da Semana 5, não segredo.
+  1. A gente prefere dizer o que falta antes que alguém pergunte.
+  1. Em segurança, listamos as ameaças uma a uma e dissemos o que já está resolvido e o que não está.
+  1. Em privacidade, um sistema que decide salário entra na LGPD. Cada cuidado que tomamos aponta para o arquivo onde ele está no código.
+  1. Em uso de inteligência artificial, cada linha tem o que foi gerado, onde entrou e o nome de quem conferiu.
+  1. E a mais cara de admitir: a portaria oficial chegou esta semana, e ela manda fazer duas contas de um jeito um pouco diferente do nosso. Vamos arrumar na semana que vem. Preferimos falar isso aqui a ser pegos depois.
 
 ### Slide 8: de hoje ao sr1: três semanas
 
-- **Começa em** 4:10 · **dura** 0:30 · **quem fala:** Fernando · **47 palavras na tela**
-- **Frase da tela:** Semana 5: a régua oficial vira a versão 3 da regra. Semana 6: as quatro primeiras telas no ar. SR1: a régua conferida com a SEAB.
-- **O que a tela mostra:** Uma linha do tempo com os três marcos e um compromisso em cada.
+- **Começa em** 4:10 · **dura** 0:30 · **quem fala:** Fernando · **31 palavras na tela**
+- **Frase da tela:** Um compromisso por semana, e todos com data.
+- **O que a tela mostra:** Os três marcos até o SR1, com data e compromisso.
 - **A fala:**
-  1. Semana 5, arquitetura: carregar a portaria no motor como regra versão 3, com gradação por subindicador, a redistribuição do artigo 8º e o prazo de recurso do artigo 9º.
-  1. Semana 6: as quatro primeiras telas do sistema liberadas no site para qualquer visitante, e o pitch ensaiado dentro do tempo.
-  1. SR1: conferir a régua contra a planilha anonimizada com a SEAB, fora do repositório, e registrar o retorno da banca no diário de bordo.
+  1. Semana que vem: colocar a regra oficial da portaria dentro do sistema, como uma versão nova.
+  1. Na outra: as primeiras telas no ar para qualquer pessoa que abrir o site.
+  1. Até o SR1: sentar com a secretaria e conferir a regra contra a planilha real que eles nos mandaram.
+  1. O que a banca disser hoje entra no diário de bordo e orienta essas três semanas.
 
 ### Slide 9: prumo
 
@@ -131,10 +143,10 @@ são menos de 400, com teto por slide imposto em teste. O que sumiu da tela est�
 - **Frase da tela:** o registro, o sistema e este pitch estão no ar.
 - **O que a tela mostra:** Wordmark, o endereço do site e a pergunta para a banca.
 - **A fala:**
-  1. Tudo que mostramos está no endereço da tela: o registro semanal, o sistema e este pitch, com o roteiro e a portaria.
+  1. Tudo que mostramos está nesse endereço: o diário do projeto, o sistema e este pitch.
   1. Obrigado. Ficamos para as perguntas.
 
-Soma: 4:55, e 358 palavras na tela no deck inteiro. Por pessoa:
+Soma: 4:55, e 377 palavras na tela no deck inteiro. Por pessoa:
 
 | Quem fala | Slides | Tempo |
 | --- | --- | --- |

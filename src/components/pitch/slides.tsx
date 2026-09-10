@@ -24,7 +24,6 @@ import {
   type Slide,
 } from '@/content/pitch'
 import { CLIENTE, ENDERECO_SITE, INSTITUICAO, PRODUTO, URL_SITE } from '@/content/produto'
-import { ORDEM_ESTADOS, ROTULO_ESTADO } from '@/lib/calculo/tipos'
 import { cicloPorId } from '@/lib/cronograma'
 import { avaliacoesDaUnidade, carregarDados } from '@/lib/dados/consultas'
 import { formatarBR } from '@/lib/datas'
@@ -96,8 +95,8 @@ export async function Slides() {
               className={cn('bloco-raso md:-ml-px', etapa.quebra && 'border-acento md:z-10')}
             >
               <span className="ordinal">0{indice + 1}</span>
-              <p className="mt-2 text-base text-texto">{etapa.quem}</p>
-              <p className="mt-1 text-sm">{etapa.oQue}</p>
+              <p className="mt-2 text-lg text-texto">{etapa.quem}</p>
+              <p className="mt-1 text-base">{etapa.oQue}</p>
               {etapa.quebra ? (
                 <Etiqueta tom="acento" className="mt-3">
                   aqui quebra
@@ -115,8 +114,8 @@ export async function Slides() {
           {PESSOAS.map((pessoa) => (
             <li key={pessoa.papel} className="bloco-raso md:-ml-px">
               <p className="rotulo">{pessoa.papel}</p>
-              <p className="titulo-bloco mt-2 text-xl">{pessoa.quem}</p>
-              <p className="mt-3 text-sm">{pessoa.dor}</p>
+              <p className="titulo-bloco mt-2 text-2xl">{pessoa.quem}</p>
+              <p className="mt-3 text-base">{pessoa.dor}</p>
             </li>
           ))}
         </ul>
@@ -148,36 +147,19 @@ export async function Slides() {
           {CAMINHO_DO_NUMERO.map((passo, indice) => (
             <li key={passo.nome} className="bloco-raso md:-ml-px">
               <span className="ordinal">0{indice + 1}</span>
-              <p className="titulo-bloco mt-2">{passo.nome}</p>
-              <p className="mt-1 text-sm">{passo.como}</p>
+              <p className="titulo-bloco mt-2 text-xl">{passo.nome}</p>
+              <p className="mt-1 text-base">{passo.como}</p>
             </li>
           ))}
         </ol>
-        <div className="mt-6 flex flex-wrap items-start justify-between gap-x-10 gap-y-4">
-          <div>
-            <p className="rotulo">quem</p>
-            <ul className="mt-2 space-y-1 text-sm">
-              {PAPEIS_EM_UMA_LINHA.map((papel) => (
-                <li key={papel.papel}>
-                  <span className="text-texto">{papel.papel}:</span> {papel.faz}
-                </li>
-              ))}
-            </ul>
-          </div>
-          <ol className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm">
-            {ORDEM_ESTADOS.map((estado, indice) => (
-              <li key={estado} className="flex items-center gap-2">
-                {indice > 0 ? (
-                  <span aria-hidden className="text-linha-alta">
-                    →
-                  </span>
-                ) : null}
-                <span className={cn(indice === ORDEM_ESTADOS.length - 1 && 'text-texto')}>
-                  {ROTULO_ESTADO[estado].toLowerCase()}
-                </span>
+        <div className="mt-6">
+          <ul className="grid gap-x-10 gap-y-1 text-base sm:grid-cols-2">
+            {PAPEIS_EM_UMA_LINHA.map((papel) => (
+              <li key={papel.papel}>
+                <span className="text-texto">{papel.papel}</span> {papel.faz}
               </li>
             ))}
-          </ol>
+          </ul>
         </div>
       </Quadro>
 
@@ -351,8 +333,8 @@ function Contagem({
   return (
     <div className="bloco-raso md:-ml-px">
       <dt className="rotulo">{rotulo}</dt>
-      <dd className="fonte-display numero mt-1 text-5xl">{numero}</dd>
-      <dd className="mt-2 text-sm">{children}</dd>
+      <dd className="fonte-display numero mt-1 text-6xl leading-none">{numero}</dd>
+      <dd className="mt-3 text-sm">{children}</dd>
     </div>
   )
 }

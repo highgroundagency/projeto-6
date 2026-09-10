@@ -212,7 +212,9 @@ export function Deck({ total, children }: { total: number; children: ReactNode }
       {/* A ajuda mora AQUI, e não na página, porque ela descreve teclas: sem
           JavaScript nenhuma delas funciona, e a versão anterior anunciava
           quatro atalhos mortos justamente para quem não podia usá-los. */}
-      {montado ? (
+      {/* A ajuda aparece no primeiro slide e some assim que a pessoa anda: ela
+          serve para ensinar o teclado, não para acompanhar a apresentação. */}
+      {montado && atual === 1 ? (
         <p className="ajuda-deck sem-impressao">
           ← → passam o slide · n abre as notas · f tela cheia · r zera o tempo · p imprime
         </p>

@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import { AtalhoDoPitch } from '@/components/base/atalho-pitch'
 import { MarcaCesar } from '@/components/base/marca'
 import { Num } from '@/components/base/num'
 import { Aviso } from '@/components/sistema/base'
@@ -193,9 +194,12 @@ export default async function SistemaCompleto({
     <>
       <header className="flex flex-wrap items-center justify-between gap-4 border-b border-linha pb-5">
         <h1 className="fonte-display text-2xl sm:text-3xl">Gratificação por desempenho</h1>
-        {/* A logo da instituição fecha o cabeçalho do MVP: quem abre esta tela
-            numa banca precisa saber de onde ela vem sem voltar para a home. */}
-        <MarcaCesar className="h-7 shrink-0" />
+        <span className="flex items-center gap-3">
+          <AtalhoDoPitch className="text-apagado" />
+          {/* A logo da instituição fecha o cabeçalho do MVP: quem abre esta tela
+              numa banca precisa saber de onde ela vem sem voltar para a home. */}
+          <MarcaCesar className="h-7 shrink-0" />
+        </span>
       </header>
 
       {liberadas.length === 0 ? (

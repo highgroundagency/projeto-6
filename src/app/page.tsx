@@ -16,10 +16,10 @@ import { EQUIPE, SELO_PAPEIS } from '@/content/equipe'
 import { INSTITUICAO, PERGUNTA_DO_PROJETO, PROBLEMA } from '@/content/produto'
 import { cicloPorId } from '@/lib/cronograma'
 import { formatarBR } from '@/lib/datas'
-import { ehSemanaCorrente, pitchEmDestaque } from '@/lib/releases'
+import { ehSemanaCorrente } from '@/lib/releases'
 import { featuresLiberadas } from '@/lib/sistema'
 import { temaAtual } from '@/lib/tema'
-import { obterVisao, podeVer } from '@/lib/visao'
+import { obterVisao } from '@/lib/visao'
 
 /**
  * A página. Não uma porta de entrada para outras páginas: o site inteiro.
@@ -51,10 +51,7 @@ export default async function Pagina() {
   return (
     <>
       <FaixaAdmin visao={visao} />
-      {/* O link do pitch só existe quando a rota existe: o portão do ciclo é o
-          começo da janela, e `pitchEmDestaque` é o fim dela. Anunciar no topo
-          uma rota que responde 404 seria pior que não anunciar. */}
-      <Cabecalho tema={tema} pitch={podeVer(visao, 'ko') && pitchEmDestaque(visao.hoje)} />
+      <Cabecalho tema={tema} />
 
       <main id="conteudo" className="mx-auto max-w-[1100px] px-0 sm:px-8">
         {/* Hero — o único lugar da página com imagem. */}

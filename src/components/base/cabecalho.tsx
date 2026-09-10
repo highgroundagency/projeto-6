@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { Presentation } from 'lucide-react'
+import { AtalhoDoPitch } from './atalho-pitch'
 import { BotaoTema } from './botao-tema'
 import { MarcaPrumo } from './marca'
 import type { Tema } from '@/lib/tema'
@@ -16,7 +16,7 @@ import type { Tema } from '@/lib/tema'
  * para revelar quatro links — e exigiria JavaScript numa página que não usa
  * nenhum. Os links ficam à mostra e somem no mobile, onde o espaço não dá.
  */
-export function Cabecalho({ tema, pitch = false }: { tema: Tema; pitch?: boolean }) {
+export function Cabecalho({ tema }: { tema: Tema }) {
   return (
     <header className="sem-impressao sticky top-0 z-50 bg-fundo/80 backdrop-blur-md">
       <div className="mx-auto flex max-w-[1100px] items-center justify-between gap-3 px-5 py-3.5 sm:gap-4 sm:px-8">
@@ -40,19 +40,8 @@ export function Cabecalho({ tema, pitch = false }: { tema: Tema; pitch?: boolean
               que já resolveu a visão; aqui o componente só desenha. Borda em
               vez de laranja porque o orçamento de acento da home está no
               limite (regra 11). */}
-          {pitch ? (
-            <Link
-              href="/pitch"
-              title="Pitch do Kick-off"
-              className="inline-flex items-center gap-1.5 border border-linha-alta px-1.5 py-1 text-texto transition-colors hover:border-acento hover:text-acento sm:px-2"
-            >
-              <Presentation aria-hidden size={13} strokeWidth={1.5} />
-              {/* No mobile fica só o ícone: com a palavra, a marca mais três
-                  links e o botão de tema estouram 360px, e há teste que mede
-                  isso. O nome acessível vem do texto, que continua no DOM. */}
-              <span className="sr-only sm:not-sr-only">pitch</span>
-            </Link>
-          ) : null}
+          {/* O atalho decide sozinho se deve existir: ver atalho-pitch.tsx. */}
+          <AtalhoDoPitch className="text-texto" />
           <BotaoTema tema={tema} voltarPara="/" />
         </nav>
       </div>

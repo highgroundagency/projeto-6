@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { ConteudoArquitetura } from '@/components/arquitetura'
+import { AtalhoDoPitch } from '@/components/base/atalho-pitch'
 import { Rodape } from '@/components/base/rodape'
 
 export const metadata: Metadata = {
@@ -23,9 +24,12 @@ export default function PaginaArquitetura() {
     <div data-pele="sistema" className="min-h-dvh bg-fundo text-texto">
       <main id="conteudo" className="mx-auto max-w-4xl px-5 py-7 sm:px-8">
         <header className="border-b border-linha pb-5">
-          <Link href="/" className="rotulo text-apagado hover:text-texto">
-            ← página inicial
-          </Link>
+          <div className="flex items-center justify-between gap-4">
+            <Link href="/" className="rotulo text-apagado hover:text-texto">
+              ← página inicial
+            </Link>
+            <AtalhoDoPitch />
+          </div>
           <h1 className="fonte-display mt-3 text-3xl">Arquitetura</h1>
           <p className="mt-2 max-w-prose text-sm leading-relaxed text-apagado">
             O Prumo por dentro, em quatro desenhos: quem usa, de que peças ele é feito, o
