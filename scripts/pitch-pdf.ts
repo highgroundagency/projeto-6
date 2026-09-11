@@ -114,11 +114,32 @@ async function main() {
     await pagina.evaluate(() => document.fonts.ready)
     await pagina.waitForSelector('[data-modo="deck"]')
 
+    // CONGELA O MOVIMENTO ANTES DE FOTOGRAFAR. O deck anima a entrada de cada
+    // slide, e sem isto a foto sai no meio do caminho: cartões invisíveis,
+    // números fora do lugar. Como toda animação do deck termina no estado
+    // final (`forwards`), duração de 1ms leva direto para lá. A exceção é o
+    // ponto que percorre o caminho do dinheiro: ele roda para sempre, então
+    // aqui ele fica parado onde trava, que é justamente o que a imagem
+    // precisa mostrar.
+    await pagina.addStyleTag({
+      content: `*, *::before, *::after {
+          animation-duration: 1ms !important;
+          animation-delay: 0s !important;
+          transition-duration: 1ms !important;
+        }
+        .viajante {
+          animation: none !important;
+          left: 50% !important;
+          opacity: 1 !important;
+          transform: none !important;
+        }`,
+    })
+
     // ---- capturas, slide a slide, avançando com a seta como no palco ----
     mkdirSync(PASTA_CAPTURAS, { recursive: true })
     for (const slide of SLIDES) {
       await pagina.waitForSelector(`[data-slide="${slide.numero}"][data-ativo]`)
-      await pagina.waitForTimeout(150)
+      await pagina.waitForTimeout(250)
       const caminho = join(PASTA_CAPTURAS, `slide-${String(slide.numero).padStart(2, '0')}.png`)
       await pagina.screenshot({ path: caminho, fullPage: false })
       console.log(`  ${caminho}`)

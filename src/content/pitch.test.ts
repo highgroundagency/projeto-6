@@ -80,8 +80,12 @@ describe('o pitch do Kick-off', () => {
     // O teto acima só vale se o componente não escrever texto por conta
     // própria. Nenhum literal de conteúdo em slides.tsx: o que ele tem são
     // classes, nomes de campo e o rótulo dos elementos estruturais.
-    const componente = ler('src/components/pitch/slides.tsx')
-    const frasesLongas = componente
+    const frasesLongas = ler('src/components/pitch/slides.tsx')
+      // Comentário explica a decisão e não chega à tela: fora da conta. Sem
+      // isto, documentar o componente deixa o teste vermelho, e o remédio
+      // vira parar de documentar.
+      .replace(/\{\/\*[\s\S]*?\*\/\}?/g, ' ')
+      .replace(/\/\*[\s\S]*?\*\//g, ' ')
       .split('\n')
       .map((linha) => linha.trim())
       // Nó de texto JSX é uma linha sem código: sem atributo, sem chave, sem

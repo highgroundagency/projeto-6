@@ -966,3 +966,34 @@ nunca aparecia nas semanas imprensadas, o que deixava a suíte vermelha de 05/09
 teria voltado ao verde sozinha no sábado, escondendo o problema; e a linha de ajuda das teclas
 aparecia justamente para quem estava sem JavaScript, anunciando quatro atalhos mortos.
 
+## ADR-037 · O deck ganhou movimento, e cada animação conta uma parte da história
+
+**Contexto.** Depois do corte de texto, os slides ficaram claros e parados. Um pitch de cinco
+minutos disputa atenção com seis pessoas falando, e tela parada não segura ninguém. O pedido
+foi direto: mais visual, mais vivo.
+
+**Decisão.** Cinco animações, e nenhuma decorativa. O slide ativo entra de baixo, e o conteúdo
+dele entra em cascata na ordem da leitura: título, frase, depois os cartões, um por vez. Os
+números grandes caem no lugar como um contador mecânico parando, com uma hairline se
+desenhando embaixo. No slide do problema, um ponto percorre o caminho do dinheiro e **trava**
+na etapa da planilha, batendo ali para sempre: é a única animação em laço, porque ela é o
+argumento. No slide das três pessoas, o número que elas veem aparece gigante atrás dos
+cartões, e ele não é enfeite: é o valor que o motor calcula, lido da mesma avaliação que a
+demonstração abre dois slides depois. A plateia reencontra o número e aí ele se explica. Uma
+barra fina no topo mostra a posição no deck, em cinza, porque posição não precisa de cor e o
+acento já está gasto.
+
+Nenhuma animação toca layout: só opacidade e transformação. Isso não é preciosismo. A página
+não pode crescer, senão o slide volta a rolar, e existe teste medindo isso; o modo deck ganhou
+`overflow: hidden` como guarda. Quem pede menos movimento no sistema recebe a tela pronta. E o
+papel também: o bloco de impressão desliga tudo e força o estado final, com uma exceção
+declarada para o número gigante, cuja posição É uma transformação e que sem ela cai para fora
+da página.
+
+**Consequência.** As capturas quebraram na primeira tentativa: o script fotografava 150ms
+depois de navegar, no meio da cascata, e saíam cartões invisíveis. `scripts/pitch-pdf.ts`
+passou a injetar uma folha que zera durações antes de fotografar, e a parar o ponto viajante
+onde ele trava, que é o quadro que a imagem precisa mostrar. O teste que proíbe texto de
+autor dentro do componente também precisou aprender a ignorar comentário: documentar uma
+decisão estava deixando a suíte vermelha, e o remédio para isso seria parar de documentar.
+

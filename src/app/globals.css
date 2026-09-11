@@ -386,6 +386,12 @@ body {
   }
 }
 
+/* O mesmo cursor, aplicado a um caractere que já está no texto: o `_` da
+   marca na capa e no fechamento do pitch. */
+.pisca {
+  animation: piscar 1.1s steps(1) infinite;
+}
+
 /* 2. Reveal no scroll. Sem JS: `animation-timeline: view()` onde houver
    suporte; onde não houver, o bloco simplesmente já está visível. */
 @supports (animation-timeline: view()) {
@@ -437,8 +443,10 @@ body {
     scroll-behavior: auto !important;
   }
 
-  .cursor::after {
+  .cursor::after,
+  .pisca {
     opacity: 1;
+    animation: none;
   }
 
   .revelar,
@@ -446,6 +454,27 @@ body {
     animation: none;
     opacity: 1;
     transform: none;
+  }
+
+  /* O deck inteiro chega pronto: sem cascata, sem contador, e o ponto que
+     trava no slide do problema simplesmente fica parado onde ele trava. */
+  .slide-corpo > *,
+  .cascata > *,
+  .odometro,
+  .risco-anima,
+  .fantasma,
+  .viajante {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .viajante {
+    left: 50%;
+  }
+
+  .progresso-deck {
+    transition: none !important;
   }
 }
 
@@ -737,6 +766,10 @@ html:fullscreen .ajuda-deck {
   display: none;
   min-height: calc(100dvh - 3.3rem);
   border-color: transparent;
+  /* Guarda contra o número gigante do slide 3 e contra qualquer coisa que
+     passe da borda: no modo deck, o que não cabe é cortado, nunca vira
+     rolagem de página. */
+  overflow: hidden;
 }
 
 html:fullscreen [data-modo='deck'] .slide {
@@ -838,6 +871,210 @@ html:fullscreen .ajuda-deck {
   display: none;
 }
 
+/* ---------------------------------------------------------------------------
+   O DECK EM MOVIMENTO
+
+   Cinco animações, e nenhuma decorativa: cada uma conta uma parte da história
+   que a fala está contando ao mesmo tempo.
+
+   Todas terminam no estado final (`forwards`) e nenhuma mexe em layout: só
+   opacidade e transformação. Isso importa por três razões. A página não pode
+   crescer, senão o slide volta a rolar; o teste de ponta a ponta mede isso.
+   A impressão precisa sair no estado final, e é o que acontece quando o
+   bloco de `@media print` desliga tudo. E quem pediu menos movimento no
+   sistema operacional recebe a tela pronta, sem nada piscando.
+--------------------------------------------------------------------------- */
+
+/* 1. O slide ativo entra, e o conteúdo dele entra em cascata. A ordem é a da
+      leitura: título, frase, e depois o visual, um cartão por vez. */
+[data-modo='deck'] .slide[data-ativo] .slide-corpo > * {
+  animation: subir 420ms cubic-bezier(0.2, 0.7, 0.3, 1) both;
+}
+
+[data-modo='deck'] .slide[data-ativo] .slide-corpo > *:nth-child(2) {
+  animation-delay: 70ms;
+}
+
+[data-modo='deck'] .slide[data-ativo] .slide-corpo > *:nth-child(3) {
+  animation-delay: 140ms;
+}
+
+[data-modo='deck'] .slide[data-ativo] .slide-corpo > *:nth-child(n + 4) {
+  animation-delay: 200ms;
+}
+
+/* Dentro de uma grade, cada item entra depois do anterior. Cinco no máximo:
+   é quantos cartões o slide mais cheio tem. */
+[data-modo='deck'] .slide[data-ativo] .cascata > * {
+  animation: subir 380ms cubic-bezier(0.2, 0.7, 0.3, 1) both;
+}
+
+[data-modo='deck'] .slide[data-ativo] .cascata > *:nth-child(1) {
+  animation-delay: 180ms;
+}
+[data-modo='deck'] .slide[data-ativo] .cascata > *:nth-child(2) {
+  animation-delay: 260ms;
+}
+[data-modo='deck'] .slide[data-ativo] .cascata > *:nth-child(3) {
+  animation-delay: 340ms;
+}
+[data-modo='deck'] .slide[data-ativo] .cascata > *:nth-child(4) {
+  animation-delay: 420ms;
+}
+[data-modo='deck'] .slide[data-ativo] .cascata > *:nth-child(5) {
+  animation-delay: 500ms;
+}
+
+@keyframes subir {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* 2. O número grande cai no lugar, como um contador mecânico parando. O
+      dígito é texto de verdade o tempo todo: animar o VALOR daria a chance
+      de a tela mostrar um número que não é o do repositório. */
+[data-modo='deck'] .slide[data-ativo] .odometro {
+  animation: cair 520ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: 320ms;
+}
+
+@keyframes cair {
+  from {
+    opacity: 0;
+    transform: translateY(-0.18em) scale(0.86);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* 3. Uma hairline se desenha sob cada número, da esquerda para a direita. */
+[data-modo='deck'] .slide[data-ativo] .risco-anima {
+  animation: risco 520ms ease-out both;
+  animation-delay: 460ms;
+}
+
+@keyframes risco {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/* 4. O SLIDE DO PROBLEMA: um ponto percorre o caminho do dinheiro e TRAVA na
+      etapa da planilha, batendo ali para sempre. É a única animação que se
+      repete, porque ela é o argumento: o processo não sai do lugar. */
+.viajante {
+  position: absolute;
+  top: -5px;
+  left: 10%;
+  width: 10px;
+  height: 10px;
+  margin-left: -5px;
+  border-radius: 999px;
+  background: var(--color-acento);
+}
+
+[data-modo='deck'] .slide[data-ativo] .viajante {
+  animation: viajar 4.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+  animation-delay: 700ms;
+}
+
+@keyframes viajar {
+  0% {
+    left: 10%;
+    opacity: 0;
+    transform: scale(0.6);
+  }
+  8% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  22% {
+    left: 30%;
+  }
+  40% {
+    left: 50%;
+    transform: scale(1);
+  }
+  /* Daqui em diante ele não avança mais: só bate. */
+  52%,
+  68%,
+  84% {
+    left: 50%;
+    transform: scale(1.45);
+  }
+  60%,
+  76%,
+  92% {
+    left: 50%;
+    transform: scale(1);
+  }
+  100% {
+    left: 50%;
+    opacity: 0;
+    transform: scale(0.6);
+  }
+}
+
+/* 5. O número que as três pessoas veem, gigante, atrás dos cartões. É o mesmo
+      valor que a demonstração calcula no slide seguinte, lido do motor: a
+      plateia encontra o número de novo, e aí ele se explica. */
+.fantasma {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  z-index: -1;
+  transform: translateY(-42%);
+  font-family: var(--font-display);
+  font-size: clamp(9rem, 26vw, 22rem);
+  line-height: 0.8;
+  font-weight: 600;
+  color: var(--color-linha);
+  pointer-events: none;
+  user-select: none;
+}
+
+[data-modo='deck'] .slide[data-ativo] .fantasma {
+  animation: fantasma 900ms ease-out both;
+  animation-delay: 120ms;
+}
+
+@keyframes fantasma {
+  from {
+    opacity: 0;
+    transform: translateY(-42%) scale(1.08);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(-42%) scale(1);
+  }
+}
+
+/* A barra de progresso do deck: fina, neutra, no topo absoluto da tela. O
+   acento já está gasto nos slides, e posição não precisa de cor. */
+.progresso-deck {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 60;
+  height: 2px;
+  width: 100%;
+  transform-origin: left;
+  transform: scaleX(var(--progresso, 0));
+  background: var(--color-linha-alta);
+  transition: transform 320ms cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+
 /* No papel: uma página por slide, 16:9, sem cromo e sem notas. É daqui que
    sai docs/pitch-kickoff.pdf, por `npm run pitch-pdf`. */
 @media print {
@@ -904,7 +1141,25 @@ html:fullscreen .ajuda-deck {
   .cromo,
   .deck-controles,
   .notas,
-  .ajuda-deck {
+  .ajuda-deck,
+  .viajante,
+  .progresso-deck {
     display: none !important;
+  }
+
+  /* O papel é o estado final: nenhuma animação, nenhum atraso. Sem isto, a
+     página sai congelada no primeiro quadro, com metade do slide invisível. */
+  .slide *,
+  .slide *::before,
+  .slide *::after {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  /* Menos o número gigante, cuja posição É uma transformação: zerada, ele cai
+     para fora da página e some justamente do arquivo que vira reserva. */
+  .slide .fantasma {
+    transform: translateY(-42%) !important;
   }
 }

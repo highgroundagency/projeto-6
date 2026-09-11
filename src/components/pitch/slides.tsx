@@ -76,7 +76,7 @@ export async function Slides() {
         </span>
         <h1 className="hero mt-6">
           {PRODUTO.nome.toLowerCase()}
-          <span aria-hidden className="text-acento">
+          <span aria-hidden className="text-acento pisca">
             _
           </span>
         </h1>
@@ -88,7 +88,11 @@ export async function Slides() {
       {/* 2 · O problema */}
       <Quadro slide={problema}>
         <Titulo slide={problema} />
-        <ol className="mt-8 grid md:grid-cols-5">
+        <ol className="cascata relative mt-8 grid md:grid-cols-5">
+          {/* O ponto que percorre o caminho e trava na etapa da planilha. Só
+              aparece na largura em que as cinco etapas ficam lado a lado:
+              empilhadas, ele andaria na diagonal e não diria nada. */}
+          <span aria-hidden className="viajante hidden md:block" />
           {ETAPAS_DO_MES.map((etapa, indice) => (
             <li
               key={etapa.quem}
@@ -110,7 +114,14 @@ export async function Slides() {
       {/* 3 · Quem sofre */}
       <Quadro slide={quemSofre}>
         <Titulo slide={quemSofre} />
-        <ul className="mt-8 grid md:grid-cols-3">
+        {/* O MESMO NÚMERO do título, gigante, atrás das três pessoas: é o
+            valor que a demonstração calcula no slide seguinte, lido do motor.
+            A plateia reencontra o número dois slides depois, e aí ele se
+            explica. Decorativo para o leitor de tela, então fica escondido. */}
+        <span aria-hidden className="fantasma numero">
+          {avaliacao.score.toFixed(2).replace('.', ',')}
+        </span>
+        <ul className="cascata mt-8 grid md:grid-cols-3">
           {PESSOAS.map((pessoa) => (
             <li key={pessoa.papel} className="bloco-raso md:-ml-px">
               <p className="rotulo">{pessoa.papel}</p>
@@ -143,7 +154,7 @@ export async function Slides() {
       {/* 5 · Como funciona */}
       <Quadro slide={comoFunciona}>
         <Titulo slide={comoFunciona} />
-        <ol className="mt-8 grid md:grid-cols-4">
+        <ol className="cascata mt-8 grid md:grid-cols-4">
           {CAMINHO_DO_NUMERO.map((passo, indice) => (
             <li key={passo.nome} className="bloco-raso md:-ml-px">
               <span className="ordinal">0{indice + 1}</span>
@@ -166,7 +177,7 @@ export async function Slides() {
       {/* 6 · Dados */}
       <Quadro slide={dadosSlide}>
         <Titulo slide={dadosSlide} />
-        <dl className="mt-8 grid md:grid-cols-3">
+        <dl className="cascata mt-8 grid md:grid-cols-3">
           <Contagem numero={dados.unidades.length} rotulo={ROTULOS_DA_BASE.unidades}>
             {LEGENDAS_DA_BASE.unidades}
           </Contagem>
@@ -193,7 +204,7 @@ export async function Slides() {
       {/* 7 · Riscos e transparência */}
       <Quadro slide={riscos}>
         <Titulo slide={riscos} />
-        <dl className="mt-8 grid md:grid-cols-4">
+        <dl className="cascata mt-8 grid md:grid-cols-4">
           <Contagem numero={CONTAGENS_PITCH.ameacasStride} rotulo={ROTULOS_DE_RISCO.stride}>
             {LEGENDAS_DE_RISCO.stride}
           </Contagem>
@@ -215,7 +226,7 @@ export async function Slides() {
       {/* 8 · Até o SR1 */}
       <Quadro slide={ateOSr1}>
         <Titulo slide={ateOSr1} />
-        <ol className="mt-8 grid md:grid-cols-3">
+        <ol className="cascata mt-8 grid md:grid-cols-3">
           {COMPROMISSOS_ATE_O_SR1.map((item, indice) => {
             const ciclo = cicloPorId(item.ciclo)
             const ultimo = indice === COMPROMISSOS_ATE_O_SR1.length - 1
@@ -237,7 +248,7 @@ export async function Slides() {
       <Quadro slide={fechamento} className="grao">
         <h2 className="hero">
           {PRODUTO.nome.toLowerCase()}
-          <span aria-hidden className="text-acento">
+          <span aria-hidden className="text-acento pisca">
             _
           </span>
         </h2>
@@ -333,8 +344,9 @@ function Contagem({
   return (
     <div className="bloco-raso md:-ml-px">
       <dt className="rotulo">{rotulo}</dt>
-      <dd className="fonte-display numero mt-1 text-6xl leading-none">{numero}</dd>
-      <dd className="mt-3 text-sm">{children}</dd>
+      <dd className="odometro fonte-display numero mt-1 text-6xl leading-none">{numero}</dd>
+      <dd aria-hidden className="risco-anima mt-3 h-px w-10 bg-linha-alta" />
+      <dd className="mt-2 text-sm">{children}</dd>
     </div>
   )
 }

@@ -1,6 +1,13 @@
 'use client'
 
-import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react'
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type CSSProperties,
+  type ReactNode,
+} from 'react'
 import { acaoDaTecla, impedePadrao } from './teclado'
 
 /**
@@ -147,7 +154,11 @@ export function Deck({ total, children }: { total: number; children: ReactNode }
       data-modo={montado ? 'deck' : undefined}
       data-notas={notas ? '' : undefined}
       className="deck"
+      // Só a fração da posição, nunca texto: o que chega ao componente
+      // cliente chega também ao bundle (regra 3 da casa).
+      style={montado ? ({ '--progresso': atual / total } as CSSProperties) : undefined}
     >
+      {montado ? <span aria-hidden className="progresso-deck sem-impressao" /> : null}
       {children}
 
       {montado ? (
