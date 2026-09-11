@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react'
 import { MarcaCesar } from '@/components/base/marca'
 import { Etiqueta } from '@/components/base/selo'
+import { HorizonteDoRecife } from '@/components/pitch/horizonte'
 import { CartaoScore, MemoriaDeCalculo } from '@/components/sistema/memoria'
 import { integrantePorId } from '@/content/equipe'
 import resultados from '@/content/ml/resultados.json'
@@ -83,6 +84,7 @@ export async function Slides() {
         <p className="slide-apoio text-texto">{capa.apoio}</p>
         <p className="mt-6 text-sm">{CLIENTE.orgao}</p>
         <MarcaCesar className="mt-8 h-8 self-start" />
+        <HorizonteDoRecife className="horizonte" />
       </Quadro>
 
       {/* 2 · O problema */}
@@ -264,6 +266,7 @@ export async function Slides() {
           {INSTITUICAO.equipe}
         </p>
         <p className="fonte-display mt-10 text-2xl">perguntas?</p>
+        <HorizonteDoRecife className="horizonte" />
       </Quadro>
     </>
   )

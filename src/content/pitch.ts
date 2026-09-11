@@ -95,7 +95,7 @@ export const CONTAGENS_PITCH = {
   /** Linhas de "Privacy by Design: onde está no código" em docs/privacidade.md. */
   principiosPrivacidade: 6,
   /** Linhas do registro semanal em docs/uso-de-ia.md. */
-  usosDeIa: 42,
+  usosDeIa: 43,
 } as const
 
 export const SLIDES = [

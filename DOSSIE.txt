@@ -2633,6 +2633,7 @@ Os porquês completos estão em `docs/decisoes.md`. Os títulos, aqui:
   - ADR-036 · O deck ficou usável: teclado que sobrevive ao clique, tela que cabe, texto
     que a fala carrega
   - ADR-037 · O deck ganhou movimento, e cada animação conta uma parte da história
+  - ADR-038 · A capa e o fechamento ganharam uma xilogravura, no traço de J. Borges
 
 ============================================================================================
 13.  COMO RODAR E COMO CONFERIR

@@ -997,3 +997,30 @@ onde ele trava, que é o quadro que a imagem precisa mostrar. O teste que proíb
 autor dentro do componente também precisou aprender a ignorar comentário: documentar uma
 decisão estava deixando a suíte vermelha, e o remédio para isso seria parar de documentar.
 
+## ADR-038 · A capa e o fechamento ganharam uma xilogravura, no traço de J. Borges
+
+**Contexto.** O pedido foi trazer identidade visual de Pernambuco para a apresentação: cacto,
+sol, e um mapa. A referência escolhida depois foi J. Borges, o xilogravador de Bezerros.
+
+**Decisão sobre a geografia, antes da arte.** O cliente é a Secretaria de Saúde do **Recife**,
+prefeitura. Não é governo do estado e não é federal, então mapa do Brasil estaria errado e
+mapa de Pernambuco inteiro seria largo demais para um cliente municipal. Cacto sozinho
+também não serve: mandacaru é iconografia do sertão, e o Recife é maré, mangue e ponte. A
+cena escolhida mostra o estado sem escolher um lado: o sol e o mandacaru do sertão, o casario
+e a água da cidade. Nenhum mapa, porque desenhar um contorno de memória seria inventar
+geografia num projeto que trata invenção como defeito.
+
+**Decisão sobre o traço.** O resto do site é hairline de 1px, e xilogravura não tem fio fino:
+é mancha cheia, corte branco por dentro da mancha e hachura paralela no lugar de sombra. A
+regra do traço muda de propósito nesta peça, e só nela. O que NÃO muda é a paleta: a tinta é
+`--color-linha-alta`, o corte é a cor do fundo, e o acento aparece uma vez, no disco do sol,
+respeitando o orçamento de cor da casa. É SVG escrito à mão, sem texto dentro, então a
+estampa não entra na conta de palavras do slide nem é anunciada por leitor de tela.
+
+**Consequência.** A faixa aparece na capa e no fechamento, atrás do conteúdo, e o canto
+esquerdo dela fica deliberadamente vazio: é onde moram o nome do produto, o cliente e a
+assinatura da instituição. Estampa que cobre assinatura deixa de ser estampa, e a primeira
+versão cobria as duas. A cena também é larga (1600 por 250) para que, ocupando a largura
+toda, ela fique com um terço da altura do slide em vez de metade. No papel ela é mantida, com
+a mesma exceção que o número gigante já tinha no bloco de impressão.
+
