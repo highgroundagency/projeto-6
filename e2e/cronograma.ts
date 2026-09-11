@@ -1,4 +1,6 @@
+import { TRAVAS_VERSIONADAS } from '@/content/travas'
 import { CRONOGRAMA, type CicloId } from '@/lib/cronograma'
+import { FEATURES } from '@/lib/features'
 import { hojeEmRecife } from '@/lib/datas'
 import {
   ADIANTAMENTO_PADRAO,
@@ -24,7 +26,12 @@ import {
 function recorte() {
   const hoje = hojeEmRecife()
   const releaseAtual = calcularReleaseAtual({ hoje, adiantamentoDias: ADIANTAMENTO_PADRAO })
-  const visiveis = ciclosVisiveis({ releaseAtual })
+  // As travas versionadas entram na conta pelo mesmo motivo que entram em
+  // `scripts/verificar-vazamento.ts`: elas fazem parte do padrão do ambiente.
+  // Sem elas o teste procuraria esconder um ciclo que o site publica de
+  // propósito, e acusaria vazamento onde há decisão registrada em
+  // `src/content/travas.ts`.
+  const visiveis = ciclosVisiveis({ releaseAtual, travas: TRAVAS_VERSIONADAS })
 
   // Só ciclos que RENDERIZAM um cartão de registro entram na conta. Os
   // imprensados (`tipo: 'pausa'`) têm carregador `null` de propósito: as
@@ -71,6 +78,23 @@ export const DEVE_OFERECER_PITCH: boolean =
 
 /** O primeiro ciclo que o visitante AINDA não vê: o alvo natural do teste de vazamento. */
 export const CICLO_OCULTO: CicloId = RECORTE.ocultos[0]
+
+/**
+ * As rotas de funcionalidade que o visitante comum AINDA não pode abrir hoje.
+ *
+ * Mesma lição do `CICLO_OCULTO`: a lista era literal (`/sistema/cam` e
+ * companhia), e no dia em que a s5 abriu essas rotas passaram a responder 3xx
+ * onde o teste exigia 404. Um teste com o calendário embutido não está errado
+ * amanhã: ele está errado desde sempre, e só cobra a conta depois.
+ */
+export const ROTAS_FECHADAS: readonly string[] = FEATURES.filter(
+  (f) => !RECORTE.todosVisiveis.includes(f.ciclo),
+).map((f) => f.rota)
+
+/** E as que já abriram. Vazio antes da s5, e é isso que a casca precisa dizer. */
+export const ROTAS_ABERTAS: readonly string[] = FEATURES.filter((f) =>
+  RECORTE.todosVisiveis.includes(f.ciclo),
+).map((f) => f.rota)
 
 /**
  * O marcador que o registro imprime no HTML de cada ciclo renderizado.

@@ -98,8 +98,11 @@ export const CRONOGRAMA = [
     tipo: 'marco',
     peso: 0,
     evidencias: [
-      'Pitch de 5 min: problema, relevância, ideia priorizada, direcionamento',
+      'Pitch: problema, objetivos, análises, ideação, solução e cronograma',
       'Fala distribuída entre os 6 integrantes',
+      'Objetivo geral e objetivos específicos',
+      'Matriz CSD',
+      'Wireframes de baixa fidelidade',
     ],
   },
   {

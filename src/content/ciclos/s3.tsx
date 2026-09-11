@@ -1,4 +1,10 @@
 import { Cartao, Grade, Lista, Nota, Tabela } from '@/components/conteudo'
+import {
+  ALTERNATIVAS,
+  NOTA_DA_ESCOLHA,
+  RAZOES_DA_ESCOLHA,
+  TECNICAS_DE_IDEACAO,
+} from '@/content/analises'
 import type { Documento, RegistroSemana } from '@/lib/registro/tipos'
 
 export const registro = {
@@ -236,33 +242,14 @@ export const documentos = [
     Conteudo: () => (
       <>
         <Grade colunas={3}>
-          <Cartao titulo="Brainwriting" etiqueta="20 min">
-            <p>
-              Cada integrante escreve três ideias em silêncio, sem discutir, e passa a folha
-              adiante. Quem recebe amplia a ideia do colega em vez de criticá-la.
-            </p>
-            <p>
-              <strong>Produto:</strong> 18 ideias escritas, sem viés de quem fala primeiro.
-            </p>
-          </Cartao>
-          <Cartao titulo="Brainstorming" etiqueta="25 min">
-            <p>
-              Discussão aberta a partir das folhas do brainwriting, agrupando ideias parecidas e
-              nomeando os grupos.
-            </p>
-            <p>
-              <strong>Produto:</strong> de 6 a 8 alternativas distintas, já agrupadas.
-            </p>
-          </Cartao>
-          <Cartao titulo="Crazy 8’s" etiqueta="8 min">
-            <p>
-              Oito esboços de tela em oito minutos, individualmente, para as duas alternativas
-              mais votadas.
-            </p>
-            <p>
-              <strong>Produto:</strong> primeiras telas em papel, insumo do protótipo.
-            </p>
-          </Cartao>
+          {TECNICAS_DE_IDEACAO.map((tecnica) => (
+            <Cartao key={tecnica.nome} titulo={tecnica.nome} etiqueta={`${tecnica.minutos} min`}>
+              <p>{tecnica.como}</p>
+              <p>
+                <strong>Produto:</strong> {tecnica.produto}
+              </p>
+            </Cartao>
+          ))}
         </Grade>
       </>
     ),
@@ -270,33 +257,18 @@ export const documentos = [
   {
     id: 'alternativas',
     titulo: 'Alternativas levantadas',
-    resumo: 'as oito ideias e a matriz de impacto × esforço × aderência.',
+    resumo: 'as oito ideias e a matriz de impacto, esforço e aderência.',
     Conteudo: () => (
       <>
         <Tabela
           colunas={['Alternativa', 'Impacto', 'Esforço', 'Aderência', 'Situação']}
-          linhas={[
-            [
-              'Planilha padronizada com validação e trava de fórmula',
-              '2',
-              '1',
-              '4',
-              'Linha de base',
-            ],
-            ['Formulário de coleta + planilha de consolidação', '2', '2', '4', 'Descartada'],
-            [
-              'Sistema web com regra parametrizável e memória de cálculo',
-              '5',
-              '4',
-              '5',
-              'Escolhida',
-            ],
-            ['Painel de indicadores sem cálculo de gratificação', '2', '3', '3', 'Descartada'],
-            ['Robô que lê as planilhas e consolida sozinho', '3', '4', '2', 'Descartada'],
-            ['Módulo dentro de um ERP público existente', '4', '5', '2', 'Descartada'],
-            ['Aplicativo mobile para o gestor avaliado', '2', '3', '2', 'Adiada'],
-            ['Modelo preditivo de risco de não-atingimento', '3', '3', '4', 'Incorporada'],
-          ]}
+          linhas={ALTERNATIVAS.map((a) => [
+            a.nome,
+            String(a.impacto),
+            String(a.esforco),
+            String(a.aderencia),
+            a.situacao,
+          ])}
         />
       </>
     ),
@@ -307,19 +279,9 @@ export const documentos = [
     resumo: 'por que a alternativa escolhida venceu as outras.',
     Conteudo: () => (
       <>
-        <Lista
-          itens={[
-            'Impacto: ataca a causa do problema, a regra da portaria hoje só existe dentro de fórmulas de planilha.',
-            'Aderência: parametrizar indicadores e regras pela interface permite que mudança de portaria não vire mudança de software.',
-            'Esforço: alto, mas fatiável: lançamento, cálculo e memória cabem até o SR1; auditoria e gestão vêm nas sprints.',
-            'Sinergia: o modelo preditivo não virou produto separado; entrou como funcionalidade da mesma base de dados.',
-          ]}
-        />
+        <Lista itens={RAZOES_DA_ESCOLHA.map((r) => `${r.titulo}: ${r.texto}`)} />
         <div className="mt-3">
-          <Nota>
-            A alternativa “melhorar a planilha” continua na matriz de propósito: ela é a régua
-            contra a qual o ganho do sistema é medido na validação da Semana 11.
-          </Nota>
+          <Nota>{NOTA_DA_ESCOLHA}</Nota>
         </div>
       </>
     ),

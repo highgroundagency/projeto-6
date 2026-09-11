@@ -1,5 +1,12 @@
 import { expect, test, type Page } from '@playwright/test'
+import { SLIDES } from '@/content/pitch'
 import { CICLOS_PUBLICOS } from './cronograma'
+
+/** Quantos slides o deck tem HOJE. Sai de `pitch.ts`, nunca de um número à mão. */
+const TOTAL = SLIDES.length
+
+/** Em que posição está o slide da demonstração, que é o único com layout próprio. */
+const DEMO = SLIDES.findIndex((slide) => slide.id === 'ideia') + 1
 
 const SENHA = '0321'
 
@@ -21,7 +28,7 @@ test.describe('o pitch do Kick-off', () => {
     expect(resposta?.status()).toBe(KO_PUBLICO ? 200 : 404)
   })
 
-  test('o admin abre o deck: nove slides, indicador, teclado, notas e a memória real', async ({
+  test('o admin abre o deck: todos os slides, indicador, teclado, notas e a memória real', async ({
     page,
   }) => {
     await entrarNoPainel(page)
@@ -29,14 +36,14 @@ test.describe('o pitch do Kick-off', () => {
 
     // O modo deck liga com JavaScript e mostra um slide por vez.
     await expect(page.locator('[data-modo="deck"]')).toBeAttached()
-    expect(await page.locator('[data-slide]').count()).toBe(9)
+    expect(await page.locator('[data-slide]').count()).toBe(TOTAL)
     await expect(page.locator('[data-slide="1"][data-ativo]')).toBeVisible()
     await expect(page.locator('[data-slide="2"]')).toBeHidden()
 
     await page.keyboard.press('ArrowRight')
     await page.keyboard.press('ArrowRight')
     await expect(page.locator('[data-slide="3"][data-ativo]')).toBeVisible()
-    await expect(page.locator('[data-slide="3"] .slide-rodape')).toContainText('3/9')
+    await expect(page.locator('[data-slide="3"] .slide-rodape')).toContainText(`3/${TOTAL}`)
     await expect(page).toHaveURL(/#slide-3$/)
 
     // `n` abre as notas do apresentador, com quem fala e o tempo.
@@ -45,8 +52,8 @@ test.describe('o pitch do Kick-off', () => {
     await expect(page.locator('[data-slide="3"] details.notas summary')).toContainText('0:40')
 
     // O slide da demonstração traz a memória de cálculo de verdade, já aberta.
-    await page.keyboard.press('ArrowRight')
-    const demo = page.locator('[data-slide="4"] .demo')
+    for (let i = 3; i < DEMO; i++) await page.keyboard.press('ArrowRight')
+    const demo = page.locator(`[data-slide="${DEMO}"] .demo`)
     await expect(demo).toContainText('Memória de cálculo')
     await expect(demo.locator('details[open]')).toHaveCount(1)
     await expect(demo).toContainText('Soma das contribuições')
@@ -130,9 +137,9 @@ test.describe('o pitch do Kick-off', () => {
     test(`a memória cabe inteira em ${tamanho.width}x${tamanho.height}`, async ({ page }) => {
       await entrarNoPainel(page)
       await page.setViewportSize(tamanho)
-      await page.goto('/pitch#slide-4')
+      await page.goto(`/pitch#slide-${DEMO}`)
 
-      const caixa = page.locator('[data-slide="4"] .demo')
+      const caixa = page.locator(`[data-slide="${DEMO}"] .demo`)
       // Visível, não só presente: a linha da conta é o argumento do slide.
       await expect(caixa.getByText('A conta final')).toBeInViewport()
       await expect(caixa.getByText('Soma das contribuições')).toBeInViewport()
@@ -159,7 +166,7 @@ test.describe('o pitch do Kick-off', () => {
     })
   }
 
-  test('sem JavaScript, os nove slides ficam empilhados e legíveis', async ({
+  test('sem JavaScript, todos os slides ficam empilhados e legíveis', async ({
     browser,
     baseURL,
   }) => {
@@ -169,10 +176,12 @@ test.describe('o pitch do Kick-off', () => {
     await page.goto('/pitch')
 
     expect(await page.locator('[data-modo="deck"]').count()).toBe(0)
-    for (let numero = 1; numero <= 9; numero++) {
+    for (let numero = 1; numero <= TOTAL; numero++) {
       await expect(page.locator(`[data-slide="${numero}"]`)).toBeVisible()
     }
-    await expect(page.locator('[data-slide="9"] .slide-rodape')).toContainText('9/9')
+    await expect(page.locator(`[data-slide="${TOTAL}"] .slide-rodape`)).toContainText(
+      `${TOTAL}/${TOTAL}`,
+    )
 
     await contexto.close()
   })

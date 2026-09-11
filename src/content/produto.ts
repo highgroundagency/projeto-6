@@ -36,6 +36,70 @@ export const PERGUNTA_DO_PROJETO =
   'Como tornar o cálculo da gratificação confiável, transparente, sustentável e auditável?'
 
 /**
+ * OS OBJETIVOS DO PROJETO: um geral e quatro específicos.
+ *
+ * Nascem aqui, e não dentro de um ciclo, porque objetivo de projeto não é
+ * entrega de semana: ele atravessa o semestre inteiro e é lido por três
+ * consumidores que não podem divergir — o slide do pitch, a seção do site e o
+ * documento do registro.
+ *
+ * NÃO CONFUNDIR com os "Objetivos SMART" da Semana 2 (`#doc-s2-objetivos`).
+ * Aqueles são metas de ENTREGA da disciplina, com data de marco: ter o motor
+ * coberto por testes até a Semana 6, coletar feedback na Semana 11. Estes aqui
+ * dizem o que o PRODUTO tem de fazer. Os dois convivem, e o documento do ciclo
+ * do Kick-off explica a diferença para a banca não ler duas versões da mesma
+ * coisa.
+ *
+ * A linguagem é a mesma do pitch: palavra que qualquer um entende, porque
+ * estes textos vão para a tela e são lidos em voz alta por seis pessoas que
+ * não estão todas dentro de cada parte do projeto.
+ */
+export const OBJETIVO_GERAL =
+  'Tirar o cálculo da gratificação da planilha e entregar um sistema em que a conta de cada nota fica aberta: qualquer pessoa refaz o número e vê de onde ele veio.'
+
+export interface ObjetivoEspecifico {
+  /** Três a cinco palavras: é o que cabe no slide. */
+  readonly resumo: string
+  /** A frase inteira, para o documento e para a seção do site. */
+  readonly detalhe: string
+  /** Onde a gente promete ter isso de pé. Texto, não data: a data vem do cronograma. */
+  readonly quando: string
+}
+
+export const OBJETIVOS_ESPECIFICOS: readonly ObjetivoEspecifico[] = [
+  {
+    resumo: 'a regra como dado',
+    detalhe:
+      'Guardar a regra da portaria fora do código, com versão, para que mudança de regra deixe de ser mudança de programa e o mês já fechado continue mostrando o mesmo resultado.',
+    quando: 'Semana 5',
+  },
+  {
+    resumo: 'a conta sempre aberta',
+    detalhe:
+      'Mostrar, em toda tela que exibe um resultado, a conta inteira que levou até ele: o que a unidade informou, o alvo, o peso e quanto cada item somou na nota.',
+    quando: 'SR1',
+  },
+  {
+    resumo: 'nada muda sem registro',
+    detalhe:
+      'Registrar quem mudou o quê, quando, e qual era o valor antes, sem apagar nada, para que qualquer resultado contestado possa ser refeito passo a passo.',
+    quando: 'Semana 9',
+  },
+  {
+    resumo: 'cada um vê o que é seu',
+    detalhe:
+      'Separar o que cada um dos quatro papéis do processo pode ver e fazer, de modo que quem envia o número não seja quem escolhe o alvo.',
+    quando: 'SR1',
+  },
+  {
+    resumo: 'conferido com o cliente',
+    detalhe:
+      'Provar com a Secretaria que a conta do sistema bate com a conta da planilha que eles usam hoje, e registrar as diferenças que aparecerem.',
+    quando: 'Semana 11',
+  },
+]
+
+/**
  * URL da pasta do Drive da equipe. Configurável por env var: enquanto não
  * estiver definida, o link simplesmente não aparece para o visitante e o
  * painel admin avisa que falta configurar.

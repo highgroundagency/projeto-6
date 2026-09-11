@@ -1,14 +1,20 @@
 # Pitch do Kick-off: roteiro corrigido, material de apoio e pendências
 
 **O original é a rota `/pitch` do site.** Ela é liberada pelo motor de releases junto com o
-ciclo `ko` (público desde 05/09, pelo adiantamento de sete dias), tem os nove slides, as setas
-do teclado, as notas do apresentador com a tecla `n` e a memória de cálculo real dentro do
-slide da demonstração. Este documento é a versão para ler e ensaiar longe do navegador;
-`public/pitch-kickoff.pdf`, baixável pelo próprio deck, é a reserva para o dia em que a rede
-falhar; as capturas ficam em `docs/pitch/`.
+ciclo `ko` (público desde 05/09, pelo adiantamento de sete dias), tem os dezessete slides, as
+setas do teclado, as notas do apresentador com a tecla `n` e a conta de verdade dentro do
+slide da demonstração. Este documento é a versão para ler e ensaiar longe do navegador; o PDF
+em `/pitch/pdf`, baixável pelo próprio deck, é a reserva para o dia em que a rede falhar; as
+capturas ficam em `docs/pitch/`.
 
-A fonte única do que está aqui é `src/content/pitch.ts`. Um teste confere que este arquivo
-contém o título e a fala de cada slide: mudou lá, muda aqui, ou o teste avisa.
+A fonte única do que está aqui é `src/content/pitch.ts`, e a seção 2 é **gerada** por
+`npm run roteiro`: não edite aquele trecho à mão. Um teste confere que este arquivo contém o
+título e a fala de cada slide, então rodar o gerador faz parte de mudar o deck.
+
+**NOVE MINUTOS, não cinco.** A diretriz escrita dá cinco minutos mais cinco para terminar; o
+professor liberou dez. O briefing oficial do Kick-off cobra sete critérios, e três deles não
+apareciam em slide nenhum na versão de 4:55: objetivos, as análises e a ideação. O deck
+cresceu para cobrir os sete, com um minuto de margem.
 
 ## 1. O que o roteiro dizia e o que o repositório sustenta
 
@@ -38,8 +44,9 @@ Nomes aparecem só como quem fala. Quem construiu o quê não é assunto do pitc
 construiu. As falas abaixo são as notas do apresentador da rota `/pitch`, na íntegra.
 
 **A tela leva o mínimo e a fala leva o resto.** O deck começou com 1.127 palavras na tela para
-4:55 de apresentação, quase todas repetindo estas notas: a plateia lia em vez de ouvir. Hoje
-são menos de 400, com teto por slide imposto em teste. O que sumiu da tela está aqui embaixo.
+4:55 de apresentação, quase todas repetindo estas notas: a plateia lia em vez de ouvir. O teto
+por slide é de 70 palavras e é imposto em teste. Ele NÃO subiu quando o deck dobrou de
+tamanho: são mais slides, não mais texto por slide. O que sumiu da tela está aqui embaixo.
 
 **E nada de palavra difícil, na tela ou na fala.** Quem apresenta são os seis, e nem todos
 estão dentro de cada parte do projeto: a pessoa precisa entender o slide enquanto lê. Por isso
@@ -47,18 +54,29 @@ saíram "consolidar", "régua", "homologar", "memória de cálculo" e "subindica
 vale ponto com a banca, ela entra entre parênteses depois da palavra simples, como em
 "ameaças de segurança listadas uma a uma (STRIDE)". Há teste que recusa a volta delas.
 
+<!-- roteiro:inicio -->
+
 ### Slide 1: prumo
 
-- **Começa em** 0:00 · **dura** 0:05 · **quem fala:** Gabriel · **10 palavras na tela**
+- **Começa em** 0:00 · **dura** 0:20 · **quem fala:** Gabriel · **10 palavras na tela**
 - **Frase da tela:** o cálculo da gratificação, aberto para qualquer um conferir
-- **O que a tela mostra:** Wordmark, uma linha, e a pílula do marco: kick-off, data e equipe.
+- **O que a tela mostra:** Wordmark, a pílula do marco e os seis nomes da equipe.
 - **A fala:**
-  1. Bom dia. Somos a Equipe 2, e este é o Prumo.
-  1. Em cinco minutos: qual é o problema, quem sofre com ele, o que já construímos e para onde vamos.
+  1. Bom dia. Somos a Equipe 2 de Sistemas de Informação, e este é o Prumo.
+  1. Estamos os seis aqui, e qualquer um de nós responde qualquer pergunta no fim.
+  1. O cliente é a Secretaria de Saúde do Recife.
 
-### Slide 2: todo mês, uma conta feita à mão
+### Slide 2: o caminho de hoje
 
-- **Começa em** 0:05 · **dura** 0:35 · **quem fala:** Gabriel · **64 palavras na tela**
+- **Começa em** 0:20 · **dura** 0:10 · **quem fala:** Fernando · **26 palavras na tela**
+- **Frase da tela:** sete paradas, nove minutos.
+- **O que a tela mostra:** As sete paradas do roteiro, numeradas.
+- **A fala:**
+  1. O caminho é este: o problema, o que a gente quer entregar, quem sofre com isso, o que a gente estudou, a ideia que venceu, o sistema rodando e o prazo.
+
+### Slide 3: todo mês, uma conta feita à mão
+
+- **Começa em** 0:30 · **dura** 0:40 · **quem fala:** Gabriel · **64 palavras na tela**
 - **Frase da tela:** A prefeitura paga um extra no salário de quem bate as metas da saúde. A regra está num documento oficial. A conta está numa planilha.
 - **O que a tela mostra:** O caminho do dinheiro em cinco passos, com o ponto que quebra em destaque.
 - **A fala:**
@@ -67,20 +85,98 @@ vale ponto com a banca, ela entra entre parênteses depois da palavra simples, c
   1. O caminho é este da tela: as unidades mandam os números, a secretaria junta, uma comissão confere, e o pagamento entra na folha.
   1. O problema está no meio: a conferência é feita à mão, numa planilha. A regra está escrita; a conta, não.
 
-### Slide 3: três pessoas, o mesmo número
+### Slide 4: não é impressão nossa
 
-- **Começa em** 0:40 · **dura** 0:40 · **quem fala:** Matheus · **60 palavras na tela**
-- **Frase da tela:** Ninguém consegue dizer de onde veio esse número sem abrir a planilha de outra pessoa.
-- **O que a tela mostra:** Três cartões, um por pessoa afetada, com o medo de cada uma.
+- **Começa em** 1:10 · **dura** 0:30 · **quem fala:** Matheus · **39 palavras na tela**
+- **Frase da tela:** cada coisa que a gente diz aqui tem de onde ter saído.
+- **O que a tela mostra:** As três fontes da pesquisa, cada uma com a data.
 - **A fala:**
-  1. Essas três pessoas não são inventadas por nós: saíram do caso e foram confirmadas na conversa com o cliente, em agosto. São papéis, não gente de verdade.
-  1. A primeira fecha a conta do mês. Ela mexe na planilha há três ciclos e é quem todo mundo procura quando alguém reclama do resultado.
-  1. A segunda manda os números da unidade dela, sempre em cima do prazo, no meio de outras dez tarefas.
+  1. A primeira fonte é a portaria: o documento oficial que criou a gratificação, publicado no diário oficial do Recife. Ele está copiado inteiro dentro do nosso repositório.
+  1. A segunda é o caso, escrito pela escola junto com o órgão, que descreve o processo de hoje e a tentativa anterior que foi abandonada.
+  1. A terceira é a conversa: sentamos com a secretaria em 22 de agosto, e o que mudou ali está escrito na ata, no site.
+  1. Nada do que vem a seguir é achismo nosso. Tudo aponta para uma dessas três.
+
+### Slide 5: o que o sistema tem que fazer
+
+- **Começa em** 1:40 · **dura** 0:35 · **quem fala:** Gabriel · **69 palavras na tela**
+- **Frase da tela:** Tirar o cálculo da gratificação da planilha e entregar um sistema em que a conta de cada nota fica aberta: qualquer pessoa refaz o número e vê de onde ele veio.
+- **O que a tela mostra:** O objetivo geral e os cinco específicos, cada um com o prazo.
+- **A fala:**
+  1. Em uma frase: tirar essa conta da planilha e deixar ela aberta.
+  1. Aberta quer dizer que qualquer pessoa refaz o número no papel e vê de onde ele veio.
+  1. Embaixo, o que isso exige, com prazo em cada um: a regra virar dado com versão, a conta aparecer em toda tela que mostra resultado, nada mudar sem ficar registrado, cada papel ver só o que é dele, e a nossa conta bater com a planilha do cliente.
+  1. O último é o que vale mais: enquanto a conta do sistema não bater com a deles, o resto é promessa.
+
+### Slide 6: três pessoas, o mesmo número
+
+- **Começa em** 2:15 · **dura** 0:40 · **quem fala:** Matheus · **63 palavras na tela**
+- **Frase da tela:** “Se mexer numa fórmula, tenho que conferir a planilha inteira de novo.”
+- **O que a tela mostra:** A fala do mapa de empatia e os três cartões de quem é afetado.
+- **A fala:**
+  1. Essa frase é do mapa de empatia da analista, a pessoa que carrega o processo hoje. Ela resume o medo que move este projeto.
+  1. As três pessoas da tela não foram inventadas por nós: saíram do caso e foram confirmadas na conversa com o cliente. São papéis, não gente de verdade.
+  1. A primeira fecha a conta do mês, e é quem todo mundo procura quando alguém reclama do resultado.
+  1. A segunda manda os números da unidade, sempre em cima do prazo, no meio de outras dez tarefas.
   1. A terceira recebe o valor no fim. Ela vê quanto ganhou e não vê como chegaram naquele número. É por ela que este projeto existe.
 
-### Slide 4: a nota com a conta aberta
+### Slide 7: o que sabemos, e o que ainda é chute
 
-- **Começa em** 1:20 · **dura** 0:45 · **quem fala:** João · **15 palavras na tela**
+- **Começa em** 2:55 · **dura** 0:30 · **quem fala:** Matheus · **59 palavras na tela**
+- **Frase da tela:** certeza tem fonte. aposta a gente declara. pergunta a gente leva para o cliente.
+- **O que a tela mostra:** As três colunas da matriz, com a contagem e dois exemplos de cada.
+- **A fala:**
+  1. Separamos tudo o que sabemos em três colunas, e cada linha da primeira tem a fonte do lado: artigo da portaria, o caso ou a ata da reunião. Certeza sem origem é chute com voz firme.
+  1. No meio, o que a gente assumiu para poder andar. Está escrito que é aposta, e está escrito dentro do código também.
+  1. Na direita, o que ainda não sabemos, e a quem vamos perguntar. A maior delas: como redistribuir o peso quando falta um número.
+
+### Slide 8: quem mais resolve isso, e o que joga a favor
+
+- **Começa em** 3:25 · **dura** 0:35 · **quem fala:** Fernando · **58 palavras na tela**
+- **Frase da tela:** cinco referências olhadas de perto, e o retrato honesto do projeto.
+- **O que a tela mostra:** As referências com o veredito, e os quatro quadrantes da SWOT.
+- **A fala:**
+  1. Antes de decidir construir, olhamos o que já existe: painéis de transparência de prefeituras, sistemas de metas do SUS, ferramentas de acompanhamento de objetivos, e a própria planilha de hoje.
+  1. Cada uma resolve um pedaço. Nenhuma junta as três coisas que este caso precisa ao mesmo tempo: regra com versão, conta aberta e registro de quem mudou.
+  1. Do lado direito, o retrato do projeto (SWOT). A força é ter cliente real com regra escrita. A fraqueza é que ninguém da equipe conhece o processo por dentro.
+  1. A ameaça maior está acontecendo: a portaria pode mudar, e de fato ela chegou agora e mexeu no nosso desenho. A gente conta isso daqui a pouco.
+
+### Slide 9: como a gente gerou ideias
+
+- **Começa em** 4:00 · **dura** 0:35 · **quem fala:** João Pedro · **30 palavras na tela**
+- **Frase da tela:** três dinâmicas numa hora, com a regra de somar antes de criticar.
+- **O que a tela mostra:** As três técnicas, com o tempo e o que cada uma produziu.
+- **A fala:**
+  1. A primeira é escrita e em silêncio: cada um anota três ideias e passa a folha, e quem recebe amplia a do colega. Sem discussão, ninguém é puxado pela opinião de quem falou primeiro.
+  1. A segunda é a conversa aberta, juntando o que ficou parecido e dando nome a cada grupo.
+  1. A terceira são oito desenhos de tela em oito minutos, cada um sozinho. É de lá que saem as primeiras telas em papel.
+  1. De dezoito ideias no papel sobraram oito alternativas de verdade na mesa.
+
+### Slide 10: por que essa ideia venceu
+
+- **Começa em** 4:35 · **dura** 0:30 · **quem fala:** João Pedro · **51 palavras na tela**
+- **Frase da tela:** sistema web com regra ajustável e a conta aberta
+- **O que a tela mostra:** A alternativa escolhida, as quatro razões e o que ficou de comparação.
+- **A fala:**
+  1. Demos nota de 1 a 5 para cada alternativa em três coisas: o tamanho do impacto, o esforço para fazer e o quanto ela encosta no problema de verdade.
+  1. A escolhida ganhou porque ataca a causa e não o sintoma: hoje a regra da portaria só existe dentro de fórmulas de planilha.
+  1. O esforço é alto, mas dá para fatiar: lançar, calcular e mostrar a conta cabem até o SR1.
+  1. E a planilha melhorada continua na tabela de propósito: ela é contra o que a gente vai medir o ganho, na validação com o cliente.
+
+### Slide 11: do papel para a tela
+
+- **Começa em** 5:05 · **dura** 0:35 · **quem fala:** João Pedro · **33 palavras na tela**
+- **Frase da tela:** os quatro desenhos que vieram antes, e o que eles viraram.
+- **O que a tela mostra:** Os quatro wireframes, um por tela, com a legenda de cada.
+- **A fala:**
+  1. Estes são os desenhos de baixa fidelidade das quatro telas centrais. Barra cinza no lugar de texto, de propósito: a conversa aqui é sobre onde cada coisa fica, não sobre a frase.
+  1. A primeira é onde a unidade digita os números do mês.
+  1. A segunda é a nota com a conta inteira embaixo, e é a tela que vocês vão ver rodando no slide seguinte.
+  1. A terceira é o painel do distrito: quem já mandou, quem falta.
+  1. A quarta é o resultado do gestor, com os meses anteriores do lado.
+
+### Slide 12: a nota com a conta aberta
+
+- **Começa em** 5:40 · **dura** 0:45 · **quem fala:** João Henrique · **15 palavras na tela**
 - **Frase da tela:** Isto é o sistema rodando agora, não uma imagem.
 - **O que a tela mostra:** A nota e a conta inteira, do sistema de verdade, para uma unidade de teste.
 - **A fala:**
@@ -90,9 +186,9 @@ vale ponto com a banca, ela entra entre parênteses depois da palavra simples, c
   1. A última linha fecha a conta na frente de todo mundo. Qualquer pessoa consegue refazer essa continha no papel. É isso que a planilha não dá.
   1. Se faltar internet no dia, o PDF que a gente baixou antes tem esta mesma tela.
 
-### Slide 5: cada mês guarda a regra que usou
+### Slide 13: cada mês guarda a regra que usou
 
-- **Começa em** 2:05 · **dura** 0:45 · **quem fala:** João · **67 palavras na tela**
+- **Começa em** 6:25 · **dura** 0:35 · **quem fala:** João Henrique · **67 palavras na tela**
 - **Frase da tela:** Se a regra mudar, o mês antigo continua igual.
 - **O que a tela mostra:** O caminho de um número em quatro passos, e quem faz o quê.
 - **A fala:**
@@ -102,9 +198,9 @@ vale ponto com a banca, ela entra entre parênteses depois da palavra simples, c
   1. São quatro pessoas no processo, e cada uma só faz a parte dela. Quem manda o número não escolhe o alvo.
   1. Toda mudança fica gravada com autor, data e o valor de antes. Nada é apagado.
 
-### Slide 6: nenhum dado real. ainda.
+### Slide 14: nenhum dado real. ainda.
 
-- **Começa em** 2:50 · **dura** 0:40 · **quem fala:** Rafael · **56 palavras na tela**
+- **Começa em** 7:00 · **dura** 0:30 · **quem fala:** Rafael · **56 palavras na tela**
 - **Frase da tela:** Hoje o sistema roda com dados inventados por um programa. Qualquer pessoa roda de novo e vê os mesmos números.
 - **O que a tela mostra:** O tamanho da base de teste, e o que os modelos acertam e erram.
 - **A fala:**
@@ -114,9 +210,9 @@ vale ponto com a banca, ela entra entre parênteses depois da palavra simples, c
   1. Um deles perde para o chute. A gente deixou publicado do mesmo jeito, porque esconder isso seria enganar.
   1. E nada do que o modelo diz entra na conta do dinheiro. A conta é a da portaria, sempre.
 
-### Slide 7: o que pode dar errado, dito antes
+### Slide 15: o que pode dar errado, dito antes
 
-- **Começa em** 3:30 · **dura** 0:40 · **quem fala:** Fernando · **63 palavras na tela**
+- **Começa em** 7:30 · **dura** 0:30 · **quem fala:** Rafael · **63 palavras na tela**
 - **Frase da tela:** O login é de faz de conta, o banco de dados está desligado e a conta ainda usa a regra que deduzimos.
 - **O que a tela mostra:** Quatro contagens do que já foi mapeado, cada uma com o estado dela.
 - **A fala:**
@@ -126,36 +222,29 @@ vale ponto com a banca, ela entra entre parênteses depois da palavra simples, c
   1. Em uso de inteligência artificial, cada linha tem o que foi gerado, onde entrou e o nome de quem conferiu.
   1. E a mais cara de admitir: a portaria oficial chegou esta semana, e ela manda fazer duas contas de um jeito um pouco diferente do nosso. Vamos arrumar na semana que vem. Preferimos falar isso aqui a ser pegos depois.
 
-### Slide 8: de hoje ao sr1: três semanas
+### Slide 16: as dezoito semanas, e onde estamos
 
-- **Começa em** 4:10 · **dura** 0:30 · **quem fala:** Fernando · **31 palavras na tela**
-- **Frase da tela:** Um compromisso por semana, e todos com data.
-- **O que a tela mostra:** Os três marcos até o SR1, com data e compromisso.
+- **Começa em** 8:00 · **dura** 0:35 · **quem fala:** Fernando · **42 palavras na tela**
+- **Frase da tela:** cada entrega tem dono, data e estado, e o quadro inteiro está no site.
+- **O que a tela mostra:** A linha do semestre com os marcos, e as entregas do próximo mês com dono.
 - **A fala:**
-  1. Semana que vem: colocar a regra oficial da portaria dentro do sistema, como uma versão nova.
-  1. Na outra: as primeiras telas no ar para qualquer pessoa que abrir o site.
-  1. Até o SR1: sentar com a secretaria e conferir a regra contra a planilha real que eles nos mandaram.
-  1. O que a banca disser hoje entra no diário de bordo e orienta essas três semanas.
+  1. O semestre inteiro está planejado em dezoito semanas, e cada semana tem as entregas que ela precisa produzir.
+  1. As quatro primeiras estão fechadas e publicadas no site, com o que foi feito, quem fez e o que travou.
+  1. Hoje é o Kick-off. Daqui até o SR1 são três semanas, e cada uma tem um compromisso com data e com nome.
+  1. Semana que vem, a regra oficial da portaria entra no sistema. Na outra, as primeiras telas no ar. Até o SR1, sentar com a secretaria e conferir a conta contra a planilha real.
+  1. Nada disso está num arquivo separado: o quadro com dono e estado é uma seção do próprio site.
 
-### Slide 9: prumo
+### Slide 17: prumo
 
-- **Começa em** 4:40 · **dura** 0:15 · **quem fala:** Gabriel · **11 palavras na tela**
-- **Frase da tela:** o registro, o sistema e este pitch estão no ar.
+- **Começa em** 8:35 · **dura** 0:25 · **quem fala:** Gabriel · **13 palavras na tela**
+- **Frase da tela:** o registro, os documentos, o sistema e este pitch estão no ar.
 - **O que a tela mostra:** Wordmark, o endereço do site e a pergunta para a banca.
 - **A fala:**
-  1. Tudo que mostramos está nesse endereço: o diário do projeto, o sistema e este pitch.
-  1. Obrigado. Ficamos para as perguntas.
+  1. Tudo que mostramos está nesse endereço: o diário do projeto semana a semana, os documentos de cada entrega, o sistema e este pitch.
+  1. O site tem um índice no topo com as oito seções, na ordem em que vocês pediram.
+  1. Obrigado. Ficamos para as perguntas, e qualquer um de nós responde.
 
-Soma: 4:55, e 377 palavras na tela no deck inteiro. Por pessoa:
-
-| Quem fala | Slides | Tempo |
-| --- | --- | --- |
-| Gabriel | 1, 2, 9 | 0:55 |
-| Matheus | 3 | 0:40 |
-| João | 4 | 0:45 |
-| João | 5 | 0:45 |
-| Rafael | 6 | 0:40 |
-| Fernando | 7, 8 | 1:10 |
+<!-- roteiro:fim -->
 
 ## 3. O roteiro-base, com os espaços preenchidos
 

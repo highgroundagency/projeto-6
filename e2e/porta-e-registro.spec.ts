@@ -100,10 +100,15 @@ test.describe('registro do projeto', () => {
     await expect(
       page.getByText(/confiável, transparente, sustentável e auditável/),
     ).toBeVisible()
+    const trilha = page.getByRole('region', { name: 'Evolução do projeto' })
     await expect(page.getByRole('heading', { name: 'Evolução do projeto' })).toBeVisible()
 
+    // DENTRO DA TRILHA, e não na página inteira. O nome de um marco aparece
+    // hoje em vários lugares legítimos (o quadro do cronograma, a coluna
+    // "verificável em" dos objetivos), e alguns deles dentro de sanfona
+    // fechada. Sem escopo, o `.first()` pegava um `<td>` escondido.
     for (const marco of ['Kick-off', 'SR1', 'SR2: Final']) {
-      await expect(page.getByText(marco, { exact: true }).first()).toBeVisible()
+      await expect(trilha.getByText(marco, { exact: true }).first()).toBeVisible()
     }
   })
 
@@ -229,8 +234,11 @@ test.describe('registro do projeto', () => {
 test.describe('arquitetura em desenhos', () => {
   test('a home tem a porta, e a página tem os quatro desenhos e o prompt', async ({ page }) => {
     await page.goto('/')
-    // A seção da home é a porta de entrada: clicou, apareceu.
-    await expect(page.getByRole('heading', { name: 'Arquitetura' })).toBeVisible()
+    // A seção da home é a porta de entrada: clicou, apareceu. O escopo é a
+    // seção, porque "Arquitetura" também é título de documento de ciclo.
+    await expect(
+      page.locator('#arquitetura').getByRole('heading', { name: 'Arquitetura' }),
+    ).toBeVisible()
     await page.getByRole('link', { name: /ver a arquitetura/ }).click()
     await expect(page).toHaveURL(/\/arquitetura$/)
 

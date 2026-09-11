@@ -1,4 +1,6 @@
-import { Citacao, Lista, Nota, Tabela } from '@/components/conteudo'
+import { Citacao, Grade, Cartao, Lista, Nota, Secao, Tabela } from '@/components/conteudo'
+import { WIREFRAMES } from '@/components/wireframe'
+import { CSD } from '@/content/analises'
 import { integrantePorId } from '@/content/equipe'
 import {
   DEMO_PITCH,
@@ -7,7 +9,8 @@ import {
   formatarTempo,
   inicioDoSlide,
 } from '@/content/pitch'
-import { URL_REPOSITORIO } from '@/content/produto'
+import { LEGENDAS_DO_WIREFRAME } from '@/content/pitch'
+import { OBJETIVOS_ESPECIFICOS, OBJETIVO_GERAL, URL_REPOSITORIO } from '@/content/produto'
 import type { Documento, RegistroSemana } from '@/lib/registro/tipos'
 
 export const registro = {
@@ -18,7 +21,7 @@ export const registro = {
     selo: 'validado',
     validadoPor: 'gabriel',
     conteudo:
-      'Apresentar em 5 minutos o problema, sua relevância, a ideia priorizada e o direcionamento do projeto, com fala distribuída entre os seis, direto do site.',
+      'Apresentar o problema, os objetivos, as análises, a ideação, a solução e o cronograma dentro dos dez minutos liberados, com fala distribuída entre os seis, direto do site.',
   },
 
   avancos: {
@@ -29,6 +32,9 @@ export const registro = {
       'Os slides viraram uma rota do próprio site, /pitch, liberada pelo mesmo motor de releases do registro: nove telas, uma ideia por tela, setas do teclado, notas do apresentador e a memória de cálculo real dentro do slide da demonstração.',
       'A régua oficial chegou: a Portaria Conjunta nº 001/2024, publicada no Diário Oficial de 21/09/2024, foi transcrita para o repositório e comparada com o motor. Ela confirma o modelo e corrige dois pontos.',
       'PDF e capturas gerados a partir da própria rota, na identidade do site. O PDF é baixável pelo próprio deck, para o caso de a sala não ter rede.',
+      'O briefing oficial do Kick-off chegou na véspera, com sete critérios de avaliação e uma estrutura mínima de oito seções para o site. A auditoria contra ele achou três peças que não existiam em lugar nenhum: objetivo geral e específicos, a matriz CSD e os wireframes de baixa fidelidade. As três foram produzidas nesta semana e estão nos documentos abaixo, com a data verdadeira.',
+      'O deck cresceu de nove para dezessete slides e de 4:55 para 9:00, dentro dos dez minutos que o professor liberou. Os slides novos cobrem exatamente os critérios que não apareciam: objetivos, as fontes da pesquisa, a matriz CSD, benchmarking com SWOT, as técnicas de ideação, a justificativa da escolha, os wireframes e o cronograma com responsável.',
+      'O site ganhou o índice das oito seções no topo, a biblioteca com todos os documentos publicados e o cronograma das 18 semanas com estado e responsável, que até aqui só existia atrás da senha do painel.',
     ],
   },
 
@@ -60,6 +66,21 @@ export const registro = {
         decisao: 'Abrir pelo problema, não pela solução.',
         porque: 'A relevância do case é o que sustenta o projeto; a tecnologia é consequência.',
       },
+      {
+        decisao: 'Crescer o deck em vez de cortar, usando os dez minutos liberados.',
+        porque:
+          'O briefing cobra sete critérios, e três deles não apareciam em slide nenhum na versão de 4:55. Com a permissão dos dez minutos, cobrir os sete custa menos que escolher quais perder. Ficou um minuto de margem: ensaio que fecha no limite estoura no dia.',
+      },
+      {
+        decisao: 'Datar a matriz CSD e os wireframes nesta semana, e dizer isso no documento.',
+        porque:
+          'Os dois artefatos não existiam. Escrevê-los como se fossem de agosto deixaria o registro mais bonito e menos verdadeiro, e o site inteiro vale pelo que ele registra. A Semana 3 prometeu telas em papel e não publicou: o documento dos wireframes reconhece isso em vez de esconder.',
+      },
+      {
+        decisao: 'O índice das oito seções mora na página, não no cabeçalho.',
+        porque:
+          'O cabeçalho foi desenhado para três destinos e estoura em 360px com oito. O índice na página também serve de ordem de leitura para quem avalia, coisa que um menu não faz.',
+      },
     ],
   },
 
@@ -69,6 +90,8 @@ export const registro = {
     conteudo: [
       'Ensaio cronometrado com os seis integrantes ainda não realizado. A rota /pitch mostra o tempo de cada slide nas notas para isso.',
       'O motor ainda calcula pela régua deduzida na reunião de 22/08, não pela portaria: a média das notas dos subindicadores e a redistribuição de peso do art. 8º entram como regra versão 3 na Semana 5.',
+      'O benchmarking não nomeia concorrentes: as cinco referências são categorias de ferramenta, não produtos identificados. Nomeá-las exige um levantamento que não coube nesta semana.',
+      'A dinâmica real das três técnicas de ideação continua sem registro em foto ou artefato: o que está publicado é o roteiro previsto, e o checklist foi corrigido para dizer isso.',
     ],
   },
 
@@ -96,6 +119,8 @@ export const registro = {
       'Ensaiar com cronômetro em /pitch e ajustar os blocos que estourarem.',
       'Preparar as respostas das perguntas prováveis da banca, listadas no documento abaixo.',
       'Entrar na Semana 5 com a régua oficial carregada no motor como regra versão 3, e com o diagrama de arquitetura pronto.',
+      'Subir o PDF da apresentação para a pasta da equipe no Drive e ligar o link no site, que é o último item do checklist do professor ainda em aberto.',
+      'Levar à secretaria as cinco dúvidas da matriz CSD, a começar pela redistribuição de peso do art. 8º.',
     ],
   },
 
@@ -103,12 +128,27 @@ export const registro = {
     selo: 'validado',
     validadoPor: 'gabriel',
     conteudo: [
-      { integrante: 'gabriel', contribuicao: 'Fala: capa, o problema e o fechamento.' },
-      { integrante: 'matheus', contribuicao: 'Fala: quem sofre com o problema.' },
-      { integrante: 'joao-pedro', contribuicao: 'Fala: a ideia priorizada, com a demonstração ao vivo.' },
-      { integrante: 'joao-henrique', contribuicao: 'Fala: como funciona, regra como dado.' },
-      { integrante: 'rafael', contribuicao: 'Fala: os dados e o que os modelos respondem.' },
-      { integrante: 'fernando', contribuicao: 'Fala: riscos, transparência e o caminho até o SR1.' },
+      {
+        integrante: 'gabriel',
+        contribuicao: 'Fala: capa, o problema, os objetivos e o fechamento.',
+      },
+      {
+        integrante: 'matheus',
+        contribuicao: 'Fala: as fontes da pesquisa, quem sofre com o problema e a matriz CSD.',
+      },
+      {
+        integrante: 'joao-pedro',
+        contribuicao: 'Fala: as técnicas de ideação, por que a ideia venceu e os wireframes.',
+      },
+      {
+        integrante: 'joao-henrique',
+        contribuicao: 'Fala: a demonstração ao vivo e a regra guardada como dado.',
+      },
+      { integrante: 'rafael', contribuicao: 'Fala: os dados, os modelos e os riscos.' },
+      {
+        integrante: 'fernando',
+        contribuicao: 'Fala: o roteiro, o benchmarking com a SWOT e o cronograma.',
+      },
     ],
   },
 
@@ -119,6 +159,10 @@ export const registro = {
       { tipo: 'prototipo', rotulo: 'Os slides do pitch, no site', url: '/pitch' },
       { tipo: 'documento', rotulo: 'A régua oficial', url: '#doc-ko-regua-oficial' },
       { tipo: 'documento', rotulo: 'Roteiro do pitch', url: '#doc-ko-roteiro-pitch' },
+      { tipo: 'documento', rotulo: 'Objetivo geral e específicos', url: '#doc-ko-objetivos' },
+      { tipo: 'documento', rotulo: 'Matriz CSD', url: '#doc-ko-csd' },
+      { tipo: 'prototipo', rotulo: 'Wireframes de baixa fidelidade', url: '#doc-ko-wireframes' },
+      { tipo: 'documento', rotulo: 'Os sete critérios do Kick-off', url: '#doc-ko-criterios' },
       {
         tipo: 'codigo',
         rotulo: 'Roteiro, PDF e portaria transcrita',
@@ -131,8 +175,8 @@ export const registro = {
 export const documentos = [
   {
     id: 'roteiro-pitch',
-    titulo: 'Roteiro do pitch: 4 minutos e 55 segundos',
-    resumo: 'os nove slides, com o tempo, quem fala e o que a tela mostra em cada um.',
+    titulo: `Roteiro do pitch: ${formatarTempo(DURACAO_PITCH_SEGUNDOS)}`,
+    resumo: `os ${SLIDES.length} slides, com o tempo, quem fala e o que a tela mostra em cada um.`,
     Conteudo: () => (
       <>
         <Tabela
@@ -264,6 +308,167 @@ export const documentos = [
           <Nota>
             O Kick-off tem peso formativo na matriz: a nota não vem daqui, mas o direcionamento
             que sai da arguição orienta tudo até o SR1.
+          </Nota>
+        </div>
+      </>
+    ),
+  },
+  {
+    id: 'objetivos',
+    titulo: 'Objetivo geral e objetivos específicos',
+    resumo: 'o que o produto tem que fazer, e até quando cada parte fica de pé.',
+    Conteudo: () => (
+      <>
+        <p>
+          Escritos na semana do Kick-off. Até aqui o projeto tinha metas de entrega da
+          disciplina, com data de marco, mas não tinha o objetivo do PRODUTO dito com todas as
+          letras. O briefing do Kick-off cobra os dois, e eles não são a mesma coisa.
+        </p>
+        <div className="mt-4">
+          <Citacao fonte="Objetivo geral">{OBJETIVO_GERAL}</Citacao>
+        </div>
+        <div className="mt-4">
+          <Tabela
+            colunas={['Objetivo específico', 'O que ele exige', 'Verificável em']}
+            linhas={OBJETIVOS_ESPECIFICOS.map((o) => [o.resumo, o.detalhe, o.quando])}
+          />
+        </div>
+        <div className="mt-3">
+          <Nota>
+            Não confundir com os Objetivos SMART da Semana 2: aqueles são metas de entrega da
+            disciplina (ter o motor coberto por testes até a Semana 6, coletar feedback na
+            Semana 11). Estes dizem o que o sistema tem de fazer. Os dois convivem, e nenhum
+            substitui o outro.
+          </Nota>
+        </div>
+      </>
+    ),
+  },
+  {
+    id: 'csd',
+    titulo: 'Matriz CSD: certezas, suposições e dúvidas',
+    resumo: 'o que sabemos com fonte, o que assumimos para poder andar, e o que falta perguntar.',
+    Conteudo: () => (
+      <>
+        <p>
+          Montada na semana do Kick-off, e não em agosto. O material estava todo escrito, só que
+          espalhado: as suposições moravam em comentário de código e numa nota da Semana 3, as
+          certezas na portaria transcrita, e as dúvidas na ata da reunião de 22/08. O que faltava
+          era a matriz.
+        </p>
+        {CSD.map((coluna) => (
+          <div key={coluna.chave} className="mt-4">
+            <Secao titulo={coluna.titulo}>
+              <Tabela
+                colunas={[coluna.titulo, 'De onde vem']}
+                linhas={coluna.itens.map((item) => [item.texto, item.fonte])}
+              />
+            </Secao>
+          </div>
+        ))}
+        <div className="mt-3">
+          <Nota>
+            Toda linha da primeira coluna tem origem verificável, e é isso que separa uma matriz
+            CSD de uma lista de opiniões: certeza sem fonte é chute com voz firme. As suposições
+            estão declaradas também dentro do código, onde elas agem.
+          </Nota>
+        </div>
+      </>
+    ),
+  },
+  {
+    id: 'wireframes',
+    titulo: 'Wireframes de baixa fidelidade',
+    resumo: 'os quatro desenhos das telas centrais, em traço de papel.',
+    Conteudo: () => (
+      <>
+        <p>
+          Desenhados na semana do Kick-off, a partir das telas que já existiam. A Semana 3
+          prometeu as primeiras telas em papel como produto do Crazy 8&rsquo;s, e o artefato não
+          chegou a ser publicado; em vez de datá-lo em agosto, ele nasce aqui, com a data certa.
+        </p>
+        <p>
+          Não há uma palavra dentro dos desenhos, e isso é de propósito: wireframe de baixa
+          fidelidade usa barra cinza no lugar de texto para a conversa ser sobre onde cada coisa
+          fica, e não sobre a escolha da frase.
+        </p>
+        <div className="mt-4">
+          <Grade colunas={2}>
+            {WIREFRAMES.map(({ id, Desenho }, indice) => (
+              <Cartao key={id} titulo={LEGENDAS_DO_WIREFRAME[indice]}>
+                <Desenho className="w-full" />
+              </Cartao>
+            ))}
+          </Grade>
+        </div>
+        <div className="mt-3">
+          <Nota>
+            A tela pronta que saiu do segundo desenho está em <code>/sistema</code> e dentro do
+            slide da demonstração, rodando com dados de teste. O par entre o desenho e a tela é a
+            resposta ao critério de solução do Kick-off.
+          </Nota>
+        </div>
+      </>
+    ),
+  },
+  {
+    id: 'criterios',
+    titulo: 'Os sete critérios do Kick-off, e onde cada um está',
+    resumo: 'o mapa para quem avalia: cada critério do briefing com o link do que o sustenta.',
+    Conteudo: () => (
+      <>
+        <p>
+          O briefing do Kick-off lista sete critérios e pede que todo o material esteja
+          organizado no site da equipe. Esta tabela existe para quem avalia não ter que procurar:
+          cada linha aponta para o documento ou a seção que sustenta aquele critério.
+        </p>
+        <div className="mt-4">
+          <Tabela
+            colunas={['Critério', 'O que o briefing pede', 'Onde está']}
+            linhas={[
+              [
+                '1. Problema',
+                'Descrição clara do desafio e evidências de pesquisa: dados, contexto e referências',
+                'Seção “o problema” na página inicial; “O processo hoje” na Semana 2; “O que já sabemos” na Semana 1; a portaria transcrita neste ciclo; slides 3 e 4',
+              ],
+              [
+                '2. Objetivos',
+                'Objetivo geral e objetivos específicos alinhados ao problema',
+                'O documento de objetivos acima; os Objetivos SMART na Semana 2; slide 5',
+              ],
+              [
+                '3. Análises',
+                'CSD, mapa de empatia, personas, benchmarking e SWOT',
+                'A matriz CSD acima; “Personas e mapa de empatia”, “Benchmarking” e “Análise SWOT” na Semana 2; slides 6, 7 e 8',
+              ],
+              [
+                '4. Ideação',
+                'Evidência das técnicas aplicadas e justificativa da ideia escolhida',
+                '“Roteiro das três técnicas”, “Alternativas levantadas” e “Justificativa da escolha” na Semana 3; slides 9 e 10',
+              ],
+              [
+                '5. Solução',
+                'Solução inicial e protótipos de baixa fidelidade com wireframes',
+                'Os wireframes acima; “Proposta em uma página”, “Escopo” e “Backlog inicial” na Semana 4; o sistema rodando em /sistema; slides 11, 12 e 13',
+              ],
+              [
+                '6. Cronograma',
+                'Atividades, estado, prazos e responsáveis',
+                'A seção de cronograma na página inicial, com as 18 semanas, o estado de cada entrega e quem responde por ela; slide 16',
+              ],
+              [
+                '7. Documentação',
+                'Todo o conteúdo organizado no site da equipe',
+                'A seção de documentos na página inicial, com os documentos de todas as semanas publicadas, e o índice das oito seções no topo',
+              ],
+            ]}
+          />
+        </div>
+        <div className="mt-3">
+          <Nota>
+            O que o briefing chama de Google Site é, aqui, este próprio site: ele é versionado no
+            Git, tem release por ciclo e é o artefato avaliado. A apresentação fica em /pitch, e o
+            PDF dela é baixável pelo próprio deck.
           </Nota>
         </div>
       </>

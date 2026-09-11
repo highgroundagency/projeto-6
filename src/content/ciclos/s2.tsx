@@ -8,6 +8,12 @@ import {
   Secao,
   Tabela,
 } from '@/components/conteudo'
+import {
+  BENCHMARKING,
+  CONCLUSAO_BENCHMARKING,
+  MAPA_DE_EMPATIA,
+  SWOT,
+} from '@/content/analises'
 import type { Documento, RegistroSemana } from '@/lib/registro/tipos'
 
 export const registro = {
@@ -243,40 +249,7 @@ export const documentos = [
           titulo="Mapa de empatia: analista da CAM"
           descricao="A pessoa que carrega o processo hoje."
         >
-          <ListaDefinicao
-            itens={[
-              {
-                termo: 'Diz',
-                definicao:
-                  '“Se mexer numa fórmula, tenho que conferir a planilha inteira de novo.”',
-              },
-              {
-                termo: 'Pensa',
-                definicao:
-                  'Que a responsabilidade por um erro vai recair sobre ela, mesmo quando o dado veio errado da origem.',
-              },
-              {
-                termo: 'Faz',
-                definicao:
-                  'Confere linha a linha, mantém cópias de segurança por versão e guarda e-mails como comprovação.',
-              },
-              {
-                termo: 'Sente',
-                definicao:
-                  'Insegurança no fechamento e alívio quando o ciclo passa sem contestação.',
-              },
-              {
-                termo: 'Dores',
-                definicao:
-                  'Retrabalho a cada mudança de regra, ausência de trilha e dependência de estar presente para o processo andar.',
-              },
-              {
-                termo: 'Ganhos',
-                definicao:
-                  'Fechar o ciclo com o cálculo explicado sozinho e conseguir tirar férias sem travar a comissão.',
-              },
-            ]}
-          />
+          <ListaDefinicao itens={MAPA_DE_EMPATIA.map((i) => ({ ...i }))} />
         </Secao>
       </>
     ),
@@ -289,39 +262,12 @@ export const documentos = [
       <>
         <Tabela
           colunas={['Referência', 'O que serve', 'O que não serve']}
-          linhas={[
-            [
-              'Painéis de indicadores de entes públicos',
-              'Transparência ativa, indicador com ficha técnica e série histórica',
-              'São vitrines de divulgação: não calculam efeito financeiro nem guardam trilha de decisão',
-            ],
-            [
-              'Sistemas de monitoramento de metas do SUS',
-              'Indicador com fonte, periodicidade e meta pactuada, vocabulário que a SESAU já usa',
-              'Regra de cálculo fixa no sistema; nossa portaria muda e precisa ser parametrizável',
-            ],
-            [
-              'Ferramenta de OKR (acompanhamento de objetivos)',
-              'Cadência de check-in, responsável por resultado e visualização de progresso',
-              'Não versiona regra normativa nem produz memória de cálculo auditável',
-            ],
-            [
-              'Ferramenta de OKR (gestão por resultados corporativa)',
-              'Peso por objetivo e agregação de score, modelo matemático parecido com o nosso',
-              'Score é gerencial, não é ato administrativo com efeito em folha; e a licença por usuário não cabe no órgão',
-            ],
-            [
-              'Planilha atual da CAM',
-              'Flexibilidade total e custo zero de adoção',
-              'Sem trilha, sem versionamento, sem controle de acesso e com o conhecimento preso em quem a escreveu',
-            ],
-          ]}
+          linhas={BENCHMARKING.map((r) => [r.referencia, r.serve, r.naoServe])}
         />
         <div className="mt-3">
           <Nota>
-            Conclusão do benchmarking: nenhuma ferramenta pronta cobre a combinação “regra
-            normativa versionada + memória de cálculo + trilha de auditoria”. Ela é o núcleo do
-            problema: e é por isso que a decisão foi construir.
+            Conclusão do benchmarking: {CONCLUSAO_BENCHMARKING} Essa combinação é o núcleo do
+            problema, e é por isso que a decisão foi construir.
           </Nota>
         </div>
       </>
@@ -333,42 +279,7 @@ export const documentos = [
     resumo: 'forças, fraquezas, oportunidades e ameaças do projeto.',
     Conteudo: () => (
       <>
-        <Quadro
-          quadrantes={[
-            {
-              titulo: 'Forças',
-              itens: [
-                'Cliente real, com processo documentado em portaria',
-                'Equipe de seis com frentes bem separadas',
-                'Problema com regra explícita: dá para modelar e testar',
-              ],
-            },
-            {
-              titulo: 'Fraquezas',
-              itens: [
-                'Sem acesso à portaria vigente no início do projeto',
-                'Nenhum integrante conhece o processo por dentro',
-                'Janela de um semestre para um domínio com regra complexa',
-              ],
-            },
-            {
-              titulo: 'Oportunidades',
-              itens: [
-                'Uma tentativa anterior de automatizar foi abandonada: há demanda represada',
-                'Transparência do cálculo é ganho direto para o gestor avaliado',
-                'Dados de indicadores viabilizam a lente de ML no mesmo case',
-              ],
-            },
-            {
-              titulo: 'Ameaças',
-              itens: [
-                'Agenda da CAM pode inviabilizar a validação com o cliente',
-                'Mudança de portaria durante o semestre',
-                'Escopo crescer para folha de pagamento, que está fora do projeto',
-              ],
-            },
-          ]}
-        />
+        <Quadro quadrantes={SWOT.map((q) => ({ titulo: q.titulo, itens: [...q.itens] }))} />
       </>
     ),
   },

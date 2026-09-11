@@ -28,7 +28,7 @@ export const ROTULO_ESTADO_REQUISITO: Record<EstadoRequisito, string> = {
 export interface Requisito {
   readonly id: string
   /** De onde veio a exigência: o briefing do case ou a matriz. */
-  readonly fonte: 'briefing' | 'matriz'
+  readonly fonte: 'briefing' | 'matriz' | 'kickoff'
   /** O texto do professor, o mais literal possível. */
   readonly pedido: string
   readonly estado: EstadoRequisito
@@ -206,10 +206,13 @@ export const REQUISITOS: readonly Requisito[] = [
     fonte: 'matriz',
     pedido:
       'Semana 3: Brainwriting, Brainstorming e Crazy 8’s; alternativas, critérios e justificativa.',
-    estado: 'atendido',
+    estado: 'parcial',
     onde: [
       'src/content/ciclos/s3.tsx: roteiro das três técnicas, alternativas e justificativa',
+      'src/content/analises.ts: as técnicas e as oito alternativas como dado, lidas também pelo pitch',
     ],
+    ressalva:
+      'O que está publicado é o ROTEIRO previsto das três dinâmicas, não o registro do que aconteceu: não há foto nem artefato da sessão. O bloqueio está declarado na Semana 3, e o checklist foi corrigido de "feito" para "em andamento" em 11/09, porque ele contradizia o próprio registro.',
   },
   {
     id: 'proposta',
@@ -310,5 +313,87 @@ export const REQUISITOS: readonly Requisito[] = [
     ],
     ressalva:
       'A ferramenta é outra, a evidência é a mesma: registro semanal público, com histórico versionado em vez de edição anônima.',
+  },
+
+  // ---- Briefing do Kick-off (11/09): os sete critérios -------------------
+  {
+    id: 'ko-problema',
+    fonte: 'kickoff',
+    pedido:
+      'Critério 1: descrição clara e objetiva do problema, com evidências de pesquisa (dados, contexto e referências).',
+    estado: 'atendido',
+    onde: [
+      'A seção "o problema" na página inicial, com atalho para os documentos que a sustentam',
+      'src/content/ciclos/ko.tsx: a portaria transcrita, com artigo e data',
+      'Slides 3 e 4 do pitch: o caminho do dinheiro e as três fontes da pesquisa',
+    ],
+  },
+  {
+    id: 'ko-objetivos',
+    fonte: 'kickoff',
+    pedido: 'Critério 2: objetivo geral e objetivos específicos alinhados ao problema.',
+    estado: 'atendido',
+    onde: [
+      'src/content/produto.ts: OBJETIVO_GERAL e OBJETIVOS_ESPECIFICOS, fonte única',
+      'src/content/ciclos/ko.tsx: o documento de objetivos, que separa produto de entrega',
+      'Slide 5 do pitch',
+    ],
+    ressalva:
+      'NÃO EXISTIAM ATÉ 11/09. O projeto tinha cinco metas SMART de entrega da disciplina, escritas na Semana 2, e nenhum objetivo de produto dito com esse nome.',
+  },
+  {
+    id: 'ko-analises',
+    fonte: 'kickoff',
+    pedido: 'Critério 3: CSD, mapa de empatia, personas, benchmarking e SWOT.',
+    estado: 'parcial',
+    onde: [
+      'src/content/analises.ts: a matriz CSD, o benchmarking, a SWOT e o mapa de empatia como dado',
+      'src/content/ciclos/s2.tsx: personas, mapa de empatia, benchmarking e SWOT',
+      'src/content/ciclos/ko.tsx: a matriz CSD, com a fonte de cada certeza',
+      'Slides 6, 7 e 8 do pitch',
+    ],
+    ressalva:
+      'A matriz CSD não existia até 11/09 e foi montada na semana do Kick-off, a partir do que as semanas 1 a 4 deixaram espalhado; o documento diz essa data. E o benchmarking não nomeia concorrentes: as cinco referências são categorias de ferramenta, não produtos identificados.',
+  },
+  {
+    id: 'ko-wireframes',
+    fonte: 'kickoff',
+    pedido: 'Critério 5: solução inicial e protótipos de baixa fidelidade com wireframes.',
+    estado: 'atendido',
+    onde: [
+      'src/components/wireframe.tsx: quatro telas em SVG, sem uma palavra dentro',
+      'src/content/ciclos/ko.tsx: o documento dos wireframes, com a data em que foram feitos',
+      'src/content/ciclos/s4.tsx: proposta, escopo e backlog',
+      '/sistema: o protótipo de alta fidelidade, rodando com dados de teste',
+      'Slides 11, 12 e 13 do pitch',
+    ],
+    ressalva:
+      'Os wireframes não existiam até 11/09. A Semana 3 prometeu "primeiras telas em papel" como produto do Crazy 8’s e o artefato não foi publicado; estes foram desenhados na semana do Kick-off, a partir das telas que já existiam.',
+  },
+  {
+    id: 'ko-cronograma',
+    fonte: 'kickoff',
+    pedido: 'Critério 6: cronograma com atividades, status, prazos e responsáveis.',
+    estado: 'atendido',
+    onde: [
+      'A seção de cronograma na página inicial: as 18 semanas com entrega, data, estado e dono',
+      'src/lib/cronograma.ts e src/content/checklist.ts, juntados por montarChecklist()',
+      'Slide 16 do pitch',
+    ],
+    ressalva:
+      'Os quatro dados já existiam, e até 11/09 só o painel administrativo, atrás de senha, os mostrava juntos. O visitante via apenas os três marcos.',
+  },
+  {
+    id: 'ko-documentacao',
+    fonte: 'kickoff',
+    pedido:
+      'Critério 7: todo o conteúdo organizado no site, na estrutura mínima de oito seções.',
+    estado: 'parcial',
+    onde: [
+      'src/components/base/indice.tsx: o índice das oito seções, na numeração do briefing',
+      'src/components/registro/biblioteca.tsx: todo documento publicado, com link para a âncora',
+    ],
+    ressalva:
+      'Falta o link para a pasta da equipe no Drive, que o checklist do professor pede junto com a apresentação salva lá. A variável NEXT_PUBLIC_DRIVE_URL está vazia, e sem ela o site não mostra link nenhum.',
   },
 ]

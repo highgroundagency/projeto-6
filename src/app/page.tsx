@@ -2,19 +2,28 @@ import Link from 'next/link'
 import { ClipboardCheck, ScrollText, Scale } from 'lucide-react'
 import { Chamada } from '@/components/base/botao'
 import { Cabecalho } from '@/components/base/cabecalho'
+import { Indice } from '@/components/base/indice'
 import { FaixaAdmin } from '@/components/base/faixa-admin'
 import { AcaoDoFluxo, Conector, EstadoDoFluxo, Fluxo } from '@/components/base/fluxo'
 import { MarcaCesar } from '@/components/base/marca'
 import { Num } from '@/components/base/num'
 import { Rodape } from '@/components/base/rodape'
 import { Selo } from '@/components/base/selo'
+import {
+  AtalhosDeDocumento,
+  Biblioteca,
+  escolher,
+  listarDocumentos,
+} from '@/components/registro/biblioteca'
+import { CronogramaPublico } from '@/components/registro/cronograma-publico'
 import { CicloSemRegistro, RegistroSemana } from '@/components/registro/registro-semana'
-import { TrilhaMarcos } from '@/components/registro/trilhas'
+import { TimelineCiclos, TrilhaMarcos } from '@/components/registro/trilhas'
 import { ExplicacaoDosPerfis } from '@/components/sistema/perfis'
 import { carregarCiclos, temRegistro } from '@/content/ciclos/registro'
 import { EQUIPE, SELO_PAPEIS } from '@/content/equipe'
 import { INSTITUICAO, PERGUNTA_DO_PROJETO, PROBLEMA } from '@/content/produto'
 import { cicloPorId } from '@/lib/cronograma'
+import { cicloCorrente } from '@/lib/releases'
 import { formatarBR } from '@/lib/datas'
 import { ehSemanaCorrente } from '@/lib/releases'
 import { featuresLiberadas } from '@/lib/sistema'
@@ -48,6 +57,17 @@ export default async function Pagina() {
   const emOrdemInversa = [...carregados].reverse()
   const semRegistro = visao.visiveis.filter((id) => !temRegistro(id)).reverse()
 
+  // A biblioteca lê os MESMOS módulos já carregados: nenhum import a mais, e
+  // nenhum documento de ciclo fechado, porque o gate aconteceu lá em cima.
+  const documentos = listarDocumentos(
+    carregados.map(({ id, modulo }) => ({
+      id,
+      rotuloCiclo: cicloPorId(id).rotulo,
+      documentos: modulo.documentos,
+    })),
+  )
+  const hoje = cicloCorrente(visao.hoje)
+
   return (
     <>
       <FaixaAdmin visao={visao} />
@@ -55,7 +75,7 @@ export default async function Pagina() {
 
       <main id="conteudo" className="mx-auto max-w-[1100px] px-0 sm:px-8">
         {/* Hero — o único lugar da página com imagem. */}
-        <section className="grao bloco border-x-0 border-t-0 pt-16 sm:pt-24">
+        <section id="topo" className="grao bloco border-x-0 border-t-0 pt-16 sm:pt-24">
           {/* No mobile a marca e a pílula ficam centradas e empilhadas; da
               largura sm para cima voltam a alinhar à esquerda com o resto. */}
           <div className="flex flex-col items-center gap-4 text-center sm:flex-row sm:items-center sm:gap-5 sm:text-left">
@@ -81,6 +101,17 @@ export default async function Pagina() {
             <Chamada href="#registro" variante="secundario">
               ver entregas ↓
             </Chamada>
+          </div>
+        </section>
+
+        {/* O índice das oito seções, logo abaixo do hero: ele é o mapa e a
+            ordem de leitura para quem chega para avaliar. */}
+        <section className="bloco revelar" aria-labelledby="titulo-indice">
+          <h2 id="titulo-indice" className="rotulo">
+            o que tem aqui
+          </h2>
+          <div className="mt-5">
+            <Indice />
           </div>
         </section>
 
@@ -127,7 +158,11 @@ export default async function Pagina() {
           </p>
         </section>
 
-        <section className="bloco revelar" aria-labelledby="titulo-problema">
+        <section
+          id="problema"
+          className="bloco revelar scroll-mt-20"
+          aria-labelledby="titulo-problema"
+        >
           <h2 id="titulo-problema" className="rotulo">
             o problema
           </h2>
@@ -136,6 +171,13 @@ export default async function Pagina() {
               <p key={paragrafo}>{paragrafo}</p>
             ))}
           </div>
+          <AtalhosDeDocumento
+            documentos={escolher(documentos, [
+              's2-processo-hoje',
+              's1-o-que-sabemos',
+              'ko-regua-oficial',
+            ])}
+          />
         </section>
 
         {/* Quem é quem. O problema acima fala de um processo com quatro atores,
@@ -144,16 +186,23 @@ export default async function Pagina() {
 
             As telas passadas são as JÁ LIBERADAS, não as oito: descrever o que
             ainda não saiu entregaria o roteiro que o §6.2 manda guardar. */}
-        <section className="bloco revelar" aria-labelledby="titulo-papeis">
+        <section
+          id="usuario"
+          className="bloco revelar scroll-mt-20"
+          aria-labelledby="titulo-papeis"
+        >
           <h2 id="titulo-papeis" className="rotulo">
-            quem usa o sistema
+            o usuário
           </h2>
           <p className="prosa mt-2 text-sm lowercase">
-            quatro papéis, e o que cada um pode e não pode fazer.
+            quatro papéis no sistema, e o que cada um pode e não pode fazer. quem são essas
+            pessoas, o que elas temem e o que elas precisam está nas personas e no mapa de
+            empatia.
           </p>
           <div className="mt-6">
             <ExplicacaoDosPerfis telas={featuresLiberadas(visao)} />
           </div>
+          <AtalhosDeDocumento documentos={escolher(documentos, ['s2-personas'])} />
         </section>
 
         {/* O registro semanal, dobrado. Fica logo depois do problema: é o que o
@@ -208,9 +257,13 @@ export default async function Pagina() {
             publicado. É o fluxo REAL da máquina de estados do motor, contado em
             linguagem de balcão: cada pílula é uma etapa do mês, cada cartão é o
             que alguém faz para o mês andar. */}
-        <section className="bloco revelar" aria-labelledby="titulo-como-funciona">
+        <section
+          id="solucao"
+          className="bloco revelar scroll-mt-20"
+          aria-labelledby="titulo-como-funciona"
+        >
           <h2 id="titulo-como-funciona" className="titulo-bloco">
-            como funciona
+            a solução, e como ela funciona
           </h2>
 
           {/* Antes do desenho, o mapa do site em duas frases: sem isso, quem
@@ -275,6 +328,85 @@ export default async function Pagina() {
               </EstadoDoFluxo>
             </Fluxo>
           </div>
+
+          <AtalhosDeDocumento
+            documentos={escolher(documentos, [
+              'ko-wireframes',
+              's4-proposta',
+              's4-escopo',
+              's4-backlog',
+            ])}
+          />
+        </section>
+
+        {/* 06 · O processo: como a equipe chegou até aqui. Não repete os
+            documentos, aponta para eles. Conteúdo duplicado é conteúdo que
+            diverge. */}
+        <section
+          id="processo"
+          className="bloco revelar scroll-mt-20"
+          aria-labelledby="titulo-processo"
+        >
+          <h2 id="titulo-processo" className="rotulo">
+            o processo
+          </h2>
+          <p className="prosa mt-2 text-sm lowercase">
+            o que a equipe estudou antes de decidir, e como a ideia foi escolhida: a matriz de
+            certezas, suposições e dúvidas, o que já existe lá fora, o retrato do projeto e as
+            três dinâmicas de ideação.
+          </p>
+          <AtalhosDeDocumento
+            documentos={escolher(documentos, [
+              'ko-csd',
+              's2-benchmarking',
+              's2-swot',
+              'ko-objetivos',
+              's2-objetivos',
+              's3-tecnicas-ideacao',
+              's3-alternativas',
+              's3-justificativa',
+              's3-reuniao-cliente',
+            ])}
+          />
+        </section>
+
+        {/* 07 · O cronograma. Os quatro dados que o briefing pede (atividade,
+            prazo, estado e responsável) já existiam e só o painel com senha
+            mostrava. */}
+        <section
+          id="cronograma"
+          className="bloco revelar scroll-mt-20"
+          aria-labelledby="titulo-cronograma"
+        >
+          <h2 id="titulo-cronograma" className="rotulo">
+            o cronograma
+          </h2>
+          <p className="prosa mt-2 text-sm lowercase">
+            as dezoito semanas do semestre, com o que cada uma entrega, a data, o estado e quem
+            responde. a semana liberada leva ao registro dela.
+          </p>
+          <TimelineCiclos
+            visiveis={visao.visiveis}
+            comRegistro={visao.visiveis.filter((id) => temRegistro(id))}
+            cicloCorrente={hoje}
+          />
+          <CronogramaPublico visiveis={visao.visiveis} cicloCorrente={hoje} />
+        </section>
+
+        {/* 08 · A biblioteca: todo documento publicado, num lugar só. */}
+        <section
+          id="documentos"
+          className="bloco revelar scroll-mt-20"
+          aria-labelledby="titulo-documentos"
+        >
+          <h2 id="titulo-documentos" className="rotulo">
+            os documentos
+          </h2>
+          <p className="prosa mt-2 text-sm lowercase">
+            tudo que foi entregue até aqui, por semana. cada título abre o documento inteiro
+            dentro da página, sem baixar arquivo e sem trocar de aba.
+          </p>
+          <Biblioteca documentos={documentos} />
         </section>
 
         {/* A porta para os desenhos da arquitetura. O conteúdo mora em página

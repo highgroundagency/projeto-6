@@ -36,17 +36,22 @@ function linhasDaTabela(markdown: string, titulo: string): string[] {
 }
 
 describe('o pitch do Kick-off', () => {
-  it('tem nove slides numerados em sequência, com ids únicos', () => {
-    expect(SLIDES).toHaveLength(9)
-    expect(SLIDES.map((s) => s.numero)).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9])
-    expect(new Set(SLIDES.map((s) => s.id)).size).toBe(9)
+  it('tem dezessete slides numerados em sequência, com ids únicos', () => {
+    expect(SLIDES).toHaveLength(17)
+    expect(SLIDES.map((s) => s.numero)).toEqual(
+      Array.from({ length: SLIDES.length }, (_, i) => i + 1),
+    )
+    expect(new Set(SLIDES.map((s) => s.id)).size).toBe(SLIDES.length)
   })
 
-  it('fecha em 4:55, com margem de cinco segundos para os cinco minutos', () => {
+  it('fecha em 9:00, com um minuto de margem dentro dos dez liberados', () => {
     const soma = SLIDES.reduce((total, s) => total + s.segundos, 0)
     expect(soma).toBe(DURACAO_PITCH_SEGUNDOS)
-    expect(soma).toBeLessThan(300)
-    expect(formatarTempo(soma)).toBe('4:55')
+    // O limite é 10 minutos, liberados pelo professor sobre os 5 da diretriz.
+    // A margem de um minuto inteiro é de propósito: ensaio que fecha no limite
+    // estoura no dia.
+    expect(soma).toBeLessThanOrEqual(540)
+    expect(formatarTempo(soma)).toBe('9:00')
     expect(inicioDoSlide(0)).toBe(0)
     expect(inicioDoSlide(SLIDES.length)).toBe(DURACAO_PITCH_SEGUNDOS)
   })
@@ -57,8 +62,11 @@ describe('o pitch do Kick-off', () => {
     expect(new Set(SLIDES.map((s) => s.quemFala)).size).toBe(EQUIPE.length)
     // Ninguém fala menos de trinta segundos nem mais de um minuto e meio.
     for (const [, segundos] of tempoPorIntegrante()) {
+      // A faixa acompanhou o deck: com 9 minutos entre seis pessoas, a média
+      // é de 90 segundos cada. O que o teste impede é alguém sumir da
+      // apresentação ou tomar conta dela.
       expect(segundos).toBeGreaterThanOrEqual(30)
-      expect(segundos).toBeLessThanOrEqual(90)
+      expect(segundos).toBeLessThanOrEqual(130)
     }
   })
 
@@ -73,7 +81,9 @@ describe('o pitch do Kick-off', () => {
       )
     }
     const total = SLIDES.reduce((soma, slide) => soma + palavrasNaTela(slide.id), 0)
-    expect(total).toBeLessThan(450)
+    // Dezessete slides a uma média de cinquenta palavras. O teto POR SLIDE
+    // não subiu quando o deck dobrou: mais slides, não mais texto por slide.
+    expect(total).toBeLessThan(900)
   })
 
   it('todo texto de tela sai de pitch.ts, e não do componente', () => {

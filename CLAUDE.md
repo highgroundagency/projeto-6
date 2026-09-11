@@ -6,9 +6,12 @@ Contexto para qualquer pessoa (ou agente) que for mexer neste repositório.
 
 Site do Projeto 6 da CESAR School (2026.2, Equipe 2). Duas camadas:
 
-- **`/`** — a página. Problema, equipe, marcos e o diário de bordo semanal, cada semana numa
-  sanfona `<details>`. É o artefato avaliado pelo professor e substitui o Google Site.
-  `/registro` continua existindo como redirecionamento para `/#registro`.
+- **`/`** — a página. As oito seções que o briefing do Kick-off exige, na numeração dele:
+  início, equipe, desafio e problema, usuário, solução, processo, cronograma e documentos.
+  O diário de bordo semanal vive dentro dela, cada semana numa sanfona `<details>`. É o
+  artefato avaliado pelo professor e substitui o Google Site. `/registro` continua existindo
+  como redirecionamento para `/#registro`.
+- **`/pitch`** — os dezessete slides do Kick-off, fechados pelo ciclo `ko`.
 - **`/sistema`** — MVP do cálculo da gratificação por desempenho da SESAU Recife.
 
 ## Regras que não se negociam
@@ -77,15 +80,18 @@ src/
 │   ├── registro/        topo, trilhas, cartão do registro semanal
 │   ├── sistema/         primitivos, ícones, sanfona da tela, tutorial, perfis
 │   │   └── telas/       o corpo das 8 telas, sem gate por dentro (ADR-023)
-│   └── conteudo.tsx     primitivos usados pelo conteúdo dos ciclos
+│   ├── conteudo.tsx     primitivos usados pelo conteúdo dos ciclos
+│   └── wireframe.tsx    os quatro wireframes de baixa fidelidade, em SVG sem texto
 ├── fontes/              os .woff2 versionados (ADR-028): build sem rede
 ├── content/
 │   ├── ciclos/          um arquivo por ciclo + registry server-only
+│   ├── analises.ts      CSD, benchmarking, SWOT, ideação e mapa de empatia, como dado
 │   ├── equipe.ts        os 6 integrantes e seus papéis
 │   ├── checklist.ts     status das evidências da matriz
+│   ├── travas.ts        travas de release versionadas: liberar um ciclo por commit
 │   ├── pitch.ts         fonte única do pitch: slides, tempos, quem fala, notas
 │   ├── tutoriais.ts     o aprendizado guiado de cada perfil
-│   └── produto.ts       nome, problema, pergunta do projeto
+│   └── produto.ts       nome, problema, pergunta e objetivos do projeto
 └── lib/
     ├── cronograma.ts    FONTE ÚNICA DE VERDADE das datas
     ├── datas.ts         aritmética civil em America/Recife
@@ -130,6 +136,7 @@ execução.
 | `npm test` | Vitest |
 | `npm run typecheck` | `tsc --noEmit` — quebra se um ciclo publicado estiver incompleto |
 | `npm run verificar-vazamento` | Prova que conteúdo futuro não vaza (exige `npm run build` antes) |
+| `npm run roteiro` | Regenera a seção slide a slide de `docs/pitch-kickoff.md` a partir de `pitch.ts` |
 | `npm run pitch-pdf` | Gera `public/pitch-kickoff.pdf` e as capturas de `docs/pitch/` a partir de `/pitch` (exige `npm run build` antes) |
 | `npm run e2e` | Playwright |
 | `npm run testar-rls` | Políticas do schema guardado contra um Postgres real (exige `DATABASE_URL_TESTE`) |

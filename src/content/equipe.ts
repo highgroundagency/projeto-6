@@ -67,6 +67,19 @@ export type IntegranteId = (typeof EQUIPE)[number]['id']
 /** Selo dos papéis: vira 'validado' quando a equipe confirmar a distribuição. */
 export const SELO_PAPEIS = 'validado' as const
 
+/**
+ * O nome curto, sem ambiguidade.
+ *
+ * Primeiro nome, que é como a equipe se chama. Mas a equipe tem DOIS Joões, e
+ * "João" numa tabela de responsáveis não diz qual: vira crédito errado, que é
+ * pior que crédito nenhum. Quando o primeiro nome se repete, entra o segundo.
+ */
+export function nomeCurto(id: IntegranteId): string {
+  const partes = integrantePorId(id).nome.split(' ')
+  const repetido = EQUIPE.filter((i) => i.nome.split(' ')[0] === partes[0]).length > 1
+  return repetido ? partes.slice(0, 2).join(' ') : partes[0]
+}
+
 export function integrantePorId(id: IntegranteId): Integrante {
   const integrante = EQUIPE.find((i) => i.id === id)
   if (!integrante) throw new Error(`Integrante desconhecido: ${id}`)

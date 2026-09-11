@@ -3,11 +3,25 @@ import { MarcaCesar } from '@/components/base/marca'
 import { Etiqueta } from '@/components/base/selo'
 import { HorizonteDoRecife } from '@/components/pitch/horizonte'
 import { CartaoScore, MemoriaDeCalculo } from '@/components/sistema/memoria'
-import { integrantePorId } from '@/content/equipe'
+import { WIREFRAMES } from '@/components/wireframe'
+import {
+  BENCHMARKING,
+  CONCLUSAO_CURTA,
+  CSD,
+  PONTO_DE_COMPARACAO,
+  RAZOES_DA_ESCOLHA,
+  SWOT,
+  TECNICAS_DE_IDEACAO,
+} from '@/content/analises'
+import { EQUIPE, nomeCurto } from '@/content/equipe'
 import resultados from '@/content/ml/resultados.json'
 import {
   CAMINHO_DO_NUMERO,
   COMPROMISSOS_ATE_O_SR1,
+  FONTES_DA_PESQUISA,
+  LEGENDAS_DO_WIREFRAME,
+  ROTEIRO,
+  ROTULO_DO_MAPA,
   CONTAGENS_PITCH,
   DEMO_PITCH,
   ETAPAS_DO_MES,
@@ -24,7 +38,14 @@ import {
   inicioDoSlide,
   type Slide,
 } from '@/content/pitch'
-import { CLIENTE, ENDERECO_SITE, INSTITUICAO, PRODUTO, URL_SITE } from '@/content/produto'
+import {
+  CLIENTE,
+  ENDERECO_SITE,
+  INSTITUICAO,
+  OBJETIVOS_ESPECIFICOS,
+  PRODUTO,
+  URL_SITE,
+} from '@/content/produto'
 import { cicloPorId } from '@/lib/cronograma'
 import { avaliacoesDaUnidade, carregarDados } from '@/lib/dados/consultas'
 import { formatarBR } from '@/lib/datas'
@@ -58,8 +79,25 @@ export async function Slides() {
   const unidadeDemo = dados.unidadePorId(DEMO_PITCH.unidadeId)
   const ko = cicloPorId('ko')
 
-  const [capa, problema, quemSofre, ideia, comoFunciona, dadosSlide, riscos, ateOSr1, fechamento] =
-    SLIDES
+  const [
+    capa,
+    roteiro,
+    problema,
+    evidencias,
+    objetivos,
+    quemSofre,
+    csd,
+    referencias,
+    ideacao,
+    escolha,
+    wireframes,
+    ideia,
+    comoFunciona,
+    dadosSlide,
+    riscos,
+    cronograma,
+    fechamento,
+  ] = SLIDES
 
   // O JSON dos modelos é heterogêneo; só o classificador tem acurácia e referência.
   const classificador = resultados.modelos.find((m) => m.modelo === 'classificacao')
@@ -83,11 +121,33 @@ export async function Slides() {
         </h1>
         <p className="slide-apoio text-texto">{capa.apoio}</p>
         <p className="mt-6 text-sm">{CLIENTE.orgao}</p>
+        {/* OS SEIS NOMES na capa. O briefing manda a equipe inteira estar
+            presente e diz que o professor pode perguntar a qualquer um: quem
+            assiste precisa saber de quem é cada rosto antes da primeira fala. */}
+        <ul className="mt-5 flex flex-wrap gap-x-5 gap-y-1 text-sm">
+          {EQUIPE.map((integrante) => (
+            <li key={integrante.id}>{integrante.nome}</li>
+          ))}
+        </ul>
         <MarcaCesar className="mt-8 h-8 self-start" />
         <HorizonteDoRecife className="horizonte" />
       </Quadro>
 
-      {/* 2 · O problema */}
+      {/* 2 · O roteiro. Meio slide, dez segundos: só para a plateia saber onde
+          a fala vai parar. A ordem é a dos sete critérios do briefing. */}
+      <Quadro slide={roteiro}>
+        <Titulo slide={roteiro} />
+        <ol className="cascata mt-8 grid sm:grid-cols-2 md:grid-cols-4">
+          {ROTEIRO.map((parada, indice) => (
+            <li key={parada} className="bloco-raso md:-ml-px">
+              <span className="ordinal">0{indice + 1}</span>
+              <p className="titulo-bloco mt-2 text-xl">{parada}</p>
+            </li>
+          ))}
+        </ol>
+      </Quadro>
+
+      {/* 3 · O problema */}
       <Quadro slide={problema}>
         <Titulo slide={problema} />
         <ol className="cascata relative mt-8 grid md:grid-cols-5">
@@ -113,7 +173,37 @@ export async function Slides() {
         </ol>
       </Quadro>
 
-      {/* 3 · Quem sofre */}
+      {/* 4 · De onde saiu a pesquisa. Uma fonte por cartão, com a data: o
+          critério pede evidência, e evidência sem origem não é evidência. */}
+      <Quadro slide={evidencias}>
+        <Titulo slide={evidencias} />
+        <ol className="cascata mt-8 grid md:grid-cols-3">
+          {FONTES_DA_PESQUISA.map((item, indice) => (
+            <li key={item.fonte} className="bloco-raso md:-ml-px">
+              <span className="ordinal">0{indice + 1}</span>
+              <p className="titulo-bloco mt-2 text-2xl">{item.fonte}</p>
+              <p className="mt-2 text-base">{item.onde}</p>
+            </li>
+          ))}
+        </ol>
+      </Quadro>
+
+      {/* 5 · Os objetivos. O geral é a frase de apoio; os específicos são a
+          grade, cada um com o prazo em que a gente se compromete. */}
+      <Quadro slide={objetivos}>
+        <Titulo slide={objetivos} />
+        <ol className="cascata mt-8 grid sm:grid-cols-2 md:grid-cols-3">
+          {OBJETIVOS_ESPECIFICOS.map((objetivo, indice) => (
+            <li key={objetivo.resumo} className="bloco-raso md:-ml-px">
+              <span className="ordinal">0{indice + 1}</span>
+              <p className="titulo-bloco mt-2 text-xl">{objetivo.resumo}</p>
+              <p className="rotulo mt-2">{objetivo.quando}</p>
+            </li>
+          ))}
+        </ol>
+      </Quadro>
+
+      {/* 6 · Quem sofre */}
       <Quadro slide={quemSofre}>
         <Titulo slide={quemSofre} />
         {/* O MESMO NÚMERO do título, gigante, atrás das três pessoas: é o
@@ -132,9 +222,105 @@ export async function Slides() {
             </li>
           ))}
         </ul>
+        <p className="rotulo mt-4">{ROTULO_DO_MAPA}</p>
       </Quadro>
 
-      {/* 4 · A ideia, ao vivo. A tela é da demonstração; a explicação é da fala. */}
+      {/* 7 · A matriz CSD. Três colunas, a contagem de cada uma no número
+          grande, e os dois primeiros itens como amostra: a matriz inteira é o
+          documento do ciclo, não o slide. */}
+      <Quadro slide={csd}>
+        <Titulo slide={csd} />
+        <dl className="cascata mt-8 grid md:grid-cols-3">
+          {CSD.map((coluna) => (
+            <div key={coluna.chave} className="bloco-raso md:-ml-px">
+              <dt>
+                <span className="numero text-4xl text-texto">{coluna.itens.length}</span>{' '}
+                <span className="rotulo">{coluna.titulo}</span>
+              </dt>
+              <dd className="mt-3">
+                <ul className="space-y-1 text-base">
+                  {coluna.itens.slice(0, 2).map((item) => (
+                    <li key={item.resumo}>{item.resumo}</li>
+                  ))}
+                </ul>
+              </dd>
+            </div>
+          ))}
+        </dl>
+      </Quadro>
+
+      {/* 8 · Benchmarking e SWOT no mesmo slide: os dois respondem à mesma
+          pergunta, o que já existe lá fora e o que temos aqui dentro. */}
+      <Quadro slide={referencias}>
+        <Titulo slide={referencias} />
+        <div className="mt-8 grid gap-8 md:grid-cols-2">
+          <div>
+            <ul className="cascata grid">
+              {BENCHMARKING.slice(0, 3).map((referencia) => (
+                <li key={referencia.curto} className="bloco-raso">
+                  <p className="titulo-bloco text-lg">{referencia.curto}</p>
+                </li>
+              ))}
+            </ul>
+            <p className="mt-4 border-l-2 border-acento pl-3 text-base text-texto">
+              {CONCLUSAO_CURTA}
+            </p>
+          </div>
+          <dl className="cascata grid grid-cols-2">
+            {SWOT.map((quadrante) => (
+              <div key={quadrante.titulo} className="bloco-raso -ml-px">
+                <dt className="rotulo">{quadrante.titulo}</dt>
+                <dd className="mt-2 text-base">{quadrante.curto}</dd>
+              </div>
+            ))}
+          </dl>
+        </div>
+      </Quadro>
+
+      {/* 9 · As três técnicas de ideação, com o tempo de cada e o que saiu. */}
+      <Quadro slide={ideacao}>
+        <Titulo slide={ideacao} />
+        <ol className="cascata mt-8 grid md:grid-cols-3">
+          {TECNICAS_DE_IDEACAO.map((tecnica) => (
+            <li key={tecnica.nome} className="bloco-raso md:-ml-px">
+              <p className="numero text-4xl text-texto">{tecnica.minutos} min</p>
+              <p className="titulo-bloco mt-3 text-xl">{tecnica.nome}</p>
+              <p className="mt-2 text-base">{tecnica.produtoCurto}</p>
+            </li>
+          ))}
+        </ol>
+      </Quadro>
+
+      {/* 10 · A escolha e as quatro razões. As notas das oito alternativas
+          ficam no documento; aqui entra só a que venceu e o porquê. */}
+      <Quadro slide={escolha}>
+        <Titulo slide={escolha} />
+        <ul className="cascata mt-8 grid sm:grid-cols-2 md:grid-cols-4">
+          {RAZOES_DA_ESCOLHA.map((razao) => (
+            <li key={razao.titulo} className="bloco-raso md:-ml-px">
+              <p className="rotulo">{razao.titulo}</p>
+              <p className="mt-2 text-base">{razao.curto}</p>
+            </li>
+          ))}
+        </ul>
+        <p className="mt-6 text-base">{PONTO_DE_COMPARACAO}</p>
+      </Quadro>
+
+      {/* 11 · Do papel para a tela: os quatro wireframes lado a lado. O
+          desenho não tem uma palavra dentro; a legenda vem de pitch.ts. */}
+      <Quadro slide={wireframes}>
+        <Titulo slide={wireframes} />
+        <ol className="mt-6 grid gap-4 sm:grid-cols-2 md:grid-cols-4">
+          {WIREFRAMES.map(({ id, Desenho }, indice) => (
+            <li key={id}>
+              <Desenho className="w-full" />
+              <p className="rotulo mt-2">{LEGENDAS_DO_WIREFRAME[indice]}</p>
+            </li>
+          ))}
+        </ol>
+      </Quadro>
+
+      {/* 12 · A ideia, ao vivo. A tela é da demonstração; a explicação é da fala. */}
       <Quadro slide={ideia} className="slide-demo">
         <Titulo slide={ideia} />
         <div
@@ -153,7 +339,7 @@ export async function Slides() {
         </div>
       </Quadro>
 
-      {/* 5 · Como funciona */}
+      {/* 13 · Como funciona */}
       <Quadro slide={comoFunciona}>
         <Titulo slide={comoFunciona} />
         <ol className="cascata mt-8 grid md:grid-cols-4">
@@ -176,7 +362,7 @@ export async function Slides() {
         </div>
       </Quadro>
 
-      {/* 6 · Dados */}
+      {/* 14 · Dados */}
       <Quadro slide={dadosSlide}>
         <Titulo slide={dadosSlide} />
         <dl className="cascata mt-8 grid md:grid-cols-3">
@@ -203,7 +389,7 @@ export async function Slides() {
         </p>
       </Quadro>
 
-      {/* 7 · Riscos e transparência */}
+      {/* 15 · Riscos e transparência */}
       <Quadro slide={riscos}>
         <Titulo slide={riscos} />
         <dl className="cascata mt-8 grid md:grid-cols-4">
@@ -225,9 +411,10 @@ export async function Slides() {
         </dl>
       </Quadro>
 
-      {/* 8 · Até o SR1 */}
-      <Quadro slide={ateOSr1}>
-        <Titulo slide={ateOSr1} />
+      {/* 16 · O cronograma: os três compromissos até o SR1, cada um com a
+          data que vem do cronograma e o nome de quem puxa. */}
+      <Quadro slide={cronograma}>
+        <Titulo slide={cronograma} />
         <ol className="cascata mt-8 grid md:grid-cols-3">
           {COMPROMISSOS_ATE_O_SR1.map((item, indice) => {
             const ciclo = cicloPorId(item.ciclo)
@@ -240,13 +427,14 @@ export async function Slides() {
                 <p className="rotulo">{ciclo.rotulo.toLowerCase()}</p>
                 <p className="numero mt-1 text-2xl text-texto">{formatarBR(ciclo.data)}</p>
                 <p className="mt-2 text-sm">{item.compromisso}</p>
+                <p className="rotulo mt-2">{nomeCurto(item.quem).toLowerCase()}</p>
               </li>
             )
           })}
         </ol>
       </Quadro>
 
-      {/* 9 · Fechamento */}
+      {/* 17 · Fechamento */}
       <Quadro slide={fechamento} className="grao">
         <h2 className="hero">
           {PRODUTO.nome.toLowerCase()}
@@ -284,7 +472,7 @@ function Quadro({
   children: ReactNode
 }) {
   const indice = SLIDES.findIndex((s) => s.id === slide.id)
-  const quemFala = integrantePorId(slide.quemFala).nome.split(' ')[0]
+  const quemFala = nomeCurto(slide.quemFala)
 
   return (
     <section

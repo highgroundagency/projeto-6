@@ -1024,3 +1024,74 @@ versão cobria as duas. A cena também é larga (1600 por 250) para que, ocupand
 toda, ela fique com um terço da altura do slide em vez de metade. No papel ela é mantida, com
 a mesma exceção que o número gigante já tinha no bloco de impressão.
 
+
+## ADR-039 · O briefing oficial do Kick-off chegou, e o deck dobrou de tamanho
+
+**Contexto.** Na véspera da apresentação, o professor divulgou o briefing do Kick-off. Ele
+traz três coisas que o projeto não conhecia: **sete critérios de avaliação**, uma **estrutura
+mínima de oito seções** para o site da equipe e um **checklist final de dez itens**. Uma
+auditoria do deck e do site contra esse documento devolveu um diagnóstico desconfortável: o
+material existia quase todo, e quase nada dele aparecia onde é avaliado. Personas, SWOT,
+benchmarking e ideação estavam escritos e publicados, soterrados a dois cliques dentro da
+sanfona da semana, sem nenhum link do site apontando para eles, e nenhum dos quatro aparecia
+em slide algum. Três peças não existiam em lugar nenhum: **objetivo geral e específicos**,
+**matriz CSD** e **wireframes de baixa fidelidade**.
+
+**Decisão 1: crescer o deck em vez de cortar.** A diretriz escrita dá cinco minutos mais
+cinco para terminar, e o deck fechava em 4:55. O professor liberou até dez. Com essa
+permissão, cobrir os sete critérios custa menos que escolher quais perder. O deck foi de nove
+para dezessete slides e de 4:55 para 9:00, com um minuto de margem: ensaio que fecha
+exatamente no limite estoura no dia. Os oito slides novos são exatamente os critérios que
+faltavam: o roteiro, as fontes da pesquisa, os objetivos, a matriz CSD, benchmarking com
+SWOT, as técnicas de ideação, a justificativa da escolha, os wireframes e o cronograma com
+responsável.
+
+**O teto de palavras por slide NÃO subiu.** Continua em setenta, imposto em teste. Mais
+slides, não mais texto por slide: dobrar o deck e afrouxar o teto ao mesmo tempo devolveria o
+teleprompter que a ADR-036 tirou. A faixa de fala por integrante subiu de 30 a 90 para 30 a
+130 segundos, porque nove minutos entre seis pessoas dá noventa de média, e o que o teste
+precisa impedir é alguém sumir da apresentação ou tomar conta dela.
+
+**Decisão 2: datar a CSD e os wireframes nesta semana, e dizer isso.** Os dois artefatos não
+existiam. Escrevê-los dentro da Semana 2 e da Semana 3 deixaria o registro mais bonito e
+menos verdadeiro, e o site inteiro vale exatamente pelo que ele registra. Eles entram como
+documentos do ciclo `ko`, e cada um abre dizendo em que semana foi produzido. O documento dos
+wireframes vai além e reconhece a dívida: a Semana 3 prometeu "primeiras telas em papel" como
+produto do Crazy 8's e o artefato nunca foi publicado.
+
+**Decisão 3: as análises viraram dado.** Benchmarking, SWOT, as três técnicas, as oito
+alternativas, as razões da escolha e o mapa de empatia saíram do JSX dos ciclos e foram para
+`src/content/analises.ts`, junto com a matriz CSD. O motivo é o de sempre: agora o slide e o
+documento mostram a mesma coisa, e duas cópias divergem na primeira correção. Cada item da
+CSD carrega a `fonte` que o sustenta, porque é isso que separa uma matriz CSD de uma lista de
+opiniões: certeza sem origem é chute com voz firme.
+
+**Decisão 4: o índice das oito seções mora na página, não no cabeçalho.** O cabeçalho foi
+desenhado para três destinos e estoura a largura de 360px com oito, que é a régua do teste.
+Mas o motivo bom é outro: uma lista numerada na página é também **ordem de leitura**, e é isso
+que serve a quem abre o site para avaliar. Um menu diz onde ir; o índice diz por onde começar,
+na numeração do próprio briefing, de 01 a 08.
+
+**Decisão 5: a biblioteca aponta, não duplica.** A seção de documentos lista todo documento
+publicado com link para a âncora `#doc-<ciclo>-<id>` que já existia desde sempre e que nenhum
+link do site usava. As seções temáticas de usuário, solução e processo também apontam, em vez
+de repetir: conteúdo duplicado é conteúdo que diverge.
+
+**Decisão 6: o cronograma público sai do painel com senha.** Atividades e prazos estavam em
+`src/lib/cronograma.ts`, estado e responsável em `src/content/checklist.ts`, e
+`montarChecklist()` já juntava os dois há semanas. O único consumidor era o painel
+administrativo, ou seja: o professor não via nada disso. A seção nova mostra uma linha por
+semana, e não por evidência, porque com 69 evidências a tabela vira planilha, que é
+exatamente o que este projeto existe para não ser. Semana ainda não liberada aparece com o
+**plano**, nunca com o registro: o calendário da disciplina é público, o texto do que
+aconteceu é que passa pelo release.
+
+**Consequência, e o que a auditoria deixou anotado.** Três incoerências do registro foram
+corrigidas de passagem, todas do tipo que a banca acha em dois cliques: o checklist marcava
+como "feito" o registro das três dinâmicas de ideação que a própria Semana 3 declara
+pendente; duas evidências da Semana 4 não tinham estado declarado e caíam em "a fazer" em
+silêncio, uma delas sendo o cronograma de execução, item nomeado pelo professor; e os links
+do checklist apontavam para a semana, não para o documento. Fica em aberto um item do
+checklist do professor: a apresentação salva na pasta do Drive da equipe, referenciada no
+site. A variável está prevista no código e vazia; sem a URL da pasta, o site não mostra link
+nenhum.

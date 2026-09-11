@@ -292,12 +292,12 @@ feedback de professor ou de cliente seria fabricar evidência.
       Referência | O que serve | O que não serve
 
        Painéis de indicadores de entes públicos | Transparência ativa, indicador com ficha técnica e série histórica | São vitrines de divulgação: não calculam efeito financeiro nem guardam trilha de decisão
-       Sistemas de monitoramento de metas do SUS | Indicador com fonte, periodicidade e meta pactuada, vocabulário que a SESAU já usa | Regra de cálculo fixa no sistema; nossa portaria muda e precisa ser parametrizável
-       Ferramenta de OKR (acompanhamento de objetivos) | Cadência de check-in, responsável por resultado e visualização de progresso | Não versiona regra normativa nem produz memória de cálculo auditável
+       Sistemas de monitoramento de metas do SUS | Indicador com fonte, periodicidade e meta pactuada, vocabulário que a SESAU já usa | Regra de cálculo fixa no sistema; nossa portaria muda e precisa ser ajustável
+       Ferramenta de OKR (acompanhamento de objetivos) | Cadência de check-in, responsável por resultado e visualização de progresso | Não guarda versão de regra normativa nem produz conta conferível
        Ferramenta de OKR (gestão por resultados corporativa) | Peso por objetivo e agregação de score, modelo matemático parecido com o nosso | Score é gerencial, não é ato administrativo com efeito em folha; e a licença por usuário não cabe no órgão
-       Planilha atual da CAM | Flexibilidade total e custo zero de adoção | Sem trilha, sem versionamento, sem controle de acesso e com o conhecimento preso em quem a escreveu
+       Planilha atual da comissão | Flexibilidade total e custo zero de adoção | Sem trilha, sem versão, sem controle de acesso e com o conhecimento preso em quem a escreveu
 
-      Conclusão do benchmarking: nenhuma ferramenta pronta cobre a combinação “regra normativa versionada + memória de cálculo + trilha de auditoria”. Ela é o núcleo do problema: e é por isso que a decisão foi construir.
+      Conclusão do benchmarking: Nenhuma ferramenta pronta junta as três coisas: regra com versão, conta aberta e registro de quem mudou. Essa combinação é o núcleo do problema, e é por isso que a decisão foi construir.
 
   >>> ANÁLISE SWOT
       âncora no site: #doc-s2-swot
@@ -305,27 +305,27 @@ feedback de professor ou de cliente seria fabricar evidência.
 
       Forças
 
-       - Cliente real, com processo documentado em portaria
+       - Cliente real, com processo escrito em portaria
        - Equipe de seis com frentes bem separadas
        - Problema com regra explícita: dá para modelar e testar
 
       Fraquezas
 
-       - Sem acesso à portaria vigente no início do projeto
-       - Nenhum integrante conhece o processo por dentro
-       - Janela de um semestre para um domínio com regra complexa
+       - Ninguém da equipe conhece o processo por dentro
+       - A portaria só chegou na quinta semana
+       - Um semestre para um domínio com regra complexa
 
       Oportunidades
 
-       - Uma tentativa anterior de automatizar foi abandonada: há demanda represada
-       - Transparência do cálculo é ganho direto para o gestor avaliado
-       - Dados de indicadores viabilizam a lente de ML no mesmo case
+       - Uma tentativa anterior foi abandonada: há demanda represada
+       - A conta aberta é ganho direto para quem é avaliado
+       - Os mesmos dados alimentam a lente de aprendizado de máquina
 
       Ameaças
 
-       - Agenda da CAM pode inviabilizar a validação com o cliente
+       - A agenda da comissão pode inviabilizar a validação
        - Mudança de portaria durante o semestre
-       - Escopo crescer para folha de pagamento, que está fora do projeto
+       - O escopo crescer para a folha de pagamento, que está fora
 
   >>> OBJETIVOS SMART
       âncora no site: #doc-s2-objetivos
@@ -453,36 +453,36 @@ feedback de professor ou de cliente seria fabricar evidência.
 
       Brainstorming
       25 minDiscussão aberta a partir das folhas do brainwriting, agrupando ideias parecidas e nomeando os grupos.
-      Produto: de 6 a 8 alternativas distintas, já agrupadas.
+      Produto: De 6 a 8 alternativas distintas, já agrupadas.
 
-      Crazy 8’s
+      Crazy 8's
       8 minOito esboços de tela em oito minutos, individualmente, para as duas alternativas mais votadas.
-      Produto: primeiras telas em papel, insumo do protótipo.
+      Produto: Primeiras telas em papel, insumo do protótipo.
 
   >>> ALTERNATIVAS LEVANTADAS
       âncora no site: #doc-s3-alternativas
-      as oito ideias e a matriz de impacto × esforço × aderência.
+      as oito ideias e a matriz de impacto, esforço e aderência.
 
       Alternativa | Impacto | Esforço | Aderência | Situação
 
        Planilha padronizada com validação e trava de fórmula | 2 | 1 | 4 | Linha de base
-       Formulário de coleta + planilha de consolidação | 2 | 2 | 4 | Descartada
-       Sistema web com regra parametrizável e memória de cálculo | 5 | 4 | 5 | Escolhida
+       Formulário de coleta mais planilha de junção | 2 | 2 | 4 | Descartada
+       Sistema web com regra ajustável e a conta aberta | 5 | 4 | 5 | Escolhida
        Painel de indicadores sem cálculo de gratificação | 2 | 3 | 3 | Descartada
-       Robô que lê as planilhas e consolida sozinho | 3 | 4 | 2 | Descartada
-       Módulo dentro de um ERP público existente | 4 | 5 | 2 | Descartada
-       Aplicativo mobile para o gestor avaliado | 2 | 3 | 2 | Adiada
-       Modelo preditivo de risco de não-atingimento | 3 | 3 | 4 | Incorporada
+       Robô que lê as planilhas e junta tudo sozinho | 3 | 4 | 2 | Descartada
+       Módulo dentro de um sistema público já existente | 4 | 5 | 2 | Descartada
+       Aplicativo de celular para o gestor avaliado | 2 | 3 | 2 | Adiada
+       Modelo que prevê risco de não bater a meta | 3 | 3 | 4 | Incorporada
 
   >>> JUSTIFICATIVA DA ESCOLHA
       âncora no site: #doc-s3-justificativa
       por que a alternativa escolhida venceu as outras.
 
-      - Impacto: ataca a causa do problema, a regra da portaria hoje só existe dentro de fórmulas de planilha.
-       - Aderência: parametrizar indicadores e regras pela interface permite que mudança de portaria não vire mudança de software.
-       - Esforço: alto, mas fatiável: lançamento, cálculo e memória cabem até o SR1; auditoria e gestão vêm nas sprints.
-       - Sinergia: o modelo preditivo não virou produto separado; entrou como funcionalidade da mesma base de dados.
-      A alternativa “melhorar a planilha” continua na matriz de propósito: ela é a régua contra a qual o ganho do sistema é medido na validação da Semana 11.
+      - Impacto: Ataca a causa do problema: a regra da portaria hoje só existe dentro de fórmulas de planilha.
+       - Aderência: Ajustar indicadores e regras pela interface faz com que mudança de portaria não vire mudança de software.
+       - Esforço: Alto, mas fatiável: lançamento, cálculo e conta aberta cabem até o SR1; auditoria e gestão vêm nas sprints.
+       - Sinergia: O modelo que prevê risco não virou produto separado: entrou como funcionalidade da mesma base.
+      A alternativa de melhorar a planilha continua na matriz de propósito: ela é o ponto de comparação contra o qual o ganho do sistema é medido na validação da Semana 11.
 
 --- S4 · Semana 4: Proposta · 29/08/2026 ---------------------------------------------------
 
@@ -619,8 +619,8 @@ feedback de professor ou de cliente seria fabricar evidência.
 
   Objetivo da semana  [validado, validado por gabriel]
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  Apresentar em 5 minutos o problema, sua relevância, a ideia priorizada e o direcionamento
-  do projeto, com fala distribuída entre os seis, direto do site.
+  Apresentar o problema, os objetivos, as análises, a ideação, a solução e o cronograma
+  dentro dos dez minutos liberados, com fala distribuída entre os seis, direto do site.
 
   Avanços  [validado, validado por gabriel]
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -635,6 +635,19 @@ feedback de professor ou de cliente seria fabricar evidência.
     modelo e corrige dois pontos.
   - PDF e capturas gerados a partir da própria rota, na identidade do site. O PDF é
     baixável pelo próprio deck, para o caso de a sala não ter rede.
+  - O briefing oficial do Kick-off chegou na véspera, com sete critérios de avaliação e uma
+    estrutura mínima de oito seções para o site. A auditoria contra ele achou três peças
+    que não existiam em lugar nenhum: objetivo geral e específicos, a matriz CSD e os
+    wireframes de baixa fidelidade. As três foram produzidas nesta semana e estão nos
+    documentos abaixo, com a data verdadeira.
+  - O deck cresceu de nove para dezessete slides e de 4:55 para 9:00, dentro dos dez
+    minutos que o professor liberou. Os slides novos cobrem exatamente os critérios que não
+    apareciam: objetivos, as fontes da pesquisa, a matriz CSD, benchmarking com SWOT, as
+    técnicas de ideação, a justificativa da escolha, os wireframes e o cronograma com
+    responsável.
+  - O site ganhou o índice das oito seções no topo, a biblioteca com todos os documentos
+    publicados e o cronograma das 18 semanas com estado e responsável, que até aqui só
+    existia atrás da senha do painel.
 
   Decisões  [validado, validado por gabriel]
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -658,6 +671,20 @@ feedback de professor ou de cliente seria fabricar evidência.
   - Abrir pelo problema, não pela solução.
       por quê: A relevância do case é o que sustenta o projeto; a tecnologia é
       consequência.
+  - Crescer o deck em vez de cortar, usando os dez minutos liberados.
+      por quê: O briefing cobra sete critérios, e três deles não apareciam em slide nenhum
+      na versão de 4:55. Com a permissão dos dez minutos, cobrir os sete custa menos que
+      escolher quais perder. Ficou um minuto de margem: ensaio que fecha no limite estoura
+      no dia.
+  - Datar a matriz CSD e os wireframes nesta semana, e dizer isso no documento.
+      por quê: Os dois artefatos não existiam. Escrevê-los como se fossem de agosto
+      deixaria o registro mais bonito e menos verdadeiro, e o site inteiro vale pelo que
+      ele registra. A Semana 3 prometeu telas em papel e não publicou: o documento dos
+      wireframes reconhece isso em vez de esconder.
+  - O índice das oito seções mora na página, não no cabeçalho.
+      por quê: O cabeçalho foi desenhado para três destinos e estoura em 360px com oito. O
+      índice na página também serve de ordem de leitura para quem avalia, coisa que um menu
+      não faz.
 
   Bloqueios  [validado, validado por gabriel]
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -666,6 +693,11 @@ feedback de professor ou de cliente seria fabricar evidência.
   - O motor ainda calcula pela régua deduzida na reunião de 22/08, não pela portaria: a
     média das notas dos subindicadores e a redistribuição de peso do art. 8º entram como
     regra versão 3 na Semana 5.
+  - O benchmarking não nomeia concorrentes: as cinco referências são categorias de
+    ferramenta, não produtos identificados. Nomeá-las exige um levantamento que não coube
+    nesta semana.
+  - A dinâmica real das três técnicas de ideação continua sem registro em foto ou artefato:
+    o que está publicado é o roteiro previsto, e o checklist foi corrigido para dizer isso.
 
   Feedback recebido  [validado, validado por gabriel]
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -681,44 +713,61 @@ feedback de professor ou de cliente seria fabricar evidência.
   - Preparar as respostas das perguntas prováveis da banca, listadas no documento abaixo.
   - Entrar na Semana 5 com a régua oficial carregada no motor como regra versão 3, e com o
     diagrama de arquitetura pronto.
+  - Subir o PDF da apresentação para a pasta da equipe no Drive e ligar o link no site, que
+    é o último item do checklist do professor ainda em aberto.
+  - Levar à secretaria as cinco dúvidas da matriz CSD, a começar pela redistribuição de
+    peso do art. 8º.
 
   Responsáveis  [validado, validado por gabriel]
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  - Gabriel Tenório de Lima Teixeira: Fala: capa, o problema e o fechamento.
-  - Matheus Lustosa: Fala: quem sofre com o problema.
-  - João Pedro Mamede: Fala: a ideia priorizada, com a demonstração ao vivo.
-  - João Henrique Micucci: Fala: como funciona, regra como dado.
-  - Rafael Serpa: Fala: os dados e o que os modelos respondem.
-  - Fernando Cavalcanti: Fala: riscos, transparência e o caminho até o SR1.
+  - Gabriel Tenório de Lima Teixeira: Fala: capa, o problema, os objetivos e o fechamento.
+  - Matheus Lustosa: Fala: as fontes da pesquisa, quem sofre com o problema e a matriz CSD.
+  - João Pedro Mamede: Fala: as técnicas de ideação, por que a ideia venceu e os
+    wireframes.
+  - João Henrique Micucci: Fala: a demonstração ao vivo e a regra guardada como dado.
+  - Rafael Serpa: Fala: os dados, os modelos e os riscos.
+  - Fernando Cavalcanti: Fala: o roteiro, o benchmarking com a SWOT e o cronograma.
 
   Evidências  [validado, validado por gabriel]
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   - [prototipo] Os slides do pitch, no site -> /pitch
   - [documento] A régua oficial -> #doc-ko-regua-oficial
   - [documento] Roteiro do pitch -> #doc-ko-roteiro-pitch
+  - [documento] Objetivo geral e específicos -> #doc-ko-objetivos
+  - [documento] Matriz CSD -> #doc-ko-csd
+  - [prototipo] Wireframes de baixa fidelidade -> #doc-ko-wireframes
+  - [documento] Os sete critérios do Kick-off -> #doc-ko-criterios
   - [codigo] Roteiro, PDF e portaria transcrita ->
     https://github.com/highgroundagency/projeto-6/tree/main/docs
 
-  Documentos de entrega desta semana (3)
+  Documentos de entrega desta semana (7)
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-  >>> ROTEIRO DO PITCH: 4 MINUTOS E 55 SEGUNDOS
+  >>> ROTEIRO DO PITCH: 9:00
       âncora no site: #doc-ko-roteiro-pitch
-      os nove slides, com o tempo, quem fala e o que a tela mostra em cada um.
+      os 17 slides, com o tempo, quem fala e o que a tela mostra em cada um.
 
       Começa em | Slide | Quem fala | O que a tela mostra | Tempo
 
-       0:00 | 1. prumo | Gabriel | Wordmark, uma linha, e a pílula do marco: kick-off, data e equipe. | 0:05
-       0:05 | 2. todo mês, uma conta feita à mão | Gabriel | O caminho do dinheiro em cinco passos, com o ponto que quebra em destaque. | 0:35
-       0:40 | 3. três pessoas, o mesmo número | Matheus | Três cartões, um por pessoa afetada, com o medo de cada uma. | 0:40
-       1:20 | 4. a nota com a conta aberta | João | A nota e a conta inteira, do sistema de verdade, para uma unidade de teste. | 0:45
-       2:05 | 5. cada mês guarda a regra que usou | João | O caminho de um número em quatro passos, e quem faz o quê. | 0:45
-       2:50 | 6. nenhum dado real. ainda. | Rafael | O tamanho da base de teste, e o que os modelos acertam e erram. | 0:40
-       3:30 | 7. o que pode dar errado, dito antes | Fernando | Quatro contagens do que já foi mapeado, cada uma com o estado dela. | 0:40
-       4:10 | 8. de hoje ao sr1: três semanas | Fernando | Os três marcos até o SR1, com data e compromisso. | 0:30
-       4:40 | 9. prumo | Gabriel | Wordmark, o endereço do site e a pergunta para a banca. | 0:15
+       0:00 | 1. prumo | Gabriel | Wordmark, a pílula do marco e os seis nomes da equipe. | 0:20
+       0:20 | 2. o caminho de hoje | Fernando | As sete paradas do roteiro, numeradas. | 0:10
+       0:30 | 3. todo mês, uma conta feita à mão | Gabriel | O caminho do dinheiro em cinco passos, com o ponto que quebra em destaque. | 0:40
+       1:10 | 4. não é impressão nossa | Matheus | As três fontes da pesquisa, cada uma com a data. | 0:30
+       1:40 | 5. o que o sistema tem que fazer | Gabriel | O objetivo geral e os cinco específicos, cada um com o prazo. | 0:35
+       2:15 | 6. três pessoas, o mesmo número | Matheus | A fala do mapa de empatia e os três cartões de quem é afetado. | 0:40
+       2:55 | 7. o que sabemos, e o que ainda é chute | Matheus | As três colunas da matriz, com a contagem e dois exemplos de cada. | 0:30
+       3:25 | 8. quem mais resolve isso, e o que joga a favor | Fernando | As referências com o veredito, e os quatro quadrantes da SWOT. | 0:35
+       4:00 | 9. como a gente gerou ideias | João | As três técnicas, com o tempo e o que cada uma produziu. | 0:35
+       4:35 | 10. por que essa ideia venceu | João | A alternativa escolhida, as quatro razões e o que ficou de comparação. | 0:30
+       5:05 | 11. do papel para a tela | João | Os quatro wireframes, um por tela, com a legenda de cada. | 0:35
+       5:40 | 12. a nota com a conta aberta | João | A nota e a conta inteira, do sistema de verdade, para uma unidade de teste. | 0:45
+       6:25 | 13. cada mês guarda a regra que usou | João | O caminho de um número em quatro passos, e quem faz o quê. | 0:35
+       7:00 | 14. nenhum dado real. ainda. | Rafael | O tamanho da base de teste, e o que os modelos acertam e erram. | 0:30
+       7:30 | 15. o que pode dar errado, dito antes | Rafael | Quatro contagens do que já foi mapeado, cada uma com o estado dela. | 0:30
+       8:00 | 16. as dezoito semanas, e onde estamos | Fernando | A linha do semestre com os marcos, e as entregas do próximo mês com dono. | 0:35
+       8:35 | 17. prumo | Gabriel | Wordmark, o endereço do site e a pergunta para a banca. | 0:25
 
-      Soma: 4:55. A fala de cada slide está nas notas do apresentador, em /pitch, com a tecla n. Quem fala não opera: uma pessoa fica na tela o tempo todo, avançando com as setas. O deck baixa o PDF de reserva pelo próprio cabeçalho, para o caso de a sala não ter rede.
+      Soma: 9:00. A fala de cada slide está nas notas do apresentador, em /pitch, com a tecla n. Quem fala não opera: uma pessoa fica na tela o tempo todo, avançando com as setas. O deck baixa o PDF de reserva pelo próprio cabeçalho, para o caso de a sala não ter rede.
 
   >>> A RÉGUA OFICIAL: PORTARIA CONJUNTA Nº 001/2024
       âncora no site: #doc-ko-regua-oficial
@@ -756,6 +805,119 @@ feedback de professor ou de cliente seria fabricar evidência.
        - "Por que o banco está desligado?" Porque o MVP não precisa dele para provar a tese, e ligar um banco a um repositório público com dado de servidor seria o risco errado na hora errada. O schema PostgreSQL com RLS e gatilhos está escrito e testado contra um banco real; a camada de dados isola as telas para ele entrar sem reescrever tela.
        - "Como garantem que não há dado real?" A base é gerada por script com semente fixa, e há teste que falha se um CPF, e-mail ou telefone aparecer nela. A planilha anonimizada do cliente não entrou no repositório, e nenhum dado real entra em prompt de IA.
       O Kick-off tem peso formativo na matriz: a nota não vem daqui, mas o direcionamento que sai da arguição orienta tudo até o SR1.
+
+  >>> OBJETIVO GERAL E OBJETIVOS ESPECÍFICOS
+      âncora no site: #doc-ko-objetivos
+      o que o produto tem que fazer, e até quando cada parte fica de pé.
+
+      Escritos na semana do Kick-off. Até aqui o projeto tinha metas de entrega da disciplina, com data de marco, mas não tinha o objetivo do PRODUTO dito com todas as letras. O briefing do Kick-off cobra os dois, e eles não são a mesma coisa.
+      Tirar o cálculo da gratificação da planilha e entregar um sistema em que a conta de cada nota fica aberta: qualquer pessoa refaz o número e vê de onde ele veio.
+      Objetivo geral
+
+       Objetivo específico | O que ele exige | Verificável em
+
+       a regra como dado | Guardar a regra da portaria fora do código, com versão, para que mudança de regra deixe de ser mudança de programa e o mês já fechado continue mostrando o mesmo resultado. | Semana 5
+       a conta sempre aberta | Mostrar, em toda tela que exibe um resultado, a conta inteira que levou até ele: o que a unidade informou, o alvo, o peso e quanto cada item somou na nota. | SR1
+       nada muda sem registro | Registrar quem mudou o quê, quando, e qual era o valor antes, sem apagar nada, para que qualquer resultado contestado possa ser refeito passo a passo. | Semana 9
+       cada um vê o que é seu | Separar o que cada um dos quatro papéis do processo pode ver e fazer, de modo que quem envia o número não seja quem escolhe o alvo. | SR1
+       conferido com o cliente | Provar com a Secretaria que a conta do sistema bate com a conta da planilha que eles usam hoje, e registrar as diferenças que aparecerem. | Semana 11
+
+      Não confundir com os Objetivos SMART da Semana 2: aqueles são metas de entrega da disciplina (ter o motor coberto por testes até a Semana 6, coletar feedback na Semana 11). Estes dizem o que o sistema tem de fazer. Os dois convivem, e nenhum substitui o outro.
+
+  >>> MATRIZ CSD: CERTEZAS, SUPOSIÇÕES E DÚVIDAS
+      âncora no site: #doc-ko-csd
+      o que sabemos com fonte, o que assumimos para poder andar, e o que falta perguntar.
+
+      Montada na semana do Kick-off, e não em agosto. O material estava todo escrito, só que espalhado: as suposições moravam em comentário de código e numa nota da Semana 3, as certezas na portaria transcrita, e as dúvidas na ata da reunião de 22/08. O que faltava era a matriz.
+
+      Certezas
+
+       Certezas | De onde vem
+
+       A Portaria Conjunta nº 001/2024, no Diário Oficial do Recife nº 131 de 21/09/2024, detalha os cinco indicadores, os subindicadores e os pesos por função. | docs/portaria-001-2024.md
+       O fechamento mensal passa por planilha, e a conferência é linha a linha, feita por poucas pessoas. | enunciado do case e reunião de 22/08
+       O art. 7º manda a SEGTES pedir a implantação do resultado na folha até o 6º dia útil do segundo mês. Não é indicador de vitrine: é dinheiro no salário. | Portaria, art. 7º
+       A Comissão de Avaliação de Metas reúne sete áreas da prefeitura e delibera com quórum de quatro. | Portaria, arts. 5º e 6º
+       Houve uma tentativa anterior de automatizar o cálculo, abandonada. É demanda represada, e também um aviso sobre o que não repetir. | enunciado do case
+       O art. 9º dá 10 dias corridos para o gestor contestar e 5 dias úteis para a comissão responder. | Portaria, art. 9º
+
+      Suposições
+
+       Suposições | De onde vem
+
+       A nota do distrito é a média das notas das unidades, sem ponderar por porte. A agregação real pode ser diferente, e se for vira campo da regra, não reescrita do sistema. | src/lib/calculo/motor.ts
+       O desenho do cálculo foi deduzido do case e da conversa com o cliente. A planilha que a Secretaria prometeu mandar é que decide se ele está certo. | Semana 3, nota das suposições declaradas
+       Cada ciclo é um mês fechado, com envio das unidades até o dia 20. Um ciclo com outro recorte quebraria a tela de fechamento, não a conta. | Portaria, art. 7º, lido como regra geral
+       Hoje o número sai da unidade em planilha ou e-mail. Se houver sistema de origem, a coleta muda de forma e o lançamento manual vira exceção. | reunião de 22/08, não confirmado
+       O sistema registra o resultado; a deliberação da comissão continua acontecendo em reunião. Se ela quiser deliberar por dentro, entra uma tela nova. | leitura do art. 6º pela equipe
+
+      Dúvidas
+
+       Dúvidas | De onde vem
+
+       O art. 8º manda desconsiderar o indicador sem lançamento e redistribuir o peso proporcionalmente. Falta saber se a redistribuição é sobre os pesos do grupo ou sobre o total. | a perguntar à Secretaria, entra na regra v3
+       A portaria diz que a comissão divulga o resultado. Não sabemos em que veículo, nem se o gestor recebe aviso individual. | a perguntar à Secretaria
+       Existe prazo, mas não sabemos se o recurso é processo em papel, e-mail ou formulário. Isso decide como a tela de contestação vai conversar com o que já existe. | a perguntar à Secretaria
+       Hoje tudo é inventado por um gerador. Falta saber se existe caminho para o sistema receber dado de verdade, com que base legal e sob qual responsabilidade. | lente de Direito, docs/privacidade.md
+       A validação com o cliente está marcada para a Semana 11. Se a agenda da comissão não abrir, a prova do sistema contra a planilha escorrega para o SR2. | risco declarado na SWOT da Semana 2
+
+      Toda linha da primeira coluna tem origem verificável, e é isso que separa uma matriz CSD de uma lista de opiniões: certeza sem fonte é chute com voz firme. As suposições estão declaradas também dentro do código, onde elas agem.
+
+  >>> WIREFRAMES DE BAIXA FIDELIDADE
+      âncora no site: #doc-ko-wireframes
+      os quatro desenhos das telas centrais, em traço de papel.
+
+      Desenhados na semana do Kick-off, a partir das telas que já existiam. A Semana 3 prometeu as primeiras telas em papel como produto do Crazy 8’s, e o artefato não chegou a ser publicado; em vez de datá-lo em agosto, ele nasce aqui, com a data certa.
+      Não há uma palavra dentro dos desenhos, e isso é de propósito: wireframe de baixa fidelidade usa barra cinza no lugar de texto para a conversa ser sobre onde cada coisa fica, e não sobre a escolha da frase.
+
+      o lançamento do mês
+
+       -
+       -
+
+      a nota com a conta
+
+       -
+       -
+       -
+       -
+       -
+       -
+       -
+
+      o painel do distrito
+
+       -
+       -
+       -
+       -
+       -
+       -
+
+      o resultado do gestor
+
+       -
+       -
+
+      A tela pronta que saiu do segundo desenho está em /sistema e dentro do slide da demonstração, rodando com dados de teste. O par entre o desenho e a tela é a resposta ao critério de solução do Kick-off.
+
+  >>> OS SETE CRITÉRIOS DO KICK-OFF, E ONDE CADA UM ESTÁ
+      âncora no site: #doc-ko-criterios
+      o mapa para quem avalia: cada critério do briefing com o link do que o sustenta.
+
+      O briefing do Kick-off lista sete critérios e pede que todo o material esteja organizado no site da equipe. Esta tabela existe para quem avalia não ter que procurar: cada linha aponta para o documento ou a seção que sustenta aquele critério.
+
+       Critério | O que o briefing pede | Onde está
+
+       1. Problema | Descrição clara do desafio e evidências de pesquisa: dados, contexto e referências | Seção “o problema” na página inicial; “O processo hoje” na Semana 2; “O que já sabemos” na Semana 1; a portaria transcrita neste ciclo; slides 3 e 4
+       2. Objetivos | Objetivo geral e objetivos específicos alinhados ao problema | O documento de objetivos acima; os Objetivos SMART na Semana 2; slide 5
+       3. Análises | CSD, mapa de empatia, personas, benchmarking e SWOT | A matriz CSD acima; “Personas e mapa de empatia”, “Benchmarking” e “Análise SWOT” na Semana 2; slides 6, 7 e 8
+       4. Ideação | Evidência das técnicas aplicadas e justificativa da ideia escolhida | “Roteiro das três técnicas”, “Alternativas levantadas” e “Justificativa da escolha” na Semana 3; slides 9 e 10
+       5. Solução | Solução inicial e protótipos de baixa fidelidade com wireframes | Os wireframes acima; “Proposta em uma página”, “Escopo” e “Backlog inicial” na Semana 4; o sistema rodando em /sistema; slides 11, 12 e 13
+       6. Cronograma | Atividades, estado, prazos e responsáveis | A seção de cronograma na página inicial, com as 18 semanas, o estado de cada entrega e quem responde por ela; slide 16
+       7. Documentação | Todo o conteúdo organizado no site da equipe | A seção de documentos na página inicial, com os documentos de todas as semanas publicadas, e o índice das oito seções no topo
+
+      O que o briefing chama de Google Site é, aqui, este próprio site: ele é versionado no Git, tem release por ciclo e é o artefato avaliado. A apresentação fica em /pitch, e o PDF dela é baixável pelo próprio deck.
 
 --- S5 · Semana 5: Arquitetura · 19/09/2026 ------------------------------------------------
 
@@ -2148,40 +2310,53 @@ histórico de quem mudou o quê e quando, que é exatamente o que o projeto defe
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   - [feito] Pesquisa estruturada (Matheus Lustosa)
   - [feito] Problema contextualizado (Matheus Lustosa)
-  - [feito] Personas e stakeholders (Matheus Lustosa) -> /#ciclo-s2
-  - [feito] Mapa de empatia (Matheus Lustosa) -> /#ciclo-s2
-  - [feito] Benchmarking (Fernando Cavalcanti)
-  - [feito] SWOT (Gabriel Tenório de Lima Teixeira)
-  - [feito] Objetivos (Gabriel Tenório de Lima Teixeira)
+  - [feito] Personas e stakeholders (Matheus Lustosa) -> /#doc-s2-personas
+  - [feito] Mapa de empatia (Matheus Lustosa) -> /#doc-s2-personas
+  - [feito] Benchmarking (Fernando Cavalcanti) -> /#doc-s2-benchmarking
+  - [feito] SWOT (Gabriel Tenório de Lima Teixeira) -> /#doc-s2-swot
+  - [feito] Objetivos (Gabriel Tenório de Lima Teixeira) -> /#doc-s2-objetivos
   - [validado] Cronograma inicial (João Henrique Micucci)
 
   S3 · Semana 3: Ideação · 22/08/2026
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  - [feito] Brainwriting, Brainstorming e Crazy 8's registrados (João Pedro Mamede)
-  - [feito] Alternativas levantadas (João Pedro Mamede)
+  - [em andamento] Brainwriting, Brainstorming e Crazy 8's registrados (João Pedro Mamede)
+    -> /#doc-s3-tecnicas-ideacao
+  - [feito] Alternativas levantadas (João Pedro Mamede) -> /#doc-s3-alternativas
   - [feito] Critérios de decisão (Gabriel Tenório de Lima Teixeira)
-  - [feito] Ideia escolhida com justificativa (Gabriel Tenório de Lima Teixeira)
-  - [feito] Reunião com o cliente registrada (Matheus Lustosa) -> /#ciclo-s3
+  - [feito] Ideia escolhida com justificativa (Gabriel Tenório de Lima Teixeira) ->
+    /#doc-s3-justificativa
+  - [feito] Reunião com o cliente registrada (Matheus Lustosa) -> /#doc-s3-reuniao-cliente
 
   S4 · Semana 4: Proposta · 29/08/2026
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  - [feito] Proposta de solução (Gabriel Tenório de Lima Teixeira)
-  - [feito] Escopo preliminar (João Henrique Micucci)
-  - [feito] Backlog inicial (Gabriel Tenório de Lima Teixeira)
+  - [feito] Proposta de solução (Gabriel Tenório de Lima Teixeira) -> /#doc-s4-proposta
+  - [feito] Escopo preliminar (João Henrique Micucci) -> /#doc-s4-escopo
+  - [feito] Backlog inicial (Gabriel Tenório de Lima Teixeira) -> /#doc-s4-backlog
+  - [validado] Papéis (Gabriel Tenório de Lima Teixeira)
+  - [feito] Cronograma de execução (Fernando Cavalcanti) -> /#cronograma
 
   KO · Kick-off · 12/09/2026
   ~~~~~~~~~~~~~~~~~~~~~~~~~~
-  - [em andamento] Pitch de 5 min: problema, relevância, ideia priorizada, direcionamento
-    (Gabriel Tenório de Lima Teixeira)
-  - [em andamento] Fala distribuída entre os 6 integrantes (João Pedro Mamede)
+  - [em andamento] Pitch: problema, objetivos, análises, ideação, solução e cronograma
+    (Gabriel Tenório de Lima Teixeira) -> /pitch
+  - [em andamento] Fala distribuída entre os 6 integrantes (João Pedro Mamede) ->
+    /#doc-ko-roteiro-pitch
+  - [feito] Objetivo geral e objetivos específicos (Gabriel Tenório de Lima Teixeira) ->
+    /#doc-ko-objetivos
+  - [feito] Matriz CSD (Matheus Lustosa) -> /#doc-ko-csd
+  - [feito] Wireframes de baixa fidelidade (João Pedro Mamede) -> /#doc-ko-wireframes
+
+  S5 · Semana 5: Arquitetura · 19/09/2026
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  - [em andamento] Fluxo de dados (Rafael Serpa)
 
 
   Totais
   ~~~~~~
-  - feito: 18
-  - validado: 2
-  - em andamento: 2
-  - total de evidências acompanhadas: 22
+  - feito: 21
+  - validado: 3
+  - em andamento: 4
+  - total de evidências acompanhadas: 28
 
 ============================================================================================
 9.  FUNCIONALIDADES DO SITE, UMA A UMA
@@ -2445,13 +2620,20 @@ banca pergunte. Auditoria que só encontra acerto não auditou nada.
   onde está:
     - src/content/ciclos/s2.tsx: cinco documentos renderizados dentro do site, sem PDF
 
-  [atendido] ideacao
-  ~~~~~~~~~~~~~~~~~~
+  [parcial] ideacao
+  ~~~~~~~~~~~~~~~~~
   pedido: "Semana 3: Brainwriting, Brainstorming e Crazy 8’s; alternativas, critérios e
   justificativa."
 
   onde está:
     - src/content/ciclos/s3.tsx: roteiro das três técnicas, alternativas e justificativa
+    - src/content/analises.ts: as técnicas e as oito alternativas como dado, lidas também
+      pelo pitch
+
+  RESSALVA: O que está publicado é o ROTEIRO previsto das três dinâmicas, não o registro do
+  que aconteceu: não há foto nem artefato da sessão. O bloqueio está declarado na Semana 3,
+  e o checklist foi corrigido de "feito" para "em andamento" em 11/09, porque ele
+  contradizia o próprio registro.
 
   [atendido] proposta
   ~~~~~~~~~~~~~~~~~~~
@@ -2543,10 +2725,10 @@ banca pergunte. Auditoria que só encontra acerto não auditou nada.
 
 --- Placar da auditoria --------------------------------------------------------------------
 
-  - atendido: 18
-  - parcial: 5
+  - atendido: 17
+  - parcial: 6
   - fora de escopo: 1
-  - total de requisitos rastreados: 24
+  - total de requisitos rastreados: 30
 
 ============================================================================================
 11.  AS REGRAS QUE NÃO SE NEGOCIAM
@@ -2634,6 +2816,7 @@ Os porquês completos estão em `docs/decisoes.md`. Os títulos, aqui:
     que a fala carrega
   - ADR-037 · O deck ganhou movimento, e cada animação conta uma parte da história
   - ADR-038 · A capa e o fechamento ganharam uma xilogravura, no traço de J. Borges
+  - ADR-039 · O briefing oficial do Kick-off chegou, e o deck dobrou de tamanho
 
 ============================================================================================
 13.  COMO RODAR E COMO CONFERIR
@@ -2650,6 +2833,7 @@ Os porquês completos estão em `docs/decisoes.md`. Os títulos, aqui:
   npm run semear                 tsx scripts/semear.ts
   npm run testar-rls             vitest run src/lib/supabase/rls.test.ts src/lib/dados/semeadura.test.ts
   npm run verificar-vazamento    tsx scripts/verificar-vazamento.ts
+  npm run roteiro                tsx scripts/roteiro.ts
   npm run pitch-pdf              tsx scripts/pitch-pdf.ts
   npm run dossie                 tsx --tsconfig scripts/tsconfig.dossie.json scripts/dossie.ts
   npm run conferir-dossie        tsx --tsconfig scripts/tsconfig.dossie.json scripts/dossie.ts --conferir

@@ -1,4 +1,15 @@
+import {
+  ALTERNATIVA_ESCOLHIDA,
+  BENCHMARKING,
+  CONCLUSAO_CURTA,
+  CSD,
+  PONTO_DE_COMPARACAO,
+  RAZOES_DA_ESCOLHA,
+  SWOT,
+  TECNICAS_DE_IDEACAO,
+} from '@/content/analises'
 import type { IntegranteId } from '@/content/equipe'
+import { OBJETIVO_GERAL, OBJETIVOS_ESPECIFICOS } from '@/content/produto'
 
 /**
  * O PITCH DO KICK-OFF, como dado.
@@ -46,8 +57,19 @@ export interface Slide {
   readonly notas: readonly string[]
 }
 
-/** 4:55. Os cinco segundos que sobram são a margem para o "obrigado". */
-export const DURACAO_PITCH_SEGUNDOS = 295
+/**
+ * 9:00, dentro dos dez minutos que o professor liberou.
+ *
+ * A diretriz escrita diz cinco minutos, mais cinco para terminar se for
+ * preciso, e a primeira versão deste deck fechava em 4:55. O briefing oficial,
+ * que chegou na véspera, cobra sete critérios, e três deles não apareciam em
+ * slide nenhum: objetivos, as análises e a ideação. Com a permissão dos dez
+ * minutos, a escolha foi crescer em vez de cortar o que já estava de pé.
+ *
+ * Sobra um minuto inteiro de margem, e essa margem é de propósito: ensaio que
+ * fecha exatamente no limite estoura no dia.
+ */
+export const DURACAO_PITCH_SEGUNDOS = 540
 
 /**
  * O PDF de reserva, para quem apresenta sem rede.
@@ -65,9 +87,10 @@ export const ARQUIVO_PDF = '/pitch/pdf'
  * apresentador (escondidas) nem a memória de cálculo do slide 4, que é a
  * interface real do sistema e não texto nosso.
  *
- * Setenta é a conta de quem fala: um slide dura 40 segundos e a plateia lê a
- * uma velocidade que não dá para competir com a voz. Passou disso, a tela
- * virou teleprompter.
+ * Setenta é a conta de quem fala: um slide dura pouco mais de meio minuto e a
+ * plateia lê a uma velocidade que não dá para competir com a voz. Passou
+ * disso, a tela virou teleprompter. O teto NÃO subiu quando o deck dobrou de
+ * tamanho: mais slides, não mais texto por slide.
  */
 export const TETO_DE_PALAVRAS_POR_SLIDE = 70
 
@@ -95,7 +118,7 @@ export const CONTAGENS_PITCH = {
   /** Linhas de "Privacy by Design: onde está no código" em docs/privacidade.md. */
   principiosPrivacidade: 6,
   /** Linhas do registro semanal em docs/uso-de-ia.md. */
-  usosDeIa: 43,
+  usosDeIa: 45,
 } as const
 
 export const SLIDES = [
@@ -104,22 +127,35 @@ export const SLIDES = [
     numero: 1,
     titulo: 'prumo',
     apoio: 'o cálculo da gratificação, aberto para qualquer um conferir',
-    visual: 'Wordmark, uma linha, e a pílula do marco: kick-off, data e equipe.',
-    segundos: 5,
+    visual: 'Wordmark, a pílula do marco e os seis nomes da equipe.',
+    segundos: 20,
     quemFala: 'gabriel',
     notas: [
-      'Bom dia. Somos a Equipe 2, e este é o Prumo.',
-      'Em cinco minutos: qual é o problema, quem sofre com ele, o que já construímos e para onde vamos.',
+      'Bom dia. Somos a Equipe 2 de Sistemas de Informação, e este é o Prumo.',
+      'Estamos os seis aqui, e qualquer um de nós responde qualquer pergunta no fim.',
+      'O cliente é a Secretaria de Saúde do Recife.',
+    ],
+  },
+  {
+    id: 'roteiro',
+    numero: 2,
+    titulo: 'o caminho de hoje',
+    apoio: 'sete paradas, nove minutos.',
+    visual: 'As sete paradas do roteiro, numeradas.',
+    segundos: 10,
+    quemFala: 'fernando',
+    notas: [
+      'O caminho é este: o problema, o que a gente quer entregar, quem sofre com isso, o que a gente estudou, a ideia que venceu, o sistema rodando e o prazo.',
     ],
   },
   {
     id: 'problema',
-    numero: 2,
+    numero: 3,
     titulo: 'todo mês, uma conta feita à mão',
     apoio:
       'A prefeitura paga um extra no salário de quem bate as metas da saúde. A regra está num documento oficial. A conta está numa planilha.',
     visual: 'O caminho do dinheiro em cinco passos, com o ponto que quebra em destaque.',
-    segundos: 35,
+    segundos: 40,
     quemFala: 'gabriel',
     notas: [
       'Desde 2023, quem dirige uma unidade de saúde no Recife pode receber um extra no salário quando bate as metas do mês.',
@@ -129,28 +165,134 @@ export const SLIDES = [
     ],
   },
   {
+    id: 'evidencias',
+    numero: 4,
+    titulo: 'não é impressão nossa',
+    apoio: 'cada coisa que a gente diz aqui tem de onde ter saído.',
+    visual: 'As três fontes da pesquisa, cada uma com a data.',
+    segundos: 30,
+    quemFala: 'matheus',
+    notas: [
+      'A primeira fonte é a portaria: o documento oficial que criou a gratificação, publicado no diário oficial do Recife. Ele está copiado inteiro dentro do nosso repositório.',
+      'A segunda é o caso, escrito pela escola junto com o órgão, que descreve o processo de hoje e a tentativa anterior que foi abandonada.',
+      'A terceira é a conversa: sentamos com a secretaria em 22 de agosto, e o que mudou ali está escrito na ata, no site.',
+      'Nada do que vem a seguir é achismo nosso. Tudo aponta para uma dessas três.',
+    ],
+  },
+  {
+    id: 'objetivos',
+    numero: 5,
+    titulo: 'o que o sistema tem que fazer',
+    apoio: OBJETIVO_GERAL,
+    visual: 'O objetivo geral e os cinco específicos, cada um com o prazo.',
+    segundos: 35,
+    quemFala: 'gabriel',
+    notas: [
+      'Em uma frase: tirar essa conta da planilha e deixar ela aberta.',
+      'Aberta quer dizer que qualquer pessoa refaz o número no papel e vê de onde ele veio.',
+      'Embaixo, o que isso exige, com prazo em cada um: a regra virar dado com versão, a conta aparecer em toda tela que mostra resultado, nada mudar sem ficar registrado, cada papel ver só o que é dele, e a nossa conta bater com a planilha do cliente.',
+      'O último é o que vale mais: enquanto a conta do sistema não bater com a deles, o resto é promessa.',
+    ],
+  },
+  {
     id: 'quem-sofre',
-    numero: 3,
+    numero: 6,
     titulo: 'três pessoas, o mesmo número',
-    apoio: 'Ninguém consegue dizer de onde veio esse número sem abrir a planilha de outra pessoa.',
-    visual: 'Três cartões, um por pessoa afetada, com o medo de cada uma.',
+    apoio: '“Se mexer numa fórmula, tenho que conferir a planilha inteira de novo.”',
+    visual: 'A fala do mapa de empatia e os três cartões de quem é afetado.',
     segundos: 40,
     quemFala: 'matheus',
     notas: [
-      'Essas três pessoas não são inventadas por nós: saíram do caso e foram confirmadas na conversa com o cliente, em agosto. São papéis, não gente de verdade.',
-      'A primeira fecha a conta do mês. Ela mexe na planilha há três ciclos e é quem todo mundo procura quando alguém reclama do resultado.',
-      'A segunda manda os números da unidade dela, sempre em cima do prazo, no meio de outras dez tarefas.',
+      'Essa frase é do mapa de empatia da analista, a pessoa que carrega o processo hoje. Ela resume o medo que move este projeto.',
+      'As três pessoas da tela não foram inventadas por nós: saíram do caso e foram confirmadas na conversa com o cliente. São papéis, não gente de verdade.',
+      'A primeira fecha a conta do mês, e é quem todo mundo procura quando alguém reclama do resultado.',
+      'A segunda manda os números da unidade, sempre em cima do prazo, no meio de outras dez tarefas.',
       'A terceira recebe o valor no fim. Ela vê quanto ganhou e não vê como chegaram naquele número. É por ela que este projeto existe.',
     ],
   },
   {
+    id: 'csd',
+    numero: 7,
+    titulo: 'o que sabemos, e o que ainda é chute',
+    apoio: 'certeza tem fonte. aposta a gente declara. pergunta a gente leva para o cliente.',
+    visual: 'As três colunas da matriz, com a contagem e dois exemplos de cada.',
+    segundos: 30,
+    quemFala: 'matheus',
+    notas: [
+      'Separamos tudo o que sabemos em três colunas, e cada linha da primeira tem a fonte do lado: artigo da portaria, o caso ou a ata da reunião. Certeza sem origem é chute com voz firme.',
+      'No meio, o que a gente assumiu para poder andar. Está escrito que é aposta, e está escrito dentro do código também.',
+      'Na direita, o que ainda não sabemos, e a quem vamos perguntar. A maior delas: como redistribuir o peso quando falta um número.',
+    ],
+  },
+  {
+    id: 'referencias',
+    numero: 8,
+    titulo: 'quem mais resolve isso, e o que joga a favor',
+    apoio: 'cinco referências olhadas de perto, e o retrato honesto do projeto.',
+    visual: 'As referências com o veredito, e os quatro quadrantes da SWOT.',
+    segundos: 35,
+    quemFala: 'fernando',
+    notas: [
+      'Antes de decidir construir, olhamos o que já existe: painéis de transparência de prefeituras, sistemas de metas do SUS, ferramentas de acompanhamento de objetivos, e a própria planilha de hoje.',
+      'Cada uma resolve um pedaço. Nenhuma junta as três coisas que este caso precisa ao mesmo tempo: regra com versão, conta aberta e registro de quem mudou.',
+      'Do lado direito, o retrato do projeto (SWOT). A força é ter cliente real com regra escrita. A fraqueza é que ninguém da equipe conhece o processo por dentro.',
+      'A ameaça maior está acontecendo: a portaria pode mudar, e de fato ela chegou agora e mexeu no nosso desenho. A gente conta isso daqui a pouco.',
+    ],
+  },
+  {
+    id: 'ideacao',
+    numero: 9,
+    titulo: 'como a gente gerou ideias',
+    apoio: 'três dinâmicas numa hora, com a regra de somar antes de criticar.',
+    visual: 'As três técnicas, com o tempo e o que cada uma produziu.',
+    segundos: 35,
+    quemFala: 'joao-pedro',
+    notas: [
+      'A primeira é escrita e em silêncio: cada um anota três ideias e passa a folha, e quem recebe amplia a do colega. Sem discussão, ninguém é puxado pela opinião de quem falou primeiro.',
+      'A segunda é a conversa aberta, juntando o que ficou parecido e dando nome a cada grupo.',
+      'A terceira são oito desenhos de tela em oito minutos, cada um sozinho. É de lá que saem as primeiras telas em papel.',
+      'De dezoito ideias no papel sobraram oito alternativas de verdade na mesa.',
+    ],
+  },
+  {
+    id: 'escolha',
+    numero: 10,
+    titulo: 'por que essa ideia venceu',
+    apoio: ALTERNATIVA_ESCOLHIDA.nome.toLowerCase(),
+    visual: 'A alternativa escolhida, as quatro razões e o que ficou de comparação.',
+    segundos: 30,
+    quemFala: 'joao-pedro',
+    notas: [
+      'Demos nota de 1 a 5 para cada alternativa em três coisas: o tamanho do impacto, o esforço para fazer e o quanto ela encosta no problema de verdade.',
+      'A escolhida ganhou porque ataca a causa e não o sintoma: hoje a regra da portaria só existe dentro de fórmulas de planilha.',
+      'O esforço é alto, mas dá para fatiar: lançar, calcular e mostrar a conta cabem até o SR1.',
+      'E a planilha melhorada continua na tabela de propósito: ela é contra o que a gente vai medir o ganho, na validação com o cliente.',
+    ],
+  },
+  {
+    id: 'wireframes',
+    numero: 11,
+    titulo: 'do papel para a tela',
+    apoio: 'os quatro desenhos que vieram antes, e o que eles viraram.',
+    visual: 'Os quatro wireframes, um por tela, com a legenda de cada.',
+    segundos: 35,
+    quemFala: 'joao-pedro',
+    notas: [
+      'Estes são os desenhos de baixa fidelidade das quatro telas centrais. Barra cinza no lugar de texto, de propósito: a conversa aqui é sobre onde cada coisa fica, não sobre a frase.',
+      'A primeira é onde a unidade digita os números do mês.',
+      'A segunda é a nota com a conta inteira embaixo, e é a tela que vocês vão ver rodando no slide seguinte.',
+      'A terceira é o painel do distrito: quem já mandou, quem falta.',
+      'A quarta é o resultado do gestor, com os meses anteriores do lado.',
+    ],
+  },
+  {
     id: 'ideia',
-    numero: 4,
+    numero: 12,
     titulo: 'a nota com a conta aberta',
     apoio: 'Isto é o sistema rodando agora, não uma imagem.',
     visual: 'A nota e a conta inteira, do sistema de verdade, para uma unidade de teste.',
     segundos: 45,
-    quemFala: 'joao-pedro',
+    quemFala: 'joao-henrique',
     notas: [
       'O que está na tela é o sistema mesmo, rodando agora, com dados de teste. Nenhuma pessoa real aparece aqui.',
       'Em cima, a nota do mês: 86,67. Do lado, quanto isso vale em dinheiro.',
@@ -161,11 +303,11 @@ export const SLIDES = [
   },
   {
     id: 'como-funciona',
-    numero: 5,
+    numero: 13,
     titulo: 'cada mês guarda a regra que usou',
     apoio: 'Se a regra mudar, o mês antigo continua igual.',
     visual: 'O caminho de um número em quatro passos, e quem faz o quê.',
-    segundos: 45,
+    segundos: 35,
     quemFala: 'joao-henrique',
     notas: [
       'A regra não está escondida dentro do código: ela é um dado, com versão, igual a um documento.',
@@ -177,12 +319,12 @@ export const SLIDES = [
   },
   {
     id: 'dados',
-    numero: 6,
+    numero: 14,
     titulo: 'nenhum dado real. ainda.',
     apoio:
       'Hoje o sistema roda com dados inventados por um programa. Qualquer pessoa roda de novo e vê os mesmos números.',
     visual: 'O tamanho da base de teste, e o que os modelos acertam e erram.',
-    segundos: 40,
+    segundos: 30,
     quemFala: 'rafael',
     notas: [
       'Tudo que vocês viram na tela anterior veio de um gerador que a gente escreveu. Ele usa sempre a mesma semente, então quem rodar de novo vê exatamente os mesmos números.',
@@ -194,13 +336,13 @@ export const SLIDES = [
   },
   {
     id: 'riscos',
-    numero: 7,
+    numero: 15,
     titulo: 'o que pode dar errado, dito antes',
     apoio:
       'O login é de faz de conta, o banco de dados está desligado e a conta ainda usa a regra que deduzimos.',
     visual: 'Quatro contagens do que já foi mapeado, cada uma com o estado dela.',
-    segundos: 40,
-    quemFala: 'fernando',
+    segundos: 30,
+    quemFala: 'rafael',
     notas: [
       'A gente prefere dizer o que falta antes que alguém pergunte.',
       'Em segurança, listamos as ameaças uma a uma e dissemos o que já está resolvido e o que não está.',
@@ -210,31 +352,33 @@ export const SLIDES = [
     ],
   },
   {
-    id: 'ate-o-sr1',
-    numero: 8,
-    titulo: 'de hoje ao sr1: três semanas',
-    apoio: 'Um compromisso por semana, e todos com data.',
-    visual: 'Os três marcos até o SR1, com data e compromisso.',
-    segundos: 30,
+    id: 'cronograma',
+    numero: 16,
+    titulo: 'as dezoito semanas, e onde estamos',
+    apoio: 'cada entrega tem dono, data e estado, e o quadro inteiro está no site.',
+    visual: 'A linha do semestre com os marcos, e as entregas do próximo mês com dono.',
+    segundos: 35,
     quemFala: 'fernando',
     notas: [
-      'Semana que vem: colocar a regra oficial da portaria dentro do sistema, como uma versão nova.',
-      'Na outra: as primeiras telas no ar para qualquer pessoa que abrir o site.',
-      'Até o SR1: sentar com a secretaria e conferir a regra contra a planilha real que eles nos mandaram.',
-      'O que a banca disser hoje entra no diário de bordo e orienta essas três semanas.',
+      'O semestre inteiro está planejado em dezoito semanas, e cada semana tem as entregas que ela precisa produzir.',
+      'As quatro primeiras estão fechadas e publicadas no site, com o que foi feito, quem fez e o que travou.',
+      'Hoje é o Kick-off. Daqui até o SR1 são três semanas, e cada uma tem um compromisso com data e com nome.',
+      'Semana que vem, a regra oficial da portaria entra no sistema. Na outra, as primeiras telas no ar. Até o SR1, sentar com a secretaria e conferir a conta contra a planilha real.',
+      'Nada disso está num arquivo separado: o quadro com dono e estado é uma seção do próprio site.',
     ],
   },
   {
     id: 'fechamento',
-    numero: 9,
+    numero: 17,
     titulo: 'prumo',
-    apoio: 'o registro, o sistema e este pitch estão no ar.',
+    apoio: 'o registro, os documentos, o sistema e este pitch estão no ar.',
     visual: 'Wordmark, o endereço do site e a pergunta para a banca.',
-    segundos: 15,
+    segundos: 25,
     quemFala: 'gabriel',
     notas: [
-      'Tudo que mostramos está nesse endereço: o diário do projeto, o sistema e este pitch.',
-      'Obrigado. Ficamos para as perguntas.',
+      'Tudo que mostramos está nesse endereço: o diário do projeto semana a semana, os documentos de cada entrega, o sistema e este pitch.',
+      'O site tem um índice no topo com as oito seções, na ordem em que vocês pediram.',
+      'Obrigado. Ficamos para as perguntas, e qualquer um de nós responde.',
     ],
   },
 ] as const satisfies readonly Slide[]
@@ -270,6 +414,30 @@ export const ETAPAS_DO_MES: readonly EtapaDoMes[] = [
   { quem: 'a folha', oQue: 'paga no salário' },
 ]
 
+/** Slide 2: as sete paradas do roteiro. A ordem é a dos critérios do briefing. */
+export const ROTEIRO = [
+  'o problema',
+  'os objetivos',
+  'quem sofre',
+  'o que estudamos',
+  'a ideia que venceu',
+  'o sistema rodando',
+  'o prazo',
+] as const
+
+/**
+ * Slide 4: de onde saiu a pesquisa.
+ *
+ * O critério de "entendimento do problema" pede evidência, e evidência sem
+ * data e sem origem não é evidência. As três fontes que o projeto tem, na
+ * ordem em que chegaram.
+ */
+export const FONTES_DA_PESQUISA = [
+  { fonte: 'a portaria', onde: 'diário oficial do Recife, 21/09/2024' },
+  { fonte: 'o caso', onde: 'escrito pela escola junto com o órgão' },
+  { fonte: 'a conversa', onde: 'reunião com a secretaria, 22/08' },
+] as const
+
 /** Slide 3: as três pessoas afetadas. Papéis, nunca gente de verdade. */
 export const PESSOAS = [
   { papel: 'quem fecha a conta', quem: 'a analista', dor: 'tem medo de errar uma fórmula' },
@@ -284,6 +452,26 @@ export const PESSOAS = [
     dor: 'vê o resultado, não vê a conta',
   },
 ] as const
+
+/** Slide 6: de onde veio a frase do topo. Crédito curto, não explicação. */
+export const ROTULO_DO_MAPA = 'do mapa de empatia da analista'
+
+/**
+ * Slide 11: o que cada wireframe é.
+ *
+ * A legenda mora aqui, e não dentro do SVG, porque texto escondido num
+ * desenho fura o teto de palavras sem ninguém ver. A ordem é a mesma de
+ * `WIREFRAMES` em `src/components/wireframe.tsx`.
+ */
+export const LEGENDAS_DO_WIREFRAME = [
+  'o lançamento do mês',
+  'a nota com a conta',
+  'o painel do distrito',
+  'o resultado do gestor',
+] as const
+
+/** Slide 16: os títulos das colunas do quadro de entregas. */
+export const COLUNAS_DO_CRONOGRAMA = ['quando', 'o compromisso', 'quem puxa'] as const
 
 /** Slide 5: o caminho de um número até virar nota. */
 export const CAMINHO_DO_NUMERO = [
@@ -342,12 +530,19 @@ export const LEGENDAS_DE_RISCO = {
   ia: 'todos com nome de quem conferiu',
 } as const
 
-/** Os compromissos do slide 8, um por marco. Datas vêm do cronograma, nunca daqui. */
+/**
+ * Os compromissos do slide do cronograma, um por marco.
+ *
+ * Datas vêm do cronograma, nunca daqui: a data é fonte única em
+ * `src/lib/cronograma.ts` (regra 2 da casa). O que mora aqui é a promessa e
+ * quem a puxa, que é o que o critério de cronograma do briefing exige junto
+ * com a atividade e o prazo.
+ */
 export const COMPROMISSOS_ATE_O_SR1 = [
-  { ciclo: 's5', compromisso: 'a regra oficial dentro do sistema' },
-  { ciclo: 's6', compromisso: 'as primeiras telas no ar' },
-  { ciclo: 'sr1', compromisso: 'a regra conferida com a secretaria' },
-] as const
+  { ciclo: 's5', compromisso: 'a regra oficial dentro do sistema', quem: 'joao-henrique' },
+  { ciclo: 's6', compromisso: 'as primeiras telas no ar', quem: 'joao-pedro' },
+  { ciclo: 'sr1', compromisso: 'a regra conferida com a secretaria', quem: 'matheus' },
+] as const satisfies readonly { ciclo: string; compromisso: string; quem: IntegranteId }[]
 
 /** Slide 4: quem é a unidade da demonstração, numa linha. */
 export const ROTULO_DA_DEMO = 'dados de teste, nenhuma pessoa real, mês já fechado'
@@ -365,13 +560,40 @@ export function textoNaTela(id: SlideId): readonly string[] {
   const base = [slide.titulo, slide.apoio]
 
   switch (id) {
+    case 'roteiro':
+      return [...base, ...ROTEIRO]
     case 'problema':
       return [
         ...base,
         ...ETAPAS_DO_MES.flatMap((e) => (e.quebra ? [e.quem, e.oQue, 'aqui quebra'] : [e.quem, e.oQue])),
       ]
+    case 'evidencias':
+      return [...base, ...FONTES_DA_PESQUISA.flatMap((f) => [f.fonte, f.onde])]
+    case 'objetivos':
+      return [...base, ...OBJETIVOS_ESPECIFICOS.flatMap((o) => [o.resumo, o.quando])]
     case 'quem-sofre':
-      return [...base, ...PESSOAS.flatMap((p) => [p.papel, p.quem, p.dor])]
+      return [...base, ROTULO_DO_MAPA, ...PESSOAS.flatMap((p) => [p.papel, p.quem, p.dor])]
+    case 'csd':
+      // A contagem de cada coluna vem do tamanho da lista, não do autor: ela
+      // não entra no teto, do mesmo jeito que o tamanho da base no slide 14.
+      return [...base, ...CSD.flatMap((c) => [c.titulo, ...c.itens.slice(0, 2).map((i) => i.resumo)])]
+    case 'referencias':
+      return [
+        ...base,
+        ...BENCHMARKING.slice(0, 3).map((r) => r.curto),
+        CONCLUSAO_CURTA,
+        ...SWOT.flatMap((q) => [q.titulo, q.curto]),
+      ]
+    case 'ideacao':
+      return [...base, ...TECNICAS_DE_IDEACAO.flatMap((t) => [t.nome, t.produtoCurto])]
+    case 'escolha':
+      return [
+        ...base,
+        ...RAZOES_DA_ESCOLHA.flatMap((r) => [r.titulo, r.curto]),
+        PONTO_DE_COMPARACAO,
+      ]
+    case 'wireframes':
+      return [...base, ...LEGENDAS_DO_WIREFRAME]
     case 'ideia':
       // A frase de apoio não aparece neste slide: a demonstração ocupa a tela.
       return [slide.titulo, ROTULO_DA_DEMO]
@@ -390,8 +612,12 @@ export function textoNaTela(id: SlideId): readonly string[] {
       ]
     case 'riscos':
       return [...base, ...Object.values(ROTULOS_DE_RISCO), ...Object.values(LEGENDAS_DE_RISCO)]
-    case 'ate-o-sr1':
-      return [...base, ...COMPROMISSOS_ATE_O_SR1.map((c) => c.compromisso)]
+    case 'cronograma':
+      return [
+        ...base,
+        ...COLUNAS_DO_CRONOGRAMA,
+        ...COMPROMISSOS_ATE_O_SR1.map((c) => c.compromisso),
+      ]
     default:
       return base
   }

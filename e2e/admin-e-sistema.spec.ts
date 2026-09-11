@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test'
-import { CICLO_OCULTO, marcador } from './cronograma'
+import { CICLO_OCULTO, ROTAS_ABERTAS, ROTAS_FECHADAS, marcador } from './cronograma'
 
 const SENHA = '0321'
 
@@ -101,7 +101,11 @@ test.describe('modo completo e visão de visitante', () => {
 
 test.describe('gate das funcionalidades', () => {
   test('rota não liberada devolve 404 para o visitante', async ({ page }) => {
-    for (const rota of ['/sistema/cam', '/sistema/meu-resultado', '/sistema/auditoria']) {
+    // As rotas saem do mapa de funcionalidades cruzado com o release de hoje,
+    // e não de uma lista à mão: quando a s5 abriu, a lista à mão passou a
+    // exigir 404 de rota que já responde.
+    expect(ROTAS_FECHADAS.length, 'nenhuma rota fechada para exercitar').toBeGreaterThan(0)
+    for (const rota of ROTAS_FECHADAS) {
       const resposta = await page.request.get(rota)
       expect(resposta.status(), `${rota} deveria ser 404`).toBe(404)
     }
@@ -109,7 +113,14 @@ test.describe('gate das funcionalidades', () => {
 
   test('a casca do sistema é honesta sobre o que ainda não existe', async ({ page }) => {
     await page.goto('/sistema')
-    await expect(page.getByText('O sistema ainda não entrou em operação')).toBeVisible()
+    if (ROTAS_ABERTAS.length === 0) {
+      await expect(page.getByText('O sistema ainda não entrou em operação')).toBeVisible()
+    } else {
+      // Com tela liberada, a casca mostra o que existe e não promete o resto:
+      // a honestidade aqui é o silêncio sobre as telas que ainda não saíram.
+      await expect(page.getByText('O sistema ainda não entrou em operação')).toHaveCount(0)
+      await expect(page.locator('details[id^="tela-"]').first()).toBeAttached()
+    }
   })
 
   test('tela de outro perfil não existe, mesmo já liberada', async ({ page }) => {
