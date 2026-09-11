@@ -148,7 +148,7 @@ export async function Slides() {
             <CartaoScore avaliacao={avaliacao} />
           </div>
           <div className="mt-3">
-            <MemoriaDeCalculo avaliacao={avaliacao} aberta />
+            <MemoriaDeCalculo avaliacao={avaliacao} aberta compacta />
           </div>
         </div>
       </Quadro>

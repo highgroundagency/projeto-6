@@ -57,12 +57,16 @@ beforeAll(() => {
   // ela libera tudo para todo mundo. Estes casos medem o GATE DE RELEASE, então
   // a env var fecha a janela: ela vence o valor versionado.
   process.env.RELEASE_ABERTO_ATE = '2020-01-01T00:00:00Z'
+  // Pelo mesmo motivo, a trava versionada em `src/content/travas.ts` volta ao
+  // automático: ela abre a s5 fora de ordem, e aqui o que se mede é a ordem.
+  process.env.RELEASE_TRAVAS = '{"s5":"automatico"}'
   vi.useFakeTimers()
   vi.setSystemTime(new Date('2026-08-15T15:00:00Z'))
 })
 
 afterAll(() => {
   delete process.env.RELEASE_ABERTO_ATE
+  delete process.env.RELEASE_TRAVAS
   vi.useRealTimers()
 })
 

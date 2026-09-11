@@ -2,6 +2,7 @@ import { mkdtemp, readFile, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
+import { TRAVAS_VERSIONADAS } from '@/content/travas'
 import { driverArquivo } from './driver-arquivo'
 import { driverMemoria } from './driver-memoria'
 import { configPadrao, descreverMudancas, type ConfigSite } from './tipos'
@@ -13,7 +14,8 @@ describe('configPadrao', () => {
     const config = configPadrao({})
     expect(config.adiantamentoDias).toBe(7)
     expect(config.overrideRelease).toBeNull()
-    expect(config.travas).toEqual({})
+    // Sem env var, valem as travas versionadas no repositório.
+    expect(config.travas).toEqual(TRAVAS_VERSIONADAS)
   })
 
   it('lê adiantamento e override do ambiente', () => {
@@ -33,7 +35,7 @@ describe('configPadrao', () => {
     })
     expect(config.adiantamentoDias).toBe(7)
     expect(config.overrideRelease).toBeNull()
-    expect(config.travas).toEqual({})
+    expect(config.travas).toEqual(TRAVAS_VERSIONADAS)
   })
 
   it('recusa adiantamento fora da faixa aceita', () => {
@@ -45,7 +47,16 @@ describe('configPadrao', () => {
     const config = configPadrao({
       RELEASE_TRAVAS: '{"s9":"sempre_visivel","xx":"sempre_oculto"}',
     })
-    expect(config.travas).toEqual({ s9: 'sempre_visivel' })
+    expect(config.travas).toEqual({ ...TRAVAS_VERSIONADAS, s9: 'sempre_visivel' })
+  })
+
+  it('deixa a env var vencer a trava versionada no mesmo ciclo', () => {
+    const [algum] = Object.keys(TRAVAS_VERSIONADAS)
+    if (!algum) return
+    const config = configPadrao({
+      RELEASE_TRAVAS: JSON.stringify({ [algum]: 'sempre_oculto' }),
+    })
+    expect(config.travas[algum as keyof typeof config.travas]).toBe('sempre_oculto')
   })
 })
 
@@ -129,7 +140,7 @@ describe('driverMemoria', () => {
     const store = driverMemoria(configPadrao({}), RELOGIO)
     const lida = await store.ler()
     lida.travas.s9 = 'sempre_visivel'
-    expect((await store.ler()).travas).toEqual({})
+    expect((await store.ler()).travas).toEqual(TRAVAS_VERSIONADAS)
   })
 })
 

@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { TRAVAS_VERSIONADAS } from '@/content/travas'
 import type { Ambiente } from '@/lib/ambiente'
 import { IDS_CICLOS, type CicloId } from '@/lib/cronograma'
 import { ADIANTAMENTO_PADRAO, type Trava, type Travas } from '@/lib/releases'
@@ -87,7 +88,9 @@ export function configPadrao(env: Ambiente = process.env): ConfigSite {
   return {
     adiantamentoDias,
     overrideRelease,
-    travas: lerTravasDaEnv(env.RELEASE_TRAVAS),
+    // A trava versionada é o padrão; a env var vence ciclo a ciclo, para quem
+    // opera pela Vercel poder corrigir sem esperar deploy.
+    travas: { ...TRAVAS_VERSIONADAS, ...lerTravasDaEnv(env.RELEASE_TRAVAS) },
     atualizadoEm: '',
   }
 }

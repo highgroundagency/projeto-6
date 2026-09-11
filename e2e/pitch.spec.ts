@@ -140,6 +140,16 @@ test.describe('o pitch do Kick-off', () => {
       const rolaCaixa = await caixa.evaluate((el) => el.scrollHeight > el.clientHeight + 1)
       expect(rolaCaixa, 'a demonstração rola por dentro').toBe(false)
 
+      // E CABE LEGÍVEL. A primeira correção fez caber encolhendo tudo a 60%,
+      // o que deixou a tabela com sete pixels de letra: ilegível a três
+      // metros de um projetor, que é a distância real da banca. A altura da
+      // célula na tela (já com o zoom aplicado) é a régua barata disso.
+      const alturaDaLinha = await caixa
+        .locator('tbody td')
+        .first()
+        .evaluate((el) => el.getBoundingClientRect().height)
+      expect(alturaDaLinha, 'a conta está pequena demais para ler').toBeGreaterThanOrEqual(20)
+
       // E a página também não rola: o modo deck promete um slide por tela, e
       // a linha de ajuda das teclas já fez a página crescer 68px uma vez.
       const rolaPagina = await page.evaluate(

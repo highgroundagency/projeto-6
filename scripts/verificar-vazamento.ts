@@ -24,6 +24,7 @@ import { hojeEmRecife } from '../src/lib/datas'
 import { FEATURES, PERFIL_PADRAO, type PerfilId } from '../src/lib/features'
 import { SLIDES, textoNaTela } from '../src/content/pitch'
 import { ciclosVisiveis, calcularReleaseAtual, ADIANTAMENTO_PADRAO } from '../src/lib/releases'
+import { TRAVAS_VERSIONADAS } from '../src/content/travas'
 import { criarTokenSessao, NOME_COOKIE_SESSAO } from '../src/lib/admin/sessao'
 
 const PORTA = Number(process.env.PORTA_VERIFICACAO ?? 3210)
@@ -94,11 +95,18 @@ async function main() {
   await exigirPortaLivre()
   const hoje = hojeEmRecife()
   const release = calcularReleaseAtual({ hoje, adiantamentoDias: ADIANTAMENTO_PADRAO })
-  const visiveis = ciclosVisiveis({ releaseAtual: release })
+  // As travas versionadas fazem parte do padrão do ambiente, então entram na
+  // conta: sem elas o script esperaria esconder um ciclo que o site publica de
+  // propósito, e acusaria vazamento onde há decisão registrada em `src/content/travas.ts`.
+  const visiveis = ciclosVisiveis({ releaseAtual: release, travas: TRAVAS_VERSIONADAS })
   const ocultos = IDS_CICLOS.filter((id) => !visiveis.includes(id))
 
   console.log(`\nData de referência (Recife): ${hoje}`)
   console.log(`Release público esperado:    ${release ?? '—'}`)
+  const travadas = Object.entries(TRAVAS_VERSIONADAS)
+    .map(([id, trava]) => `${id}=${trava}`)
+    .join(', ')
+  console.log(`Travas versionadas:          ${travadas || '(nenhuma)'}`)
   console.log(`Ciclos visíveis:             ${visiveis.join(', ') || '(nenhum)'}`)
   console.log(`Ciclos que devem estar ocultos: ${ocultos.join(', ') || '(nenhum)'}\n`)
 

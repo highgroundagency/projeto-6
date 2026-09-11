@@ -789,6 +789,13 @@ html:fullscreen [data-modo='deck'] .slide {
   font-size: clamp(1.4rem, 2.6vw, 2rem);
 }
 
+/* O slide da demonstração respira menos que os outros: cada pixel de padding
+   que ele devolve vira um pixel de tabela legível. */
+[data-modo='deck'] .slide-demo {
+  padding-top: 24px;
+  padding-bottom: 32px;
+}
+
 /* A DEMONSTRAÇÃO CABE INTEIRA, e isso não é preciosismo de layout.
    A versão anterior limitava a altura e deixava rolar: em 1280x720 a caixa
    tinha 384px para 1008px de conteúdo, então 62% ficava fora da tela,
@@ -800,23 +807,56 @@ html:fullscreen [data-modo='deck'] .slide {
    A folha de impressão já resolvia isso do jeito certo — esconder o que a
    fala cobre e reduzir a escala. Aqui é a mesma receita.
 
-   A conta, em 1280x720: 720 − 53 (cromo) − 120 (padding do slide) − 36
-   (título) − 16 (respiro) = 495px de espaço. Sem o parágrafo "como ler" o
-   conteúdo mede ~898px, e 898 × 0,52 = 467px. Cabe, com folga de 28px. Em
-   1366x768 sobram mais 48px, e em tela cheia o cromo devolve outros 53, por
-   isso a escala sobe lá embaixo.
+   A PRIMEIRA TENTATIVA ENCOLHEU DEMAIS. Reduzir a memória inteira a 60% fez
+   ela caber e ficar ilegível: a três metros de um projetor, a tabela some.
+   Ilegível é pior que cortado, porque o slide se chama "a nota com a conta
+   aberta" e ninguém lê a conta.
+
+   A correção é mostrar MENOS, e não menor: a variante `compacta` de
+   `MemoriaDeCalculo` tira a lista de subindicadores dentro de cada linha e a
+   coluna da faixa, que é o que fazia a tabela medir ~900px. Sobra a cadeia
+   inteira do argumento em corpo de leitura, e o zoom só faz o ajuste fino que
+   a resolução do dia pedir.
 
    `zoom` e não `transform: scale` de propósito: zoom participa do layout, e a
-   caixa realmente encolhe. Com `scale` o elemento continuaria ocupando 898px
-   e empurraria o rodapé do slide para fora. */
+   caixa realmente encolhe. Com `scale` o elemento continuaria ocupando a
+   altura original e empurraria o rodapé do slide para fora. */
 [data-modo='deck'] .slide-demo .slide-apoio,
 [data-modo='deck'] .slide-demo .como-ler,
 [data-modo='deck'] .slide-demo .demo summary {
   display: none;
 }
 
+/* A ESCALA SEGUE A ALTURA DA TELA, e não um número único.
+   Uma escala fixa serve a uma resolução e falha nas outras: a que fazia a
+   conta caber num notebook de 720 linhas deixava a mesma conta minúscula num
+   monitor de 1080. Medindo no navegador o maior zoom que cabe sem rolagem:
+   0,85 em 720, 0,95 em 768, 1,15 em 900 e 1,3 em 1080. Os degraus abaixo ficam
+   um passo abaixo do medido, de margem. */
+[data-modo='deck'] .slide-demo {
+  --zoom-demo: 0.82;
+}
+
+@media (min-height: 750px) {
+  [data-modo='deck'] .slide-demo {
+    --zoom-demo: 0.9;
+  }
+}
+
+@media (min-height: 820px) {
+  [data-modo='deck'] .slide-demo {
+    --zoom-demo: 1.05;
+  }
+}
+
+@media (min-height: 950px) {
+  [data-modo='deck'] .slide-demo {
+    --zoom-demo: 1.2;
+  }
+}
+
 [data-modo='deck'] .slide-demo .demo {
-  zoom: 0.6;
+  zoom: var(--zoom-demo);
   /* Rede, não muleta: com o zoom valendo, a conta cabe e nada rola — e há
      teste de ponta a ponta provando isso em 1280x720 e em 1366x768. A rede
      existe para o navegador que ignora `zoom` (Firefox anterior ao 126) e
@@ -825,8 +865,9 @@ html:fullscreen [data-modo='deck'] .slide {
   overflow: auto;
 }
 
+/* Em tela cheia o cromo devolve 53px, que é quase um degrau inteiro. */
 html:fullscreen [data-modo='deck'] .slide-demo .demo {
-  zoom: 0.66;
+  zoom: calc(var(--zoom-demo) * 1.08);
 }
 
 /* Embaixo, no centro: o rodapé do slide já ocupa os dois cantos. */
@@ -1148,8 +1189,9 @@ html:fullscreen .ajuda-deck {
     left: 0.7in;
   }
 
-  /* O slide da demonstração: a memória inteira numa página, sem a caixa de
-     rolagem do modo deck e sem o parágrafo "como ler", que a fala cobre. */
+  /* O slide da demonstração: a memória compacta numa página, sem a caixa de
+     rolagem do modo deck e sem o parágrafo "como ler", que a fala cobre. A
+     página impressa é 16:9 em paisagem, então a conta é a mesma do deck. */
   .slide-demo .slide-titulo {
     font-size: 1.6rem;
   }
@@ -1161,7 +1203,7 @@ html:fullscreen .ajuda-deck {
   .slide-demo .demo {
     max-height: none !important;
     overflow: visible !important;
-    zoom: 0.6;
+    zoom: 0.92;
   }
 
   .slide-demo .como-ler,

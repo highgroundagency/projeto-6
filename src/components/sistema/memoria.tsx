@@ -1,6 +1,18 @@
 import { Num } from '@/components/base/num'
 import { Etiqueta } from '@/components/base/selo'
 import type { Avaliacao, PassoSubindicador } from '@/lib/calculo/tipos'
+import { cn } from '@/lib/utils'
+
+const COLUNAS = [
+  'Indicador',
+  'Valor',
+  'Meta',
+  'Atingimento',
+  'Faixa',
+  'Pontos',
+  'Peso',
+  'Contribuição',
+] as const
 
 /**
  * A MEMÓRIA DE CÁLCULO (§8.3).
@@ -17,12 +29,29 @@ function porcentagem(valor: number | null): string {
 export function MemoriaDeCalculo({
   avaliacao,
   aberta = false,
+  compacta = false,
 }: {
   avaliacao: Avaliacao
   /** Já aberta ao carregar. O pitch usa; a tela "meu resultado" deixa fechada. */
   aberta?: boolean
+  /**
+   * A MESMA memória, com menos linha por linha — para o slide.
+   *
+   * A versão completa mede cerca de 900px de altura, e num slide de 720
+   * linhas isso só cabia encolhendo tudo a 60%, o que deixava a conta
+   * ilegível a três metros do projetor. Ilegível é pior que ausente: o slide
+   * se chama "a nota com a conta aberta".
+   *
+   * O que sai é o detalhe de segundo nível: a lista de subindicadores dentro
+   * de cada linha e a coluna da faixa. O que fica é a cadeia inteira do
+   * argumento, em tamanho de leitura: valor, meta, atingimento, pontos, peso,
+   * contribuição e a conta final. Continua sendo o componente do sistema,
+   * lendo o que o motor calculou; não é imagem nem maquete.
+   */
+  compacta?: boolean
 }) {
   const { memoria } = avaliacao
+  const corpo = compacta ? 'text-sm' : 'text-xs'
 
   return (
     <details
@@ -45,6 +74,7 @@ export function MemoriaDeCalculo({
       <div className="border-t border-linha px-4 py-4">
         {/* Antes da tabela, o modo de ler. Sem isto a tela mostrava a conta e
             não dizia para que ela serve, e quem não é da área ficava perdido. */}
+        {compacta ? null : (
         <p className="como-ler max-w-prose text-sm leading-relaxed">
           Como ler: cada linha é um indicador, e o valor dele nasce dos subindicadores que a
           unidade preencheu, listados dentro da própria linha. O valor composto é comparado com
@@ -52,8 +82,9 @@ export function MemoriaDeCalculo({
           quanto aquele item vale). A soma de tudo, dividida pelo máximo possível, dá a nota de
           0 a 100.
         </p>
+        )}
 
-        <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-xs">
+        <div className={cn('flex flex-wrap items-center gap-x-4 gap-y-2', corpo, compacta ? '' : 'mt-4')}>
           <span>
             <span className="rotulo">Regra</span>{' '}
             <Num>
@@ -70,19 +101,16 @@ export function MemoriaDeCalculo({
         </div>
 
         <div className="mt-3 overflow-x-auto border border-linha">
-          <table className="numero w-full min-w-[46rem] border-collapse text-xs">
+          <table
+            className={cn(
+              'numero w-full border-collapse',
+              corpo,
+              compacta ? 'min-w-[34rem]' : 'min-w-[46rem]',
+            )}
+          >
             <thead>
               <tr className="border-b border-linha bg-superficie">
-                {[
-                  'Indicador',
-                  'Valor',
-                  'Meta',
-                  'Atingimento',
-                  'Faixa',
-                  'Pontos',
-                  'Peso',
-                  'Contribuição',
-                ].map((coluna) => (
+                {COLUNAS.filter((coluna) => !(compacta && coluna === 'Faixa')).map((coluna) => (
                   <th key={coluna} className="rotulo px-2 py-1.5 text-left whitespace-nowrap">
                     {coluna}
                   </th>
@@ -97,11 +125,13 @@ export function MemoriaDeCalculo({
                 >
                   <td className="px-2 py-1.5">
                     <span className="font-sans">{passo.indicador}</span>
-                    <span className="mt-0.5 block text-[0.65rem] text-apagado">
-                      {passo.direcao === 'maior_melhor' ? 'maior é melhor' : 'menor é melhor'} ·{' '}
-                      {passo.unidadeMedida}
-                    </span>
-                    {passo.subPassos.length > 0 ? (
+                    {compacta ? null : (
+                      <span className="mt-0.5 block text-[0.65rem] text-apagado">
+                        {passo.direcao === 'maior_melhor' ? 'maior é melhor' : 'menor é melhor'}{' '}
+                        · {passo.unidadeMedida}
+                      </span>
+                    )}
+                    {!compacta && passo.subPassos.length > 0 ? (
                       <ul className="mt-1.5 space-y-0.5 border-l border-linha pl-2">
                         {passo.subPassos.map((sub) => (
                           <li key={sub.subindicadorId} className="text-[0.65rem] text-apagado">
@@ -131,7 +161,9 @@ export function MemoriaDeCalculo({
                       </span>
                     ) : null}
                   </td>
-                  <td className="px-2 py-1.5 whitespace-nowrap text-apagado">{passo.faixa}</td>
+                  {compacta ? null : (
+                    <td className="px-2 py-1.5 whitespace-nowrap text-apagado">{passo.faixa}</td>
+                  )}
                   <td className="px-2 py-1.5">{passo.pontos}</td>
                   <td className="px-2 py-1.5">{passo.peso}</td>
                   <td className="px-2 py-1.5 font-semibold">{passo.contribuicao}</td>
@@ -140,7 +172,7 @@ export function MemoriaDeCalculo({
             </tbody>
             <tfoot>
               <tr className="border-t-2 border-linha-alta bg-superficie">
-                <td colSpan={7} className="rotulo px-2 py-1.5 text-right">
+                <td colSpan={compacta ? 6 : 7} className="rotulo px-2 py-1.5 text-right">
                   Soma das contribuições
                 </td>
                 <td className="px-2 py-1.5 font-semibold">{memoria.somaContribuicoes}</td>
@@ -151,8 +183,8 @@ export function MemoriaDeCalculo({
 
         <div className="mt-3 border-l-2 border-acento bg-superficie px-3 py-2">
           <p className="rotulo">A conta final</p>
-          <p className="numero mt-1 text-xs">{memoria.formula}</p>
-          <p className="numero mt-1.5 text-sm">
+          <p className={cn('numero mt-1', corpo)}>{memoria.formula}</p>
+          <p className={cn('numero mt-1.5', compacta ? 'text-lg' : 'text-sm')}>
             ({memoria.somaContribuicoes}) ÷ ({memoria.somaPesos} × {memoria.pontuacaoMaxima}) ×
             100 = <strong>{memoria.score}</strong>
           </p>
