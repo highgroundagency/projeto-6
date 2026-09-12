@@ -66,6 +66,7 @@ export const registro = {
         contribuicao: 'Memória de cálculo (a conta aberta) na tela.',
       },
       { integrante: 'fernando', contribuicao: 'Testes dos casos-limite do motor de cálculo.' },
+      { integrante: 'kerry', contribuicao: 'Apoia a checagem de clareza da conta aberta.' },
     ],
   },
 

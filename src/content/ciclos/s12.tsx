@@ -66,6 +66,7 @@ export const registro = {
         contribuicao: 'Documentação técnica, segurança e privacidade.',
       },
       { integrante: 'joao-pedro', contribuicao: 'Ajustes de tela que saíram da validação.' },
+      { integrante: 'kerry', contribuicao: 'Apoia a conferência do planejado × realizado.' },
     ],
   },
 

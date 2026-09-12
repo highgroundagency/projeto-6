@@ -59,6 +59,7 @@ export const registro = {
         integrante: 'fernando',
         contribuicao: 'Lente de direito digital e documentação final.',
       },
+      { integrante: 'kerry', contribuicao: 'Ajuda a reunir as peças do pacote final.' },
     ],
   },
 

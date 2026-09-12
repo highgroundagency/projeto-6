@@ -70,6 +70,7 @@ export const registro = {
         contribuicao: 'Tela de análises (analytics) e exibição das métricas.',
       },
       { integrante: 'fernando', contribuicao: 'Revisão das limitações escritas na tela.' },
+      { integrante: 'kerry', contribuicao: 'Apoia a conferência das correções do SR1.' },
     ],
   },
 

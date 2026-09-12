@@ -49,6 +49,7 @@ isso que o projeto quer ser para essa conta: o jeito simples de ver se está tud
   - João Pedro Mamede (joao-pedro): Front-end e design system
   - Rafael Serpa (rafael): Dados e machine learning
   - Fernando Cavalcanti (fernando): Qualidade, documentação e governança
+  - Kerry Muniz (kerry): Apoio em pesquisa e validação
 
 ============================================================================================
 2.  CRONOGRAMA: A FONTE ÚNICA DE VERDADE DAS DATAS
@@ -312,7 +313,7 @@ feedback de professor ou de cliente seria fabricar evidência.
       Forças
 
        - Temos um cliente real, e o processo dele está escrito numa portaria
-       - Somos seis, cada um com uma frente bem definida
+       - Somos sete, com frentes separadas e pouca sobreposição
        - O problema tem regra escrita: dá para desenhar no sistema e testar
 
       Fraquezas
@@ -337,7 +338,7 @@ feedback de professor ou de cliente seria fabricar evidência.
       âncora no site: #doc-s2-objetivos
       cinco metas com prazo e critério de verificação.
 
-      - Até o SR1 (03/10), entregar um protótipo navegável com as telas de lançamento, cálculo e memória de cálculo. Os seis integrantes conferem e aprovam o protótipo entre si.
+      - Até o SR1 (03/10), entregar um protótipo navegável com as telas de lançamento, cálculo e memória de cálculo. A equipe inteira confere e aprova o protótipo entre si.
        - Até a Semana 6, ter o motor de cálculo (a parte que faz a conta) coberto por testes automáticos. Os testes cobrem os casos-limite, os de borda. São quatro: valor na fronteira entre faixas, arredondamento, indicador sem lançamento e troca de versão da regra.
        - Até a Semana 9, mostrar o ciclo inteiro, do lançamento à aprovação. Com o histórico de quem mudou o quê, sem jeito de apagar, e só com dados inventados.
        - Na Semana 11, colher feedback estruturado de pelo menos um integrante da CAM, por entrevista semiestruturada e questionário. Registrar os ajustes que vierem daí.
@@ -673,6 +674,10 @@ feedback de professor ou de cliente seria fabricar evidência.
     documentos publicados. E ganhou o cronograma das 18 semanas. Cada entrega mostra o
     estado e o responsável. Até aqui esse cronograma só existia atrás da senha do painel
     administrativo.
+  - Kerry Muniz entrou na equipe nesta semana. O nome dele está na capa da apresentação,
+    porque ele está na sala. Ele não recebeu bloco de fala: o roteiro já estava dividido e
+    ensaiado, e dar um a quem chegou ontem seria inventar participação. A frente dele
+    começa na Semana 5, apoiando pesquisa e validação.
 
   Decisões  [validado, validado por gabriel]
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -762,8 +767,33 @@ feedback de professor ou de cliente seria fabricar evidência.
   - [codigo] Roteiro, PDF e portaria transcrita ->
     https://github.com/highgroundagency/projeto-6/tree/main/docs
 
-  Documentos de entrega desta semana (5)
+  Documentos de entrega desta semana (6)
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  >>> A APRESENTAÇÃO DO KICK-OFF
+      âncora no site: #doc-ko-apresentacao
+      os dezessete slides, o que tem em cada um, e o caminho para abrir e para baixar.
+
+      A apresentação não é um arquivo à parte: ela é uma página deste mesmo site, com o sistema rodando de verdade dentro de um dos slides. São 17 slides e 9:00 de fala.
+      Abrir a apresentação → ou baixar em PDF. O PDF tem as mesmas telas, para o caso de a sala ficar sem rede.
+
+       - 1. prumo
+       - 2. o caminho de hoje
+       - 3. todo mês, uma conta feita à mão
+       - 4. não é impressão nossa
+       - 5. o que o sistema tem que fazer
+       - 6. três pessoas, o mesmo número
+       - 7. o que sabemos, e o que ainda é chute
+       - 8. quem mais resolve isso, e o que joga a favor
+       - 9. como a gente gerou ideias
+       - 10. por que essa ideia venceu
+       - 11. do papel para a tela
+       - 12. a nota com a conta aberta
+       - 13. cada mês guarda a regra que usou
+       - 14. nenhum dado real. ainda.
+       - 15. o que pode dar errado, dito antes
+       - 16. as dezoito semanas, e onde estamos
+       - 17. prumo
 
   >>> A REGRA OFICIAL: PORTARIA CONJUNTA Nº 001/2024
       âncora no site: #doc-ko-regua-oficial
@@ -959,6 +989,7 @@ feedback de professor ou de cliente seria fabricar evidência.
   - João Henrique Micucci: Modelo de dados (o desenho das tabelas) e motor de cálculo.
   - Rafael Serpa: Gerador da base de teste, sempre igual.
   - Fernando Cavalcanti: Testes dos casos extremos e documentação técnica.
+  - Kerry Muniz: Acompanha o desenho da arquitetura e anota dúvidas.
 
   Evidências  [rascunho]
   ~~~~~~~~~~~~~~~~~~~~~~
@@ -1104,6 +1135,7 @@ feedback de professor ou de cliente seria fabricar evidência.
   - Gabriel Tenório de Lima Teixeira: Roteiro do pitch e conferência do pacote.
   - João Pedro Mamede: Telas navegáveis e acessibilidade.
   - Fernando Cavalcanti: Análises de segurança e privacidade.
+  - Kerry Muniz: Apoia a conferência da pesquisa no pacote.
 
   Evidências  [rascunho]
   ~~~~~~~~~~~~~~~~~~~~~~
@@ -1183,6 +1215,7 @@ feedback de professor ou de cliente seria fabricar evidência.
   - Gabriel Tenório de Lima Teixeira: Apresentou o pitch e respondeu às perguntas.
   - João Pedro Mamede: Demonstrou o protótipo ao vivo.
   - Matheus Lustosa: Apresentou a pesquisa e as personas.
+  - Kerry Muniz: Ajudou a anotar o retorno da banca.
 
   Evidências  [rascunho]
   ~~~~~~~~~~~~~~~~~~~~~~
@@ -1288,6 +1321,7 @@ feedback de professor ou de cliente seria fabricar evidência.
   - João Henrique Micucci: Gravação dos dados e histórico de mudanças.
   - João Pedro Mamede: Telas de lançamento e painel da CAM.
   - Fernando Cavalcanti: Testes do prazo e da mudança de estado.
+  - Kerry Muniz: Apoia a conferência do painel e do histórico.
 
   Evidências  [rascunho]
   ~~~~~~~~~~~~~~~~~~~~~~
@@ -1360,6 +1394,7 @@ feedback de professor ou de cliente seria fabricar evidência.
   - João Henrique Micucci: Apuração e escolha da versão certa da regra.
   - João Pedro Mamede: Memória de cálculo (a conta aberta) na tela.
   - Fernando Cavalcanti: Testes dos casos-limite do motor de cálculo.
+  - Kerry Muniz: Apoia a checagem de clareza da conta aberta.
 
   Evidências  [rascunho]
   ~~~~~~~~~~~~~~~~~~~~~~
@@ -1446,6 +1481,7 @@ feedback de professor ou de cliente seria fabricar evidência.
   - João Henrique Micucci: Trilha que só cresce e números por área.
   - João Pedro Mamede: Painel da gestão e exportação para planilha.
   - Fernando Cavalcanti: Perfil de auditoria e conferência das permissões.
+  - Kerry Muniz: Apoia a checagem do ranking sem nomes.
 
   Evidências  [rascunho]
   ~~~~~~~~~~~~~~~~~~~~~~
@@ -1521,6 +1557,7 @@ feedback de professor ou de cliente seria fabricar evidência.
   - Rafael Serpa: Gerador de dados, cadernos (notebooks) e modelos.
   - João Pedro Mamede: Tela de análises (analytics) e exibição das métricas.
   - Fernando Cavalcanti: Revisão das limitações escritas na tela.
+  - Kerry Muniz: Apoia a conferência das correções do SR1.
 
   Evidências  [rascunho]
   ~~~~~~~~~~~~~~~~~~~~~~
@@ -1609,6 +1646,7 @@ feedback de professor ou de cliente seria fabricar evidência.
   - Gabriel Tenório de Lima Teixeira: Contato com a CAM e escolha da prioridade dos
     ajustes.
   - João Pedro Mamede: Ajustes nas telas que saíram da validação.
+  - Kerry Muniz: Apoia as anotações da entrevista e do teste.
 
   Evidências  [rascunho]
   ~~~~~~~~~~~~~~~~~~~~~~
@@ -1689,6 +1727,7 @@ feedback de professor ou de cliente seria fabricar evidência.
   - Gabriel Tenório de Lima Teixeira: Pacote do SR2 e comparativo planejado × realizado.
   - Fernando Cavalcanti: Documentação técnica, segurança e privacidade.
   - João Pedro Mamede: Ajustes de tela que saíram da validação.
+  - Kerry Muniz: Apoia a conferência do planejado × realizado.
 
   Evidências  [rascunho]
   ~~~~~~~~~~~~~~~~~~~~~~
@@ -1843,6 +1882,7 @@ feedback de professor ou de cliente seria fabricar evidência.
   - João Pedro Mamede: Demonstra o ciclo completo do sistema.
   - Rafael Serpa: Apresenta a lente de machine learning.
   - Fernando Cavalcanti: Lente de direito digital e documentação final.
+  - Kerry Muniz: Ajuda a reunir as peças do pacote final.
 
   Evidências  [rascunho]
   ~~~~~~~~~~~~~~~~~~~~~~
@@ -2373,7 +2413,7 @@ histórico de quem mudou o quê e quando, que é exatamente o que o projeto defe
   ~~~~~~~~~~~~~~~~~~~~~~~~~~
   - [em andamento] Pitch: problema, objetivos, análises, ideação, solução e cronograma
     (Gabriel Tenório de Lima Teixeira) -> /pitch
-  - [em andamento] Fala distribuída entre os 6 integrantes (João Pedro Mamede) -> /pitch
+  - [em andamento] Fala distribuída entre quem apresenta (João Pedro Mamede) -> /pitch
   - [feito] Objetivo geral e objetivos específicos (Gabriel Tenório de Lima Teixeira) ->
     /#doc-ko-objetivos
   - [feito] Matriz CSD (Matheus Lustosa) -> /#doc-ko-csd

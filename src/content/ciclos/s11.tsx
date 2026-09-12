@@ -80,6 +80,7 @@ export const registro = {
         contribuicao: 'Contato com a CAM e escolha da prioridade dos ajustes.',
       },
       { integrante: 'joao-pedro', contribuicao: 'Ajustes nas telas que saíram da validação.' },
+      { integrante: 'kerry', contribuicao: 'Apoia as anotações da entrevista e do teste.' },
     ],
   },
 

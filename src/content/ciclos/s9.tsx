@@ -67,6 +67,7 @@ export const registro = {
         integrante: 'fernando',
         contribuicao: 'Perfil de auditoria e conferência das permissões.',
       },
+      { integrante: 'kerry', contribuicao: 'Apoia a checagem do ranking sem nomes.' },
     ],
   },
 

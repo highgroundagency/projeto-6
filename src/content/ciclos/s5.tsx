@@ -82,6 +82,7 @@ export const registro = {
         integrante: 'fernando',
         contribuicao: 'Testes dos casos extremos e documentação técnica.',
       },
+      { integrante: 'kerry', contribuicao: 'Acompanha o desenho da arquitetura e anota dúvidas.' },
     ],
   },
 

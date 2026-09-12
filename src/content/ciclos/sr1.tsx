@@ -62,6 +62,7 @@ export const registro = {
       { integrante: 'gabriel', contribuicao: 'Apresentou o pitch e respondeu às perguntas.' },
       { integrante: 'joao-pedro', contribuicao: 'Demonstrou o protótipo ao vivo.' },
       { integrante: 'matheus', contribuicao: 'Apresentou a pesquisa e as personas.' },
+      { integrante: 'kerry', contribuicao: 'Ajudou a anotar o retorno da banca.' },
     ],
   },
 

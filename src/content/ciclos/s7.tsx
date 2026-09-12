@@ -63,6 +63,7 @@ export const registro = {
       },
       { integrante: 'joao-pedro', contribuicao: 'Telas de lançamento e painel da CAM.' },
       { integrante: 'fernando', contribuicao: 'Testes do prazo e da mudança de estado.' },
+      { integrante: 'kerry', contribuicao: 'Apoia a conferência do painel e do histórico.' },
     ],
   },
 

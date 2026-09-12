@@ -61,6 +61,7 @@ export const registro = {
       { integrante: 'gabriel', contribuicao: 'Roteiro do pitch e conferência do pacote.' },
       { integrante: 'joao-pedro', contribuicao: 'Telas navegáveis e acessibilidade.' },
       { integrante: 'fernando', contribuicao: 'Análises de segurança e privacidade.' },
+      { integrante: 'kerry', contribuicao: 'Apoia a conferência da pesquisa no pacote.' },
     ],
   },
 
