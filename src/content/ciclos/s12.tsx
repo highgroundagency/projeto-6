@@ -10,17 +10,17 @@ export const registro = {
     selo: 'rascunho',
     validadoPor: null,
     conteudo:
-      'Fechar o pacote do SR2: aplicar os ajustes da validação, consolidar as três lentes e comparar planejado com realizado.',
+      'Fechar o pacote do SR2. Aplicar os ajustes que saíram da validação, juntar as três lentes e comparar o que planejamos com o que fizemos.',
   },
 
   avancos: {
     selo: 'rascunho',
     validadoPor: null,
     conteudo: [
-      'Ajustes de prioridade alta da validação com a CAM aplicados.',
-      'Documentação técnica, análise de segurança e análise de privacidade em versão final.',
-      'Comparativo planejado × realizado do semestre, com os desvios explicados.',
-      'Ensaio do pitch final, cronometrado.',
+      'Aplicamos os ajustes de prioridade alta que saíram da validação com a CAM.',
+      'Fechamos a versão final da documentação técnica, da análise de segurança e da análise de privacidade.',
+      'Comparamos o que planejamos com o que fizemos no semestre (planejado × realizado). Cada desvio tem o motivo explicado.',
+      'Ensaiamos o pitch final com cronômetro.',
     ],
   },
 
@@ -29,15 +29,14 @@ export const registro = {
     validadoPor: null,
     conteudo: [
       {
-        decisao:
-          'O comparativo planejado × realizado mostra o que não foi feito, com o motivo.',
+        decisao: 'O comparativo planejado × realizado mostra o que não foi feito, e por quê.',
         porque:
-          'Relatório que só lista acerto não é relatório. O que ficou de fora e por quê é o que mostra que houve priorização.',
+          'Relatório que só lista acerto não é relatório. Mostrar o que ficou de fora, e o motivo, prova que escolhemos prioridades.',
       },
       {
-        decisao: 'Congelar funcionalidade nova a partir desta semana.',
+        decisao: 'Nenhuma funcionalidade nova a partir desta semana.',
         porque:
-          'Feature entrando na véspera é feature sem teste e sem ensaio. O que não está pronto agora vira trabalho futuro declarado.',
+          'Funcionalidade que entra na véspera chega sem teste e sem ensaio. O que não está pronto agora entra na lista de trabalho futuro declarado.',
       },
     ],
   },
@@ -66,7 +65,7 @@ export const registro = {
         integrante: 'fernando',
         contribuicao: 'Documentação técnica, segurança e privacidade.',
       },
-      { integrante: 'joao-pedro', contribuicao: 'Ajustes de interface da validação.' },
+      { integrante: 'joao-pedro', contribuicao: 'Ajustes de tela que saíram da validação.' },
     ],
   },
 
@@ -95,45 +94,45 @@ export const documentos = [
     id: 'nuvem',
     titulo: 'Nuvem: trade-offs de infraestrutura e evolução',
     resumo:
-      'o que foi escolhido, o que foi recusado, e o que a arquitetura aguenta antes de precisar mudar.',
+      'o que escolhemos, o que recusamos, e até onde a arquitetura aguenta antes de precisar mudar.',
     Conteudo: () => (
       <>
         <Secao
           titulo="As escolhas, com a alternativa recusada ao lado"
-          descricao="Trade-off sem a alternativa nomeada não é trade-off: é justificativa."
+          descricao="Toda escolha tem uma alternativa que recusamos. Sem dizer qual foi, a escolha vira só justificativa."
         >
           <Tabela
             colunas={['Escolhido', 'Recusado', 'Por quê']}
             linhas={[
               [
-                'Funções serverless',
+                'Funções sem servidor fixo (serverless)',
                 'Contêiner sempre ligado',
-                'A carga é sazonal: pico no fechamento da competência, silêncio no resto do mês. Máquina ligada 30 dias para trabalhar 3 é custo sem serviço',
+                'A carga vem em ondas. Tem pico no fechamento de cada mês avaliado (a competência) e silêncio no resto do mês. Uma máquina ligada 30 dias para trabalhar 3 é custo sem serviço',
               ],
               [
-                'Postgres gerenciado com RLS',
+                'Postgres gerenciado, com as regras de acesso no banco (RLS)',
                 'Banco em máquina própria',
-                'Autorização no banco vale para todo caminho de escrita, e ninguém da equipe precisa aplicar correção de segurança de madrugada',
+                'Regra de acesso dentro do banco vale para todo caminho de escrita. E ninguém da equipe precisa aplicar correção de segurança de madrugada',
               ],
               [
-                'Renderização no servidor a cada requisição',
-                'Site estático regerado por webhook',
-                'O que o visitante pode ver depende do dia E da sessão dele. Estático exigiria uma versão por combinação, ou vazaria conteúdo futuro no HTML',
+                'Página montada no servidor a cada pedido',
+                'Site estático, gerado de novo por aviso automático (webhook)',
+                'O que o visitante pode ver depende do dia e também da sessão dele. Um site estático precisaria de uma versão por combinação. Ou vazaria conteúdo futuro no HTML',
               ],
               [
-                'Treino de ML offline, resultado em JSON',
-                'Inferência sob demanda numa função',
-                'Partida a frio com scikit-learn custa segundos para exibir número que muda entre deploys. E o JSON versionado é auditável (ADR-022)',
+                'Modelos de ML treinados antes, fora do sistema (offline), com o resultado guardado em JSON',
+                'Modelo rodando na hora, dentro de uma função',
+                'Carregar o scikit-learn do zero custa segundos. Isso para mostrar um número que só muda entre uma publicação e outra. E o JSON guardado no Git pode ser conferido depois (ADR-022)',
               ],
               [
-                'Deploy por push no Git',
-                'Pipeline própria com aprovação manual',
+                'Publicação automática a cada envio ao Git',
+                'Esteira própria, com aprovação manual',
                 'Uma equipe de seis, num semestre, gasta mais mantendo a esteira do que ganha com ela',
               ],
               [
-                'Config em variável de ambiente e no Git',
-                'Painel de administração escrevendo em banco',
-                'Conteúdo versionado deixa histórico de quem mudou o quê. Formulário não deixa (§7.3)',
+                'Configuração em variável de ambiente e no Git',
+                'Painel de administração gravando no banco',
+                'Conteúdo guardado no Git deixa histórico de quem mudou o quê. Formulário não deixa (§7.3)',
               ],
             ]}
           />
@@ -146,41 +145,46 @@ export const documentos = [
           <Tabela
             colunas={['Dimensão', 'Hoje no protótipo', 'O que aguentaria em produção']}
             linhas={[
-              ['Áreas técnicas', '10 sintéticas', 'Dezenas: o custo é linear e trivial'],
-              ['Indicadores', '30 sintéticos', 'Centenas, sem mudança de arquitetura'],
+              [
+                'Áreas técnicas',
+                '10, na base de teste',
+                'Dezenas: o custo cresce na mesma proporção e é pequeno',
+              ],
+              ['Indicadores', '30, na base de teste', 'Centenas, sem mudar a arquitetura'],
               [
                 'Gestores avaliados',
-                'Dezenas na base sintética',
-                'Milhares: o cálculo é por gestor e paraleliza sozinho',
+                'Dezenas, na base de teste',
+                'Milhares: a conta é feita gestor por gestor, então roda em paralelo sem esforço',
               ],
               [
-                'Competências',
+                'Competências (meses avaliados)',
                 'Mensal',
-                'Mensal continua sendo o pico; o resto do mês é leitura',
+                'Mensal continua sendo o pico; o resto do mês é só leitura',
               ],
               [
-                'Trilha de auditoria',
+                'Histórico de quem mudou o quê (trilha de auditoria)',
                 'Centenas de eventos em memória',
-                'Cresce para sempre por desenho. Em produção pede índice por ciclo e arquivamento por competência antiga, e isso está declarado como pendência',
+                'Cresce para sempre, por desenho. Em produção vai precisar de índice por ciclo e de arquivamento dos meses antigos. Isso já está declarado como pendência',
               ],
             ]}
           />
           <Nota>
-            O gargalo real não é técnico: é a janela de lançamento. Todas as áreas informam nos
-            mesmos dois dias do mês, e é ali que a função escala. Serverless resolve exatamente
-            esse formato de carga, e é a razão principal da escolha.
+            O gargalo real não é técnico. É a janela de lançamento: todas as áreas informam nos
+            mesmos dois dias do mês. É ali que a função precisa crescer. Funções sem servidor
+            fixo (serverless) resolvem exatamente esse formato de carga. Essa é a razão
+            principal da escolha.
           </Nota>
         </Secao>
 
         <Secao titulo="O que falta para virar produção">
           <Lista
             itens={[
-              'Ligar o schema de `supabase/migrations/` ao runtime: ele está escrito, testado contra um Postgres real, e desligado (ADR-011).',
-              'Autenticação institucional de verdade no lugar do seletor de perfil simulado, com as políticas de RLS já escritas assumindo o controle.',
-              'Rate limit persistente: o contador atual vive na memória de uma instância, e em serverless isso é best-effort declarado.',
-              'CSP com nonce por requisição no lugar do unsafe-inline herdado do bootstrap do framework.',
-              'Observabilidade além do health check: hoje há `/api/status`, e falta série temporal de erro e latência.',
-              'Rotina de backup e teste de restauração do banco, que num sistema que paga gratificação não é opcional.',
+              'Ligar o esquema do banco em `supabase/migrations/` ao sistema em execução. Ele está escrito e testado contra um Postgres real, mas segue desligado (ADR-011).',
+              'Trocar o seletor de perfil simulado por login institucional de verdade. As regras de acesso do banco (RLS) já estão escritas e assumiriam o controle.',
+              'Guardar o limite de tentativas (rate limit) fora da memória. Hoje o contador vive na memória de uma instância. Em serverless isso funciona só na medida do possível, e está declarado assim.',
+              'Trocar a política de segurança de conteúdo (CSP) para usar um código único por pedido (nonce). Hoje ela usa unsafe-inline, herdado da configuração inicial do framework.',
+              'Acompanhar o sistema além da checagem de saúde. Hoje existe `/api/status`. Falta o registro de erros e de tempo de resposta ao longo do tempo.',
+              'Criar a rotina de cópia de segurança (backup) do banco, com teste de restauração. Num sistema que paga gratificação, isso não é opcional.',
             ]}
           />
         </Secao>
@@ -195,28 +199,31 @@ export const documentos = [
       <>
         <Secao
           titulo="Privacy by Design, apontando o código"
-          descricao="Princípio que não aponta para um arquivo é declaração de intenção."
+          descricao="Princípio que não aponta para um arquivo é só declaração de intenção."
         >
           <Tabela
             colunas={['Princípio', 'Onde está no código']}
             linhas={[
               [
                 'Minimização',
-                'A base sintética não tem CPF, e-mail nem telefone, e há teste que falha se aparecerem',
+                'A base de teste não tem CPF, e-mail nem telefone. Há um teste que falha se algum deles aparecer',
               ],
               [
                 'Finalidade',
-                'O sistema calcula o percentual devido; folha de pagamento está fora do escopo desde a proposta',
+                'O sistema calcula o percentual devido. A folha de pagamento está fora do escopo desde a proposta',
               ],
               [
                 'Transparência',
-                'A memória de cálculo abre cada passo até a origem, para o próprio avaliado',
+                'A memória de cálculo mostra cada passo da conta até a origem. O próprio avaliado pode ver',
               ],
               [
                 'Segurança',
-                'Trilha append-only, regra versionada e políticas de RLS escritas em supabase/migrations/',
+                'Histórico que só recebe registro novo, nunca apaga. Regra guardada com número de versão. Regras de acesso do banco (RLS) escritas em supabase/migrations/',
               ],
-              ['Prestação de contas', 'Cada evento guarda quem, quando, antes e depois'],
+              [
+                'Prestação de contas',
+                'Cada evento guarda quem mudou, quando, o valor antes e o valor depois',
+              ],
             ]}
           />
         </Secao>
@@ -230,18 +237,18 @@ export const documentos = [
             linhas={[
               [
                 'Confirmação e acesso',
-                'Tela "meu resultado": score, faixa, histórico e memória de cálculo do próprio avaliado',
+                'Tela "meu resultado": o avaliado vê a própria nota (score), a faixa, o histórico e a memória de cálculo',
               ],
               [
                 'Correção',
-                'Contestação com resposta da comissão; correção de lançamento gera evento novo sem apagar o anterior',
+                'O avaliado contesta e a comissão responde. Corrigir um lançamento gera um evento novo, sem apagar o anterior',
               ],
-              ['Anonimização', 'Ranking anonimizável no painel da gestão'],
+              ['Anonimização', 'O ranking no painel da gestão pode ser mostrado sem nomes'],
               ['Portabilidade', 'Exportação em CSV'],
               ['Informação sobre compartilhamento', 'Não há compartilhamento com terceiros'],
               [
                 'Revisão de decisão automatizada (art. 20)',
-                'O cálculo é determinístico e a memória mostra cada passo; o ML sinaliza e nunca bloqueia',
+                'A mesma entrada dá sempre a mesma conta, e a memória mostra cada passo. O ML só aponta onde olhar, nunca bloqueia',
               ],
             ]}
           />
@@ -250,15 +257,16 @@ export const documentos = [
         <Secao titulo="O art. 20 é o centro deste projeto">
           <Lista
             itens={[
-              'Decisão automatizada que afeta interesse do titular exige direito a revisão, e gratificação afeta remuneração.',
-              'Por isso o cálculo não é caixa-preta: a regra é dado versionado e a memória de cálculo mostra a conta inteira.',
-              'Por isso, também, nenhuma saída dos modelos de machine learning entra na conta. Eles informam onde olhar; quem decide é a comissão, e a decisão é contestável.',
+              'Decisão automática que afeta o interesse do titular, a pessoa dona dos dados, exige direito a revisão. Gratificação afeta o salário.',
+              'Por isso a conta não é caixa-preta. A regra é guardada como dado, com número de versão. A memória de cálculo mostra a conta inteira.',
+              'Por isso, também, nenhum resultado dos modelos de machine learning entra na conta. Eles só apontam onde olhar. Quem decide é a comissão, e a decisão pode ser contestada.',
             ]}
           />
           <Nota>
-            Esta é a razão pela qual a lente de Direito não é um anexo do projeto. Ela
-            determinou uma decisão de arquitetura: o motor de cálculo ser função pura e
-            auditável, e o ML ficar fora dele.
+            É por isso que a lente de Direito não é um anexo do projeto. Ela determinou uma
+            decisão de arquitetura. O motor de cálculo é uma função pura: só depende do que
+            recebe e não mexe em nada de fora. Cada passo dele pode ser conferido. E o ML fica
+            fora dele.
           </Nota>
         </Secao>
       </>
@@ -267,7 +275,7 @@ export const documentos = [
   {
     id: 'planejado',
     titulo: 'Planejado × realizado',
-    resumo: 'o que foi prometido em cada marco, o que saiu, e o desvio explicado.',
+    resumo: 'o que prometemos em cada marco, o que entregamos, e o desvio explicado.',
     Conteudo: () => (
       <>
         <Tabela
@@ -276,7 +284,7 @@ export const documentos = [
             ['Kick-off', 'Problema, pergunta e recorte', 'a preencher', 'A preencher no SR2'],
             ['SR1', 'Pesquisa e protótipo navegável', 'a preencher', 'A preencher no SR2'],
             [
-              'Sprints 1–4',
+              'Sprints 1 a 4',
               'Ciclo completo, auditoria, gestão e analytics',
               'a preencher',
               'A preencher no SR2',
@@ -286,8 +294,8 @@ export const documentos = [
         />
         <Lista
           itens={[
-            'A coluna "realizado" é preenchida no fim, com o que aconteceu, não antes.',
-            'Desvio sem explicação não conta: cada linha diz por que mudou.',
+            'A coluna "realizado" só é preenchida no fim, com o que de fato aconteceu.',
+            'Desvio sem explicação não conta. Cada linha diz por que mudou.',
           ]}
         />
       </>
@@ -296,31 +304,31 @@ export const documentos = [
   {
     id: 'futuro',
     titulo: 'Trabalho futuro declarado',
-    resumo: 'o que o semestre não cobre, dito na cara em vez de escondido.',
+    resumo: 'o que o semestre não cobre, dito às claras em vez de escondido.',
     Conteudo: () => (
       <>
         <Tabela
           colunas={['Item', 'Por que ficou de fora']}
           linhas={[
             [
-              'Persistência em banco no runtime',
-              'O schema com RLS está escrito e testado, mas o app roda no seed, ver ADR-011',
+              'Banco de dados ligado ao sistema em execução',
+              'O esquema do banco, com as regras de acesso (RLS), está escrito e testado. Mas o app roda sobre a base de teste (seed). Ver ADR-011',
             ],
             [
-              'Autenticação real por perfil',
-              'O seletor é simulado; as políticas que resolveriam isso existem no schema guardado',
+              'Autenticação (login) real por perfil',
+              'O seletor de perfil é simulado. As regras que resolveriam isso já existem no esquema guardado',
             ],
             [
               'Integração com a folha de pagamento',
-              'Fora do escopo desde a proposta: o produto calcula e audita, não paga',
+              'Fora do escopo desde a proposta. O produto calcula e guarda o histórico para conferência, não paga',
             ],
             [
-              'Rate limit persistente no painel',
-              'O contador vive na memória do processo; em serverless isso é best-effort e está declarado',
+              'Limite de tentativas (rate limit) persistente no painel',
+              'O contador vive na memória do processo. Em funções sem servidor fixo (serverless) isso funciona só na medida do possível, e está declarado',
             ],
             [
-              'CSP com nonce por requisição',
-              'A política atual usa unsafe-inline, herdado do bootstrap do framework',
+              'Política de segurança de conteúdo (CSP) com código único por pedido (nonce)',
+              'A política atual usa unsafe-inline, herdado da configuração inicial do framework',
             ],
           ]}
         />

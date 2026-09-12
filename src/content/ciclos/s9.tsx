@@ -10,17 +10,17 @@ export const registro = {
     selo: 'rascunho',
     validadoPor: null,
     conteudo:
-      'Fechar auditoria e visão de gestão: o ciclo inteiro rastreável e os agregados por área.',
+      'Fechar a parte de auditoria e a visão da gestão. O ciclo inteiro (o período avaliado) fica rastreável, e a gestão vê os números juntados por área.',
   },
 
   avancos: {
     selo: 'rascunho',
     validadoPor: null,
     conteudo: [
-      'Linha do tempo imutável com autor, momento, antes e depois de cada evento.',
-      'Painel da gestão com agregados por área, ranking anonimizável e exportação em CSV.',
-      'Ciclo completo demonstrado de ponta a ponta, de lançamento a homologação.',
-      'Perfil de auditoria que lê tudo e não escreve nada.',
+      'Fizemos a linha do tempo do sistema. Ela guarda quem fez cada coisa e quando. Guarda também o que havia antes e o que ficou depois. Uma vez escrita, ninguém apaga nem altera.',
+      'Fizemos o painel da gestão. Ele mostra os números juntados por área e um ranking que pode esconder os nomes. Os dados podem ser baixados em planilha (CSV).',
+      'Demonstramos o ciclo completo, de ponta a ponta. Ele vai do lançamento (a entrada dos valores dos indicadores) até a aprovação final (homologação).',
+      'Criamos o perfil de auditoria. Quem entra com ele lê tudo e não altera nada.',
     ],
   },
 
@@ -29,14 +29,15 @@ export const registro = {
     validadoPor: null,
     conteudo: [
       {
-        decisao: 'A trilha é append-only, e isso é garantido fora da aplicação.',
+        decisao:
+          'A trilha (o histórico de quem mudou o quê) só cresce: nada é apagado nem alterado. Isso é garantido fora do programa.',
         porque:
-          'No schema guardado é gatilho de banco: vale até para a chave mais privilegiada, não só para quem passa pela tela.',
+          'No desenho do banco que guardamos, a regra é um gatilho: o próprio banco a aplica. Por isso vale até para a chave de acesso mais poderosa, não só para quem usa a tela.',
       },
       {
-        decisao: 'O ranking tem modo anônimo.',
+        decisao: 'O ranking tem um modo que esconde os nomes.',
         porque:
-          'Comparar pessoas nominalmente num painel aberto cria constrangimento que o produto não precisa causar.',
+          'Comparar pessoas pelo nome, num painel que todos veem, constrange. O produto não precisa causar esse constrangimento.',
       },
     ],
   },
@@ -48,8 +49,8 @@ export const registro = {
     selo: 'rascunho',
     validadoPor: null,
     conteudo: [
-      'Preparar os instrumentos da validação com a CAM.',
-      'Fechar a tela de analytics com os modelos da lente de ML.',
+      'Preparar o material que vamos usar na validação com a CAM.',
+      'Fechar a tela de análises (analytics) com os modelos da lente de aprendizado de máquina (ML).',
     ],
   },
 
@@ -57,11 +58,14 @@ export const registro = {
     selo: 'rascunho',
     validadoPor: null,
     conteudo: [
-      { integrante: 'joao-henrique', contribuicao: 'Trilha append-only e agregados.' },
-      { integrante: 'joao-pedro', contribuicao: 'Painel da gestão e exportação.' },
+      { integrante: 'joao-henrique', contribuicao: 'Trilha que só cresce e números por área.' },
+      {
+        integrante: 'joao-pedro',
+        contribuicao: 'Painel da gestão e exportação para planilha.',
+      },
       {
         integrante: 'fernando',
-        contribuicao: 'Perfil de auditoria e conferência de permissões.',
+        contribuicao: 'Perfil de auditoria e conferência das permissões.',
       },
     ],
   },
@@ -81,18 +85,25 @@ export const documentos = [
   {
     id: 'trilha',
     titulo: 'O que a trilha registra',
-    resumo: 'os campos de cada evento e por que nenhum é opcional.',
+    resumo:
+      'os campos de cada evento da trilha (o histórico de quem mudou o quê) e por que nenhum pode faltar.',
     Conteudo: () => (
       <>
         <Tabela
           colunas={['Campo', 'Para quê']}
           linhas={[
-            ['quem', 'Autor da ação, para que ninguém possa negar depois'],
-            ['quando', 'Momento exato, para ordenar e para conferir prazo'],
-            ['o quê', 'Tipo do evento: lançamento, correção, transição, homologação'],
-            ['entidade', 'A que o evento se refere: qual ciclo, qual indicador'],
-            ['antes', 'Estado anterior: nulo só quando o registro está nascendo'],
-            ['depois', 'Estado novo, que é o que passa a valer'],
+            ['quem', 'Quem fez a ação. Assim ninguém pode negar depois'],
+            ['quando', 'O momento exato. Serve para pôr em ordem e para conferir prazo'],
+            [
+              'o quê',
+              'O tipo do evento. Pode ser lançamento, correção, mudança de etapa (transição) ou aprovação (homologação)',
+            ],
+            [
+              'entidade',
+              'Sobre o que é o evento: qual ciclo (o período avaliado), qual indicador',
+            ],
+            ['antes', 'Como estava antes. Fica vazio só quando o registro está sendo criado'],
+            ['depois', 'Como ficou depois. É o que passa a valer'],
           ]}
         />
       </>

@@ -17,16 +17,16 @@ export const registro = {
     selo: 'rascunho',
     validadoPor: null,
     conteudo:
-      'Apresentar problema, pesquisa e protótipo navegável, e sair com o retorno da banca registrado e priorizado.',
+      'Mostrar à banca o problema, a pesquisa e o protótipo navegável. Sair da apresentação com o retorno da banca anotado e em ordem de prioridade.',
   },
 
   avancos: {
     selo: 'rascunho',
     validadoPor: null,
     conteudo: [
-      'Pitch de cinco minutos apresentado.',
-      'Demonstração ao vivo do caminho lançamento → cálculo → memória de cálculo.',
-      'Pacote de entrega do SR1 submetido conforme a matriz de evidências.',
+      'Apresentamos o pitch de cinco minutos.',
+      'Fizemos a demonstração ao vivo de um caminho do sistema. Primeiro o lançamento, depois o cálculo, por fim a memória de cálculo (o passo a passo da conta).',
+      'Enviamos o Pacote de entrega do SR1, conforme a matriz de evidências.',
     ],
   },
 
@@ -37,7 +37,7 @@ export const registro = {
       {
         decisao: 'Demonstrar ao vivo, sem vídeo gravado.',
         porque:
-          'Gravação esconde travamento e não prova que roda. Se cair, cai na frente de todo mundo, e isso também é informação.',
+          'Um vídeo gravado esconde travamentos e não prova que o sistema roda. Se cair ao vivo, cai na frente de todo mundo, e isso também é informação.',
       },
     ],
   },
@@ -49,9 +49,9 @@ export const registro = {
     selo: 'rascunho',
     validadoPor: null,
     conteudo: [
-      'Transcrever o retorno da banca neste bloco de feedback, com origem.',
-      'Repriorizar o backlog das quatro sprints a partir do que foi apontado.',
-      'Marcar a conversa de validação com a CAM para a Semana 11.',
+      'Anotar neste bloco de feedback o que a banca disse, e de quem veio.',
+      'Reordenar o backlog, a lista de tarefas das quatro sprints, pelo que a banca apontou.',
+      'Marcar para a Semana 11 a conversa de validação com a Comissão de Avaliação de Metas (CAM).',
     ],
   },
 
@@ -59,9 +59,9 @@ export const registro = {
     selo: 'rascunho',
     validadoPor: null,
     conteudo: [
-      { integrante: 'gabriel', contribuicao: 'Narração do pitch e resposta às perguntas.' },
-      { integrante: 'joao-pedro', contribuicao: 'Demonstração ao vivo do protótipo.' },
-      { integrante: 'matheus', contribuicao: 'Apresentação da pesquisa e das personas.' },
+      { integrante: 'gabriel', contribuicao: 'Apresentou o pitch e respondeu às perguntas.' },
+      { integrante: 'joao-pedro', contribuicao: 'Demonstrou o protótipo ao vivo.' },
+      { integrante: 'matheus', contribuicao: 'Apresentou a pesquisa e as personas.' },
     ],
   },
 
@@ -84,69 +84,70 @@ export const documentos = [
   {
     id: 'direito-base-legal',
     titulo: 'Direito: base legal e dados pessoais',
-    resumo: 'que dado o sistema trataria, de quem, e sob qual artigo da lgpd.',
+    resumo: 'que dado o sistema usaria, de quem, e com base em qual artigo da lgpd.',
     Conteudo: () => (
       <>
         <Secao
-          titulo="Base legal do tratamento"
-          descricao="Art. 7º, III da LGPD: execução de política pública prevista em lei e regulamento."
+          titulo="Base legal para usar os dados"
+          descricao="A LGPD permite usar dados pessoais para executar política pública prevista em lei e regulamento. É o art. 7º, III da LGPD."
         >
           <Lista
             itens={[
-              'A gratificação é instituída por portaria: o tratamento é indispensável para executá-la.',
-              'Não se pede consentimento, e nem se deveria, numa relação funcional assimétrica ele seria frágil, e a recusa não poderia ser honrada sem inviabilizar a política.',
-              'Controladora: Secretaria de Saúde do Recife. Encarregado designado pela Prefeitura; o sistema apenas expõe o canal.',
+              'A gratificação foi criada por portaria. Sem usar esses dados, não há como executá-la.',
+              'O sistema não pede consentimento ao servidor, e nem deveria. Numa relação de trabalho desigual, o consentimento seria frágil. E se o servidor recusasse, não daria para respeitar a recusa sem impedir a política.',
+              'Quem responde pelos dados (a controladora) é a Secretaria de Saúde do Recife. O encarregado (a pessoa de contato sobre dados) é indicado pela Prefeitura. O sistema só mostra o canal para falar com ele.',
             ]}
           />
         </Secao>
 
         <Secao
-          titulo="Mapeamento dos dados"
-          descricao="O que entraria em produção, por titular e por finalidade."
+          titulo="Quais dados o sistema guardaria"
+          descricao="O que existiria no sistema real, de quem seria cada dado e para que serviria."
         >
           <Tabela
             colunas={['Categoria', 'Titular', 'Necessário para']}
             linhas={[
               [
-                'Identificação funcional (nome, matrícula, cargo, lotação)',
+                'Quem é o servidor (nome, matrícula, cargo, lotação)',
                 'Servidor avaliado',
-                'Vincular o resultado à pessoa certa',
+                'Ligar o resultado à pessoa certa',
               ],
               [
-                'Vínculo organizacional (área, período de exercício)',
+                'Onde o servidor trabalha (área, período de exercício)',
                 'Servidor avaliado',
-                'Saber quais indicadores se aplicam',
+                'Saber quais indicadores valem para ele',
               ],
               [
-                'Desempenho (score, faixa, memória de cálculo, histórico)',
+                'Desempenho (a nota, chamada de score, a faixa, a memória de cálculo e o histórico)',
                 'Servidor avaliado',
-                'Calcular e justificar a gratificação',
+                'Calcular a gratificação e explicar o resultado',
               ],
               [
-                'Autoria de lançamento (quem informou, quando)',
+                'Quem fez o lançamento (quem informou, quando)',
                 'Servidor da área técnica',
-                'Rastreabilidade e responsabilização',
+                'Ter o histórico de quem informou, para poder responsabilizar',
               ],
               [
                 'Contestação (motivo, resposta da comissão)',
                 'Servidor avaliado',
-                'Devido processo',
+                'Garantir o direito de defesa (devido processo)',
               ],
             ]}
           />
           <Nota>
-            Não são tratados: dados sensíveis do art. 5º, II, dados de pacientes, dados
-            bancários ou valores de folha. O sistema calcula o percentual devido; a folha é
-            outro sistema, e está declaradamente fora do escopo.
+            O sistema não guarda dados sensíveis, os do art. 5º, II. Também não guarda dados de
+            pacientes, dados bancários nem valores de folha. Ele só calcula o percentual devido.
+            A folha de pagamento é outro sistema, e deixamos isso fora do escopo de forma
+            declarada.
           </Nota>
         </Secao>
 
         <Secao titulo="No MVP, nada disso existe">
           <Lista
             itens={[
-              'A base é 100% sintética, com semente fixa, nenhum servidor real está no repositório.',
-              'Há teste automatizado que falha se CPF, e-mail, telefone ou matrícula aparecerem na base.',
-              'O mapeamento acima descreve o que existiria em produção, para que a análise jurídica não dependa de esperar o dado real chegar.',
+              'A base de dados é 100% sintética, ou seja, inventada por programa. Ela usa uma semente fixa, por isso sai sempre igual. Nenhum servidor real está no repositório.',
+              'Um teste automático confere a base. Ele falha se aparecer CPF, e-mail, telefone ou matrícula.',
+              'A tabela acima descreve o que existiria no sistema real. Assim, a análise jurídica não precisa esperar o dado real chegar.',
             ]}
           />
         </Secao>
@@ -156,7 +157,7 @@ export const documentos = [
   {
     id: 'pacote',
     titulo: 'Pacote de entrega do SR1',
-    resumo: 'o que foi submetido e onde cada peça está no site.',
+    resumo: 'o que entregamos e onde cada peça está no site.',
     Conteudo: () => (
       <>
         <Tabela
@@ -174,8 +175,8 @@ export const documentos = [
         />
         <Lista
           itens={[
-            'Nenhuma peça é PDF: tudo é conteúdo do site, versionado no Git.',
-            'O que ainda não foi validado carrega selo de rascunho na própria página.',
+            'Nenhuma peça é PDF. Tudo é conteúdo do site, guardado no Git com histórico de versões.',
+            'O que ainda não foi aprovado leva o selo de rascunho na própria página.',
           ]}
         />
       </>

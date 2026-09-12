@@ -16,17 +16,17 @@ export const registro = {
     selo: 'rascunho',
     validadoPor: null,
     conteudo:
-      'Validar o MVP com quem opera o processo hoje, e registrar o que precisa mudar antes do SR2.',
+      'Validar o MVP com quem faz esse trabalho hoje. Anotar o que precisa mudar antes do SR2.',
   },
 
   avancos: {
     selo: 'rascunho',
     validadoPor: null,
     conteudo: [
-      'Entrevista semiestruturada com pelo menos um integrante da CAM, sobre o fluxo real.',
-      'Teste de usabilidade com tarefa cronometrada: lançar um indicador e explicar o próprio score.',
-      'Questionário pós-teste sobre clareza da memória de cálculo e confiança no resultado.',
-      'Ajustes decorrentes registrados com origem e prioridade.',
+      'Entrevistamos pelo menos um integrante da CAM sobre como o processo acontece na prática. A conversa segue um roteiro, mas deixa a pessoa falar livremente.',
+      'Fizemos um teste de usabilidade com tempo marcado. A pessoa tenta lançar um indicador e explicar a própria nota (o score).',
+      'Depois do teste, a pessoa responde a um questionário. Ele pergunta se a memória de cálculo, o passo a passo da conta, ficou clara. E se ela confia no resultado.',
+      'Anotamos os ajustes que saíram daí. Cada ajuste leva anotado de onde veio e a prioridade.',
     ],
   },
 
@@ -37,12 +37,12 @@ export const registro = {
       {
         decisao: 'A validação usa tarefa cronometrada, não demonstração narrada.',
         porque:
-          'Demonstração guiada mede a nossa explicação, não a clareza da tela. A pessoa precisa tentar sozinha.',
+          'Se nós mostramos, o teste mede a nossa explicação, não a clareza da tela. A pessoa precisa tentar sozinha.',
       },
       {
-        decisao: 'Nenhum dado real da SESAU entra no ambiente de teste.',
+        decisao: 'Nenhum dado real da SESAU entra no teste.',
         porque:
-          'A validação é do fluxo e da clareza, não dos números. Base sintética resolve, e evita tratar dado de servidor sem base legal.',
+          'Queremos validar o fluxo e a clareza, não os números. Uma base de teste gerada por programa basta. E ela evita mexer em dado de servidor sem base legal.',
       },
     ],
   },
@@ -51,7 +51,7 @@ export const registro = {
     selo: 'rascunho',
     validadoPor: null,
     conteudo: [
-      'A validação depende da agenda da CAM, que não está sob controle da equipe; marcar com antecedência é o único mitigador.',
+      'A validação depende da agenda da CAM, e essa agenda não é nossa. A única defesa é marcar com antecedência.',
     ],
   },
 
@@ -61,9 +61,9 @@ export const registro = {
     selo: 'rascunho',
     validadoPor: null,
     conteudo: [
-      'Transcrever o retorno da CAM neste bloco de feedback, com origem declarada.',
-      'Aplicar os ajustes de prioridade alta antes do Pré-SR2.',
-      'Registrar o que foi apontado e conscientemente não será feito, com o motivo.',
+      'Escrever o retorno da CAM neste bloco de feedback, dizendo de onde veio.',
+      'Fazer os ajustes de prioridade alta antes do Pré-SR2.',
+      'Anotar o que foi apontado e decidimos não fazer, com o motivo.',
     ],
   },
 
@@ -73,13 +73,13 @@ export const registro = {
     conteudo: [
       {
         integrante: 'matheus',
-        contribuicao: 'Condução da entrevista e do teste de usabilidade.',
+        contribuicao: 'Conduzir a entrevista e o teste de usabilidade.',
       },
       {
         integrante: 'gabriel',
-        contribuicao: 'Interlocução com a CAM e priorização dos ajustes.',
+        contribuicao: 'Contato com a CAM e escolha da prioridade dos ajustes.',
       },
-      { integrante: 'joao-pedro', contribuicao: 'Ajustes de interface decorrentes.' },
+      { integrante: 'joao-pedro', contribuicao: 'Ajustes nas telas que saíram da validação.' },
     ],
   },
 
@@ -105,28 +105,31 @@ export const documentos = [
           linhas={[
             [
               'Conte como foi o último fechamento de ciclo, do começo ao fim.',
-              'O fluxo real, não o fluxo descrito na portaria',
+              'O que acontece de verdade, não o que a portaria descreve',
             ],
-            ['O que costuma dar errado?', 'Os pontos de quebra, na ordem de quem sente a dor'],
+            [
+              'O que costuma dar errado?',
+              'Onde o processo quebra, na ordem em que a pessoa sente',
+            ],
             [
               'Como você confere se um número está certo hoje?',
               'Se existe conferência, e quanto ela custa',
             ],
             [
               'Já teve alguém contestando um resultado? Como foi?',
-              'O caminho da contestação e o que faltou para respondê-la',
+              'O caminho da contestação, e o que faltou para responder a ela',
             ],
             [
               'O que você faria se tivesse mais tempo no fechamento?',
-              'A prioridade real, dita sem a pressão de escolher',
+              'O que importa de verdade, dito sem a pressão de escolher',
             ],
           ]}
         />
         <Lista
           itens={[
-            'Perguntas abertas, sem sugerir a resposta, nada de "não seria melhor se…".',
-            'Quem conduz não defende o produto: se a pessoa criticar, a resposta é "me conta mais".',
-            'Nenhum dado real de servidor é solicitado ou anotado.',
+            'As perguntas são abertas e não sugerem resposta. Nada de "não seria melhor se…".',
+            'Quem conduz não defende o produto. Se a pessoa criticar, a resposta é "me conta mais".',
+            'Não pedimos nem anotamos nenhum dado real de servidor.',
           ]}
         />
       </>
@@ -135,7 +138,7 @@ export const documentos = [
   {
     id: 'tarefas',
     titulo: 'Tarefas do teste de usabilidade',
-    resumo: 'o que a pessoa tenta fazer sozinha, e o critério de sucesso de cada tarefa.',
+    resumo: 'o que a pessoa tenta fazer sozinha, e o que conta como sucesso em cada tarefa.',
     Conteudo: () => (
       <>
         <Tabela
@@ -144,22 +147,22 @@ export const documentos = [
             [
               'Lançar o valor de um indicador da sua área',
               'Concluir sem pedir ajuda',
-              'Se a janela e a evidência ficam claras sem explicação',
+              'Se o prazo de lançamento e a evidência ficam claros sem ninguém explicar',
             ],
             [
-              'Descobrir por que o score de um gestor deu o que deu',
-              'Chegar à memória de cálculo e apontar um indicador',
-              'Se a conta abre até a origem sem treinamento',
+              'Descobrir por que a nota (o score) de um gestor deu o que deu',
+              'Chegar ao passo a passo da conta (a memória de cálculo) e apontar um indicador',
+              'Se dá para seguir a conta até a origem sem treinamento',
             ],
             [
               'Encontrar quem informou determinado valor e quando',
-              'Chegar à trilha de auditoria',
-              'Se a rastreabilidade é achável, não só existente',
+              'Chegar ao histórico de quem fez o quê e quando (a trilha de auditoria)',
+              'Se o histórico é fácil de achar, e não só existe',
             ],
             [
               'Contestar um resultado',
               'Abrir a contestação e saber o prazo',
-              'Se o caminho de discordar é visível para quem é avaliado',
+              'Se quem é avaliado enxerga o caminho para discordar',
             ],
           ]}
         />

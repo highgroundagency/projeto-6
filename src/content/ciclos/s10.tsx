@@ -11,19 +11,19 @@ export const registro = {
     selo: 'rascunho',
     validadoPor: null,
     conteudo:
-      'Fechar a Sprint 4: aplicar as correções apontadas no SR1 e entregar a lente de machine learning como funcionalidade do produto, com o método declarado ao lado do número.',
+      'Fechar a Sprint 4. Aplicar as correções apontadas no SR1. Entregar a lente de aprendizado de máquina (ML) como funcionalidade do produto, com o método escrito ao lado do número.',
   },
 
   avancos: {
     selo: 'rascunho',
     validadoPor: null,
     conteudo: [
-      'Correções do feedback do SR1 implementadas, cada uma ligada ao apontamento que a originou.',
-      'Tela de analytics com os resultados dos modelos e a metodologia visível.',
-      'Modelos treinados exclusivamente sobre a base sintética, sem nenhum dado real.',
-      'Métricas de desempenho publicadas junto do resultado, não escondidas.',
-      'Limitações do modelo escritas na própria tela, em linguagem de quem vai ler.',
-      'Backlog repriorizado depois das correções: o que sobrou vai para a validação ou vira trabalho futuro declarado.',
+      'Aplicamos as correções do retorno do SR1. Cada correção fica ligada ao apontamento que a originou.',
+      'Fizemos a tela de análises (analytics). Ela mostra os resultados dos modelos e deixa o método à vista.',
+      'Treinamos os modelos só sobre a base sintética, a base gerada por programa. Nenhum dado real entrou.',
+      'Publicamos as métricas, as medidas de quanto cada modelo acerta, junto do resultado. Elas não ficaram escondidas.',
+      'Escrevemos as limitações do modelo na própria tela, na linguagem de quem vai ler.',
+      'Reordenamos o backlog, a lista de tarefas, depois das correções. O que sobrou vai para a validação ou fica anotado como trabalho futuro.',
     ],
   },
 
@@ -34,12 +34,12 @@ export const registro = {
       {
         decisao: 'O método fica ao lado do número, sempre.',
         porque:
-          'Previsão sem método declarado é opinião com aparência de dado. Num cálculo de gratificação, isso é grave.',
+          'Previsão sem método escrito é só opinião com cara de dado. Num cálculo de gratificação, isso é grave.',
       },
       {
         decisao: 'O modelo não decide nada: informa.',
         porque:
-          'Nenhuma saída de ML entra na conta da gratificação. A regra é a portaria, e ela é determinística.',
+          'Nenhum resultado do modelo de ML entra na conta da gratificação. A regra é a portaria, e a mesma entrada dá sempre o mesmo resultado.',
       },
     ],
   },
@@ -51,9 +51,9 @@ export const registro = {
     selo: 'rascunho',
     validadoPor: null,
     conteudo: [
-      'Validar com a CAM na Semana 11.',
-      'Levar o backlog atualizado para a validação: o que a CAM apontar entra na frente do que sobrou.',
-      'Consolidar as três lentes no pacote do SR2.',
+      'Fazer a validação com a Comissão de Avaliação de Metas (CAM) na Semana 11.',
+      'Levar o backlog atualizado para a validação: o que a CAM apontar passa na frente do que sobrou.',
+      'Juntar as três lentes no pacote de entrega do SR2.',
     ],
   },
 
@@ -61,12 +61,15 @@ export const registro = {
     selo: 'rascunho',
     validadoPor: null,
     conteudo: [
-      { integrante: 'rafael', contribuicao: 'Gerador de dados, notebooks e modelos.' },
+      {
+        integrante: 'rafael',
+        contribuicao: 'Gerador de dados, cadernos (notebooks) e modelos.',
+      },
       {
         integrante: 'joao-pedro',
-        contribuicao: 'Tela de analytics e apresentação das métricas.',
+        contribuicao: 'Tela de análises (analytics) e exibição das métricas.',
       },
-      { integrante: 'fernando', contribuicao: 'Revisão das limitações declaradas.' },
+      { integrante: 'fernando', contribuicao: 'Revisão das limitações escritas na tela.' },
     ],
   },
 
@@ -74,10 +77,10 @@ export const registro = {
     selo: 'rascunho',
     validadoPor: null,
     conteudo: [
-      { tipo: 'dashboard', rotulo: 'Analytics', url: '/sistema/analytics' },
+      { tipo: 'dashboard', rotulo: 'Tela de análises (analytics)', url: '/sistema/analytics' },
       { tipo: 'documento', rotulo: 'Método e limitações', url: '#doc-s10-metodo' },
       { tipo: 'documento', rotulo: 'Os seis cadernos', url: '#doc-s10-cadernos' },
-      { tipo: 'codigo', rotulo: 'Notebooks e modelos', url: URL_REPOSITORIO },
+      { tipo: 'codigo', rotulo: 'Cadernos (notebooks) e modelos', url: URL_REPOSITORIO },
     ],
   },
 } satisfies RegistroSemana
@@ -86,7 +89,8 @@ export const documentos = [
   {
     id: 'cadernos',
     titulo: 'Os seis cadernos e o resultado negativo',
-    resumo: 'o que cada notebook faz, e por que um dos modelos fica publicado como fracasso.',
+    resumo:
+      'o que cada caderno (notebook) faz, e por que um dos modelos fica publicado como fracasso.',
     Conteudo: () => (
       <>
         <Tabela
@@ -94,33 +98,37 @@ export const documentos = [
           linhas={[
             [
               '01: EDA',
-              'Distribuição do atingimento por área. É aqui que aparece o achado que muda o projeto: quase nada bate a meta',
+              'Exploração inicial dos dados. Mostra como o atingimento da meta se distribui por área. É aqui que aparece o achado que muda o projeto: quase nada bate a meta',
             ],
             [
               '02: Pré-processamento',
-              'Atributos com shift(1) e separação treino/teste temporal, para o modelo nunca ver o futuro',
+              'Prepara os dados. Cada dado de entrada (atributo) olha só para os meses anteriores (shift(1)). Treino e teste são separados no tempo, para o modelo nunca ver o futuro',
             ],
             [
               '03: Classificação',
-              'Duas perguntas: "vai bater a meta?" (fracassa) e "vai melhorar?" (funciona)',
+              'Responde duas perguntas de sim ou não. "Vai bater a meta?", que fracassa. "Vai melhorar?", que funciona',
             ],
-            ['04: Regressão', 'Atingimento esperado, com importância dos atributos'],
+            [
+              '04: Regressão',
+              'Estima o atingimento esperado. Mostra também quanto cada dado de entrada (atributo) pesou na estimativa',
+            ],
             [
               '05: Clustering',
-              'Agrupamento de ÁREAS: nunca de pessoas: com a silhueta publicada ao lado',
+              'Agrupa ÁREAS parecidas, nunca pessoas. A silhueta, a medida de quão bem os grupos se separam, fica publicada ao lado',
             ],
             [
               '06: Conclusões',
-              'Comparação entre os quatro modelos e o limite que não se negocia',
+              'Compara os quatro modelos. Deixa escrito o limite que não se negocia',
             ],
           ]}
         />
         <Nota>
-          O classificador de &ldquo;vai bater a meta&rdquo; NÃO supera o palpite de chutar a
-          classe majoritária, e fica publicado assim na tela de analytics. O caderno 01 já
-          explicava o porquê: com pouquíssimos positivos, o alvo não tem sinal. Não é o modelo
-          que é ruim: é a pergunta que é mal posta nesta base. Esconder o que falhou e mostrar
-          só o que deu certo seria escolher a métrica depois de ver o resultado.
+          O modelo de &ldquo;vai bater a meta&rdquo; NÃO acerta mais do que chutar sempre a
+          resposta mais comum. E fica publicado assim na tela de análises. O caderno 01 já
+          explicava o porquê: com pouquíssimos casos de &ldquo;sim&rdquo;, não sobra padrão para
+          o modelo aprender. O modelo não é ruim. A pergunta é que está mal feita para esta
+          base. Não escondemos o que falhou para mostrar só o que deu certo. Isso seria escolher
+          a medida de acerto depois de ver o resultado.
         </Nota>
       </>
     ),
@@ -136,20 +144,23 @@ export const documentos = [
           linhas={[
             [
               'Base',
-              'Exclusivamente sintética, com semente fixa: nenhum dado real de pessoa ou da SESAU',
+              'Só a base sintética: gerada por programa e sempre igual (semente fixa). Nenhum dado real de pessoa ou da SESAU',
             ],
             [
               'Escopo',
-              'Apoia a leitura de tendência por área; não entra no cálculo da gratificação',
+              'Ajuda a ler a tendência de cada área. Não entra no cálculo da gratificação',
             ],
-            ['Métricas', 'Publicadas na própria tela, junto do resultado'],
+            [
+              'Métricas',
+              'As medidas de acerto ficam publicadas na própria tela, junto do resultado',
+            ],
             [
               'Limitação principal',
-              'Base sintética reproduz a regra que a gerou: desempenho em dado real seria outro',
+              'A base sintética reproduz a regra que a gerou, e o modelo aprende essa regra de volta. Com dado real, o desempenho seria outro',
             ],
             [
               'O que não faz',
-              'Não classifica pessoa, não recomenda pagamento, não substitui a portaria',
+              'Não classifica pessoa. Não recomenda pagamento. Não substitui a portaria',
             ],
           ]}
         />

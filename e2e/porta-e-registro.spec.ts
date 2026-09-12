@@ -188,7 +188,11 @@ test.describe('registro do projeto', () => {
     if (CICLO_DA_SEMANA) {
       // No cartão certo, e em um só: duas semanas correntes seria pior que
       // nenhuma.
-      await expect(page.locator(`[data-ciclo="${CICLO_DA_SEMANA}"]`).getByText('esta semana')).toBeVisible()
+      // `exact` aqui também: o texto do cartão diz "nesta semana" mais de uma
+      // vez, e sem ele a busca casa por substring e resolve para vários nós.
+      await expect(
+        page.locator(`[data-ciclo="${CICLO_DA_SEMANA}"]`).getByText('esta semana', { exact: true }),
+      ).toBeVisible()
       await expect(pilula).toHaveCount(1)
     } else {
       await expect(pilula).toHaveCount(0)

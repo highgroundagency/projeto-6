@@ -26,11 +26,11 @@ Como tornar o cálculo da gratificação confiável, transparente, sustentável 
 
 --- O problema -----------------------------------------------------------------------------
 
-Desde 2023, a Secretaria de Saúde do Recife paga um extra no salário de gestores quando as
-metas da saúde são atingidas. As metas estão num documento oficial, a portaria.
+Desde 2023, a prefeitura do Recife paga um extra no salário de quem dirige um posto de
+saúde e bate as metas do mês. As metas estão num documento oficial, chamado portaria.
 
-Todo mês, dezenas de números vindos de várias áreas precisam virar uma nota para cada
-gestor. Hoje essa conta é feita à mão, em planilhas.
+Todo mês, dezenas de números de várias áreas viram uma nota para cada gestor. Hoje essa
+conta é feita à mão, numa planilha.
 
 O resultado: erros difíceis de achar, contas difíceis de conferir, e um processo que
 depende da memória de poucas pessoas.
@@ -98,28 +98,31 @@ feedback de professor ou de cliente seria fabricar evidência.
 
   Objetivo da semana  [validado, validado por fernando]
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  Formar a equipe, escolher o case e colocar de pé o registro público do projeto.
+  Formar a equipe e escolher o case. Colocar de pé o registro público do projeto.
 
   Avanços  [validado, validado por fernando]
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  - Equipe 2 formada com os seis integrantes e canal de comunicação definido.
-  - Case escolhido: a gratificação por desempenho da Secretaria de Saúde do Recife.
-  - Papéis distribuídos por frente, cobrindo as três lentes da disciplina.
-  - Pasta do Drive criada como repositório oficial de documentos.
-  - Registro do projeto publicado como site próprio, no lugar do Google Site.
+  - Formamos a Equipe 2 com os seis integrantes. Definimos o canal de comunicação.
+  - Escolhemos o case: a gratificação por desempenho da Secretaria de Saúde do Recife.
+  - Dividimos os papéis por frente de trabalho. As três lentes da disciplina ficaram
+    cobertas.
+  - Criamos a pasta do Drive. Ela é o lugar oficial dos documentos.
+  - Publicamos o registro do projeto num site nosso, no lugar do Google Site.
 
   Decisões  [validado, validado por fernando]
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  - Adotar o case da SESAU em vez de um problema hipotético.
-      por quê: Há cliente real, dor documentada desde 2023 e chance de validar com quem
-      opera o processo.
-  - Registrar o projeto em site próprio, versionado em Git.
-      por quê: O professor dispensou o Google Site, e o registro vira também evidência
-      técnica da disciplina.
-  - Nenhum dado real de pessoa ou da SESAU entra no repositório.
-      por quê: O MVP roda com dados sintéticos: elimina risco de LGPD antes que ele exista.
+  - Trabalhar com o case real da SESAU.
+      por quê: Há um cliente real, não um problema inventado. A dor está documentada desde
+      2023. E dá para validar com quem opera o processo.
+  - Registrar o projeto em site próprio.
+      por quê: O professor dispensou o Google Site. Cada versão fica guardada no Git, e o
+      registro vira também evidência técnica da disciplina.
+  - Nenhum dado real entra no repositório.
+      por quê: Nem de pessoa, nem da SESAU: o protótipo (MVP) usa dados fictícios, gerados
+      por programa. Assim o risco com a lei de proteção de dados (LGPD) some antes de
+      existir.
   - Chamar o produto de Prumo.
-      por quê: O fio de prumo diz se algo está alinhado, é exatamente o que falta ao
+      por quê: O fio de prumo mostra se algo está alinhado. É exatamente o que falta ao
       cálculo hoje.
 
   Bloqueios  [validado, validado por fernando]
@@ -128,25 +131,25 @@ feedback de professor ou de cliente seria fabricar evidência.
 
   Feedback recebido  [validado, validado por fernando]
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  - (equipe) O case só se sustenta se conseguirmos acesso à portaria e a alguém da CAM.
-    Combinado tentar o contato já na Semana 2.
+  - (equipe) O case só se sustenta com acesso à portaria. E com alguém da Comissão de
+    Avaliação de Metas (CAM). Combinamos tentar o contato já na Semana 2.
 
   Próximos passos  [validado, validado por fernando]
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   - Estruturar a pesquisa: personas, mapa de empatia, benchmarking e SWOT.
-  - Contextualizar o problema com fontes públicas sobre gratificação por desempenho no
-    setor público.
-  - Escrever objetivos SMART e o cronograma inicial.
+  - Situar o problema com fontes públicas sobre gratificação por desempenho no setor
+    público.
+  - Escrever os objetivos SMART e o cronograma inicial.
 
   Responsáveis  [validado, validado por fernando]
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  - Gabriel Tenório de Lima Teixeira: Conduziu a escolha do case e o contato inicial com o
+  - Gabriel Tenório de Lima Teixeira: Conduziu a escolha do case e o primeiro contato com o
     cliente.
-  - Matheus Lustosa: Levantou o material público sobre o processo de avaliação de metas.
-  - João Henrique Micucci: Definiu a stack e abriu o repositório.
+  - Matheus Lustosa: Reuniu o material público sobre o processo de avaliação de metas.
+  - João Henrique Micucci: Escolheu as tecnologias e abriu o repositório.
   - João Pedro Mamede: Propôs a identidade visual e o nome do produto.
-  - Rafael Serpa: Mapeou onde o módulo de ML entra no problema.
-  - Fernando Cavalcanti: Montou a estrutura de documentação e o registro de uso de IA.
+  - Rafael Serpa: Mapeou onde o módulo de aprendizado de máquina (ML) entra no problema.
+  - Fernando Cavalcanti: Montou a estrutura da documentação e o registro de uso de IA.
 
   Evidências  [validado, validado por fernando]
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -158,17 +161,17 @@ feedback de professor ou de cliente seria fabricar evidência.
 
   >>> POR QUE ESTE CASE
       âncora no site: #doc-s1-escolha-do-case
-      os critérios que levaram a escolher a sesau.
+      o que nos levou a escolher a sesau.
 
-      - Cliente real e acessível: a Secretaria opera o processo hoje e sente a dor todo ciclo.
-       - Problema com regra explícita: existe portaria, existem indicadores, existe cálculo, dá para modelar de verdade.
-       - Espaço para as três lentes: sistema (Projeto), previsão e perfis (ML) e tratamento de dados de servidores (Direito).
+      - Cliente real e acessível: a Secretaria opera o processo hoje. E sente a dor todo ciclo.
+       - Problema com regra escrita: existe portaria, existem indicadores, existe cálculo. Dá para modelar isso de verdade.
+       - Espaço para as três lentes. O sistema cobre a lente de Projeto. Previsão e perfis cobrem a de aprendizado de máquina (ML). O tratamento de dados de servidores cobre a de Direito.
 
   >>> O QUE JÁ SABEMOS DO PROBLEMA
       âncora no site: #doc-s1-o-que-sabemos
       o que a portaria e o enunciado deixam claro.
 
-      A consolidação da gratificação é feita à mão, em planilhas, por uma comissão pequena. Uma tentativa anterior de automatizar foi abandonada por falta de recursos. O conhecimento do processo está concentrado em poucas pessoas.
+      A conta da gratificação é fechada à mão, em planilhas, por uma comissão pequena. Uma tentativa anterior de automatizar foi abandonada por falta de recursos. O conhecimento do processo fica com poucas pessoas.
       Descrição do case, registrada na Semana 1
 
 --- S2 · Semana 2: Imersão · 15/08/2026 ----------------------------------------------------
@@ -176,62 +179,65 @@ feedback de professor ou de cliente seria fabricar evidência.
 
   Objetivo da semana  [validado, validado por fernando]
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  Entender o problema a fundo: quem sofre com ele, como ele é hoje e o que já existe no
-  mercado.
+  Entender o problema a fundo: quem sofre com ele, como ele funciona hoje e o que já existe
+  no mercado.
 
   Avanços  [validado, validado por fernando]
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  - Pesquisa estruturada em três frentes: processo atual, entes públicos comparáveis e
-    ferramentas de gestão de metas.
-  - Três personas construídas a partir dos papéis descritos no case.
-  - Mapa de empatia da analista da CAM, que é quem opera a planilha hoje.
-  - Benchmarking com entes públicos e duas ferramentas de OKR, separando o que serve do que
-    não serve para órgão público.
-  - SWOT do projeto e objetivos SMART escritos.
-  - Cronograma inicial fechado nos 18 ciclos do semestre.
+  - Fizemos a pesquisa em três frentes. Olhamos o processo atual, outros entes públicos
+    (governos e órgãos parecidos) e ferramentas de gestão de metas.
+  - Criamos três personas: personagens fictícios que representam quem usa o sistema. Elas
+    seguem os papéis descritos no case.
+  - Montamos o mapa de empatia da analista da CAM. É ela quem opera a planilha hoje.
+  - Comparamos o que já existe (benchmarking): entes públicos e duas ferramentas de OKR.
+    Separamos o que serve do que não serve para órgão público.
+  - Escrevemos a SWOT do projeto: forças, fraquezas, oportunidades e ameaças. Escrevemos
+    também os objetivos SMART.
+  - Fechamos o cronograma inicial com os 18 ciclos do semestre.
 
   Decisões  [validado, validado por fernando]
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  - Tratar a memória de cálculo como funcionalidade central, não como relatório extra.
-      por quê: É o que responde "de onde veio este número?", a pergunta que a planilha não
-      responde.
-  - Indicadores e regras serão parametrizáveis pela interface, não escritos em código.
-      por quê: A portaria muda; se a regra virar código, cada mudança de portaria vira
-      release de software.
-  - Versionar regra de pontuação em vez de editá-la.
-      por quê: Um ciclo já homologado precisa continuar reproduzindo o mesmo resultado para
-      sempre.
-  - Escolher a analista da CAM como persona primária.
-      por quê: É quem carrega o processo hoje; se a solução não servir para ela, não serve
-      para ninguém.
+  - Memória de cálculo é funcionalidade central, não relatório extra.
+      por quê: Ela mostra o caminho de cada número. É o que responde "de onde veio este
+      número?", a pergunta que a planilha não responde.
+  - Indicadores e regras se ajustam pela tela, não no código.
+      por quê: A portaria muda. Se a regra estivesse escrita no código, cada portaria nova
+      exigiria uma nova versão do programa.
+  - Regra de pontuação ganha versão nova em vez de ser editada.
+      por quê: Um ciclo já aprovado precisa continuar dando o mesmo resultado para sempre.
+  - A analista da CAM é a persona primária.
+      por quê: É ela quem carrega o processo hoje. Se a solução não servir para ela, não
+      serve para ninguém.
 
   Bloqueios  [validado, validado por fernando]
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  - Ainda sem acesso ao texto da portaria vigente: os indicadores usados no MVP seguem
-    fictícios e verossímeis até lá.
-  - Contato com a CAM ainda não confirmado para a entrevista de validação.
+  - Ainda não temos o texto da portaria em vigor. Até lá, os indicadores do MVP seguem
+    inventados, mas parecidos com os reais.
+  - Ainda não confirmamos o contato com a CAM para a entrevista de validação.
 
   Feedback recebido  [validado, validado por fernando]
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  - (equipe) O benchmarking mostrou que ferramenta de OKR resolve acompanhamento, não
-    cálculo normativo com efeito financeiro. Isso reforça construir em vez de adotar.
+  - (equipe) O benchmarking mostrou que ferramenta de OKR serve para acompanhar metas. Ela
+    não faz a conta definida na portaria, a que mexe com o pagamento das pessoas. Isso
+    reforça a escolha: construir em vez de adotar uma ferramenta pronta.
 
   Próximos passos  [validado, validado por fernando]
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  - Rodar Brainwriting, Brainstorming e Crazy 8’s com os seis integrantes.
-  - Levantar de 6 a 8 alternativas de solução e classificá-las por impacto, esforço e
+  - Rodar as dinâmicas de Brainwriting, Brainstorming e Crazy 8’s com os seis integrantes.
+  - Levantar de 6 a 8 alternativas de solução. Classificar cada uma por impacto, esforço e
     aderência.
-  - Escolher a ideia a desenvolver e registrar a justificativa.
+  - Escolher a ideia que vamos desenvolver e registrar o porquê.
 
   Responsáveis  [validado, validado por fernando]
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  - Matheus Lustosa: Conduziu a pesquisa, as personas e o mapa de empatia.
-  - Gabriel Tenório de Lima Teixeira: Escreveu os objetivos SMART e consolidou a SWOT.
-  - Fernando Cavalcanti: Fez o benchmarking e o recorte de LGPD do problema.
-  - João Henrique Micucci: Modelou o processo atual como fluxo, do lançamento à
-    homologação.
-  - João Pedro Mamede: Traduziu as personas em necessidades de interface.
-  - Rafael Serpa: Mapeou quais perguntas do problema são respondíveis por modelo.
+  - Matheus Lustosa: Conduziu pesquisa, personas e mapa de empatia.
+  - Gabriel Tenório de Lima Teixeira: Escreveu os objetivos SMART e montou a SWOT.
+  - Fernando Cavalcanti: Fez o benchmarking e a análise de LGPD do problema.
+  - João Henrique Micucci: Desenhou o processo atual como um fluxo, do lançamento à
+    aprovação.
+  - João Pedro Mamede: Traduziu as personas em necessidades de tela.
+  - Rafael Serpa: Mapeou quais perguntas do problema um modelo de aprendizado de máquina
+    consegue responder.
 
   Evidências  [validado, validado por fernando]
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -244,60 +250,60 @@ feedback de professor ou de cliente seria fabricar evidência.
 
   >>> O PROCESSO HOJE
       âncora no site: #doc-s2-processo-hoje
-      como a gratificação é calculada antes do prumo existir.
+      como a gratificação é calculada hoje, antes do prumo existir.
 
       Etapa | Quem faz | Como é hoje | Onde quebra
 
-       Coleta | Áreas técnicas | Cada área envia seus números por planilha ou e-mail | Formato livre, sem validação na origem
-       Consolidação | CAM | Cópia manual para uma planilha mestre | Erro de digitação e de fórmula passa despercebido
-       Cálculo | CAM | Fórmulas encadeadas na própria planilha | Regra da portaria fica implícita na célula
-       Conferência | CAM | Revisão por leitura, sem trilha | Não há como refazer o caminho de um número
-       Divulgação | CAM | Resultado enviado ao gestor avaliado | Contestação vira troca de e-mails
+       Coleta | Áreas técnicas | Cada área manda seus números por planilha ou e-mail | Cada uma manda do seu jeito, e ninguém confere na origem
+       Consolidação | CAM | Cópia feita à mão para uma planilha principal | Erro de digitação ou de fórmula passa sem ninguém ver
+       Cálculo | CAM | Fórmulas ligadas umas às outras, dentro da própria planilha | A regra da portaria fica escondida dentro das células
+       Conferência | CAM | Alguém lê e revisa, sem histórico do que conferiu | Não dá para refazer o caminho de um número
+       Divulgação | CAM | O resultado é enviado ao gestor avaliado | Quem discorda entra numa troca de e-mails
 
   >>> PERSONAS E MAPA DE EMPATIA
       âncora no site: #doc-s2-personas
       três personagens fictícios e o mapa da analista que carrega o processo.
 
       Personas
-      Personagens fictícios construídos a partir dos papéis descritos no case. Nenhum dado real de pessoa foi usado.
+      Personagens inventados a partir dos papéis descritos no case. Nenhum dado real de pessoa foi usado.
 
       Analista da CAM
-      PrimáriaOpera a planilha mestre há três ciclos. Conhece as regras de cor e é procurada sempre que alguém contesta um resultado.
+      PrimáriaOpera a planilha principal há três ciclos. Sabe as regras de cor. É procurada sempre que alguém contesta um resultado.
       Precisa: fechar o ciclo sem medo de ter errado uma fórmula.
       Teme: descobrir um erro depois do pagamento.
 
       Gestor de área técnica
-      SecundáriaResponde por informar de 4 a 8 indicadores da própria área, sempre em cima do prazo, entre outras dez prioridades.
+      SecundáriaInforma de 4 a 8 indicadores da própria área. Faz isso sempre em cima do prazo, no meio de outras dez prioridades.
       Precisa: saber exatamente o que informar e até quando.
       Teme: ser cobrado por um dado que ele já enviou.
 
       Coordenadora avaliada
-      SecundáriaRecebe a gratificação variável e vê apenas o resultado final, sem o caminho que levou até ele.
+      SecundáriaRecebe a gratificação variável. Vê só o resultado final, sem o caminho que levou até ele.
       Precisa: entender por que o valor foi aquele.
       Teme: ser avaliada por dado que ela não pôde conferir.
 
       Mapa de empatia: analista da CAM
-      A pessoa que carrega o processo hoje.
+      A pessoa que carrega o processo hoje: o que ela diz, pensa, faz e sente, suas dores e seus ganhos.
       Diz“Se mexer numa fórmula, tenho que conferir a planilha inteira de novo.”
-      PensaQue a responsabilidade por um erro vai recair sobre ela, mesmo quando o dado veio errado da origem.
-      FazConfere linha a linha, mantém cópias de segurança por versão e guarda e-mails como comprovação.
-      SenteInsegurança no fechamento e alívio quando o ciclo passa sem contestação.
-      DoresRetrabalho a cada mudança de regra, ausência de trilha e dependência de estar presente para o processo andar.
-      GanhosFechar o ciclo com o cálculo explicado sozinho e conseguir tirar férias sem travar a comissão.
+      PensaQue a culpa de qualquer erro vai cair nela. Mesmo quando o dado já chegou errado de quem enviou.
+      FazConfere linha a linha. Guarda uma cópia de segurança de cada versão. Guarda também os e-mails, como prova.
+      SenteInsegurança na hora do fechamento. Alívio quando o ciclo passa sem contestação.
+      DoresRefazer tudo a cada mudança de regra. Não ter registro de quem mudou o quê. E o processo só andar quando ela está presente.
+      GanhosFechar o ciclo com um cálculo que se explica sozinho. E conseguir tirar férias sem travar a comissão.
 
   >>> BENCHMARKING
       âncora no site: #doc-s2-benchmarking
-      o que as referências resolvem e o que não serve para este caso.
+      o que cada referência resolve e o que não serve para o nosso caso.
 
       Referência | O que serve | O que não serve
 
-       Painéis de indicadores de entes públicos | Transparência ativa, indicador com ficha técnica e série histórica | São vitrines de divulgação: não calculam efeito financeiro nem guardam trilha de decisão
-       Sistemas de monitoramento de metas do SUS | Indicador com fonte, periodicidade e meta pactuada, vocabulário que a SESAU já usa | Regra de cálculo fixa no sistema; nossa portaria muda e precisa ser ajustável
-       Ferramenta de OKR (acompanhamento de objetivos) | Cadência de check-in, responsável por resultado e visualização de progresso | Não guarda versão de regra normativa nem produz conta conferível
-       Ferramenta de OKR (gestão por resultados corporativa) | Peso por objetivo e agregação de score, modelo matemático parecido com o nosso | Score é gerencial, não é ato administrativo com efeito em folha; e a licença por usuário não cabe no órgão
-       Planilha atual da comissão | Flexibilidade total e custo zero de adoção | Sem trilha, sem versão, sem controle de acesso e com o conhecimento preso em quem a escreveu
+       Painéis de indicadores de entes públicos | Publicam os dados por conta própria (transparência ativa). Cada indicador tem ficha técnica e histórico ao longo do tempo. | São vitrines de divulgação. Não calculam quanto dinheiro sai disso, nem guardam o histórico de quem decidiu o quê.
+       Sistemas de monitoramento de metas do SUS | Cada indicador tem fonte, frequência de medição e meta combinada. É o vocabulário que a SESAU já usa. | A regra de cálculo é fixa dentro do sistema. A nossa portaria muda, então a regra precisa ser ajustável.
+       Ferramenta de OKR (acompanhamento de objetivos) | Reuniões de acompanhamento em ritmo fixo, um responsável por cada resultado e o progresso visível. | Não guarda a regra da portaria com número de versão. Também não mostra a conta de um jeito que dê para conferir.
+       Ferramenta de OKR (gestão por resultados corporativa) | Cada objetivo tem um peso, e as notas se juntam numa nota final. A conta é parecida com a nossa. | A nota ali é só para gestão. Não é um ato administrativo que mexe na folha de pagamento. E o modelo de licença por usuário não cabe no órgão.
+       Planilha atual da comissão | Faz o que quiserem e não custa nada para começar a usar. | Não guarda quem mudou o quê. Não tem versão nem controle de quem pode acessar. E só quem escreveu a planilha entende como ela funciona.
 
-      Conclusão do benchmarking: Nenhuma ferramenta pronta junta as três coisas: regra com versão, conta aberta e registro de quem mudou. Essa combinação é o núcleo do problema, e é por isso que a decisão foi construir.
+      Conclusão do benchmarking: Nenhuma ferramenta pronta junta as três coisas: regra com versão, conta aberta para conferir e registro de quem mudou. Essas três coisas juntas são o centro do nosso problema. Por isso decidimos construir em vez de adotar uma ferramenta pronta.
 
   >>> ANÁLISE SWOT
       âncora no site: #doc-s2-swot
@@ -305,105 +311,112 @@ feedback de professor ou de cliente seria fabricar evidência.
 
       Forças
 
-       - Cliente real, com processo escrito em portaria
-       - Equipe de seis com frentes bem separadas
-       - Problema com regra explícita: dá para modelar e testar
+       - Temos um cliente real, e o processo dele está escrito numa portaria
+       - Somos seis, cada um com uma frente bem definida
+       - O problema tem regra escrita: dá para desenhar no sistema e testar
 
       Fraquezas
 
        - Ninguém da equipe conhece o processo por dentro
        - A portaria só chegou na quinta semana
-       - Um semestre para um domínio com regra complexa
+       - Só um semestre para um assunto com regra complicada
 
       Oportunidades
 
-       - Uma tentativa anterior foi abandonada: há demanda represada
-       - A conta aberta é ganho direto para quem é avaliado
-       - Os mesmos dados alimentam a lente de aprendizado de máquina
+       - Já tentaram antes e pararam: a necessidade existe e está esperando
+       - Ver a conta aberta é ganho direto para quem é avaliado
+       - Os mesmos dados servem para a parte de aprendizado de máquina
 
       Ameaças
 
-       - A agenda da comissão pode inviabilizar a validação
-       - Mudança de portaria durante o semestre
-       - O escopo crescer para a folha de pagamento, que está fora
+       - A agenda da comissão pode impedir a validação
+       - A portaria pode mudar no meio do semestre
+       - O projeto crescer até a folha de pagamento, que não faz parte dele
 
   >>> OBJETIVOS SMART
       âncora no site: #doc-s2-objetivos
       cinco metas com prazo e critério de verificação.
 
-      - Entregar, até o SR1 (03/10), um protótipo navegável com as telas de lançamento, cálculo e memória de cálculo, validado internamente pelos seis integrantes.
-       - Ter o motor de cálculo coberto por testes automatizados nos casos-limite (faixas de fronteira, arredondamento, indicador sem lançamento e troca de versão de regra) até a Semana 6.
-       - Demonstrar, até a Semana 9, o ciclo completo de lançamento a homologação com trilha de auditoria imutável, usando exclusivamente dados sintéticos.
-       - Coletar, na Semana 11, feedback estruturado de pelo menos um integrante da CAM por entrevista semiestruturada e questionário, e registrar os ajustes decorrentes.
-       - Chegar ao SR2 (05/12) com documentação técnica, análise de segurança e de privacidade publicadas junto ao MVP.
+      - Até o SR1 (03/10), entregar um protótipo navegável com as telas de lançamento, cálculo e memória de cálculo. Os seis integrantes conferem e aprovam o protótipo entre si.
+       - Até a Semana 6, ter o motor de cálculo (a parte que faz a conta) coberto por testes automáticos. Os testes cobrem os casos-limite, os de borda. São quatro: valor na fronteira entre faixas, arredondamento, indicador sem lançamento e troca de versão da regra.
+       - Até a Semana 9, mostrar o ciclo inteiro, do lançamento à aprovação. Com o histórico de quem mudou o quê, sem jeito de apagar, e só com dados inventados.
+       - Na Semana 11, colher feedback estruturado de pelo menos um integrante da CAM, por entrevista semiestruturada e questionário. Registrar os ajustes que vierem daí.
+       - Chegar ao SR2 (05/12) com o MVP publicado junto com a documentação técnica. Publicar também a análise de segurança e a de privacidade.
 
 --- S3 · Semana 3: Ideação · 22/08/2026 ----------------------------------------------------
 
 
   Objetivo da semana  [validado, validado por fernando]
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  Gerar alternativas de solução com técnicas de ideação e escolher, com critério explícito,
-  a que será desenvolvida.
+  Levantar várias ideias de solução com técnicas de ideação, as dinâmicas de gerar ideias
+  em grupo. Depois, escolher uma com critérios claros. É essa que vamos construir.
 
   Avanços  [validado, validado por fernando]
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  - Roteiro das três técnicas preparado, com tempo, material e produto esperado de cada
-    uma.
-  - Oito alternativas levantadas a partir da pesquisa da Semana 2.
-  - Matriz de impacto × esforço × aderência montada para comparar as alternativas.
-  - Critérios de decisão acordados antes da votação, para evitar escolha por preferência
-    pessoal.
-  - Primeira reunião com o representante do cliente realizada em 22/08, com ata registrada
-    como documento desta semana.
+  - Preparamos o roteiro das três dinâmicas de ideias. Para cada uma, definimos o tempo, o
+    material e o que ela deve produzir.
+  - Levantamos oito alternativas de solução. Todas partiram da pesquisa da Semana 2.
+  - Montamos a matriz de priorização, uma tabela que compara as alternativas. Cada ideia
+    recebe nota em três critérios: impacto, esforço e aderência. Aderência é o quanto a
+    ideia cabe na realidade do órgão público.
+  - Combinamos os critérios de decisão antes da votação. Assim ninguém escolhe só por
+    preferência pessoal.
+  - Fizemos a primeira reunião com o representante do cliente em 22/08. A ata está
+    registrada como documento desta semana.
 
   Decisões  [validado, validado por fernando]
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  - Fixar os critérios de avaliação antes de gerar as ideias.
+  - Critérios de avaliação fixados antes das ideias.
       por quê: Critério definido depois tende a justificar a ideia de quem fala mais alto.
-  - Aderência ao órgão público entra como critério com peso próprio.
-      por quê: Solução tecnicamente boa que não sobrevive a pregão, portaria ou
-      rotatividade de equipe não serve.
-  - Ideia escolhida: sistema com regra parametrizável e memória de cálculo auditável.
-      por quê: Ataca a causa (regra implícita na planilha) e não o sintoma (planilha
-      bonita), e cabe no semestre.
-  - Remodelar o domínio do MVP já, com o que a reunião com o cliente revelou:
-    subindicadores, tipos de unidade e a rede por distrito.
+  - Aderência ao órgão público: critério com peso próprio.
+      por quê: Solução boa na técnica pode morrer no órgão: licitação (pregão), portaria
+      nova, troca de equipe. Se não sobrevive a isso, não serve.
+  - Ideia escolhida: sistema com regra parametrizável e memória de cálculo auditável. Ou
+    seja: regra ajustável sem mudar o programa, e conta aberta para conferir.
+      por quê: Ela ataca a causa: a regra hoje vive escondida nas fórmulas da planilha. Uma
+      planilha mais bonita só trataria o sintoma, e essa ideia cabe no semestre.
+  - Refazer o modelo do MVP já, com o que a reunião com o cliente revelou. Mudam três
+    coisas: os itens medidos (subindicadores), os tipos de unidade e a rede por distrito.
       por quê: O que muda é o coração do modelo, não um detalhe de tela. Cada semana
       construída sobre o entendimento antigo custaria mais caro de desfazer.
 
   Bloqueios  [validado, validado por fernando]
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  - Registro da dinâmica real das três técnicas pendente, esta seção é preenchida na semana
-    com fotos e artefatos.
-  - A planilha real de cálculo prometida na reunião ainda não chegou: a composição dos
-    subindicadores e a agregação distrital seguem como suposições declaradas, marcadas na
-    ata.
+  - Ainda falta registrar como as três dinâmicas aconteceram de verdade. Esta parte é
+    preenchida na semana, com fotos e o material produzido.
+  - A planilha real de cálculo, prometida na reunião, ainda não chegou. Sem ela, seguimos
+    com suposições declaradas, marcadas na ata. Uma: como os itens medidos formam o
+    indicador. Outra: como as unidades formam a nota do distrito.
 
   Feedback recebido  [validado, validado por fernando]
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  - (cliente) O que se preenche são subindicadores (valor direto, ou numerador e
-    denominador); o indicador é calculado. A régua depende do tipo da unidade, e a rede é
-    secretaria, distrito sanitário e unidade, com o gerente distrital também avaliado.
-  - (cliente) Confirmações do que o MVP já fazia: ciclo mensal, regra versionada que muda
-    de ano em ano, correção com histórico, visualização por nível de acesso e exportação de
-    planilha. Pedido novo: janela de revisão de cinco dias no fim do mês.
-  - (equipe) A alternativa de “só melhorar a planilha” foi mantida na matriz de propósito:
-    serve de linha de base para comparar ganho real.
+  - (cliente) O que a unidade preenche são os itens medidos, chamados subindicadores. Cada
+    item é um valor direto ou um numerador e um denominador. O indicador é calculado a
+    partir deles. As metas e os pesos dependem do tipo da unidade. A rede tem três níveis:
+    secretaria, distrito sanitário e unidade. O gerente distrital também é avaliado.
+  - (cliente) O cliente confirmou o que o MVP já fazia. A conta é mensal. A regra muda de
+    ano em ano e fica guardada com número de versão. Um número corrigido guarda o valor
+    antigo no histórico. Cada perfil vê só o que é do seu nível. Dá para exportar planilha.
+    Pedido novo: um prazo de revisão de cinco dias no fim do mês.
+  - (equipe) Mantivemos de propósito a alternativa de “só melhorar a planilha” na matriz.
+    Ela é o ponto de comparação (a linha de base) para medir o ganho real do sistema.
 
   Próximos passos  [validado, validado por fernando]
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   - Escrever a proposta de solução em uma página.
-  - Definir escopo dentro e fora, e o backlog inicial em histórias de usuário.
-  - Fechar o cronograma de execução até o SR1.
+  - Definir o que entra e o que fica fora do escopo. Montar a primeira lista de tarefas (o
+    backlog) em histórias de usuário.
+  - Fechar o cronograma de trabalho até o marco SR1.
 
   Responsáveis  [validado, validado por fernando]
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  - João Pedro Mamede: Facilitou as dinâmicas e organizou o material.
-  - Gabriel Tenório de Lima Teixeira: Definiu os critérios e conduziu a priorização.
-  - Matheus Lustosa: Trouxe as dores da pesquisa como insumo das ideias.
-  - João Henrique Micucci: Estimou esforço técnico de cada alternativa.
-  - Rafael Serpa: Avaliou quais alternativas geram dado aproveitável por modelo.
-  - Fernando Cavalcanti: Registrou a dinâmica e consolidou a justificativa da escolha.
+  - João Pedro Mamede: Conduziu as dinâmicas e organizou o material.
+  - Gabriel Tenório de Lima Teixeira: Definiu os critérios e conduziu a escolha.
+  - Matheus Lustosa: Trouxe as dores da pesquisa para as ideias.
+  - João Henrique Micucci: Estimou o esforço técnico de cada alternativa.
+  - Rafael Serpa: Avaliou quais alternativas geram dado útil para o modelo de aprendizado
+    de máquina.
+  - Fernando Cavalcanti: Registrou a dinâmica e escreveu a justificativa da escolha.
 
   Evidências  [validado, validado por fernando]
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -415,53 +428,54 @@ feedback de professor ou de cliente seria fabricar evidência.
 
   >>> REUNIÃO COM O CLIENTE (22/08)
       âncora no site: #doc-s3-reuniao-cliente
-      a ata sintetizada: o que a conversa confirmou, o que ela mudou no domínio, e o que
-      ficou para validar.
+      a ata resumida: o que a conversa confirmou, o que mudou no desenho do sistema e o que
+      ficou para conferir.
 
-      Primeira conversa com o representante do órgão (SECOGE/SESAU) sobre o processo real da gratificação. A ata abaixo é sintetizada e sem nomes de pessoa, seguindo a regra de privacidade do projeto: papel importa, identidade não.
+      Foi a primeira conversa com o representante do órgão (SECOGE/SESAU) sobre o processo real da gratificação. A ata abaixo é um resumo e não cita nome de pessoa. É a regra de privacidade do projeto: importa o papel, não a identidade.
 
        O que o MVP já cobria | O que a reunião mudou
 
-       Indicador preenchido direto, com meta e peso próprios | O que se preenche é o SUBINDICADOR: valor direto (índice) ou numerador e denominador (razão). O indicador é calculado a partir deles.
-       Áreas técnicas planas, todas com a mesma régua | A régua depende do TIPO da unidade (USF, CAPS, UPA, policlínica): a depender do tipo, só alguns indicadores valem, e os pesos mudam.
-       Um gestor por área | A rede é secretaria → distrito sanitário → unidade. O gerente distrital também é avaliado: a nota dele agrega as unidades do distrito.
-       Correção dentro da janela de lançamento | Janela de REVISÃO de cinco dias no fim do mês, com o valor antigo guardado no histórico.
-       Perfis CAM, área técnica, gestor e auditoria | Os quatro atores nomeados: gerente de unidade, gerente distrital, administrador da plataforma e coordenação da SEAB.
+       O indicador era preenchido direto, com meta e peso próprios | O que se preenche é o item medido, o SUBINDICADOR. Ele é um valor direto (um índice) ou um numerador e um denominador (uma razão). O indicador é calculado a partir desses itens.
+       Áreas técnicas sem hierarquia, todas com as mesmas metas e pesos | As metas e os pesos dependem do TIPO da unidade (USF, CAPS, UPA, policlínica). Conforme o tipo, só alguns indicadores valem, e os pesos mudam.
+       Um gestor por área | A rede tem três níveis: secretaria, distrito sanitário e unidade. O gerente distrital também é avaliado. A nota dele junta as notas das unidades do distrito.
+       Correção dentro do prazo de lançamento | Um prazo de REVISÃO de cinco dias no fim do mês. O valor antigo fica guardado no histórico.
+       Perfis CAM, área técnica, gestor e auditoria | Quatro papéis, com nome: gerente de unidade, gerente distrital, administrador da plataforma e coordenação da SEAB.
 
       Gerente de unidade
-      ator 1Dirige uma unidade de saúde. Preenche os subindicadores do mês e responde pela nota da unidade, que segue a régua do tipo dela.
+      ator 1Dirige uma unidade de saúde. Preenche os itens medidos do mês. Responde pela nota da unidade, que segue as metas e os pesos do tipo dela.
 
       Gerente distrital
-      ator 2Acompanha as unidades do distrito (na rede real, cerca de trinta) e revisa números na janela. Também é avaliado, pela agregação das unidades.
+      ator 2Acompanha as unidades do distrito, cerca de trinta na rede real. Revisa os números no prazo de revisão. Também é avaliado: a nota dele junta as notas das unidades.
 
       Administrador
-      ator 3Opera a plataforma: cadastros, acessos e trilha. Administra a ferramenta, não as notas.
+      ator 3Cuida da plataforma: cadastros, acessos e o histórico de quem mudou o quê. Administra a ferramenta, não as notas.
 
       Coordenação da SEAB
-      ator 4Coordena o processo: define a régua, cobra os números, faz a conta, homologa, publica e responde contestação.
+      ator 4Coordena o processo. Define as metas e os pesos, cobra os números e faz a conta. Aprova, publica e responde às contestações.
 
-      O que a conversa confirmou do que o MVP já fazia: ciclo mensal, regra versionada que muda de ano em ano, correção com histórico, visualização por nível de acesso, exportação de planilha e persistência com historicidade.
-      Suposições declaradas, a validar com a planilha real prometida: razão = numerador ÷ denominador; indicador com vários subindicadores = média simples dos apurados; nota distrital = média simples das unidades. Se a planilha disser diferente, vira versão nova da regra, não reescrita do sistema.
+      O que a conversa confirmou do que o MVP já fazia. A conta é mensal. A regra muda de ano em ano e fica guardada com número de versão. Um número corrigido guarda o valor antigo. Cada perfil vê só o que é do seu nível. Dá para exportar planilha. E os dados ficam guardados com todo o histórico.
+      Suposições declaradas por nós, a conferir com a planilha real prometida. Razão = numerador ÷ denominador. Indicador com vários itens medidos = média simples dos itens apurados. Nota do distrito = média simples das unidades. Se a planilha disser diferente, vira uma versão nova da regra, não uma reescrita do sistema.
 
   >>> ROTEIRO DAS TRÊS TÉCNICAS
       âncora no site: #doc-s3-tecnicas-ideacao
-      brainwriting, brainstorming e crazy 8’s, com tempo e produto de cada.
+      brainwriting, brainstorming e crazy 8’s: quanto tempo cada uma leva e o que produz.
 
       Brainwriting
-      20 minCada integrante escreve três ideias em silêncio, sem discutir, e passa a folha adiante. Quem recebe amplia a ideia do colega em vez de criticá-la.
-      Produto: 18 ideias escritas, sem viés de quem fala primeiro.
+      20 minCada integrante escreve três ideias em silêncio, sem discutir. Depois passa a folha adiante. Quem recebe amplia a ideia do colega, em vez de criticar.
+      Produto: 18 ideias escritas, sem o peso de quem fala primeiro.
 
       Brainstorming
-      25 minDiscussão aberta a partir das folhas do brainwriting, agrupando ideias parecidas e nomeando os grupos.
-      Produto: De 6 a 8 alternativas distintas, já agrupadas.
+      25 minConversa aberta sobre as folhas do brainwriting. Juntamos as ideias parecidas e demos nome a cada grupo.
+      Produto: De 6 a 8 alternativas diferentes, já agrupadas.
 
       Crazy 8's
-      8 minOito esboços de tela em oito minutos, individualmente, para as duas alternativas mais votadas.
-      Produto: Primeiras telas em papel, insumo do protótipo.
+      8 minCada um desenha oito rascunhos de tela em oito minutos. Fizemos isso para as duas alternativas mais votadas.
+      Produto: As primeiras telas em papel, que serviram de base para o protótipo.
 
   >>> ALTERNATIVAS LEVANTADAS
       âncora no site: #doc-s3-alternativas
-      as oito ideias e a matriz de impacto, esforço e aderência.
+      as oito ideias e a matriz de impacto, esforço e aderência: a nota de cada uma nos
+      três critérios.
 
       Alternativa | Impacto | Esforço | Aderência | Situação
 
@@ -478,42 +492,46 @@ feedback de professor ou de cliente seria fabricar evidência.
       âncora no site: #doc-s3-justificativa
       por que a alternativa escolhida venceu as outras.
 
-      - Impacto: Ataca a causa do problema: a regra da portaria hoje só existe dentro de fórmulas de planilha.
-       - Aderência: Ajustar indicadores e regras pela interface faz com que mudança de portaria não vire mudança de software.
-       - Esforço: Alto, mas fatiável: lançamento, cálculo e conta aberta cabem até o SR1; auditoria e gestão vêm nas sprints.
-       - Sinergia: O modelo que prevê risco não virou produto separado: entrou como funcionalidade da mesma base.
-      A alternativa de melhorar a planilha continua na matriz de propósito: ela é o ponto de comparação contra o qual o ganho do sistema é medido na validação da Semana 11.
+      - Impacto: Ataca a causa do problema. Hoje a regra da portaria só existe dentro de fórmulas de planilha.
+       - Aderência: Indicadores e regras se ajustam pela tela. Assim, quando a portaria muda, o programa não precisa mudar.
+       - Esforço: É alto, mas dá para dividir em fatias. Lançamento, cálculo e conta aberta cabem até o SR1. Auditoria e gestão vêm depois, nas sprints.
+       - Sinergia: O modelo que prevê risco não virou um produto separado. Entrou como uma funcionalidade a mais, sobre a mesma base.
+      A ideia de melhorar a planilha continua na matriz de propósito. Ela é o ponto de comparação. Na validação da Semana 11, o ganho do sistema será medido contra ela.
 
 --- S4 · Semana 4: Proposta · 29/08/2026 ---------------------------------------------------
 
 
   Objetivo da semana  [validado, validado por fernando]
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  Transformar a ideia escolhida em proposta com escopo delimitado, backlog priorizado e
-  cronograma de execução.
+  Transformar a ideia escolhida em proposta. Isso pede escopo definido, lista de tarefas
+  (backlog) por prioridade e cronograma de execução.
 
   Avanços  [validado, validado por fernando]
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  - Proposta de solução escrita em uma página.
-  - Escopo dentro e fora definido, com o que fica explicitamente de fora.
-  - Backlog inicial em épicos e histórias de usuário, classificado por MoSCoW.
-  - Papéis confirmados e cronograma de execução amarrado aos marcos do semestre.
+  - Escrevemos a proposta de solução em uma página.
+  - Definimos o escopo. Listamos o que entra no semestre e, por escrito, o que fica de
+    fora.
+  - Montamos o backlog inicial: a lista de tarefas, em grupos (épicos) e histórias de
+    usuário. Cada história recebeu uma prioridade pelo método MoSCoW: obrigatória (Must),
+    desejável (Should) ou possível (Could).
+  - Confirmamos o papel de cada integrante. Amarramos o cronograma de execução aos marcos
+    do semestre.
 
   Decisões  [validado, validado por fernando]
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   - Folha de pagamento fica fora do escopo.
-      por quê: O sistema calcula e publica o resultado; integrar com folha exige acesso e
-      homologação que o semestre não comporta.
+      por quê: O sistema calcula o valor e publica o resultado. Ligar isso à folha de
+      pagamento exige acesso e aprovação que o semestre não comporta.
   - Quatro perfis de acesso desde o protótipo, com os papéis que o cliente nomeou na
-    reunião de 22/08: coordenação da SEAB, administrador, gerente distrital e gerente de
-    unidade.
-      por quê: O controle de acesso é parte do problema de confiabilidade, não um enfeite
+    reunião de 22/08. São eles: coordenação da SEAB, administrador, gerente distrital e
+    gerente de unidade.
+      por quê: Controlar o acesso faz parte do problema de confiabilidade. Não é enfeite
       para depois.
-  - Auditoria é append-only: nada se apaga.
-      por quê: Trilha que pode ser editada não serve de prova, e é isso que a planilha já
-      não oferece.
-  - Priorização por MoSCoW com o corte do SR1 nos "Must".
-      por quê: Deixa explícito o que é entrega mínima e o que é desejável.
+  - O histórico de mudanças só cresce: nada se apaga.
+      por quê: Um histórico que pode ser editado não serve de prova. Prova é justamente o
+      que a planilha de hoje não oferece.
+  - Prioridade por MoSCoW: o SR1 entrega os "Must".
+      por quê: Assim fica claro o que é a entrega mínima e o que é desejável.
 
   Bloqueios  [validado, validado por fernando]
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -521,22 +539,23 @@ feedback de professor ou de cliente seria fabricar evidência.
 
   Feedback recebido  [validado, validado por fernando]
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  - (equipe) O backlog nasceu grande demais para um semestre. O corte foi feito na revisão:
-    25 histórias, com os "Must" cabendo até o SR1.
+  - (equipe) A lista de tarefas nasceu grande demais para um semestre. Cortamos na revisão:
+    ficaram 25 histórias, com os "Must" cabendo até o SR1.
 
   Próximos passos  [validado, validado por fernando]
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  - Preparar o pitch de 5 minutos do Kick-off, com fala dividida entre os seis.
-  - Fechar o diagrama de arquitetura e o fluxo de dados para a Semana 5.
+  - Preparar o pitch de 5 minutos do Kick-off, com a fala dividida entre os seis.
+  - Fechar o desenho da arquitetura e o fluxo de dados para a Semana 5.
 
   Responsáveis  [validado, validado por fernando]
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  - Gabriel Tenório de Lima Teixeira: Escreveu a proposta e o backlog priorizado.
-  - João Henrique Micucci: Delimitou o escopo técnico e as fronteiras de integração.
-  - João Pedro Mamede: Converteu as histórias em fluxo de telas.
-  - Matheus Lustosa: Amarrou cada história a uma dor levantada na pesquisa.
-  - Rafael Serpa: Especificou as histórias da frente de dados e ML.
-  - Fernando Cavalcanti: Revisou o escopo sob a ótica de segurança e privacidade.
+  - Gabriel Tenório de Lima Teixeira: Escreveu a proposta e o backlog, já com as
+    prioridades.
+  - João Henrique Micucci: Definiu o escopo técnico e os limites de integração.
+  - João Pedro Mamede: Transformou as histórias em fluxo de telas.
+  - Matheus Lustosa: Ligou cada história a uma dor da pesquisa.
+  - Rafael Serpa: Detalhou as histórias de dados e ML (aprendizado de máquina).
+  - Fernando Cavalcanti: Revisou o escopo pelo lado da segurança e da privacidade.
 
   Evidências  [validado, validado por fernando]
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -548,14 +567,14 @@ feedback de professor ou de cliente seria fabricar evidência.
 
   >>> PROPOSTA EM UMA PÁGINA
       âncora no site: #doc-s4-proposta
-      o produto, o recorte e a aposta central.
+      o que é o produto, até onde ele vai e a aposta central.
 
-      - O quê: um sistema web que substitui a planilha de consolidação da gratificação por desempenho.
-       - Para quem: os quatro atores que o cliente nomeou, coordenação da SEAB, administrador da plataforma, gerentes distritais e gerentes de unidade.
-       - Como: subindicadores preenchidos pelas unidades; indicador calculado; régua (meta e peso) por tipo de unidade, dentro da regra versionada; cálculo por função pura; memória de cálculo exibida junto de cada resultado; trilha de auditoria imutável.
-       - Por que agora: o processo depende de poucas pessoas e não tem rastreabilidade, um erro só aparece depois do pagamento.
-       - Como saberemos que deu certo: qualquer número do resultado responde “de onde veio?” em um clique, e o mesmo ciclo recalculado devolve o mesmo valor.
-      Atualizado depois da reunião com o cliente de 22/08 (ver o documento da Semana 3): o domínio ganhou subindicadores, tipos de unidade e a rede por distrito.
+      - O quê: um sistema na web. Ele substitui a planilha que hoje junta os dados da gratificação por desempenho.
+       - Para quem: os quatro papéis que o cliente nomeou. Coordenação da SEAB, administrador da plataforma, gerentes distritais e gerentes de unidade.
+       - Como: cada unidade informa os itens medidos. O sistema calcula o indicador a partir deles. A meta e o peso variam por tipo de unidade. Eles ficam guardados na regra, que tem número de versão. O cálculo é uma conta que não depende de nada de fora. A memória de cálculo, o passo a passo da conta, aparece junto de cada resultado. O histórico de quem mudou o quê não pode ser alterado.
+       - Por que agora: o processo depende de poucas pessoas. Ninguém consegue seguir o caminho de cada número. Um erro só aparece depois do pagamento.
+       - Como saberemos que deu certo: qualquer número do resultado responde “de onde veio?” num clique. E o mesmo ciclo, recalculado, devolve o mesmo valor.
+      Atualizamos este texto depois da reunião com o cliente de 22/08 (ver o documento da Semana 3). O desenho do sistema ganhou os itens medidos dentro de cada indicador. Ganhou também os tipos de unidade e a rede por distrito.
 
   >>> ESCOPO
       âncora no site: #doc-s4-escopo
@@ -563,176 +582,179 @@ feedback de professor ou de cliente seria fabricar evidência.
 
       Dentro
 
-       - Cadastro da rede (distritos, tipos, unidades) e do catálogo de indicadores com seus subindicadores
-       - Régua por tipo de unidade (meta e peso na regra versionada)
-       - Lançamento por subindicador pelas unidades, com evidência e janela de revisão de 5 dias
-       - Motor de cálculo com memória composta, subindicador por subindicador
-       - Avaliação por unidade e a distrital (média das unidades do distrito)
-       - Estados do ciclo, da abertura à publicação, com trilha de auditoria
-       - Consulta do próprio resultado pelo gerente e abertura de contestação
-       - Painel agregado por distrito e exportação em CSV
-       - Analytics com os resultados dos modelos e o método declarado
+       - Cadastro da rede: distritos, tipos de unidade e unidades. Cadastro da lista de indicadores, com os itens medidos de cada um
+       - Meta e peso por tipo de unidade, guardados na regra com número de versão
+       - Cada unidade informa seus itens medidos e anexa a evidência. Há uma janela de revisão de 5 dias
+       - O cálculo do resultado, com a memória de cálculo montada item medido por item medido
+       - Avaliação por unidade e avaliação do distrito (a média das unidades do distrito)
+       - As etapas do ciclo, da abertura à publicação, com histórico de quem mudou o quê
+       - O gerente consulta o próprio resultado e pode abrir contestação
+       - Painel com os números reunidos por distrito e exportação em CSV
+       - Análises (analytics) com os resultados dos modelos e o método usado, dito por escrito
 
       Fora
 
        - Integração com folha de pagamento
-       - Autenticação corporativa da prefeitura
-       - Migração de dados históricos reais
-       - Aplicativo mobile nativo
-       - Cálculo de outras verbas que não a gratificação por desempenho
+       - Login com a conta corporativa da prefeitura
+       - Trazer os dados históricos reais para o sistema
+       - Aplicativo próprio para celular (nativo)
+       - Cálculo de qualquer outra verba além da gratificação por desempenho
 
   >>> BACKLOG INICIAL
       âncora no site: #doc-s4-backlog
-      os itens priorizados com estimativa e critério de pronto.
+      os itens por prioridade, com estimativa e o que conta como pronto.
 
       Épico | História | MoSCoW
 
-       Ciclo | Como SEAB, quero abrir um ciclo de avaliação para que as unidades possam lançar dados | M
-       Ciclo | Como SEAB, quero definir a janela de lançamento, com a janela de revisão nos dias finais, para controlar o prazo | M
-       Ciclo | Como SEAB, quero avançar o estado do ciclo para refletir a etapa real do processo | M
-       Ciclo | Como SEAB, quero homologar o ciclo para congelar os resultados | M
+       Ciclo | Como SEAB, quero abrir um ciclo de avaliação para que as unidades possam informar seus dados | M
+       Ciclo | Como SEAB, quero definir a janela de lançamento, com a revisão nos dias finais, para controlar o prazo | M
+       Ciclo | Como SEAB, quero avançar a etapa do ciclo para que ela reflita o ponto real do processo | M
+       Ciclo | Como SEAB, quero aprovar o ciclo para que os resultados não mudem mais | M
        Ciclo | Como SEAB, quero publicar o ciclo para que os gerentes vejam seus resultados | S
-       Régua | Como SEAB, quero cadastrar indicadores compostos por subindicadores (índice ou razão) para refletir o processo real | M
-       Régua | Como SEAB, quero definir quais indicadores valem para cada tipo de unidade, com meta e peso próprios, para respeitar o recorte de cada tipo | M
+       Régua | Como SEAB, quero cadastrar indicadores formados por itens medidos (um índice ou uma razão) para refletir o processo real | M
+       Régua | Como SEAB, quero definir quais indicadores valem para cada tipo de unidade, com meta e peso próprios. Assim respeito a realidade de cada tipo | M
        Régua | Como SEAB, quero criar uma nova versão da regra para não alterar ciclos já fechados | M
-       Régua | Como SEAB, quero ver o diff entre versões da regra para saber o que mudou | S
-       Régua | Como SEAB, quero definir a vigência da regra para que cada ciclo use a versão certa | M
-       Lançamento | Como gerente de unidade, quero lançar cada subindicador da minha unidade (valor, ou numerador e denominador) para cumprir minha parte | M
+       Régua | Como SEAB, quero comparar duas versões da regra para saber o que mudou | S
+       Régua | Como SEAB, quero definir de quando até quando a regra vale, para que cada ciclo use a versão certa | M
+       Lançamento | Como gerente de unidade, quero informar cada item medido da minha unidade (um valor, ou numerador e denominador). Assim cumpro minha parte | M
        Lançamento | Como gerente de unidade, quero anexar a evidência do dado para sustentar o que informei | M
-       Lançamento | Como gerente de unidade, quero corrigir um lançamento na janela de revisão, com o valor antigo guardado, para acertar engano | M
-       Lançamento | Como gerente distrital, quero revisar os lançamentos das minhas unidades na janela de revisão para responder pelo distrito | S
+       Lançamento | Como gerente de unidade, quero corrigir um dado na janela de revisão, com o valor antigo guardado. Assim conserto um engano | M
+       Lançamento | Como gerente distrital, quero revisar os dados informados pelas minhas unidades na janela de revisão para responder pelo distrito | S
        Lançamento | Como gerente de unidade, quero ser avisado de valor fora do padrão para conferir antes de enviar | C
-       Resultado | Como gerente de unidade, quero ver o score e a faixa da minha unidade para saber meu resultado | M
-       Resultado | Como gerente de unidade, quero abrir a memória de cálculo, com a composição de cada subindicador, para entender de onde veio o número | M
-       Resultado | Como gerente distrital, quero ver minha nota como média das unidades do distrito, com a composição aberta, para saber meu resultado | M
+       Resultado | Como gerente de unidade, quero ver a nota e a faixa da minha unidade para saber meu resultado | M
+       Resultado | Como gerente de unidade, quero abrir a memória de cálculo, com a conta de cada item medido. Assim entendo de onde veio o número | M
+       Resultado | Como gerente distrital, quero ver minha nota como a média das unidades do distrito, com a conta aberta. Assim sei meu resultado | M
        Resultado | Como gerente, quero comparar meus ciclos para acompanhar minha evolução | S
        Resultado | Como gerente, quero abrir contestação para questionar um resultado | S
-       Resultado | Como SEAB, quero responder a contestação para encerrar o questionamento com registro | S
+       Resultado | Como SEAB, quero responder à contestação para encerrar o questionamento, com tudo registrado | S
        Governança | Como administrador, quero ver a linha do tempo de tudo que aconteceu para dar suporte e fiscalizar | M
-       Governança | Como administrador, quero que nada possa ser apagado para que a trilha sirva de prova | M
-       Governança | Como SEAB, quero ver agregados por distrito para enxergar o funil do ciclo | S
+       Governança | Como administrador, quero que nada possa ser apagado para que o histórico sirva de prova | M
+       Governança | Como SEAB, quero ver os totais por distrito para enxergar o andamento do ciclo | S
        Governança | Como SEAB, quero exportar os resultados em CSV para usar em outros relatórios | C
-       Governança | Como SEAB, quero ver o risco de não-atingimento no próximo ciclo para agir antes | C
+       Governança | Como SEAB, quero ver o risco de a meta não ser atingida no próximo ciclo para agir antes | C
 
 --- KO · Kick-off · 12/09/2026 -------------------------------------------------------------
 
 
   Objetivo da semana  [validado, validado por gabriel]
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  Apresentar o problema, os objetivos, as análises, a ideação, a solução e o cronograma
-  dentro dos dez minutos liberados, com fala distribuída entre os seis, direto do site.
+  Apresentar o projeto nos dez minutos que o professor liberou, direto do site. Os seis
+  falam. Entram o problema, os objetivos, as análises, a ideação, a solução e o cronograma.
 
   Avanços  [validado, validado por gabriel]
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  - Roteiro conferido linha a linha contra o repositório: quem consolida e homologa, os
-    quatro papéis, as oito telas, os estados do mês e cada número dito no palco. As
-    correções estão na tabela do documento abaixo.
-  - Os slides viraram uma rota do próprio site, /pitch, liberada pelo mesmo motor de
-    releases do registro: nove telas, uma ideia por tela, setas do teclado, notas do
-    apresentador e a memória de cálculo real dentro do slide da demonstração.
-  - A régua oficial chegou: a Portaria Conjunta nº 001/2024, publicada no Diário Oficial de
-    21/09/2024, foi transcrita para o repositório e comparada com o motor. Ela confirma o
-    modelo e corrige dois pontos.
-  - PDF e capturas gerados a partir da própria rota, na identidade do site. O PDF é
-    baixável pelo próprio deck, para o caso de a sala não ter rede.
-  - O briefing oficial do Kick-off chegou na véspera, com sete critérios de avaliação e uma
-    estrutura mínima de oito seções para o site. A auditoria contra ele achou três peças
-    que não existiam em lugar nenhum: objetivo geral e específicos, a matriz CSD e os
-    wireframes de baixa fidelidade. As três foram produzidas nesta semana e estão nos
-    documentos abaixo, com a data verdadeira.
-  - O deck cresceu de nove para dezessete slides e de 4:55 para 9:00, dentro dos dez
-    minutos que o professor liberou. Os slides novos cobrem exatamente os critérios que não
-    apareciam: objetivos, as fontes da pesquisa, a matriz CSD, benchmarking com SWOT, as
-    técnicas de ideação, a justificativa da escolha, os wireframes e o cronograma com
-    responsável.
-  - O site ganhou o índice das oito seções no topo, a biblioteca com todos os documentos
-    publicados e o cronograma das 18 semanas com estado e responsável, que até aqui só
-    existia atrás da senha do painel.
+  - Conferimos o roteiro linha a linha contra o que está no repositório. Checamos quem
+    junta os números e quem aprova. Checamos os quatro papéis, as oito telas do sistema e
+    as etapas do mês. E cada número dito no palco. As correções estão na tabela do
+    documento abaixo.
+  - Os slides viraram um endereço do próprio site: /pitch. Ele é liberado pela mesma porta
+    que decide quando cada parte do registro aparece. São nove slides, uma ideia por slide.
+    Tem setas do teclado e notas do apresentador. E a memória de cálculo de verdade dentro
+    do slide da demonstração. Ela é o passo a passo da conta.
+  - A regra oficial chegou: a Portaria Conjunta nº 001/2024, publicada no Diário Oficial de
+    21/09/2024. Copiamos o texto dela para o repositório e comparamos com o cálculo do
+    sistema. Ela confirma o nosso modelo e corrige dois pontos.
+  - Geramos o PDF e as imagens dos slides a partir do próprio /pitch. Eles têm a mesma cara
+    do site. O PDF pode ser baixado de dentro da própria apresentação. É a reserva para o
+    caso de a sala não ter internet.
+  - O briefing oficial do Kick-off chegou na véspera. É o documento que diz o que o
+    Kick-off precisa ter. Ele traz sete critérios de avaliação. E pede uma estrutura mínima
+    de oito seções para o site. Conferimos o nosso material contra ele. Achamos três peças
+    que não existiam em lugar nenhum. Eram o objetivo geral com os específicos. A matriz
+    CSD, a lista de certezas, suposições e dúvidas. E os wireframes de baixa fidelidade, os
+    desenhos simples das telas. Produzimos as três nesta semana. Estão nos documentos
+    abaixo, com a data verdadeira.
+  - A apresentação cresceu de nove para dezessete slides. O tempo foi de 4:55 para 9:00,
+    dentro dos dez minutos que o professor liberou. Os slides novos cobrem exatamente os
+    critérios que faltavam. São eles: os objetivos, as fontes da pesquisa, a matriz CSD e o
+    benchmarking com a SWOT. E também as técnicas de ideação, a justificativa da escolha,
+    os wireframes e o cronograma com responsável.
+  - O site ganhou o índice das oito seções no topo. Ganhou a biblioteca com todos os
+    documentos publicados. E ganhou o cronograma das 18 semanas. Cada entrega mostra o
+    estado e o responsável. Até aqui esse cronograma só existia atrás da senha do painel
+    administrativo.
 
   Decisões  [validado, validado por gabriel]
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  - Apresentar direto do site, não de um arquivo de slides.
-      por quê: O pitch é conteúdo do projeto como qualquer outro: entra no Git, passa pelo
-      release e pelo teste de vazamento, e a banca acessa depois pelo mesmo endereço. O PDF
-      é a reserva, não o original.
-  - Mostrar a memória de cálculo ao vivo, e não uma imagem dela.
-      por quê: É o argumento do projeto contra a planilha; ver o número se explicar sozinho
-      vale mais que ouvir sobre isso. A memória é renderizada no servidor junto com o
-      slide, então não há serviço externo que possa cair no meio: a reserva contra sala sem
-      rede é o PDF, que o próprio deck baixa.
-  - Dividir a apresentação por bloco do roteiro, não por quem construiu o quê.
-      por quê: A diretriz pede fala distribuída; a equipe construiu tudo em conjunto, e o
-      pitch é da equipe. Cada bloco tem uma voz para a fala ter ritmo, e as perguntas
-      qualquer um responde.
-  - A portaria entra no repositório; a planilha anonimizada que veio junto, não.
-      por quê: A portaria é ato público. A planilha tem gente, mesmo com o nome trocado, e
-      o repositório é público: dado real da SESAU ali é irreversível. Ela fica como
-      referência privada da equipe para validar a régua.
+  - Apresentar direto do site, sem arquivo de slides.
+      por quê: O pitch é conteúdo do projeto como qualquer outro. Entra no Git. Passa pela
+      liberação e pelo teste que prova que nada vaza antes da hora. Depois, a banca acessa
+      pelo mesmo endereço. O PDF é só a reserva, não o original.
+  - Memória de cálculo ao vivo, não em imagem.
+      por quê: É o nosso argumento contra a planilha. Ver o número se explicar sozinho vale
+      mais que ouvir falar disso. A memória é montada junto com o slide, no servidor.
+      Nenhum serviço de fora pode cair no meio. Sem internet na sala, a reserva é o PDF,
+      que a própria apresentação baixa.
+  - Fala dividida por bloco do roteiro, não por quem construiu.
+      por quê: A orientação que recebemos pede que todos falem. A equipe construiu tudo
+      junta, e o pitch é da equipe. Cada bloco tem uma voz, para a fala ter ritmo. As
+      perguntas, qualquer um responde.
+  - A portaria entra no repositório; a planilha anonimizada, não.
+      por quê: A portaria é um documento público. A planilha tem gente, mesmo com os nomes
+      trocados. O repositório é público: dado real da SESAU ali não tem volta. Ela fica
+      como referência privada da equipe, para conferir a regra.
   - Abrir pelo problema, não pela solução.
-      por quê: A relevância do case é o que sustenta o projeto; a tecnologia é
+      por quê: A relevância do case é o que sustenta o projeto. A tecnologia é
       consequência.
-  - Crescer o deck em vez de cortar, usando os dez minutos liberados.
-      por quê: O briefing cobra sete critérios, e três deles não apareciam em slide nenhum
-      na versão de 4:55. Com a permissão dos dez minutos, cobrir os sete custa menos que
-      escolher quais perder. Ficou um minuto de margem: ensaio que fecha no limite estoura
-      no dia.
+  - Crescer a apresentação em vez de cortar, usando os dez minutos liberados.
+      por quê: O briefing cobra sete critérios. Três não apareciam em slide nenhum na
+      versão de 4:55. Com os dez minutos, cobrir os sete custa menos que escolher quais
+      perder. Sobrou um minuto de margem: ensaio que fecha no limite estoura no dia.
   - Datar a matriz CSD e os wireframes nesta semana, e dizer isso no documento.
-      por quê: Os dois artefatos não existiam. Escrevê-los como se fossem de agosto
-      deixaria o registro mais bonito e menos verdadeiro, e o site inteiro vale pelo que
-      ele registra. A Semana 3 prometeu telas em papel e não publicou: o documento dos
-      wireframes reconhece isso em vez de esconder.
-  - O índice das oito seções mora na página, não no cabeçalho.
-      por quê: O cabeçalho foi desenhado para três destinos e estoura em 360px com oito. O
-      índice na página também serve de ordem de leitura para quem avalia, coisa que um menu
-      não faz.
+      por quê: Os dois não existiam. Escrevê-los como se fossem de agosto deixaria o
+      registro mais bonito e menos verdadeiro. O site inteiro vale pelo que ele registra. A
+      Semana 3 prometeu telas em papel e não publicou. O documento dos wireframes reconhece
+      isso, em vez de esconder.
+  - Índice das oito seções na página, não no cabeçalho.
+      por quê: O cabeçalho foi desenhado para três destinos. Com oito, ele não cabe numa
+      tela de 360px. E o índice na página serve de ordem de leitura para quem avalia. Um
+      menu não faz isso.
 
   Bloqueios  [validado, validado por gabriel]
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  - Ensaio cronometrado com os seis integrantes ainda não realizado. A rota /pitch mostra o
-    tempo de cada slide nas notas para isso.
-  - O motor ainda calcula pela régua deduzida na reunião de 22/08, não pela portaria: a
-    média das notas dos subindicadores e a redistribuição de peso do art. 8º entram como
-    regra versão 3 na Semana 5.
-  - O benchmarking não nomeia concorrentes: as cinco referências são categorias de
-    ferramenta, não produtos identificados. Nomeá-las exige um levantamento que não coube
-    nesta semana.
-  - A dinâmica real das três técnicas de ideação continua sem registro em foto ou artefato:
-    o que está publicado é o roteiro previsto, e o checklist foi corrigido para dizer isso.
+  - Ainda não fizemos o ensaio cronometrado com os seis integrantes. O endereço /pitch
+    mostra o tempo de cada slide nas notas, para isso.
+  - O cálculo ainda segue a regra que deduzimos na reunião de 22/08, não a portaria. A
+    média das notas dos itens medidos e a redistribuição de peso do art. 8º entram como
+    regra versão 3, na Semana 5.
+  - O benchmarking não nomeia concorrentes: as cinco referências são tipos de ferramenta,
+    não produtos com nome. Nomeá-las exige um levantamento que não coube nesta semana.
+  - A dinâmica real das três técnicas de ideação continua sem foto ou registro. O que está
+    publicado é o roteiro previsto, e corrigimos o checklist para dizer isso.
 
   Feedback recebido  [validado, validado por gabriel]
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  - (equipe) Primeira versão do roteiro passava de 7 minutos. O corte foi tirar arquitetura
-    do pitch e deixá-la para a arguição.
-  - (cliente) O órgão enviou a portaria que regulamenta a gratificação e uma planilha
-    anonimizada de um ciclo real, para a equipe conferir a régua. Só a portaria entra no
+  - (equipe) A primeira versão do roteiro passava de 7 minutos. Tiramos a arquitetura do
+    pitch e deixamos para a hora das perguntas da banca.
+  - (cliente) O órgão enviou a portaria que regulamenta a gratificação. Enviou também uma
+    planilha anonimizada de um ciclo real, para conferirmos a regra. Só a portaria entra no
     repositório.
 
   Próximos passos  [validado, validado por gabriel]
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   - Ensaiar com cronômetro em /pitch e ajustar os blocos que estourarem.
-  - Preparar as respostas das perguntas prováveis da banca, listadas no documento abaixo.
-  - Entrar na Semana 5 com a régua oficial carregada no motor como regra versão 3, e com o
-    diagrama de arquitetura pronto.
-  - Subir o PDF da apresentação para a pasta da equipe no Drive e ligar o link no site, que
-    é o último item do checklist do professor ainda em aberto.
-  - Levar à secretaria as cinco dúvidas da matriz CSD, a começar pela redistribuição de
+  - Preparar as respostas para as perguntas prováveis da banca, listadas no documento
+    abaixo.
+  - Entrar na Semana 5 com a regra oficial carregada no cálculo, como regra versão 3. E com
+    o desenho da arquitetura pronto.
+  - Subir o PDF da apresentação para a pasta da equipe no Drive e ligar o link no site. É o
+    último item do checklist do professor ainda em aberto.
+  - Levar à secretaria as cinco dúvidas da matriz CSD, começando pela redistribuição de
     peso do art. 8º.
 
   Responsáveis  [validado, validado por gabriel]
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  - Gabriel Tenório de Lima Teixeira: Fala: capa, o problema, os objetivos e o fechamento.
-  - Matheus Lustosa: Fala: as fontes da pesquisa, quem sofre com o problema e a matriz CSD.
-  - João Pedro Mamede: Fala: as técnicas de ideação, por que a ideia venceu e os
-    wireframes.
-  - João Henrique Micucci: Fala: a demonstração ao vivo e a regra guardada como dado.
-  - Rafael Serpa: Fala: os dados, os modelos e os riscos.
-  - Fernando Cavalcanti: Fala: o roteiro, o benchmarking com a SWOT e o cronograma.
+  - Gabriel Tenório de Lima Teixeira: Fala: capa, problema, objetivos e fechamento.
+  - Matheus Lustosa: Fala: fontes da pesquisa, quem sofre com o problema, matriz CSD.
+  - João Pedro Mamede: Fala: técnicas de ideação, por que a ideia venceu, wireframes.
+  - João Henrique Micucci: Fala: demonstração ao vivo, regra guardada como dado.
+  - Rafael Serpa: Fala: dados, modelos e riscos.
+  - Fernando Cavalcanti: Fala: roteiro, benchmarking com SWOT, cronograma.
 
   Evidências  [validado, validado por gabriel]
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   - [prototipo] Os slides do pitch, no site -> /pitch
-  - [documento] A régua oficial -> #doc-ko-regua-oficial
-  - [documento] Roteiro do pitch -> #doc-ko-roteiro-pitch
+  - [documento] A regra oficial -> #doc-ko-regua-oficial
   - [documento] Objetivo geral e específicos -> #doc-ko-objetivos
   - [documento] Matriz CSD -> #doc-ko-csd
   - [prototipo] Wireframes de baixa fidelidade -> #doc-ko-wireframes
@@ -740,77 +762,38 @@ feedback de professor ou de cliente seria fabricar evidência.
   - [codigo] Roteiro, PDF e portaria transcrita ->
     https://github.com/highgroundagency/projeto-6/tree/main/docs
 
-  Documentos de entrega desta semana (7)
+  Documentos de entrega desta semana (5)
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-  >>> ROTEIRO DO PITCH: 9:00
-      âncora no site: #doc-ko-roteiro-pitch
-      os 17 slides, com o tempo, quem fala e o que a tela mostra em cada um.
-
-      Começa em | Slide | Quem fala | O que a tela mostra | Tempo
-
-       0:00 | 1. prumo | Gabriel | Wordmark, a pílula do marco e os seis nomes da equipe. | 0:20
-       0:20 | 2. o caminho de hoje | Fernando | As sete paradas do roteiro, numeradas. | 0:10
-       0:30 | 3. todo mês, uma conta feita à mão | Gabriel | O caminho do dinheiro em cinco passos, com o ponto que quebra em destaque. | 0:40
-       1:10 | 4. não é impressão nossa | Matheus | As três fontes da pesquisa, cada uma com a data. | 0:30
-       1:40 | 5. o que o sistema tem que fazer | Gabriel | O objetivo geral e os cinco específicos, cada um com o prazo. | 0:35
-       2:15 | 6. três pessoas, o mesmo número | Matheus | A fala do mapa de empatia e os três cartões de quem é afetado. | 0:40
-       2:55 | 7. o que sabemos, e o que ainda é chute | Matheus | As três colunas da matriz, com a contagem e dois exemplos de cada. | 0:30
-       3:25 | 8. quem mais resolve isso, e o que joga a favor | Fernando | As referências com o veredito, e os quatro quadrantes da SWOT. | 0:35
-       4:00 | 9. como a gente gerou ideias | João | As três técnicas, com o tempo e o que cada uma produziu. | 0:35
-       4:35 | 10. por que essa ideia venceu | João | A alternativa escolhida, as quatro razões e o que ficou de comparação. | 0:30
-       5:05 | 11. do papel para a tela | João | Os quatro wireframes, um por tela, com a legenda de cada. | 0:35
-       5:40 | 12. a nota com a conta aberta | João | A nota e a conta inteira, do sistema de verdade, para uma unidade de teste. | 0:45
-       6:25 | 13. cada mês guarda a regra que usou | João | O caminho de um número em quatro passos, e quem faz o quê. | 0:35
-       7:00 | 14. nenhum dado real. ainda. | Rafael | O tamanho da base de teste, e o que os modelos acertam e erram. | 0:30
-       7:30 | 15. o que pode dar errado, dito antes | Rafael | Quatro contagens do que já foi mapeado, cada uma com o estado dela. | 0:30
-       8:00 | 16. as dezoito semanas, e onde estamos | Fernando | A linha do semestre com os marcos, e as entregas do próximo mês com dono. | 0:35
-       8:35 | 17. prumo | Gabriel | Wordmark, o endereço do site e a pergunta para a banca. | 0:25
-
-      Soma: 9:00. A fala de cada slide está nas notas do apresentador, em /pitch, com a tecla n. Quem fala não opera: uma pessoa fica na tela o tempo todo, avançando com as setas. O deck baixa o PDF de reserva pelo próprio cabeçalho, para o caso de a sala não ter rede.
-
-  >>> A RÉGUA OFICIAL: PORTARIA CONJUNTA Nº 001/2024
+  >>> A REGRA OFICIAL: PORTARIA CONJUNTA Nº 001/2024
       âncora no site: #doc-ko-regua-oficial
-      o que a norma publicada confirma no modelo do Prumo, e os dois pontos em que ela o
-      corrige.
+      o que a portaria confirma no nosso modelo, e os dois pontos em que ela nos corrige.
 
-      Publicada no Diário Oficial do Recife nº 131, de 21/09/2024, com efeito desde 01/09/2024. É o ato que detalha os indicadores e subindicadores do Decreto nº 36.482/2023 e institui a Comissão de Avaliação de Metas. A transcrição está em docs/portaria-001-2024.md; abaixo, o que importa para o motor.
+      Publicada no Diário Oficial do Recife nº 131, de 21/09/2024, valendo desde 01/09/2024. Ela detalha os indicadores do Decreto nº 36.482/2023 e os itens medidos de cada um (os subindicadores). Também cria a Comissão de Avaliação de Metas. O texto completo está em docs/portaria-001-2024.md; abaixo, só o que importa para o cálculo.
       A Comissão de Avaliação de Metas (CAM) é a responsável por consolidar, analisar, deliberar e divulgar os resultados da avaliação do cumprimento dos indicadores de gestão e dos recursos interpostos.
       Art. 6º
 
-       Tema | O motor hoje (regra v2) | A portaria | Estado
+       Tema | O cálculo hoje (regra v2) | A portaria | Estado
 
-       O que se preenche | Subindicador: valor direto ou numerador e denominador | Cada subindicador tem fórmula numerador ÷ denominador × 100, ou contagem direta | Confirmado
-       Régua por tipo de unidade | Aplicabilidade tipo × indicador → meta e peso, na regra versionada | O Indicador 4 muda inteiro por tipo (USF, CAPS, UBT, UCIS, CECON, MAC) e os pesos mudam por função | Confirmado
-       Nota do distrito | Média simples das unidades | Média das notas das unidades, em todos os indicadores distritais | Confirmado
-       Composição do indicador | Média dos valores apurados, graduada depois contra a meta | Média simples das notas dos subindicadores, cada uma já graduada; o Indicador 4 usa média ponderada | Diverge: regra v3 na Semana 5
-       Indicador sem lançamento | zera com aviso | Art. 8º: desconsidera e redistribui o peso proporcionalmente | Diverge: regra v3 na Semana 5
-       Quem homologa | Coordenação da SEAB, no sistema | A CAM, com apoio da SECOGE, quórum de 4 (arts. 5º e 6º) | O perfil do sistema é operacional; a CAM homologa fora dele
-       Contestação | Tela sem prazo | Art. 9º: 10 dias corridos para recorrer, 5 dias úteis para responder | Prazo entra na regra v3
+       O que se preenche | Cada item medido: um valor direto, ou numerador e denominador | Cada item medido tem a fórmula numerador ÷ denominador × 100, ou é uma contagem direta | Confirmado
+       Meta e peso por tipo de unidade | Para cada par tipo de unidade e indicador, a regra guarda a meta e o peso. A regra tem número de versão | O Indicador 4 muda inteiro por tipo (USF, CAPS, UBT, UCIS, CECON, MAC), e os pesos mudam por função | Confirmado
+       Nota do distrito | Média simples das notas das unidades | Média das notas das unidades, em todos os indicadores distritais | Confirmado
+       Como o indicador é composto | Tira a média dos valores informados. Só depois compara com a meta para virar nota | Cada item medido vira nota primeiro. Depois tira a média simples dessas notas. O Indicador 4 usa média ponderada | Diverge: vira regra v3 na Semana 5
+       Indicador sem lançamento | Dá nota zero e mostra um aviso | Art. 8º: ignora o indicador e divide o peso dele entre os outros, na proporção | Diverge: vira regra v3 na Semana 5
+       Quem aprova | A Coordenação da SEAB, dentro do sistema | A CAM, com apoio da SECOGE, com pelo menos 4 membros presentes (arts. 5º e 6º) | O sistema cuida do dia a dia. A aprovação final é da CAM, fora do sistema
+       Contestação | A tela existe, mas não controla prazo | Art. 9º: 10 dias corridos para recorrer, 5 dias úteis para responder | O prazo entra na regra v3
 
-       - Fluxo do art. 7º: cada secretaria executiva coleta e envia à SECOGE até o dia 20; a CAM valida e publica até o último dia útil; a SEGTES pede a implantação na folha até o 6º dia útil do segundo mês.
-       - A comissão tem sete áreas: SECOGE, SEAB, SEAF, SEGTES, SERMAC, SEVS e SEPLAGTD, com titular e suplente cada. Os nomes ficaram fora do repositório de propósito.
-       - Cinco indicadores: registro de medicamentos e MMH; gestão do trabalho; satisfação do usuário; desempenho das unidades; e vigilância em saúde, este só para funções distritais. Pesos de 20%, 20%, 20%, 40% e 30%, variando por função.
+       - Fluxo do art. 7º: cada secretaria executiva coleta os dados e envia à SECOGE até o dia 20. A CAM valida e publica até o último dia útil. A SEGTES pede a implantação na folha até o 6º dia útil do segundo mês.
+       - A comissão tem sete áreas: SECOGE, SEAB, SEAF, SEGTES, SERMAC, SEVS e SEPLAGTD, cada uma com titular e suplente. Os nomes ficaram fora do repositório de propósito.
+       - São cinco indicadores: registro de medicamentos e MMH; gestão do trabalho; satisfação do usuário; desempenho das unidades; e vigilância em saúde, este só para funções distritais. Os pesos são 20%, 20%, 20%, 40% e 30%, e variam por função.
 
-      A demonstração do pitch usa a unidade sintética usf-canario na regra v2, a deduzida em 22/08. A régua oficial vira a regra v3 na Semana 5, e o slide 7 diz isso em voz alta.
-
-  >>> PERGUNTAS PROVÁVEIS DA BANCA
-      âncora no site: #doc-ko-perguntas
-      o que esperamos ouvir e a resposta que o repositório sustenta.
-
-      - "Vocês já falaram com o cliente?" Sim. Reunião em 22/08 com a SECOGE, ata sintetizada na Semana 3; e em 05/09 o órgão enviou a portaria e uma planilha anonimizada. A validação formal da régua com a SEAB está marcada para o caminho até o SR1.
-       - "E se a portaria mudar?" Regra é dado versionado, não código. Cria-se uma versão nova; os meses já homologados continuam reproduzindo o resultado antigo, porque cada ciclo aponta para a versão que usou. A própria chegada da portaria oficial é o primeiro caso real disso: vira a regra v3.
-       - "Qual o diferencial em relação à planilha?" A memória de cálculo: cada número responde de onde veio, com o subindicador, a meta e o peso que o geraram. E a trilha: toda escrita tem autor, data, antes e depois. Nenhuma ferramenta pronta do benchmarking da Semana 2 versiona regra normativa nem produz memória de cálculo.
-       - "Onde entra o machine learning, e por que ele não decide?" Fora do cálculo. Os modelos treinam offline e publicam sinais na tela de analytics, cada um com a linha de base ao lado; o classificador de meta perde para o palpite majoritário e isso está escrito. A portaria é determinística; o modelo diz onde olhar, não quanto alguém recebe.
-       - "Por que o banco está desligado?" Porque o MVP não precisa dele para provar a tese, e ligar um banco a um repositório público com dado de servidor seria o risco errado na hora errada. O schema PostgreSQL com RLS e gatilhos está escrito e testado contra um banco real; a camada de dados isola as telas para ele entrar sem reescrever tela.
-       - "Como garantem que não há dado real?" A base é gerada por script com semente fixa, e há teste que falha se um CPF, e-mail ou telefone aparecer nela. A planilha anonimizada do cliente não entrou no repositório, e nenhum dado real entra em prompt de IA.
-      O Kick-off tem peso formativo na matriz: a nota não vem daqui, mas o direcionamento que sai da arguição orienta tudo até o SR1.
+      A demonstração do pitch usa a unidade fictícia usf-canario, gerada por programa. Ela roda na regra v2, a que deduzimos em 22/08. A regra oficial vira a regra v3 na Semana 5, e o slide 7 diz isso em voz alta.
 
   >>> OBJETIVO GERAL E OBJETIVOS ESPECÍFICOS
       âncora no site: #doc-ko-objetivos
       o que o produto tem que fazer, e até quando cada parte fica de pé.
 
-      Escritos na semana do Kick-off. Até aqui o projeto tinha metas de entrega da disciplina, com data de marco, mas não tinha o objetivo do PRODUTO dito com todas as letras. O briefing do Kick-off cobra os dois, e eles não são a mesma coisa.
+      Escritos na semana do Kick-off. Até aqui o projeto tinha metas de entrega da disciplina, com data de marco. Mas não tinha o objetivo do PRODUTO dito com todas as letras. O briefing do Kick-off cobra os dois, e eles não são a mesma coisa.
       Tirar o cálculo da gratificação da planilha e entregar um sistema em que a conta de cada nota fica aberta: qualquer pessoa refaz o número e vê de onde ele veio.
       Objetivo geral
 
@@ -822,53 +805,53 @@ feedback de professor ou de cliente seria fabricar evidência.
        cada um vê o que é seu | Separar o que cada um dos quatro papéis do processo pode ver e fazer, de modo que quem envia o número não seja quem escolhe o alvo. | SR1
        conferido com o cliente | Provar com a Secretaria que a conta do sistema bate com a conta da planilha que eles usam hoje, e registrar as diferenças que aparecerem. | Semana 11
 
-      Não confundir com os Objetivos SMART da Semana 2: aqueles são metas de entrega da disciplina (ter o motor coberto por testes até a Semana 6, coletar feedback na Semana 11). Estes dizem o que o sistema tem de fazer. Os dois convivem, e nenhum substitui o outro.
+      Não confundir com os Objetivos SMART da Semana 2. Aqueles são metas de entrega da disciplina, como ter o cálculo coberto por testes até a Semana 6. Ou coletar feedback na Semana 11. Estes dizem o que o sistema tem de fazer. Os dois convivem, e nenhum substitui o outro.
 
   >>> MATRIZ CSD: CERTEZAS, SUPOSIÇÕES E DÚVIDAS
       âncora no site: #doc-ko-csd
       o que sabemos com fonte, o que assumimos para poder andar, e o que falta perguntar.
 
-      Montada na semana do Kick-off, e não em agosto. O material estava todo escrito, só que espalhado: as suposições moravam em comentário de código e numa nota da Semana 3, as certezas na portaria transcrita, e as dúvidas na ata da reunião de 22/08. O que faltava era a matriz.
+      Montada na semana do Kick-off, e não em agosto. O material já estava escrito, só que espalhado. As suposições moravam em comentário de código e numa nota da Semana 3. As certezas, na portaria transcrita. As dúvidas, na ata da reunião de 22/08. Só faltava juntar tudo na matriz.
 
       Certezas
 
        Certezas | De onde vem
 
-       A Portaria Conjunta nº 001/2024, no Diário Oficial do Recife nº 131 de 21/09/2024, detalha os cinco indicadores, os subindicadores e os pesos por função. | docs/portaria-001-2024.md
-       O fechamento mensal passa por planilha, e a conferência é linha a linha, feita por poucas pessoas. | enunciado do case e reunião de 22/08
-       O art. 7º manda a SEGTES pedir a implantação do resultado na folha até o 6º dia útil do segundo mês. Não é indicador de vitrine: é dinheiro no salário. | Portaria, art. 7º
-       A Comissão de Avaliação de Metas reúne sete áreas da prefeitura e delibera com quórum de quatro. | Portaria, arts. 5º e 6º
-       Houve uma tentativa anterior de automatizar o cálculo, abandonada. É demanda represada, e também um aviso sobre o que não repetir. | enunciado do case
-       O art. 9º dá 10 dias corridos para o gestor contestar e 5 dias úteis para a comissão responder. | Portaria, art. 9º
+       A Portaria Conjunta nº 001/2024 saiu no Diário Oficial do Recife nº 131, de 21/09/2024. Ela detalha os cinco indicadores e os itens medidos dentro de cada um. Diz também o peso de cada indicador por função. | docs/portaria-001-2024.md
+       Todo mês, o fechamento é feito numa planilha. A conferência é linha a linha, e poucas pessoas fazem esse trabalho. | enunciado do case e reunião de 22/08
+       O art. 7º manda a SEGTES pedir que o resultado entre na folha de pagamento. O prazo é o 6º dia útil do segundo mês. Não é um número de vitrine: é dinheiro no salário. | Portaria, art. 7º
+       A Comissão de Avaliação de Metas reúne sete áreas da prefeitura. Para decidir, precisa de quatro presentes (o quórum). | Portaria, arts. 5º e 6º
+       Já tentaram automatizar o cálculo antes, e a tentativa foi abandonada. Isso mostra que a necessidade existe e está esperando. E também avisa o que não devemos repetir. | enunciado do case
+       O art. 9º dá ao gestor 10 dias corridos para contestar o resultado. A comissão tem 5 dias úteis para responder. | Portaria, art. 9º
 
       Suposições
 
        Suposições | De onde vem
 
-       A nota do distrito é a média das notas das unidades, sem ponderar por porte. A agregação real pode ser diferente, e se for vira campo da regra, não reescrita do sistema. | src/lib/calculo/motor.ts
-       O desenho do cálculo foi deduzido do case e da conversa com o cliente. A planilha que a Secretaria prometeu mandar é que decide se ele está certo. | Semana 3, nota das suposições declaradas
-       Cada ciclo é um mês fechado, com envio das unidades até o dia 20. Um ciclo com outro recorte quebraria a tela de fechamento, não a conta. | Portaria, art. 7º, lido como regra geral
-       Hoje o número sai da unidade em planilha ou e-mail. Se houver sistema de origem, a coleta muda de forma e o lançamento manual vira exceção. | reunião de 22/08, não confirmado
-       O sistema registra o resultado; a deliberação da comissão continua acontecendo em reunião. Se ela quiser deliberar por dentro, entra uma tela nova. | leitura do art. 6º pela equipe
+       A nota do distrito é a média simples das notas das unidades. Unidade grande e unidade pequena pesam igual. A conta real pode ser outra. Se for, ela vira um campo na regra guardada, sem reescrever o sistema. | src/lib/calculo/motor.ts
+       Desenhamos o cálculo a partir do case e da conversa com o cliente. A Secretaria prometeu mandar a planilha real. É ela que vai dizer se acertamos. | Semana 3, nota das suposições declaradas
+       Cada ciclo é um mês inteiro. As unidades enviam os números até o dia 20. Se o ciclo tivesse outro período, a tela de fechamento quebraria. A conta em si continuaria certa. | Portaria, art. 7º, lido como regra geral
+       Hoje o número sai da unidade em planilha ou e-mail. Se existir um sistema de origem, a coleta muda de forma. Aí, digitar o número à mão vira exceção. | reunião de 22/08, não confirmado
+       O sistema registra o resultado. A comissão continua decidindo em reunião, fora do sistema. Se ela quiser decidir por dentro, entra uma tela nova. | leitura do art. 6º pela equipe
 
       Dúvidas
 
        Dúvidas | De onde vem
 
-       O art. 8º manda desconsiderar o indicador sem lançamento e redistribuir o peso proporcionalmente. Falta saber se a redistribuição é sobre os pesos do grupo ou sobre o total. | a perguntar à Secretaria, entra na regra v3
-       A portaria diz que a comissão divulga o resultado. Não sabemos em que veículo, nem se o gestor recebe aviso individual. | a perguntar à Secretaria
-       Existe prazo, mas não sabemos se o recurso é processo em papel, e-mail ou formulário. Isso decide como a tela de contestação vai conversar com o que já existe. | a perguntar à Secretaria
-       Hoje tudo é inventado por um gerador. Falta saber se existe caminho para o sistema receber dado de verdade, com que base legal e sob qual responsabilidade. | lente de Direito, docs/privacidade.md
-       A validação com o cliente está marcada para a Semana 11. Se a agenda da comissão não abrir, a prova do sistema contra a planilha escorrega para o SR2. | risco declarado na SWOT da Semana 2
+       O art. 8º diz o que fazer quando um indicador fica sem número informado. Ele sai da conta, e o peso dele é dividido entre os outros, na proporção de cada um. Falta saber se essa divisão é entre os pesos do grupo ou entre o total. | a perguntar à Secretaria, entra na regra v3
+       A portaria diz que a comissão divulga o resultado. Não sabemos onde ela publica. Também não sabemos se cada gestor recebe um aviso. | a perguntar à Secretaria
+       O prazo para recorrer existe. Mas não sabemos como o recurso é feito hoje: em papel, por e-mail ou num formulário. A resposta define como a tela de contestação vai se encaixar no que já existe. | a perguntar à Secretaria
+       Hoje todos os dados são inventados por um programa gerador. Falta saber se o sistema pode um dia receber dado de verdade. E, se puder, com que base legal e quem responde por ele. | lente de Direito, docs/privacidade.md
+       A validação com o cliente está marcada para a Semana 11. Se a agenda da comissão não abrir, o teste do sistema contra a planilha atrasa para o SR2. | risco declarado na SWOT da Semana 2
 
-      Toda linha da primeira coluna tem origem verificável, e é isso que separa uma matriz CSD de uma lista de opiniões: certeza sem fonte é chute com voz firme. As suposições estão declaradas também dentro do código, onde elas agem.
+      Toda linha da primeira coluna tem uma origem que dá para conferir. É isso que separa uma matriz CSD de uma lista de opiniões: certeza sem fonte é chute com voz firme. As suposições também estão declaradas dentro do código, onde elas agem.
 
   >>> WIREFRAMES DE BAIXA FIDELIDADE
       âncora no site: #doc-ko-wireframes
       os quatro desenhos das telas centrais, em traço de papel.
 
-      Desenhados na semana do Kick-off, a partir das telas que já existiam. A Semana 3 prometeu as primeiras telas em papel como produto do Crazy 8’s, e o artefato não chegou a ser publicado; em vez de datá-lo em agosto, ele nasce aqui, com a data certa.
-      Não há uma palavra dentro dos desenhos, e isso é de propósito: wireframe de baixa fidelidade usa barra cinza no lugar de texto para a conversa ser sobre onde cada coisa fica, e não sobre a escolha da frase.
+      Desenhados na semana do Kick-off, a partir das telas que já existiam. A Semana 3 prometeu as primeiras telas em papel, como produto do Crazy 8’s. O desenho não chegou a ser publicado. Em vez de datá-lo em agosto, ele nasce aqui, com a data certa.
+      Não há uma palavra dentro dos desenhos, e isso é de propósito. Wireframe de baixa fidelidade usa barra cinza no lugar de texto. Assim a conversa é sobre onde cada coisa fica, e não sobre a escolha da frase.
 
       o lançamento do mês
 
@@ -899,13 +882,13 @@ feedback de professor ou de cliente seria fabricar evidência.
        -
        -
 
-      A tela pronta que saiu do segundo desenho está em /sistema e dentro do slide da demonstração, rodando com dados de teste. O par entre o desenho e a tela é a resposta ao critério de solução do Kick-off.
+      A tela pronta que saiu do segundo desenho está em /sistema e no slide da demonstração. Ela roda com dados de teste. O par desenho e tela é a nossa resposta ao critério de solução do Kick-off.
 
   >>> OS SETE CRITÉRIOS DO KICK-OFF, E ONDE CADA UM ESTÁ
       âncora no site: #doc-ko-criterios
       o mapa para quem avalia: cada critério do briefing com o link do que o sustenta.
 
-      O briefing do Kick-off lista sete critérios e pede que todo o material esteja organizado no site da equipe. Esta tabela existe para quem avalia não ter que procurar: cada linha aponta para o documento ou a seção que sustenta aquele critério.
+      O briefing do Kick-off lista sete critérios. E pede todo o material organizado no site da equipe. Esta tabela existe para quem avalia não ter que procurar. Cada linha aponta para o documento ou a seção que sustenta aquele critério.
 
        Critério | O que o briefing pede | Onde está
 
@@ -917,40 +900,49 @@ feedback de professor ou de cliente seria fabricar evidência.
        6. Cronograma | Atividades, estado, prazos e responsáveis | A seção de cronograma na página inicial, com as 18 semanas, o estado de cada entrega e quem responde por ela; slide 16
        7. Documentação | Todo o conteúdo organizado no site da equipe | A seção de documentos na página inicial, com os documentos de todas as semanas publicadas, e o índice das oito seções no topo
 
-      O que o briefing chama de Google Site é, aqui, este próprio site: ele é versionado no Git, tem release por ciclo e é o artefato avaliado. A apresentação fica em /pitch, e o PDF dela é baixável pelo próprio deck.
+      O que o briefing chama de Google Site é, aqui, este próprio site. Ele fica guardado no Git e é liberado ciclo a ciclo. É o material avaliado. A apresentação fica em /pitch, e o PDF dela pode ser baixado de dentro da própria apresentação.
 
 --- S5 · Semana 5: Arquitetura · 19/09/2026 ------------------------------------------------
 
 
   Objetivo da semana  [rascunho]
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  Fechar a arquitetura do MVP e ter o motor de cálculo rodando de ponta a ponta sobre a
-  base sintética.
+  Fechar o desenho da arquitetura do MVP. Ter o motor de cálculo (a parte que faz a conta
+  da nota) rodando de ponta a ponta. Ele roda sobre a base de teste, feita só de dados
+  inventados.
 
   Avanços  [rascunho]
   ~~~~~~~~~~~~~~~~~~~
-  - Modelo de dados fechado no domínio da reunião com o cliente: distritos, tipos de
-    unidade, unidades, indicadores compostos por subindicadores, regras versionadas com a
-    régua por tipo, ciclos, lançamentos e trilha de auditoria.
-  - Motor de cálculo implementado como função pura, com a memória de cálculo saindo do
-    mesmo cálculo que a interface exibe.
-  - Diagramas C4 de contexto e de contêiner publicados em docs/arquitetura.md.
-  - Base sintética com semente fixa gerando os 3 distritos, as 12 unidades de 4 tipos e os
-    7 indicadores com seus 11 subindicadores.
+  - Fechamos o desenho das tabelas do sistema, seguindo o que o cliente contou na reunião.
+    Ele guarda os distritos, as unidades de saúde e o tipo de cada uma. Guarda os
+    indicadores e os itens medidos que formam cada um. Guarda a regra da nota, com número
+    de versão e metas e pesos por tipo de unidade. Guarda os ciclos, que são os meses
+    avaliados, e os números informados. Por fim, guarda o histórico de quem mudou o quê.
+  - Escrevemos o motor de cálculo, a parte do sistema que faz a conta da nota. É uma conta
+    que não depende de nada de fora. O passo a passo que a tela mostra (a memória de
+    cálculo) sai dessa mesma conta.
+  - Publicamos os desenhos da arquitetura em docs/arquitetura.md. São dois, no padrão C4: o
+    de contexto e o de contêiner. C4 é um jeito conhecido de desenhar sistemas em níveis de
+    zoom.
+  - Montamos a base de teste, gerada por programa e sempre igual. Ela cria os 3 distritos e
+    as 12 unidades, de 4 tipos. Cria também os 7 indicadores e os 11 itens medidos que os
+    formam.
 
   Decisões  [rascunho]
   ~~~~~~~~~~~~~~~~~~~~
-  - Regra de pontuação é dado versionado, não código.
-      por quê: A portaria muda. Com a regra em `if`, cada mudança vira release e o ciclo
-      antigo deixa de reproduzir o próprio resultado.
-  - O motor de cálculo não faz I/O, não lê relógio e não sorteia nada.
-      por quê: É o que permite testar fronteira de faixa e arredondamento sem subir
-      infraestrutura, e garante o mesmo número para o mesmo insumo.
+  - A regra da nota fica guardada como dado, com número de versão, e não como código.
+      por quê: A portaria muda. Se a regra estivesse escrita dentro do programa, toda
+      mudança exigiria mexer no código e publicar versão nova. E o ciclo antigo deixaria de
+      reproduzir a própria nota.
+  - O motor de cálculo não lê nem grava nada fora dele, não olha o relógio e não sorteia
+    nada.
+      por quê: Assim testamos as bordas de cada faixa e o arredondamento sem ligar servidor
+      nenhum. E o mesmo dado de entrada dá sempre o mesmo número.
 
   Bloqueios  [rascunho]
   ~~~~~~~~~~~~~~~~~~~~~
-  - Sem acesso à planilha real prometida na reunião, as metas e pesos da régua por tipo são
-    arbitrados pela equipe e precisam de conferência com o cliente.
+  - Ainda não temos a planilha real prometida na reunião. Por isso a equipe definiu sozinha
+    as metas e os pesos por tipo de unidade. O cliente precisa conferir esses valores.
 
   Feedback recebido  [rascunho]
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -958,15 +950,15 @@ feedback de professor ou de cliente seria fabricar evidência.
 
   Próximos passos  [rascunho]
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  - Ligar as telas de lançamento e de resultado ao motor.
-  - Cobrir os casos-limite do cálculo com teste antes do Pré-SR1.
-  - Levantar as perguntas de arquitetura que a banca provavelmente fará.
+  - Ligar as telas de lançamento e de resultado ao motor de cálculo.
+  - Escrever testes para os casos extremos da conta antes do Pré-SR1.
+  - Listar as perguntas sobre arquitetura que a banca deve fazer.
 
   Responsáveis  [rascunho]
   ~~~~~~~~~~~~~~~~~~~~~~~~
-  - João Henrique Micucci: Modelo de dados e motor de cálculo.
-  - Rafael Serpa: Gerador da base sintética com semente fixa.
-  - Fernando Cavalcanti: Testes dos casos-limite e documentação técnica.
+  - João Henrique Micucci: Modelo de dados (o desenho das tabelas) e motor de cálculo.
+  - Rafael Serpa: Gerador da base de teste, sempre igual.
+  - Fernando Cavalcanti: Testes dos casos extremos e documentação técnica.
 
   Evidências  [rascunho]
   ~~~~~~~~~~~~~~~~~~~~~~
@@ -981,89 +973,91 @@ feedback de professor ou de cliente seria fabricar evidência.
 
   >>> NUVEM: ARQUITETURA NATIVA E FLUXO DE DADOS
       âncora no site: #doc-s5-nuvem
-      onde cada componente roda, como eles se integram, e as decisões que a nuvem impôs ao
-      produto.
+      onde cada parte do sistema roda, como elas conversam entre si, e o que a nuvem mudou
+      no produto.
 
-      Onde cada componente executa
-      A matriz pede componentes de infraestrutura e integração entre eles. Estes são os do MVP, e nenhum deles é servidor que a equipe administre.
+      Onde cada parte roda
+      A matriz de avaliação pede as peças de infraestrutura e como elas se ligam. Estas são as peças do MVP. Nenhuma delas é um servidor que a equipe precise cuidar.
 
        Componente | Onde roda | Por que ali
 
-       Páginas e telas | Função serverless na Vercel, por requisição | O recorte de release depende do dia e da sessão, então não há como pré-renderizar: `force-dynamic` é consequência da regra, não preguiça
-       Porta do painel | Middleware na borda, antes da função | Barrar antes de acordar a função é mais barato e mais seguro: quem não tem sessão nunca chega ao código do painel
-       Assets e fontes | CDN, com hash imutável no nome do arquivo | Chunk com hash pode ter cache eterno, e a invalidação vira consequência do build
-       Modelos de ML | Fora da nuvem: treinam offline e viram JSON versionado | Carregar scikit-learn por requisição custaria segundos de partida a frio para exibir número que só muda entre deploys (ADR-022)
-       Dados do protótipo | Memória do processo, com semente fixa | Sem banco, `git clone && npm run dev` sobe sem credencial nenhuma. O schema de verdade está escrito e desligado (ADR-011)
-       Persistência prevista | Postgres gerenciado, com RLS no banco | Autorização que mora no banco vale para qualquer caminho de escrita, inclusive um que ainda não existe
+       Páginas e telas | Na Vercel, como função sem servidor fixo (serverless). Roda uma vez por pedido | O que fica visível depende do dia e de quem está logado. Por isso a página não pode ser montada antes. O modo `force-dynamic` vem dessa regra, não de preguiça
+       Porta do painel | Num filtro (middleware) na borda da rede, antes da função | Barrar antes de acordar a função custa menos e é mais seguro. Quem não está logado nunca chega ao código do painel
+       Arquivos estáticos (assets) e fontes | Numa rede de distribuição (CDN). O nome de cada arquivo leva um código (hash) que nunca muda | Arquivo com código no nome pode ficar guardado no cache para sempre. Quando o site é gerado de novo, o nome muda e o cache velho cai sozinho
+       Modelos de ML | Fora da nuvem. Treinamos os modelos antes, fora do site, e guardamos o resultado num arquivo JSON no Git | Carregar a biblioteca scikit-learn a cada pedido custaria segundos de espera na partida. E o número só muda quando publicamos uma versão nova (ADR-022)
+       Dados do protótipo | Na memória do programa, gerados sempre iguais | Sem banco, `git clone && npm run dev` sobe sem senha nenhuma. O desenho do banco de verdade está escrito, mas desligado (ADR-011)
+       Persistência prevista | Postgres gerenciado pelo provedor, com as regras de acesso do banco (RLS) | Permissão que mora no banco vale para qualquer caminho de gravação. Vale até para um caminho que ainda não existe
 
       O fluxo de dados, ponta a ponta
       O caminho de um número, do teclado da unidade até a folha do gerente.
 
-       - A unidade envia cada subindicador (valor direto, ou numerador e denominador) com evidência, num POST comum de formulário; zod valida na entrada e recusa com motivo.
-       - A camada de dados grava o lançamento e ESCREVE UM EVENTO na trilha, no mesmo passo. Não há caminho que grave sem registrar.
-       - A SEAB fecha a janela; o estado do ciclo avança um passo, e a transição também vira evento.
-       - O motor puro compõe cada indicador dos subindicadores lançados, aplica a régua do tipo da unidade na versão da regra vigente, e devolve score, faixa e memória de cálculo com os sub-passos.
-       - A tela exibe a memória que saiu do mesmo cálculo, nunca uma recontagem paralela.
-       - O painel da gestão agrega e exporta em CSV; a auditoria lê a trilha, e escreve nada.
-      O pipeline é síncrono de propósito. Fila e processamento em lote resolveriam volume que este caso não tem: são dezenas de indicadores por competência mensal, não milhões de eventos por minuto. Escolher a arquitetura pelo volume que se sonha ter é como comprar caminhão para carregar feira.
+       - A unidade informa cada item medido, junto com a evidência. Pode ser um valor direto, ou um numerador e um denominador. O envio é um formulário comum (POST). A biblioteca zod confere os dados na entrada e recusa o que está errado, dizendo o motivo.
+       - A camada de dados grava o lançamento e, no mesmo passo, ESCREVE UM EVENTO no histórico. Não existe caminho que grave sem registrar.
+       - A SEAB fecha a janela de lançamento. O ciclo avança um passo, e essa mudança também vira evento no histórico.
+       - O motor de cálculo junta os itens medidos e forma cada indicador. Aplica as metas e os pesos do tipo da unidade, na versão da regra que vale para o mês. Devolve a nota (score), a faixa e a memória de cálculo, com cada passo da conta.
+       - A tela mostra a memória de cálculo que saiu dessa mesma conta. Nunca refaz a conta por fora.
+       - O painel da gestão soma os resultados e exporta em CSV. A auditoria lê o histórico e não escreve nada.
+      Cada passo roda na hora, um atrás do outro, e isso é de propósito. Fila e processamento em lote servem para um volume que este caso não tem. São dezenas de indicadores por mês, não milhões de eventos por minuto. Escolher a arquitetura pelo volume que se sonha ter é como comprar caminhão para carregar feira.
 
       O que a nuvem decidiu no produto
-      Restrição de infraestrutura que virou decisão de desenho, não observação de rodapé.
+      Limites da nuvem que viraram decisão de desenho do produto, e não nota de rodapé.
 
        Restrição da nuvem | O que mudou no produto
 
-       Função sem estado, e várias instâncias ao mesmo tempo | O contador do rate limit vive na memória de uma instância: é best-effort, e está declarado como tal em vez de fingir garantia
-       Partida a frio cobra por dependência pesada | O treino de ML saiu do runtime; a tela lê um JSON com semente, commit e data do treino
-       Sistema de arquivos efêmero | Config vai para env var e para o Git, nunca para arquivo gravado em execução
-       Segredo não pode morar no repositório | A senha do painel e o segredo do cookie só existem em variável de ambiente; sem elas, o painel simplesmente não existe (responde 404)
-       Deploy é um push | A vitrine foi versionada em código para abrir por commit, sem alguém abrir painel de provedor e colar valor à mão (ADR-021)
+       A função não guarda estado, e várias cópias rodam ao mesmo tempo | O contador que limita tentativas (rate limit) vive na memória de uma cópia só. Ele ajuda, mas não garante. Deixamos isso escrito em vez de fingir garantia
+       Biblioteca pesada deixa a partida lenta | O treino dos modelos de ML saiu do programa que roda no site. A tela lê um arquivo JSON com a semente, o commit e a data do treino. Semente é o número que fixa o sorteio
+       O disco some a cada execução | A configuração vai para variável de ambiente e para o Git. Nunca para arquivo gravado enquanto o site roda
+       Segredo não pode morar no repositório | A senha do painel e o segredo do cookie só existem em variável de ambiente. Sem elas, o painel simplesmente não existe: responde 404
+       Publicar é dar um push | A vitrine ficou guardada em código e abre por commit. Ninguém precisa entrar no painel do provedor e colar valor à mão (ADR-021)
 
       Doze fatores, conferidos
 
        Fator | Como está aqui
 
-       Base de código | Um repositório, muitos deploys: produção e prévia por branch
-       Dependências | Declaradas em package.json com lockfile; nada instalado à mão
-       Configuração | Em variáveis de ambiente, com `.env.example` versionado
-       Serviços de apoio | Banco tratado como recurso plugável: driver trocável
-       Build, release, run | Separados: `next build` congela o artefato, o deploy o publica
-       Processos | Sem estado; o que precisa durar vai para cookie assinado ou para o Git
-       Concorrência | Escala horizontal por instância de função, sem sessão pegajosa
-       Descartabilidade | Partida rápida e desligamento sem ritual
-       Paridade dev/prod | O mesmo build de produção é o que a verificação de vazamento sobe
-       Logs | Fluxo de eventos na saída padrão, coletado pela plataforma
-       Processos administrativos | Semeadura e verificação como scripts do repositório
+       Base de código | Um repositório só, com várias publicações: produção e uma prévia por branch
+       Dependências | Todas listadas em package.json, com lockfile. Nada instalado à mão
+       Configuração | Em variáveis de ambiente, com um `.env.example` guardado no Git
+       Serviços de apoio | O banco é tratado como peça que se encaixa: dá para trocar o driver
+       Build, release, run | Separados: `next build` congela o pacote, e o deploy publica esse pacote
+       Processos | Sem estado. O que precisa durar vai para cookie assinado ou para o Git
+       Concorrência | Cresce criando mais cópias da função. Nenhum usuário fica preso a uma cópia
+       Descartabilidade | Liga rápido e desliga sem cerimônia
+       Paridade dev/prod | A verificação de vazamento roda sobre o mesmo build que vai para produção
+       Logs | Os registros saem na saída padrão, e a plataforma recolhe
+       Processos administrativos | Semear a base e verificar o site são scripts do repositório
 
   >>> ARQUITETURA DO MVP
       âncora no site: #doc-s5-arquitetura
-      as camadas, o que cada uma resolve e por que o motor fica isolado.
+      as camadas do sistema, o que cada uma resolve e por que o motor de cálculo fica
+      isolado.
 
       Camada | O que resolve | Por que separada
 
-       Conteúdo (content/) | Registro semanal e documentos, versionados em TSX | Entra no Git com histórico; o painel decide quando aparece, não o que diz
-       Regra (lib/calculo/) | Score, faixa e memória de cálculo | Função pura: testável nos casos-limite sem subir nada
-       Dados (lib/dados/) | De onde vêm unidades, indicadores e lançamentos | Isola as telas da fonte: trocar seed por banco não reescreve tela
-       Release (lib/releases.ts) | O que está visível hoje | Cálculo puro sobre o cronograma, com o "hoje" injetado de fora
+       Conteúdo (content/) | O diário semanal e os documentos, guardados no Git como TSX | Entra no Git com histórico. O painel decide quando aparece, não o que diz
+       Regra (lib/calculo/) | A nota (score), a faixa e a memória de cálculo | É uma conta que não depende de nada de fora. Dá para testar os casos extremos sem ligar nada
+       Dados (lib/dados/) | De onde vêm unidades, indicadores e lançamentos | Separa as telas da origem dos dados. Trocar a base de teste por um banco não obriga a reescrever tela
+       Liberação (lib/releases.ts) | O que está visível hoje | Uma conta que não depende de nada de fora, feita sobre o cronograma. O "hoje" entra como dado, vindo de fora
 
-       - Nenhuma camada acima chama a de baixo pulando a do meio: a tela fala com dados, dados falam com a fonte.
-       - O motor de cálculo não conhece nem tela nem banco, recebe números e devolve números com a conta aberta.
+       - Nenhuma camada pula a do meio. A tela fala com a camada de dados, e a de dados fala com a origem.
+       - O motor de cálculo não conhece tela nem banco. Recebe números e devolve números, com a conta aberta.
 
   >>> MODELO DE DADOS
       âncora no site: #doc-s5-modelo
-      as entidades do MVP, no domínio da reunião de 22/08, e o que cada uma guarda.
+      as tabelas do MVP, seguindo o que o cliente contou na reunião de 22/08, e o que cada
+      uma guarda.
 
       Entidade | Guarda | Observação
 
-       Distrito sanitário | Nome | Três na base sintética; cada um tem uma gerência distrital, também avaliada
-       Tipo de unidade | Nome e sigla (USF, CAPS, UPA, POLI) | É o tipo que decide quais indicadores valem, com que meta e peso
-       Unidade | Nome, distrito e tipo | Doze na base sintética; é quem lança e quem recebe a nota
-       Indicador | Nome, unidade de medida, direção e fonte | Sete no catálogo; SEM meta e peso próprios: isso mora na régua da regra
-       Subindicador | Nome e tipo (índice, ou razão com numerador e denominador) | Onze; é o que a unidade de fato preenche, e o indicador é a composição
-       Regra | Faixas de pontuação, régua por tipo (aplicabilidades), vigência e versão | Alterar cria versão nova; a vigente é escolhida pela competência
-       Ciclo | Competência, estado, janela de lançamento e início da revisão | Máquina de estados: só avança um passo por vez; os dias finais são a janela de revisão
-       Lançamento | Valor OU numerador e denominador, evidência, autor e data | Correção entra como novo lançamento, não sobrescreve
-       Avaliação | Score, faixa e memória de cálculo da unidade no ciclo, com sub-passos | Reproduzível: recalcular o ciclo antigo dá o mesmo número; a distrital é a média das unidades
-       Evento de auditoria | Quem, quando, o quê, antes e depois | Append-only: a trilha não é editada, só recebe
+       Distrito sanitário | Nome | Três na base de teste. Cada um tem uma gerência distrital, que também recebe nota
+       Tipo de unidade | Nome e sigla (USF, CAPS, UPA, POLI) | O tipo decide quais indicadores valem para a unidade, com qual meta e qual peso
+       Unidade | Nome, distrito e tipo | Doze na base de teste. É quem informa os números e quem recebe a nota
+       Indicador | Nome, unidade de medida, direção e fonte | Sete no catálogo. Não tem meta nem peso próprios: isso fica na regra
+       Subindicador | Nome e tipo: índice, ou razão com numerador e denominador | Onze. É o item que a unidade de fato preenche. O indicador é a junção deles
+       Regra | Faixas de nota, metas e pesos por tipo de unidade (aplicabilidades), período em que vale e versão | Mudar a regra cria uma versão nova. O mês avaliado escolhe qual versão vale
+       Ciclo | O mês avaliado (competência), o estado, a janela de lançamento e o início da revisão | Só avança um passo por vez. Os dias finais são a janela de revisão
+       Lançamento | Valor OU numerador e denominador, evidência, autor e data | Corrigir é fazer um lançamento novo. O antigo não é sobrescrito
+       Avaliação | A nota (score), a faixa e a memória de cálculo da unidade no ciclo, passo a passo | Dá para refazer: recalcular um mês antigo dá o mesmo número. A nota do distrito é a média das unidades
+       Evento de auditoria | Quem, quando, o quê, antes e depois | Só cresce: o histórico nunca é editado, só recebe linha nova
 
 --- S6 · Semana 6: Pré-SR1 · 26/09/2026 ----------------------------------------------------
 
@@ -1075,19 +1069,21 @@ feedback de professor ou de cliente seria fabricar evidência.
 
   Avanços  [rascunho]
   ~~~~~~~~~~~~~~~~~~~
-  - Telas de lançamento, resultado e memória de cálculo navegáveis com dados sintéticos.
-  - Pacote do SR1 conferido item a item contra a matriz de evidências.
-  - Ensaio cronometrado do pitch, com corte do que não cabe em cinco minutos.
-  - Análise de segurança e de privacidade em primeira versão.
+  - Deixamos três telas navegáveis, com dados de teste gerados por programa: lançamento,
+    resultado e memória de cálculo. A memória de cálculo é o passo a passo da conta.
+  - Conferimos o pacote do SR1 item a item. Usamos como guia a matriz de evidências, a
+    lista do que a disciplina cobra.
+  - Ensaiamos o pitch com cronômetro na mão. O que não coube em cinco minutos foi cortado.
+  - Escrevemos a primeira versão das análises de segurança e de privacidade.
 
   Decisões  [rascunho]
   ~~~~~~~~~~~~~~~~~~~~
   - O pitch abre pela memória de cálculo, não pela arquitetura.
-      por quê: É o que distingue o produto de uma planilha melhorada. Arquitetura entra se
-      a banca perguntar.
+      por quê: É isso que separa o produto de uma planilha melhorada. A arquitetura só
+      entra se a banca perguntar.
   - Nada de slide com código.
-      por quê: Em cinco minutos, código na tela consome atenção e não prova nada que a demo
-      não prove.
+      por quê: Em cinco minutos, código na tela só rouba atenção. E não prova nada que a
+      demonstração já não prove.
 
   Bloqueios  [rascunho]
   ~~~~~~~~~~~~~~~~~~~~~
@@ -1100,8 +1096,8 @@ feedback de professor ou de cliente seria fabricar evidência.
   Próximos passos  [rascunho]
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~
   - Apresentar o SR1.
-  - Registrar o retorno da banca no ciclo do SR1, com origem declarada.
-  - Repriorizar o backlog das sprints a partir do que a banca apontar.
+  - Anotar o retorno da banca no ciclo do SR1, dizendo de quem veio cada comentário.
+  - Reordenar a lista de tarefas das sprints (o backlog) conforme o que a banca apontar.
 
   Responsáveis  [rascunho]
   ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1120,51 +1116,52 @@ feedback de professor ou de cliente seria fabricar evidência.
 
   >>> CHECKLIST DO SR1
       âncora no site: #doc-s6-checklist
-      o que precisa estar pronto, e o critério de pronto de cada item.
+      o que precisa estar pronto, e como saber que cada item está pronto.
 
       Item | Critério de pronto
 
-       Problema e pergunta | Publicados na página, com o cliente nomeado
-       Pesquisa consolidada | Personas, mapa de empatia, benchmarking e SWOT no site
-       Protótipo navegável | Lançamento → cálculo → memória de cálculo, sem tela morta
-       Registro semanal | Todas as semanas vencidas publicadas e validadas
-       Análises da disciplina | Segurança e privacidade em primeira versão
-       Pitch | Cronometrado em cinco minutos, com ensaio feito
+       Problema e pergunta | Os dois publicados na página, com o nome do cliente
+       Pesquisa reunida | Personas, mapa de empatia, benchmarking e SWOT, tudo no site
+       Protótipo navegável | Do lançamento ao cálculo, e do cálculo à memória de cálculo. Sem tela morta: toda tela abre e leva a algum lugar
+       Registro semanal | Todas as semanas que já passaram estão publicadas e validadas
+       Análises da disciplina | Segurança e privacidade, na primeira versão
+       Pitch | Ensaiado e cronometrado: cabe em cinco minutos
 
   >>> ROTEIRO DO PITCH: SR1
       âncora no site: #doc-s6-pitch
-      os cinco minutos divididos, com o que provar em cada trecho.
+      os cinco minutos divididos em trechos, e o que cada trecho precisa provar.
 
       Tempo | O quê | O que precisa ficar claro
 
-       0:00–0:40 | O problema | Dinheiro público calculado à mão, sem rastro
-       0:40–1:30 | A pergunta e o recorte | O que está dentro e o que ficou fora
-       1:30–3:30 | Demonstração | Um lançamento vira score, e o score abre até a origem
-       3:30–4:20 | Como sabemos que está certo | Regra versionada e teste de caso-limite
-       4:20–5:00 | O que vem até o SR2 | Sprints, validação com a CAM e as duas lentes
+       0:00 a 0:40 | O problema | Dinheiro público calculado à mão, sem deixar rastro
+       0:40 a 1:30 | A pergunta e o recorte | O que o projeto cobre e o que ficou de fora
+       1:30 a 3:30 | Demonstração | Um lançamento vira nota (score), e a nota abre até a origem
+       3:30 a 4:20 | Como sabemos que está certo | A regra fica guardada com número de versão. E a conta tem teste para os casos extremos
+       4:20 a 5:00 | O que vem até o SR2 | As sprints e a validação com a Comissão de Avaliação de Metas (CAM). E as duas lentes
 
-       - Quem demonstra não é quem narra: a troca evita depender de uma pessoa só.
-       - A demo roda com dados sintéticos, e isso é dito em voz alta na abertura.
+       - Quem mexe na tela não é quem fala. Assim a apresentação não depende de uma pessoa só.
+       - A demonstração roda com dados de teste, gerados por programa. Dizemos isso em voz alta logo na abertura.
 
 --- SR1 · SR1 · 03/10/2026 -----------------------------------------------------------------
 
 
   Objetivo da semana  [rascunho]
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  Apresentar problema, pesquisa e protótipo navegável, e sair com o retorno da banca
-  registrado e priorizado.
+  Mostrar à banca o problema, a pesquisa e o protótipo navegável. Sair da apresentação com
+  o retorno da banca anotado e em ordem de prioridade.
 
   Avanços  [rascunho]
   ~~~~~~~~~~~~~~~~~~~
-  - Pitch de cinco minutos apresentado.
-  - Demonstração ao vivo do caminho lançamento → cálculo → memória de cálculo.
-  - Pacote de entrega do SR1 submetido conforme a matriz de evidências.
+  - Apresentamos o pitch de cinco minutos.
+  - Fizemos a demonstração ao vivo de um caminho do sistema. Primeiro o lançamento, depois
+    o cálculo, por fim a memória de cálculo (o passo a passo da conta).
+  - Enviamos o Pacote de entrega do SR1, conforme a matriz de evidências.
 
   Decisões  [rascunho]
   ~~~~~~~~~~~~~~~~~~~~
   - Demonstrar ao vivo, sem vídeo gravado.
-      por quê: Gravação esconde travamento e não prova que roda. Se cair, cai na frente de
-      todo mundo, e isso também é informação.
+      por quê: Um vídeo gravado esconde travamentos e não prova que o sistema roda. Se cair
+      ao vivo, cai na frente de todo mundo, e isso também é informação.
 
   Bloqueios  [rascunho]
   ~~~~~~~~~~~~~~~~~~~~~
@@ -1176,15 +1173,16 @@ feedback de professor ou de cliente seria fabricar evidência.
 
   Próximos passos  [rascunho]
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  - Transcrever o retorno da banca neste bloco de feedback, com origem.
-  - Repriorizar o backlog das quatro sprints a partir do que foi apontado.
-  - Marcar a conversa de validação com a CAM para a Semana 11.
+  - Anotar neste bloco de feedback o que a banca disse, e de quem veio.
+  - Reordenar o backlog, a lista de tarefas das quatro sprints, pelo que a banca apontou.
+  - Marcar para a Semana 11 a conversa de validação com a Comissão de Avaliação de Metas
+    (CAM).
 
   Responsáveis  [rascunho]
   ~~~~~~~~~~~~~~~~~~~~~~~~
-  - Gabriel Tenório de Lima Teixeira: Narração do pitch e resposta às perguntas.
-  - João Pedro Mamede: Demonstração ao vivo do protótipo.
-  - Matheus Lustosa: Apresentação da pesquisa e das personas.
+  - Gabriel Tenório de Lima Teixeira: Apresentou o pitch e respondeu às perguntas.
+  - João Pedro Mamede: Demonstrou o protótipo ao vivo.
+  - Matheus Lustosa: Apresentou a pesquisa e as personas.
 
   Evidências  [rascunho]
   ~~~~~~~~~~~~~~~~~~~~~~
@@ -1197,37 +1195,37 @@ feedback de professor ou de cliente seria fabricar evidência.
 
   >>> DIREITO: BASE LEGAL E DADOS PESSOAIS
       âncora no site: #doc-sr1-direito-base-legal
-      que dado o sistema trataria, de quem, e sob qual artigo da lgpd.
+      que dado o sistema usaria, de quem, e com base em qual artigo da lgpd.
 
-      Base legal do tratamento
-      Art. 7º, III da LGPD: execução de política pública prevista em lei e regulamento.
+      Base legal para usar os dados
+      A LGPD permite usar dados pessoais para executar política pública prevista em lei e regulamento. É o art. 7º, III da LGPD.
 
-       - A gratificação é instituída por portaria: o tratamento é indispensável para executá-la.
-       - Não se pede consentimento, e nem se deveria, numa relação funcional assimétrica ele seria frágil, e a recusa não poderia ser honrada sem inviabilizar a política.
-       - Controladora: Secretaria de Saúde do Recife. Encarregado designado pela Prefeitura; o sistema apenas expõe o canal.
+       - A gratificação foi criada por portaria. Sem usar esses dados, não há como executá-la.
+       - O sistema não pede consentimento ao servidor, e nem deveria. Numa relação de trabalho desigual, o consentimento seria frágil. E se o servidor recusasse, não daria para respeitar a recusa sem impedir a política.
+       - Quem responde pelos dados (a controladora) é a Secretaria de Saúde do Recife. O encarregado (a pessoa de contato sobre dados) é indicado pela Prefeitura. O sistema só mostra o canal para falar com ele.
 
-      Mapeamento dos dados
-      O que entraria em produção, por titular e por finalidade.
+      Quais dados o sistema guardaria
+      O que existiria no sistema real, de quem seria cada dado e para que serviria.
 
        Categoria | Titular | Necessário para
 
-       Identificação funcional (nome, matrícula, cargo, lotação) | Servidor avaliado | Vincular o resultado à pessoa certa
-       Vínculo organizacional (área, período de exercício) | Servidor avaliado | Saber quais indicadores se aplicam
-       Desempenho (score, faixa, memória de cálculo, histórico) | Servidor avaliado | Calcular e justificar a gratificação
-       Autoria de lançamento (quem informou, quando) | Servidor da área técnica | Rastreabilidade e responsabilização
-       Contestação (motivo, resposta da comissão) | Servidor avaliado | Devido processo
+       Quem é o servidor (nome, matrícula, cargo, lotação) | Servidor avaliado | Ligar o resultado à pessoa certa
+       Onde o servidor trabalha (área, período de exercício) | Servidor avaliado | Saber quais indicadores valem para ele
+       Desempenho (a nota, chamada de score, a faixa, a memória de cálculo e o histórico) | Servidor avaliado | Calcular a gratificação e explicar o resultado
+       Quem fez o lançamento (quem informou, quando) | Servidor da área técnica | Ter o histórico de quem informou, para poder responsabilizar
+       Contestação (motivo, resposta da comissão) | Servidor avaliado | Garantir o direito de defesa (devido processo)
 
-      Não são tratados: dados sensíveis do art. 5º, II, dados de pacientes, dados bancários ou valores de folha. O sistema calcula o percentual devido; a folha é outro sistema, e está declaradamente fora do escopo.
+      O sistema não guarda dados sensíveis, os do art. 5º, II. Também não guarda dados de pacientes, dados bancários nem valores de folha. Ele só calcula o percentual devido. A folha de pagamento é outro sistema, e deixamos isso fora do escopo de forma declarada.
 
       No MVP, nada disso existe
 
-       - A base é 100% sintética, com semente fixa, nenhum servidor real está no repositório.
-       - Há teste automatizado que falha se CPF, e-mail, telefone ou matrícula aparecerem na base.
-       - O mapeamento acima descreve o que existiria em produção, para que a análise jurídica não dependa de esperar o dado real chegar.
+       - A base de dados é 100% sintética, ou seja, inventada por programa. Ela usa uma semente fixa, por isso sai sempre igual. Nenhum servidor real está no repositório.
+       - Um teste automático confere a base. Ele falha se aparecer CPF, e-mail, telefone ou matrícula.
+       - A tabela acima descreve o que existiria no sistema real. Assim, a análise jurídica não precisa esperar o dado real chegar.
 
   >>> PACOTE DE ENTREGA DO SR1
       âncora no site: #doc-sr1-pacote
-      o que foi submetido e onde cada peça está no site.
+      o que entregamos e onde cada peça está no site.
 
       Peça | Onde está
 
@@ -1240,32 +1238,37 @@ feedback de professor ou de cliente seria fabricar evidência.
        Registro semanal | Página inicial, seção Registro semanal
        Uso de IA | Transparência no uso de IA
 
-       - Nenhuma peça é PDF: tudo é conteúdo do site, versionado no Git.
-       - O que ainda não foi validado carrega selo de rascunho na própria página.
+       - Nenhuma peça é PDF. Tudo é conteúdo do site, guardado no Git com histórico de versões.
+       - O que ainda não foi aprovado leva o selo de rascunho na própria página.
 
 --- S7 · Semana 7: Sprint 1 · 17/10/2026 ---------------------------------------------------
 
 
   Objetivo da semana  [rascunho]
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  Fechar o ciclo de lançamento: área técnica informa, a CAM enxerga o funil e o estado
-  avança com trilha.
+  Fechar o ciclo de lançamento. A área técnica informa os números. A CAM enxerga o funil:
+  quanto já entrou e o que falta. E cada avanço de estado fica no histórico.
 
   Avanços  [rascunho]
   ~~~~~~~~~~~~~~~~~~~
-  - Tela de lançamento validando valor, unidade e janela do ciclo antes de aceitar.
-  - Dashboard da CAM com funil por área e pendências do ciclo em andamento.
-  - Transição de estado do ciclo gravando antes e depois na trilha de auditoria.
-  - Correção de lançamento entrando como evento novo, sem sobrescrever o anterior.
+  - A tela de lançamento passou a conferir o envio antes de aceitar. Ela checa o valor, a
+    unidade e a janela do ciclo. Janela é o prazo em que o ciclo ainda recebe lançamentos.
+  - Montamos o painel (dashboard) da Comissão de Avaliação de Metas (CAM). Ele mostra o
+    funil por área: o que cada área já enviou e o que falta. E lista as pendências do ciclo
+    em andamento.
+  - Quando o ciclo muda de estado, o sistema grava o estado anterior e o novo. Isso fica no
+    histórico de quem mudou o quê.
+  - Corrigir um lançamento agora entra como um registro novo. O anterior continua guardado,
+    sem ser sobrescrito.
 
   Decisões  [rascunho]
   ~~~~~~~~~~~~~~~~~~~~
   - Correção não sobrescreve: entra como lançamento novo.
       por quê: Sobrescrever apaga o rastro. Quem contesta precisa ver o valor antigo, quem
       corrigiu e quando.
-  - A janela de lançamento é conferida na camada de escrita, não só na tela.
-      por quê: Validação de interface é conveniência; a regra tem que valer para qualquer
-      caminho de escrita.
+  - A janela de lançamento é conferida na gravação, não só na tela.
+      por quê: A conferência na tela é só uma ajuda para quem digita. A regra do prazo
+      precisa valer para qualquer caminho que grave dados.
 
   Bloqueios  [rascunho]
   ~~~~~~~~~~~~~~~~~~~~~
@@ -1277,14 +1280,14 @@ feedback de professor ou de cliente seria fabricar evidência.
 
   Próximos passos  [rascunho]
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  - Ligar a apuração ao motor de cálculo na Sprint 2.
-  - Cobrir a transição de estado com teste de caso-limite.
+  - Na Sprint 2, ligar a apuração ao motor de cálculo, que faz a conta da nota.
+  - Escrever testes dos casos extremos para a mudança de estado do ciclo.
 
   Responsáveis  [rascunho]
   ~~~~~~~~~~~~~~~~~~~~~~~~
-  - João Henrique Micucci: Camada de escrita e trilha de auditoria.
-  - João Pedro Mamede: Telas de lançamento e dashboard da CAM.
-  - Fernando Cavalcanti: Testes da janela e da transição.
+  - João Henrique Micucci: Gravação dos dados e histórico de mudanças.
+  - João Pedro Mamede: Telas de lançamento e painel da CAM.
+  - Fernando Cavalcanti: Testes do prazo e da mudança de estado.
 
   Evidências  [rascunho]
   ~~~~~~~~~~~~~~~~~~~~~~
@@ -1297,38 +1300,47 @@ feedback de professor ou de cliente seria fabricar evidência.
 
   >>> FLUXO DO CICLO
       âncora no site: #doc-s7-fluxo
-      os cinco estados, quem move cada um e o que fica na trilha.
+      os cinco estados do ciclo, quem move cada um e o que fica no histórico.
 
       Estado | Quem move | O que acontece
 
-       rascunho | CAM | Ciclo montado, ainda sem janela aberta
-       lançamento aberto | Área técnica | Valores informados com evidência, dentro do prazo
-       em validação | CAM | Conferência dos lançamentos e apuração
-       homologado | CAM | Resultado fechado; gestor consulta e pode contestar
-       publicado | CAM | Ciclo encerrado; nada mais entra
+       rascunho | CAM | O ciclo foi montado, mas o prazo de envio ainda não abriu
+       lançamento aberto | Área técnica | A área informa os valores, com evidência, dentro do prazo
+       em validação | CAM | A CAM confere os lançamentos e apura o resultado
+       homologado | CAM | Resultado aprovado e fechado. O gestor consulta e pode contestar
+       publicado | CAM | Ciclo encerrado. Nada mais entra
 
 --- S8 · Semana 8: Sprint 2 · 24/10/2026 ---------------------------------------------------
 
 
   Objetivo da semana  [rascunho]
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  Ligar a apuração ao motor: do lançamento ao score, com a memória de cálculo aberta até a
+  Ligar a apuração ao motor de cálculo, a parte do sistema que faz a conta. O número
+  informado entra, a nota (score) sai. E a conta fica aberta, passo a passo, até o dado de
   origem.
 
   Avanços  [rascunho]
   ~~~~~~~~~~~~~~~~~~~
-  - Apuração do ciclo produzindo score, faixa e memória de cálculo por gestor.
-  - Tela "meu resultado" com a conta aberta passo a passo e a evolução entre ciclos.
-  - Regra versionada escolhida pela competência do ciclo, não pela data de hoje.
-  - Testes de fronteira de faixa, arredondamento e indicador sem lançamento.
+  - A apuração do ciclo já produz, para cada gestor, três coisas. A nota (score). A faixa,
+    que define o percentual pago. E a memória de cálculo, que é a conta aberta, passo a
+    passo.
+  - Construímos a tela "meu resultado". Ela mostra a conta aberta, passo a passo. Mostra
+    também como o resultado evoluiu de um ciclo para o outro.
+  - A regra fica guardada com número de versão. A apuração escolhe a versão pela
+    competência do ciclo, e não pela data de hoje. Competência é o mês a que o ciclo se
+    refere.
+  - Escrevemos testes para três casos delicados. O primeiro: valor bem na fronteira de uma
+    faixa. O segundo: arredondamento. O terceiro: indicador sem lançamento no ciclo, ou
+    seja, sem número informado.
 
   Decisões  [rascunho]
   ~~~~~~~~~~~~~~~~~~~~
-  - A memória de cálculo sai do mesmo cálculo que a interface exibe.
-      por quê: Recalcular para mostrar abriria espaço para a explicação divergir do número
-      pago.
-  - Peso normalizado só na divisão final.
-      por quê: Normalizar peso a peso antes de somar dava 99,9 para desempenho perfeito.
+  - A memória de cálculo sai do mesmo cálculo que a tela exibe.
+      por quê: Refazer a conta só para mostrar o passo a passo seria arriscado. A
+      explicação poderia divergir do número pago.
+  - Normalizar os pesos (ajustar para que somem 100) só na divisão final.
+      por quê: Normalizar peso a peso antes de somar dava 99,9 para um desempenho perfeito,
+      em vez de 100. Normalizando só no fim, a conta fecha em 100.
 
   Bloqueios  [rascunho]
   ~~~~~~~~~~~~~~~~~~~~~
@@ -1340,14 +1352,14 @@ feedback de professor ou de cliente seria fabricar evidência.
 
   Próximos passos  [rascunho]
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  - Abrir a auditoria e o painel da gestão na Sprint 3.
+  - Na Sprint 3, abrir a auditoria (o histórico de quem mudou o quê) e o painel da gestão.
   - Preparar o roteiro da validação com a CAM.
 
   Responsáveis  [rascunho]
   ~~~~~~~~~~~~~~~~~~~~~~~~
-  - João Henrique Micucci: Apuração e escolha da regra vigente.
-  - João Pedro Mamede: Memória de cálculo na interface.
-  - Fernando Cavalcanti: Testes de caso-limite do motor.
+  - João Henrique Micucci: Apuração e escolha da versão certa da regra.
+  - João Pedro Mamede: Memória de cálculo (a conta aberta) na tela.
+  - Fernando Cavalcanti: Testes dos casos-limite do motor de cálculo.
 
   Evidências  [rascunho]
   ~~~~~~~~~~~~~~~~~~~~~~
@@ -1360,52 +1372,60 @@ feedback de professor ou de cliente seria fabricar evidência.
 
   >>> CASOS-LIMITE DO MOTOR
       âncora no site: #doc-s8-casos
-      o que precisa ser testado antes de confiar num número que vira dinheiro.
+      o motor é a parte do sistema que faz a conta. Aqui está o que precisa ser testado
+      antes de confiar num número que vira dinheiro.
 
       Caso | Por que importa | Comportamento esperado
 
-       Valor exatamente na fronteira da faixa | É onde uma comparação com > em vez de >= muda o pagamento | A faixa é escolhida pelo critério declarado na regra, sem ambiguidade
-       Desempenho perfeito em todos os indicadores | Normalizar peso a peso antes de somar dava 99,9 em vez de 100 | Score fecha em 100,00 exatos
-       Indicador sem lançamento no ciclo | Tratar como zero e tratar como ausente dão resultados diferentes | Entra como zero pontos, e a memória de cálculo diz que não houve lançamento
-       Ciclo apurado com regra de outra versão | A portaria muda no meio do ano | Vale a regra vigente na competência do ciclo, não a de hoje
-       Recálculo de ciclo já homologado | Se o número mudar depois de pago, o produto perdeu a razão de existir | Reproduz exatamente o mesmo score
-       Soma dos pesos diferente de 100 | O briefing traz pesos que somam 115 | A normalização acontece na divisão final; a memória continua fechando
+       Valor exatamente na fronteira da faixa | Comparar com "maior que" (>) em vez de "maior ou igual" (>=) muda o pagamento | A faixa segue o critério escrito na regra, sem margem para dúvida
+       Desempenho perfeito em todos os indicadores | Normalizar (ajustar) peso a peso antes de somar dava 99,9 em vez de 100 | A nota fecha em 100,00 exatos
+       Indicador sem lançamento no ciclo | Contar como zero e contar como ausente dão resultados diferentes | Entra com zero pontos, e a memória de cálculo avisa que não houve lançamento
+       Ciclo apurado com outra versão da regra | A portaria muda no meio do ano | Vale a versão em vigor na competência do ciclo, não a de hoje
+       Refazer a conta de um ciclo já homologado (aprovado) | Se o número mudar depois de pago, o produto perdeu a razão de existir | Dá exatamente a mesma nota
+       Pesos que não somam 100 | O briefing traz pesos que somam 115 | A normalização (o ajuste dos pesos) acontece na divisão final, e a memória de cálculo continua fechando
 
   >>> COMO O SCORE É CALCULADO
       âncora no site: #doc-s8-calculo
-      a fórmula, o que entra nela e por que cada escolha.
+      a fórmula da nota, o que entra nela e por que cada escolha.
 
       Etapa | O que é
 
-       Pontos do indicador | A regra vigente converte o valor informado em pontos, pela faixa
-       Peso | Cada indicador tem peso próprio, definido em portaria
-       Soma ponderada | Σ (pontos × peso): o numerador
-       Teto | Σ (peso × pontuação máxima): o denominador
-       Score | (soma ponderada ÷ teto) × 100, de 0 a 100
-       Faixa | O score cai numa faixa da regra, que define o percentual pago
+       Pontos do indicador | A regra em vigor transforma o valor informado em pontos, conforme a faixa em que ele cai
+       Peso | Cada indicador tem o próprio peso, definido em portaria
+       Soma ponderada | Σ (pontos × peso). Ou seja: soma-se pontos vezes peso de cada indicador. É a parte de cima da divisão (o numerador)
+       Teto | Σ (peso × pontuação máxima). Ou seja: o máximo que a soma ponderada poderia dar. É a parte de baixo da divisão (o denominador)
+       Score | (soma ponderada ÷ teto) × 100. Dá um número de 0 a 100
+       Faixa | A nota cai numa das faixas da regra. A faixa define o percentual pago
 
 --- S9 · Semana 9: Sprint 3 · 07/11/2026 ---------------------------------------------------
 
 
   Objetivo da semana  [rascunho]
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  Fechar auditoria e visão de gestão: o ciclo inteiro rastreável e os agregados por área.
+  Fechar a parte de auditoria e a visão da gestão. O ciclo inteiro (o período avaliado)
+  fica rastreável, e a gestão vê os números juntados por área.
 
   Avanços  [rascunho]
   ~~~~~~~~~~~~~~~~~~~
-  - Linha do tempo imutável com autor, momento, antes e depois de cada evento.
-  - Painel da gestão com agregados por área, ranking anonimizável e exportação em CSV.
-  - Ciclo completo demonstrado de ponta a ponta, de lançamento a homologação.
-  - Perfil de auditoria que lê tudo e não escreve nada.
+  - Fizemos a linha do tempo do sistema. Ela guarda quem fez cada coisa e quando. Guarda
+    também o que havia antes e o que ficou depois. Uma vez escrita, ninguém apaga nem
+    altera.
+  - Fizemos o painel da gestão. Ele mostra os números juntados por área e um ranking que
+    pode esconder os nomes. Os dados podem ser baixados em planilha (CSV).
+  - Demonstramos o ciclo completo, de ponta a ponta. Ele vai do lançamento (a entrada dos
+    valores dos indicadores) até a aprovação final (homologação).
+  - Criamos o perfil de auditoria. Quem entra com ele lê tudo e não altera nada.
 
   Decisões  [rascunho]
   ~~~~~~~~~~~~~~~~~~~~
-  - A trilha é append-only, e isso é garantido fora da aplicação.
-      por quê: No schema guardado é gatilho de banco: vale até para a chave mais
-      privilegiada, não só para quem passa pela tela.
-  - O ranking tem modo anônimo.
-      por quê: Comparar pessoas nominalmente num painel aberto cria constrangimento que o
-      produto não precisa causar.
+  - A trilha (o histórico de quem mudou o quê) só cresce: nada é apagado nem alterado. Isso
+    é garantido fora do programa.
+      por quê: No desenho do banco que guardamos, a regra é um gatilho: o próprio banco a
+      aplica. Por isso vale até para a chave de acesso mais poderosa, não só para quem usa
+      a tela.
+  - O ranking tem um modo que esconde os nomes.
+      por quê: Comparar pessoas pelo nome, num painel que todos veem, constrange. O produto
+      não precisa causar esse constrangimento.
 
   Bloqueios  [rascunho]
   ~~~~~~~~~~~~~~~~~~~~~
@@ -1417,14 +1437,15 @@ feedback de professor ou de cliente seria fabricar evidência.
 
   Próximos passos  [rascunho]
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  - Preparar os instrumentos da validação com a CAM.
-  - Fechar a tela de analytics com os modelos da lente de ML.
+  - Preparar o material que vamos usar na validação com a CAM.
+  - Fechar a tela de análises (analytics) com os modelos da lente de aprendizado de máquina
+    (ML).
 
   Responsáveis  [rascunho]
   ~~~~~~~~~~~~~~~~~~~~~~~~
-  - João Henrique Micucci: Trilha append-only e agregados.
-  - João Pedro Mamede: Painel da gestão e exportação.
-  - Fernando Cavalcanti: Perfil de auditoria e conferência de permissões.
+  - João Henrique Micucci: Trilha que só cresce e números por área.
+  - João Pedro Mamede: Painel da gestão e exportação para planilha.
+  - Fernando Cavalcanti: Perfil de auditoria e conferência das permissões.
 
   Evidências  [rascunho]
   ~~~~~~~~~~~~~~~~~~~~~~
@@ -1437,44 +1458,48 @@ feedback de professor ou de cliente seria fabricar evidência.
 
   >>> O QUE A TRILHA REGISTRA
       âncora no site: #doc-s9-trilha
-      os campos de cada evento e por que nenhum é opcional.
+      os campos de cada evento da trilha (o histórico de quem mudou o quê) e por que nenhum
+      pode faltar.
 
       Campo | Para quê
 
-       quem | Autor da ação, para que ninguém possa negar depois
-       quando | Momento exato, para ordenar e para conferir prazo
-       o quê | Tipo do evento: lançamento, correção, transição, homologação
-       entidade | A que o evento se refere: qual ciclo, qual indicador
-       antes | Estado anterior: nulo só quando o registro está nascendo
-       depois | Estado novo, que é o que passa a valer
+       quem | Quem fez a ação. Assim ninguém pode negar depois
+       quando | O momento exato. Serve para pôr em ordem e para conferir prazo
+       o quê | O tipo do evento. Pode ser lançamento, correção, mudança de etapa (transição) ou aprovação (homologação)
+       entidade | Sobre o que é o evento: qual ciclo (o período avaliado), qual indicador
+       antes | Como estava antes. Fica vazio só quando o registro está sendo criado
+       depois | Como ficou depois. É o que passa a valer
 
 --- S10 · Semana 10: Sprint 4 · 14/11/2026 -------------------------------------------------
 
 
   Objetivo da semana  [rascunho]
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  Fechar a Sprint 4: aplicar as correções apontadas no SR1 e entregar a lente de machine
-  learning como funcionalidade do produto, com o método declarado ao lado do número.
+  Fechar a Sprint 4. Aplicar as correções apontadas no SR1. Entregar a lente de aprendizado
+  de máquina (ML) como funcionalidade do produto, com o método escrito ao lado do número.
 
   Avanços  [rascunho]
   ~~~~~~~~~~~~~~~~~~~
-  - Correções do feedback do SR1 implementadas, cada uma ligada ao apontamento que a
-    originou.
-  - Tela de analytics com os resultados dos modelos e a metodologia visível.
-  - Modelos treinados exclusivamente sobre a base sintética, sem nenhum dado real.
-  - Métricas de desempenho publicadas junto do resultado, não escondidas.
-  - Limitações do modelo escritas na própria tela, em linguagem de quem vai ler.
-  - Backlog repriorizado depois das correções: o que sobrou vai para a validação ou vira
-    trabalho futuro declarado.
+  - Aplicamos as correções do retorno do SR1. Cada correção fica ligada ao apontamento que
+    a originou.
+  - Fizemos a tela de análises (analytics). Ela mostra os resultados dos modelos e deixa o
+    método à vista.
+  - Treinamos os modelos só sobre a base sintética, a base gerada por programa. Nenhum dado
+    real entrou.
+  - Publicamos as métricas, as medidas de quanto cada modelo acerta, junto do resultado.
+    Elas não ficaram escondidas.
+  - Escrevemos as limitações do modelo na própria tela, na linguagem de quem vai ler.
+  - Reordenamos o backlog, a lista de tarefas, depois das correções. O que sobrou vai para
+    a validação ou fica anotado como trabalho futuro.
 
   Decisões  [rascunho]
   ~~~~~~~~~~~~~~~~~~~~
   - O método fica ao lado do número, sempre.
-      por quê: Previsão sem método declarado é opinião com aparência de dado. Num cálculo
-      de gratificação, isso é grave.
+      por quê: Previsão sem método escrito é só opinião com cara de dado. Num cálculo de
+      gratificação, isso é grave.
   - O modelo não decide nada: informa.
-      por quê: Nenhuma saída de ML entra na conta da gratificação. A regra é a portaria, e
-      ela é determinística.
+      por quê: Nenhum resultado do modelo de ML entra na conta da gratificação. A regra é a
+      portaria, e a mesma entrada dá sempre o mesmo resultado.
 
   Bloqueios  [rascunho]
   ~~~~~~~~~~~~~~~~~~~~~
@@ -1486,41 +1511,43 @@ feedback de professor ou de cliente seria fabricar evidência.
 
   Próximos passos  [rascunho]
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  - Validar com a CAM na Semana 11.
-  - Levar o backlog atualizado para a validação: o que a CAM apontar entra na frente do que
+  - Fazer a validação com a Comissão de Avaliação de Metas (CAM) na Semana 11.
+  - Levar o backlog atualizado para a validação: o que a CAM apontar passa na frente do que
     sobrou.
-  - Consolidar as três lentes no pacote do SR2.
+  - Juntar as três lentes no pacote de entrega do SR2.
 
   Responsáveis  [rascunho]
   ~~~~~~~~~~~~~~~~~~~~~~~~
-  - Rafael Serpa: Gerador de dados, notebooks e modelos.
-  - João Pedro Mamede: Tela de analytics e apresentação das métricas.
-  - Fernando Cavalcanti: Revisão das limitações declaradas.
+  - Rafael Serpa: Gerador de dados, cadernos (notebooks) e modelos.
+  - João Pedro Mamede: Tela de análises (analytics) e exibição das métricas.
+  - Fernando Cavalcanti: Revisão das limitações escritas na tela.
 
   Evidências  [rascunho]
   ~~~~~~~~~~~~~~~~~~~~~~
-  - [dashboard] Analytics -> /sistema/analytics
+  - [dashboard] Tela de análises (analytics) -> /sistema/analytics
   - [documento] Método e limitações -> #doc-s10-metodo
   - [documento] Os seis cadernos -> #doc-s10-cadernos
-  - [codigo] Notebooks e modelos -> https://github.com/highgroundagency/projeto-6
+  - [codigo] Cadernos (notebooks) e modelos ->
+    https://github.com/highgroundagency/projeto-6
 
   Documentos de entrega desta semana (2)
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   >>> OS SEIS CADERNOS E O RESULTADO NEGATIVO
       âncora no site: #doc-s10-cadernos
-      o que cada notebook faz, e por que um dos modelos fica publicado como fracasso.
+      o que cada caderno (notebook) faz, e por que um dos modelos fica publicado como
+      fracasso.
 
       Caderno | O que faz
 
-       01: EDA | Distribuição do atingimento por área. É aqui que aparece o achado que muda o projeto: quase nada bate a meta
-       02: Pré-processamento | Atributos com shift(1) e separação treino/teste temporal, para o modelo nunca ver o futuro
-       03: Classificação | Duas perguntas: "vai bater a meta?" (fracassa) e "vai melhorar?" (funciona)
-       04: Regressão | Atingimento esperado, com importância dos atributos
-       05: Clustering | Agrupamento de ÁREAS: nunca de pessoas: com a silhueta publicada ao lado
-       06: Conclusões | Comparação entre os quatro modelos e o limite que não se negocia
+       01: EDA | Exploração inicial dos dados. Mostra como o atingimento da meta se distribui por área. É aqui que aparece o achado que muda o projeto: quase nada bate a meta
+       02: Pré-processamento | Prepara os dados. Cada dado de entrada (atributo) olha só para os meses anteriores (shift(1)). Treino e teste são separados no tempo, para o modelo nunca ver o futuro
+       03: Classificação | Responde duas perguntas de sim ou não. "Vai bater a meta?", que fracassa. "Vai melhorar?", que funciona
+       04: Regressão | Estima o atingimento esperado. Mostra também quanto cada dado de entrada (atributo) pesou na estimativa
+       05: Clustering | Agrupa ÁREAS parecidas, nunca pessoas. A silhueta, a medida de quão bem os grupos se separam, fica publicada ao lado
+       06: Conclusões | Compara os quatro modelos. Deixa escrito o limite que não se negocia
 
-      O classificador de “vai bater a meta” NÃO supera o palpite de chutar a classe majoritária, e fica publicado assim na tela de analytics. O caderno 01 já explicava o porquê: com pouquíssimos positivos, o alvo não tem sinal. Não é o modelo que é ruim: é a pergunta que é mal posta nesta base. Esconder o que falhou e mostrar só o que deu certo seria escolher a métrica depois de ver o resultado.
+      O modelo de “vai bater a meta” NÃO acerta mais do que chutar sempre a resposta mais comum. E fica publicado assim na tela de análises. O caderno 01 já explicava o porquê: com pouquíssimos casos de “sim”, não sobra padrão para o modelo aprender. O modelo não é ruim. A pergunta é que está mal feita para esta base. Não escondemos o que falhou para mostrar só o que deu certo. Isso seria escolher a medida de acerto depois de ver o resultado.
 
   >>> MÉTODO E LIMITAÇÕES
       âncora no site: #doc-s10-metodo
@@ -1528,41 +1555,43 @@ feedback de professor ou de cliente seria fabricar evidência.
 
       Aspecto | O que vale
 
-       Base | Exclusivamente sintética, com semente fixa: nenhum dado real de pessoa ou da SESAU
-       Escopo | Apoia a leitura de tendência por área; não entra no cálculo da gratificação
-       Métricas | Publicadas na própria tela, junto do resultado
-       Limitação principal | Base sintética reproduz a regra que a gerou: desempenho em dado real seria outro
-       O que não faz | Não classifica pessoa, não recomenda pagamento, não substitui a portaria
+       Base | Só a base sintética: gerada por programa e sempre igual (semente fixa). Nenhum dado real de pessoa ou da SESAU
+       Escopo | Ajuda a ler a tendência de cada área. Não entra no cálculo da gratificação
+       Métricas | As medidas de acerto ficam publicadas na própria tela, junto do resultado
+       Limitação principal | A base sintética reproduz a regra que a gerou, e o modelo aprende essa regra de volta. Com dado real, o desempenho seria outro
+       O que não faz | Não classifica pessoa. Não recomenda pagamento. Não substitui a portaria
 
 --- S11 · Semana 11: Validação · 21/11/2026 ------------------------------------------------
 
 
   Objetivo da semana  [rascunho]
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  Validar o MVP com quem opera o processo hoje, e registrar o que precisa mudar antes do
-  SR2.
+  Validar o MVP com quem faz esse trabalho hoje. Anotar o que precisa mudar antes do SR2.
 
   Avanços  [rascunho]
   ~~~~~~~~~~~~~~~~~~~
-  - Entrevista semiestruturada com pelo menos um integrante da CAM, sobre o fluxo real.
-  - Teste de usabilidade com tarefa cronometrada: lançar um indicador e explicar o próprio
-    score.
-  - Questionário pós-teste sobre clareza da memória de cálculo e confiança no resultado.
-  - Ajustes decorrentes registrados com origem e prioridade.
+  - Entrevistamos pelo menos um integrante da CAM sobre como o processo acontece na
+    prática. A conversa segue um roteiro, mas deixa a pessoa falar livremente.
+  - Fizemos um teste de usabilidade com tempo marcado. A pessoa tenta lançar um indicador e
+    explicar a própria nota (o score).
+  - Depois do teste, a pessoa responde a um questionário. Ele pergunta se a memória de
+    cálculo, o passo a passo da conta, ficou clara. E se ela confia no resultado.
+  - Anotamos os ajustes que saíram daí. Cada ajuste leva anotado de onde veio e a
+    prioridade.
 
   Decisões  [rascunho]
   ~~~~~~~~~~~~~~~~~~~~
   - A validação usa tarefa cronometrada, não demonstração narrada.
-      por quê: Demonstração guiada mede a nossa explicação, não a clareza da tela. A pessoa
-      precisa tentar sozinha.
-  - Nenhum dado real da SESAU entra no ambiente de teste.
-      por quê: A validação é do fluxo e da clareza, não dos números. Base sintética
-      resolve, e evita tratar dado de servidor sem base legal.
+      por quê: Se nós mostramos, o teste mede a nossa explicação, não a clareza da tela. A
+      pessoa precisa tentar sozinha.
+  - Nenhum dado real da SESAU entra no teste.
+      por quê: Queremos validar o fluxo e a clareza, não os números. Uma base de teste
+      gerada por programa basta. E ela evita mexer em dado de servidor sem base legal.
 
   Bloqueios  [rascunho]
   ~~~~~~~~~~~~~~~~~~~~~
-  - A validação depende da agenda da CAM, que não está sob controle da equipe; marcar com
-    antecedência é o único mitigador.
+  - A validação depende da agenda da CAM, e essa agenda não é nossa. A única defesa é
+    marcar com antecedência.
 
   Feedback recebido  [rascunho]
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1570,15 +1599,16 @@ feedback de professor ou de cliente seria fabricar evidência.
 
   Próximos passos  [rascunho]
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  - Transcrever o retorno da CAM neste bloco de feedback, com origem declarada.
-  - Aplicar os ajustes de prioridade alta antes do Pré-SR2.
-  - Registrar o que foi apontado e conscientemente não será feito, com o motivo.
+  - Escrever o retorno da CAM neste bloco de feedback, dizendo de onde veio.
+  - Fazer os ajustes de prioridade alta antes do Pré-SR2.
+  - Anotar o que foi apontado e decidimos não fazer, com o motivo.
 
   Responsáveis  [rascunho]
   ~~~~~~~~~~~~~~~~~~~~~~~~
-  - Matheus Lustosa: Condução da entrevista e do teste de usabilidade.
-  - Gabriel Tenório de Lima Teixeira: Interlocução com a CAM e priorização dos ajustes.
-  - João Pedro Mamede: Ajustes de interface decorrentes.
+  - Matheus Lustosa: Conduzir a entrevista e o teste de usabilidade.
+  - Gabriel Tenório de Lima Teixeira: Contato com a CAM e escolha da prioridade dos
+    ajustes.
+  - João Pedro Mamede: Ajustes nas telas que saíram da validação.
 
   Evidências  [rascunho]
   ~~~~~~~~~~~~~~~~~~~~~~
@@ -1594,50 +1624,52 @@ feedback de professor ou de cliente seria fabricar evidência.
 
       Pergunta | O que se quer descobrir
 
-       Conte como foi o último fechamento de ciclo, do começo ao fim. | O fluxo real, não o fluxo descrito na portaria
-       O que costuma dar errado? | Os pontos de quebra, na ordem de quem sente a dor
+       Conte como foi o último fechamento de ciclo, do começo ao fim. | O que acontece de verdade, não o que a portaria descreve
+       O que costuma dar errado? | Onde o processo quebra, na ordem em que a pessoa sente
        Como você confere se um número está certo hoje? | Se existe conferência, e quanto ela custa
-       Já teve alguém contestando um resultado? Como foi? | O caminho da contestação e o que faltou para respondê-la
-       O que você faria se tivesse mais tempo no fechamento? | A prioridade real, dita sem a pressão de escolher
+       Já teve alguém contestando um resultado? Como foi? | O caminho da contestação, e o que faltou para responder a ela
+       O que você faria se tivesse mais tempo no fechamento? | O que importa de verdade, dito sem a pressão de escolher
 
-       - Perguntas abertas, sem sugerir a resposta, nada de "não seria melhor se…".
-       - Quem conduz não defende o produto: se a pessoa criticar, a resposta é "me conta mais".
-       - Nenhum dado real de servidor é solicitado ou anotado.
+       - As perguntas são abertas e não sugerem resposta. Nada de "não seria melhor se…".
+       - Quem conduz não defende o produto. Se a pessoa criticar, a resposta é "me conta mais".
+       - Não pedimos nem anotamos nenhum dado real de servidor.
 
   >>> TAREFAS DO TESTE DE USABILIDADE
       âncora no site: #doc-s11-tarefas
-      o que a pessoa tenta fazer sozinha, e o critério de sucesso de cada tarefa.
+      o que a pessoa tenta fazer sozinha, e o que conta como sucesso em cada tarefa.
 
       Tarefa | Sucesso é | O que se mede
 
-       Lançar o valor de um indicador da sua área | Concluir sem pedir ajuda | Se a janela e a evidência ficam claras sem explicação
-       Descobrir por que o score de um gestor deu o que deu | Chegar à memória de cálculo e apontar um indicador | Se a conta abre até a origem sem treinamento
-       Encontrar quem informou determinado valor e quando | Chegar à trilha de auditoria | Se a rastreabilidade é achável, não só existente
-       Contestar um resultado | Abrir a contestação e saber o prazo | Se o caminho de discordar é visível para quem é avaliado
+       Lançar o valor de um indicador da sua área | Concluir sem pedir ajuda | Se o prazo de lançamento e a evidência ficam claros sem ninguém explicar
+       Descobrir por que a nota (o score) de um gestor deu o que deu | Chegar ao passo a passo da conta (a memória de cálculo) e apontar um indicador | Se dá para seguir a conta até a origem sem treinamento
+       Encontrar quem informou determinado valor e quando | Chegar ao histórico de quem fez o quê e quando (a trilha de auditoria) | Se o histórico é fácil de achar, e não só existe
+       Contestar um resultado | Abrir a contestação e saber o prazo | Se quem é avaliado enxerga o caminho para discordar
 
 --- S12 · Semana 12: Pré-SR2 · 28/11/2026 --------------------------------------------------
 
 
   Objetivo da semana  [rascunho]
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  Fechar o pacote do SR2: aplicar os ajustes da validação, consolidar as três lentes e
-  comparar planejado com realizado.
+  Fechar o pacote do SR2. Aplicar os ajustes que saíram da validação, juntar as três lentes
+  e comparar o que planejamos com o que fizemos.
 
   Avanços  [rascunho]
   ~~~~~~~~~~~~~~~~~~~
-  - Ajustes de prioridade alta da validação com a CAM aplicados.
-  - Documentação técnica, análise de segurança e análise de privacidade em versão final.
-  - Comparativo planejado × realizado do semestre, com os desvios explicados.
-  - Ensaio do pitch final, cronometrado.
+  - Aplicamos os ajustes de prioridade alta que saíram da validação com a CAM.
+  - Fechamos a versão final da documentação técnica, da análise de segurança e da análise
+    de privacidade.
+  - Comparamos o que planejamos com o que fizemos no semestre (planejado × realizado). Cada
+    desvio tem o motivo explicado.
+  - Ensaiamos o pitch final com cronômetro.
 
   Decisões  [rascunho]
   ~~~~~~~~~~~~~~~~~~~~
-  - O comparativo planejado × realizado mostra o que não foi feito, com o motivo.
-      por quê: Relatório que só lista acerto não é relatório. O que ficou de fora e por quê
-      é o que mostra que houve priorização.
-  - Congelar funcionalidade nova a partir desta semana.
-      por quê: Feature entrando na véspera é feature sem teste e sem ensaio. O que não está
-      pronto agora vira trabalho futuro declarado.
+  - O comparativo planejado × realizado mostra o que não foi feito, e por quê.
+      por quê: Relatório que só lista acerto não é relatório. Mostrar o que ficou de fora,
+      e o motivo, prova que escolhemos prioridades.
+  - Nenhuma funcionalidade nova a partir desta semana.
+      por quê: Funcionalidade que entra na véspera chega sem teste e sem ensaio. O que não
+      está pronto agora entra na lista de trabalho futuro declarado.
 
   Bloqueios  [rascunho]
   ~~~~~~~~~~~~~~~~~~~~~
@@ -1656,7 +1688,7 @@ feedback de professor ou de cliente seria fabricar evidência.
   ~~~~~~~~~~~~~~~~~~~~~~~~
   - Gabriel Tenório de Lima Teixeira: Pacote do SR2 e comparativo planejado × realizado.
   - Fernando Cavalcanti: Documentação técnica, segurança e privacidade.
-  - João Pedro Mamede: Ajustes de interface da validação.
+  - João Pedro Mamede: Ajustes de tela que saíram da validação.
 
   Evidências  [rascunho]
   ~~~~~~~~~~~~~~~~~~~~~~
@@ -1671,124 +1703,126 @@ feedback de professor ou de cliente seria fabricar evidência.
 
   >>> NUVEM: TRADE-OFFS DE INFRAESTRUTURA E EVOLUÇÃO
       âncora no site: #doc-s12-nuvem
-      o que foi escolhido, o que foi recusado, e o que a arquitetura aguenta antes de
-      precisar mudar.
+      o que escolhemos, o que recusamos, e até onde a arquitetura aguenta antes de precisar
+      mudar.
 
       As escolhas, com a alternativa recusada ao lado
-      Trade-off sem a alternativa nomeada não é trade-off: é justificativa.
+      Toda escolha tem uma alternativa que recusamos. Sem dizer qual foi, a escolha vira só justificativa.
 
        Escolhido | Recusado | Por quê
 
-       Funções serverless | Contêiner sempre ligado | A carga é sazonal: pico no fechamento da competência, silêncio no resto do mês. Máquina ligada 30 dias para trabalhar 3 é custo sem serviço
-       Postgres gerenciado com RLS | Banco em máquina própria | Autorização no banco vale para todo caminho de escrita, e ninguém da equipe precisa aplicar correção de segurança de madrugada
-       Renderização no servidor a cada requisição | Site estático regerado por webhook | O que o visitante pode ver depende do dia E da sessão dele. Estático exigiria uma versão por combinação, ou vazaria conteúdo futuro no HTML
-       Treino de ML offline, resultado em JSON | Inferência sob demanda numa função | Partida a frio com scikit-learn custa segundos para exibir número que muda entre deploys. E o JSON versionado é auditável (ADR-022)
-       Deploy por push no Git | Pipeline própria com aprovação manual | Uma equipe de seis, num semestre, gasta mais mantendo a esteira do que ganha com ela
-       Config em variável de ambiente e no Git | Painel de administração escrevendo em banco | Conteúdo versionado deixa histórico de quem mudou o quê. Formulário não deixa (§7.3)
+       Funções sem servidor fixo (serverless) | Contêiner sempre ligado | A carga vem em ondas. Tem pico no fechamento de cada mês avaliado (a competência) e silêncio no resto do mês. Uma máquina ligada 30 dias para trabalhar 3 é custo sem serviço
+       Postgres gerenciado, com as regras de acesso no banco (RLS) | Banco em máquina própria | Regra de acesso dentro do banco vale para todo caminho de escrita. E ninguém da equipe precisa aplicar correção de segurança de madrugada
+       Página montada no servidor a cada pedido | Site estático, gerado de novo por aviso automático (webhook) | O que o visitante pode ver depende do dia e também da sessão dele. Um site estático precisaria de uma versão por combinação. Ou vazaria conteúdo futuro no HTML
+       Modelos de ML treinados antes, fora do sistema (offline), com o resultado guardado em JSON | Modelo rodando na hora, dentro de uma função | Carregar o scikit-learn do zero custa segundos. Isso para mostrar um número que só muda entre uma publicação e outra. E o JSON guardado no Git pode ser conferido depois (ADR-022)
+       Publicação automática a cada envio ao Git | Esteira própria, com aprovação manual | Uma equipe de seis, num semestre, gasta mais mantendo a esteira do que ganha com ela
+       Configuração em variável de ambiente e no Git | Painel de administração gravando no banco | Conteúdo guardado no Git deixa histórico de quem mudou o quê. Formulário não deixa (§7.3)
 
       Até onde isto aguenta
       Número honesto: a SESAU tem dezenas de indicadores e centenas de avaliados, não milhões.
 
        Dimensão | Hoje no protótipo | O que aguentaria em produção
 
-       Áreas técnicas | 10 sintéticas | Dezenas: o custo é linear e trivial
-       Indicadores | 30 sintéticos | Centenas, sem mudança de arquitetura
-       Gestores avaliados | Dezenas na base sintética | Milhares: o cálculo é por gestor e paraleliza sozinho
-       Competências | Mensal | Mensal continua sendo o pico; o resto do mês é leitura
-       Trilha de auditoria | Centenas de eventos em memória | Cresce para sempre por desenho. Em produção pede índice por ciclo e arquivamento por competência antiga, e isso está declarado como pendência
+       Áreas técnicas | 10, na base de teste | Dezenas: o custo cresce na mesma proporção e é pequeno
+       Indicadores | 30, na base de teste | Centenas, sem mudar a arquitetura
+       Gestores avaliados | Dezenas, na base de teste | Milhares: a conta é feita gestor por gestor, então roda em paralelo sem esforço
+       Competências (meses avaliados) | Mensal | Mensal continua sendo o pico; o resto do mês é só leitura
+       Histórico de quem mudou o quê (trilha de auditoria) | Centenas de eventos em memória | Cresce para sempre, por desenho. Em produção vai precisar de índice por ciclo e de arquivamento dos meses antigos. Isso já está declarado como pendência
 
-      O gargalo real não é técnico: é a janela de lançamento. Todas as áreas informam nos mesmos dois dias do mês, e é ali que a função escala. Serverless resolve exatamente esse formato de carga, e é a razão principal da escolha.
+      O gargalo real não é técnico. É a janela de lançamento: todas as áreas informam nos mesmos dois dias do mês. É ali que a função precisa crescer. Funções sem servidor fixo (serverless) resolvem exatamente esse formato de carga. Essa é a razão principal da escolha.
 
       O que falta para virar produção
 
-       - Ligar o schema de `supabase/migrations/` ao runtime: ele está escrito, testado contra um Postgres real, e desligado (ADR-011).
-       - Autenticação institucional de verdade no lugar do seletor de perfil simulado, com as políticas de RLS já escritas assumindo o controle.
-       - Rate limit persistente: o contador atual vive na memória de uma instância, e em serverless isso é best-effort declarado.
-       - CSP com nonce por requisição no lugar do unsafe-inline herdado do bootstrap do framework.
-       - Observabilidade além do health check: hoje há `/api/status`, e falta série temporal de erro e latência.
-       - Rotina de backup e teste de restauração do banco, que num sistema que paga gratificação não é opcional.
+       - Ligar o esquema do banco em `supabase/migrations/` ao sistema em execução. Ele está escrito e testado contra um Postgres real, mas segue desligado (ADR-011).
+       - Trocar o seletor de perfil simulado por login institucional de verdade. As regras de acesso do banco (RLS) já estão escritas e assumiriam o controle.
+       - Guardar o limite de tentativas (rate limit) fora da memória. Hoje o contador vive na memória de uma instância. Em serverless isso funciona só na medida do possível, e está declarado assim.
+       - Trocar a política de segurança de conteúdo (CSP) para usar um código único por pedido (nonce). Hoje ela usa unsafe-inline, herdado da configuração inicial do framework.
+       - Acompanhar o sistema além da checagem de saúde. Hoje existe `/api/status`. Falta o registro de erros e de tempo de resposta ao longo do tempo.
+       - Criar a rotina de cópia de segurança (backup) do banco, com teste de restauração. Num sistema que paga gratificação, isso não é opcional.
 
   >>> DIREITO: PRIVACY BY DESIGN E DIREITOS DOS TITULARES
       âncora no site: #doc-s12-direito-titulares
       onde a privacidade está no código, e como cada direito do art. 18 é atendido.
 
       Privacy by Design, apontando o código
-      Princípio que não aponta para um arquivo é declaração de intenção.
+      Princípio que não aponta para um arquivo é só declaração de intenção.
 
        Princípio | Onde está no código
 
-       Minimização | A base sintética não tem CPF, e-mail nem telefone, e há teste que falha se aparecerem
-       Finalidade | O sistema calcula o percentual devido; folha de pagamento está fora do escopo desde a proposta
-       Transparência | A memória de cálculo abre cada passo até a origem, para o próprio avaliado
-       Segurança | Trilha append-only, regra versionada e políticas de RLS escritas em supabase/migrations/
-       Prestação de contas | Cada evento guarda quem, quando, antes e depois
+       Minimização | A base de teste não tem CPF, e-mail nem telefone. Há um teste que falha se algum deles aparecer
+       Finalidade | O sistema calcula o percentual devido. A folha de pagamento está fora do escopo desde a proposta
+       Transparência | A memória de cálculo mostra cada passo da conta até a origem. O próprio avaliado pode ver
+       Segurança | Histórico que só recebe registro novo, nunca apaga. Regra guardada com número de versão. Regras de acesso do banco (RLS) escritas em supabase/migrations/
+       Prestação de contas | Cada evento guarda quem mudou, quando, o valor antes e o valor depois
 
       Direitos do titular (art. 18)
       Cada direito, e a tela que o atende.
 
        Direito | Como o sistema atende
 
-       Confirmação e acesso | Tela "meu resultado": score, faixa, histórico e memória de cálculo do próprio avaliado
-       Correção | Contestação com resposta da comissão; correção de lançamento gera evento novo sem apagar o anterior
-       Anonimização | Ranking anonimizável no painel da gestão
+       Confirmação e acesso | Tela "meu resultado": o avaliado vê a própria nota (score), a faixa, o histórico e a memória de cálculo
+       Correção | O avaliado contesta e a comissão responde. Corrigir um lançamento gera um evento novo, sem apagar o anterior
+       Anonimização | O ranking no painel da gestão pode ser mostrado sem nomes
        Portabilidade | Exportação em CSV
        Informação sobre compartilhamento | Não há compartilhamento com terceiros
-       Revisão de decisão automatizada (art. 20) | O cálculo é determinístico e a memória mostra cada passo; o ML sinaliza e nunca bloqueia
+       Revisão de decisão automatizada (art. 20) | A mesma entrada dá sempre a mesma conta, e a memória mostra cada passo. O ML só aponta onde olhar, nunca bloqueia
 
       O art. 20 é o centro deste projeto
 
-       - Decisão automatizada que afeta interesse do titular exige direito a revisão, e gratificação afeta remuneração.
-       - Por isso o cálculo não é caixa-preta: a regra é dado versionado e a memória de cálculo mostra a conta inteira.
-       - Por isso, também, nenhuma saída dos modelos de machine learning entra na conta. Eles informam onde olhar; quem decide é a comissão, e a decisão é contestável.
-      Esta é a razão pela qual a lente de Direito não é um anexo do projeto. Ela determinou uma decisão de arquitetura: o motor de cálculo ser função pura e auditável, e o ML ficar fora dele.
+       - Decisão automática que afeta o interesse do titular, a pessoa dona dos dados, exige direito a revisão. Gratificação afeta o salário.
+       - Por isso a conta não é caixa-preta. A regra é guardada como dado, com número de versão. A memória de cálculo mostra a conta inteira.
+       - Por isso, também, nenhum resultado dos modelos de machine learning entra na conta. Eles só apontam onde olhar. Quem decide é a comissão, e a decisão pode ser contestada.
+      É por isso que a lente de Direito não é um anexo do projeto. Ela determinou uma decisão de arquitetura. O motor de cálculo é uma função pura: só depende do que recebe e não mexe em nada de fora. Cada passo dele pode ser conferido. E o ML fica fora dele.
 
   >>> PLANEJADO × REALIZADO
       âncora no site: #doc-s12-planejado
-      o que foi prometido em cada marco, o que saiu, e o desvio explicado.
+      o que prometemos em cada marco, o que entregamos, e o desvio explicado.
 
       Marco | Planejado | Realizado | Desvio
 
        Kick-off | Problema, pergunta e recorte | a preencher | A preencher no SR2
        SR1 | Pesquisa e protótipo navegável | a preencher | A preencher no SR2
-       Sprints 1–4 | Ciclo completo, auditoria, gestão e analytics | a preencher | A preencher no SR2
+       Sprints 1 a 4 | Ciclo completo, auditoria, gestão e analytics | a preencher | A preencher no SR2
        Semana 11 | Validação com a CAM | a preencher | A preencher no SR2
 
-       - A coluna "realizado" é preenchida no fim, com o que aconteceu, não antes.
-       - Desvio sem explicação não conta: cada linha diz por que mudou.
+       - A coluna "realizado" só é preenchida no fim, com o que de fato aconteceu.
+       - Desvio sem explicação não conta. Cada linha diz por que mudou.
 
   >>> TRABALHO FUTURO DECLARADO
       âncora no site: #doc-s12-futuro
-      o que o semestre não cobre, dito na cara em vez de escondido.
+      o que o semestre não cobre, dito às claras em vez de escondido.
 
       Item | Por que ficou de fora
 
-       Persistência em banco no runtime | O schema com RLS está escrito e testado, mas o app roda no seed, ver ADR-011
-       Autenticação real por perfil | O seletor é simulado; as políticas que resolveriam isso existem no schema guardado
-       Integração com a folha de pagamento | Fora do escopo desde a proposta: o produto calcula e audita, não paga
-       Rate limit persistente no painel | O contador vive na memória do processo; em serverless isso é best-effort e está declarado
-       CSP com nonce por requisição | A política atual usa unsafe-inline, herdado do bootstrap do framework
+       Banco de dados ligado ao sistema em execução | O esquema do banco, com as regras de acesso (RLS), está escrito e testado. Mas o app roda sobre a base de teste (seed). Ver ADR-011
+       Autenticação (login) real por perfil | O seletor de perfil é simulado. As regras que resolveriam isso já existem no esquema guardado
+       Integração com a folha de pagamento | Fora do escopo desde a proposta. O produto calcula e guarda o histórico para conferência, não paga
+       Limite de tentativas (rate limit) persistente no painel | O contador vive na memória do processo. Em funções sem servidor fixo (serverless) isso funciona só na medida do possível, e está declarado
+       Política de segurança de conteúdo (CSP) com código único por pedido (nonce) | A política atual usa unsafe-inline, herdado da configuração inicial do framework
 
 --- SR2 · SR2: Final · 05/12/2026 ----------------------------------------------------------
 
 
   Objetivo da semana  [rascunho]
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  Apresentar o MVP funcionando, a trajetória do semestre e as três lentes da disciplina
-  consolidadas.
+  Mostrar o sistema (MVP) funcionando e contar o caminho do semestre. Apresentar as três
+  lentes da disciplina, já juntas num só produto.
 
   Avanços  [rascunho]
   ~~~~~~~~~~~~~~~~~~~
-  - Demonstração do ciclo completo: lançamento, apuração, memória de cálculo, auditoria e
-    contestação.
-  - Pacote final submetido conforme a matriz de evidências.
-  - Comparativo planejado × realizado publicado, com os desvios explicados.
-  - Registro semanal completo das doze semanas, validado.
+  - Demonstramos o ciclo completo, com as cinco etapas: lançamento, apuração, memória de
+    cálculo, auditoria e contestação.
+  - Entregamos o pacote final. Ele segue a matriz de evidências, a lista do que a
+    disciplina pede.
+  - Publicamos o comparativo entre o que planejamos e o que fizemos. Cada desvio está
+    explicado.
+  - O registro das doze semanas está completo e validado.
 
   Decisões  [rascunho]
   ~~~~~~~~~~~~~~~~~~~~
   - A apresentação final mostra também o que não foi feito.
-      por quê: Trabalho futuro declarado é sinal de que houve priorização consciente;
-      esconder lacuna é o contrário disso.
+      por quê: Dizer o que fica para depois mostra que escolhemos prioridades de propósito.
+      Esconder o que faltou seria o contrário disso.
 
   Bloqueios  [rascunho]
   ~~~~~~~~~~~~~~~~~~~~~
@@ -1800,14 +1834,14 @@ feedback de professor ou de cliente seria fabricar evidência.
 
   Próximos passos  [rascunho]
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  - Transcrever o retorno final da banca neste bloco de feedback, com origem.
-  - Arquivar o repositório com a documentação em versão final.
+  - Escrever neste bloco de feedback o retorno final da banca, dizendo de quem veio.
+  - Arquivar o repositório com a documentação na versão final.
 
   Responsáveis  [rascunho]
   ~~~~~~~~~~~~~~~~~~~~~~~~
-  - Gabriel Tenório de Lima Teixeira: Narração e fechamento do pacote final.
-  - João Pedro Mamede: Demonstração do ciclo completo.
-  - Rafael Serpa: Apresentação da lente de machine learning.
+  - Gabriel Tenório de Lima Teixeira: Faz a narração e fecha o pacote final.
+  - João Pedro Mamede: Demonstra o ciclo completo do sistema.
+  - Rafael Serpa: Apresenta a lente de machine learning.
   - Fernando Cavalcanti: Lente de direito digital e documentação final.
 
   Evidências  [rascunho]
@@ -1825,18 +1859,18 @@ feedback de professor ou de cliente seria fabricar evidência.
 
       Peça | Onde está
 
-       MVP funcionando | Sistema: oito telas com dados sintéticos
+       MVP funcionando | Sistema: oito telas, com dados de teste gerados por programa
        Registro das doze semanas | Página inicial, seção Registro semanal
-       Documentos de pesquisa e proposta | Dentro de cada semana, em sanfona
+       Documentos de pesquisa e proposta | Dentro de cada semana, numa sanfona que abre ao clicar
        Arquitetura e modelo de dados | Registro, Semana 5, e docs/arquitetura.md
        Análise de segurança | docs/seguranca.md: STRIDE e OWASP Top 10
        Análise de privacidade | docs/privacidade.md: LGPD e Privacy by Design
-       Decisões de arquitetura | docs/decisoes.md: ADRs com o que se perdeu em troca
+       Decisões de arquitetura | docs/decisoes.md: cada decisão (ADR) com o que se perdeu em troca
        Uso de IA | Transparência no uso de IA
        Planejado × realizado | Registro, Semana 12
 
-       - Nenhuma peça é PDF: tudo é conteúdo do site, versionado no Git.
-       - Nenhum dado real de pessoa ou da SESAU em nenhuma delas.
+       - Nenhuma peça é PDF. Tudo é conteúdo do site, guardado no Git com histórico de versões.
+       - Nenhuma peça usa dado real de pessoa ou da SESAU.
 
   >>> AS TRÊS LENTES
       âncora no site: #doc-sr2-lentes
@@ -1844,12 +1878,12 @@ feedback de professor ou de cliente seria fabricar evidência.
 
       Lente | O que entregou | Onde se vê
 
-       Projeto | Problema real recortado, pesquisa com o cliente, MVP funcionando e registro semanal | Página inicial e sistema
-       Machine learning | Gerador sintético, modelos treinados e a tela de analytics com método declarado | Sistema → Analytics
-       Direito digital | Base legal do tratamento, Privacy by Design apontando o código, direitos dos titulares | docs/privacidade.md
+       Projeto | Um problema real, bem delimitado. Pesquisa com o cliente, o sistema (MVP) funcionando e o registro semanal. | Página inicial e sistema
+       Machine learning | Um gerador de dados de teste, os modelos treinados e a tela de analytics, que explica o método usado. | Sistema → Analytics
+       Direito digital | A base legal para tratar os dados. O Privacy by Design, apontando onde está no código. Os direitos dos titulares, as pessoas donas dos dados. | docs/privacidade.md
 
-       - As três lentes atravessam o mesmo produto, não são três trabalhos costurados.
-       - A lente de ML não decide pagamento: a regra da portaria é determinística e continua sendo.
+       - As três lentes olham para o mesmo produto. Não são três trabalhos costurados um no outro.
+       - A lente de machine learning (ML) não decide pagamento. A regra da portaria é determinística, dá sempre o mesmo resultado para os mesmos números. E continua sendo assim.
 
 ============================================================================================
 4.  O SISTEMA: AS OITO TELAS DO MVP
@@ -2339,8 +2373,7 @@ histórico de quem mudou o quê e quando, que é exatamente o que o projeto defe
   ~~~~~~~~~~~~~~~~~~~~~~~~~~
   - [em andamento] Pitch: problema, objetivos, análises, ideação, solução e cronograma
     (Gabriel Tenório de Lima Teixeira) -> /pitch
-  - [em andamento] Fala distribuída entre os 6 integrantes (João Pedro Mamede) ->
-    /#doc-ko-roteiro-pitch
+  - [em andamento] Fala distribuída entre os 6 integrantes (João Pedro Mamede) -> /pitch
   - [feito] Objetivo geral e objetivos específicos (Gabriel Tenório de Lima Teixeira) ->
     /#doc-ko-objetivos
   - [feito] Matriz CSD (Matheus Lustosa) -> /#doc-ko-csd
@@ -2817,6 +2850,7 @@ Os porquês completos estão em `docs/decisoes.md`. Os títulos, aqui:
   - ADR-037 · O deck ganhou movimento, e cada animação conta uma parte da história
   - ADR-038 · A capa e o fechamento ganharam uma xilogravura, no traço de J. Borges
   - ADR-039 · O briefing oficial do Kick-off chegou, e o deck dobrou de tamanho
+  - ADR-040 · O texto do site passou a ser escrito para quem lê na hora
 
 ============================================================================================
 13.  COMO RODAR E COMO CONFERIR

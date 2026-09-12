@@ -24,19 +24,19 @@ export const registro = {
     selo: 'validado',
     validadoPor: 'fernando',
     conteudo:
-      'Entender o problema a fundo: quem sofre com ele, como ele é hoje e o que já existe no mercado.',
+      'Entender o problema a fundo: quem sofre com ele, como ele funciona hoje e o que já existe no mercado.',
   },
 
   avancos: {
     selo: 'validado',
     validadoPor: 'fernando',
     conteudo: [
-      'Pesquisa estruturada em três frentes: processo atual, entes públicos comparáveis e ferramentas de gestão de metas.',
-      'Três personas construídas a partir dos papéis descritos no case.',
-      'Mapa de empatia da analista da CAM, que é quem opera a planilha hoje.',
-      'Benchmarking com entes públicos e duas ferramentas de OKR, separando o que serve do que não serve para órgão público.',
-      'SWOT do projeto e objetivos SMART escritos.',
-      'Cronograma inicial fechado nos 18 ciclos do semestre.',
+      'Fizemos a pesquisa em três frentes. Olhamos o processo atual, outros entes públicos (governos e órgãos parecidos) e ferramentas de gestão de metas.',
+      'Criamos três personas: personagens fictícios que representam quem usa o sistema. Elas seguem os papéis descritos no case.',
+      'Montamos o mapa de empatia da analista da CAM. É ela quem opera a planilha hoje.',
+      'Comparamos o que já existe (benchmarking): entes públicos e duas ferramentas de OKR. Separamos o que serve do que não serve para órgão público.',
+      'Escrevemos a SWOT do projeto: forças, fraquezas, oportunidades e ameaças. Escrevemos também os objetivos SMART.',
+      'Fechamos o cronograma inicial com os 18 ciclos do semestre.',
     ],
   },
 
@@ -45,26 +45,24 @@ export const registro = {
     validadoPor: 'fernando',
     conteudo: [
       {
-        decisao:
-          'Tratar a memória de cálculo como funcionalidade central, não como relatório extra.',
+        decisao: 'Memória de cálculo é funcionalidade central, não relatório extra.',
         porque:
-          'É o que responde "de onde veio este número?", a pergunta que a planilha não responde.',
+          'Ela mostra o caminho de cada número. É o que responde "de onde veio este número?", a pergunta que a planilha não responde.',
       },
       {
-        decisao:
-          'Indicadores e regras serão parametrizáveis pela interface, não escritos em código.',
+        decisao: 'Indicadores e regras se ajustam pela tela, não no código.',
         porque:
-          'A portaria muda; se a regra virar código, cada mudança de portaria vira release de software.',
+          'A portaria muda. Se a regra estivesse escrita no código, cada portaria nova exigiria uma nova versão do programa.',
       },
       {
-        decisao: 'Versionar regra de pontuação em vez de editá-la.',
+        decisao: 'Regra de pontuação ganha versão nova em vez de ser editada.',
         porque:
-          'Um ciclo já homologado precisa continuar reproduzindo o mesmo resultado para sempre.',
+          'Um ciclo já aprovado precisa continuar dando o mesmo resultado para sempre.',
       },
       {
-        decisao: 'Escolher a analista da CAM como persona primária.',
+        decisao: 'A analista da CAM é a persona primária.',
         porque:
-          'É quem carrega o processo hoje; se a solução não servir para ela, não serve para ninguém.',
+          'É ela quem carrega o processo hoje. Se a solução não servir para ela, não serve para ninguém.',
       },
     ],
   },
@@ -73,8 +71,8 @@ export const registro = {
     selo: 'validado',
     validadoPor: 'fernando',
     conteudo: [
-      'Ainda sem acesso ao texto da portaria vigente: os indicadores usados no MVP seguem fictícios e verossímeis até lá.',
-      'Contato com a CAM ainda não confirmado para a entrevista de validação.',
+      'Ainda não temos o texto da portaria em vigor. Até lá, os indicadores do MVP seguem inventados, mas parecidos com os reais.',
+      'Ainda não confirmamos o contato com a CAM para a entrevista de validação.',
     ],
   },
 
@@ -85,7 +83,7 @@ export const registro = {
       {
         origem: 'equipe',
         texto:
-          'O benchmarking mostrou que ferramenta de OKR resolve acompanhamento, não cálculo normativo com efeito financeiro. Isso reforça construir em vez de adotar.',
+          'O benchmarking mostrou que ferramenta de OKR serve para acompanhar metas. Ela não faz a conta definida na portaria, a que mexe com o pagamento das pessoas. Isso reforça a escolha: construir em vez de adotar uma ferramenta pronta.',
       },
     ],
   },
@@ -94,9 +92,9 @@ export const registro = {
     selo: 'validado',
     validadoPor: 'fernando',
     conteudo: [
-      'Rodar Brainwriting, Brainstorming e Crazy 8’s com os seis integrantes.',
-      'Levantar de 6 a 8 alternativas de solução e classificá-las por impacto, esforço e aderência.',
-      'Escolher a ideia a desenvolver e registrar a justificativa.',
+      'Rodar as dinâmicas de Brainwriting, Brainstorming e Crazy 8’s com os seis integrantes.',
+      'Levantar de 6 a 8 alternativas de solução. Classificar cada uma por impacto, esforço e aderência.',
+      'Escolher a ideia que vamos desenvolver e registrar o porquê.',
     ],
   },
 
@@ -106,27 +104,27 @@ export const registro = {
     conteudo: [
       {
         integrante: 'matheus',
-        contribuicao: 'Conduziu a pesquisa, as personas e o mapa de empatia.',
+        contribuicao: 'Conduziu pesquisa, personas e mapa de empatia.',
       },
       {
         integrante: 'gabriel',
-        contribuicao: 'Escreveu os objetivos SMART e consolidou a SWOT.',
+        contribuicao: 'Escreveu os objetivos SMART e montou a SWOT.',
       },
       {
         integrante: 'fernando',
-        contribuicao: 'Fez o benchmarking e o recorte de LGPD do problema.',
+        contribuicao: 'Fez o benchmarking e a análise de LGPD do problema.',
       },
       {
         integrante: 'joao-henrique',
-        contribuicao: 'Modelou o processo atual como fluxo, do lançamento à homologação.',
+        contribuicao: 'Desenhou o processo atual como um fluxo, do lançamento à aprovação.',
       },
       {
         integrante: 'joao-pedro',
-        contribuicao: 'Traduziu as personas em necessidades de interface.',
+        contribuicao: 'Traduziu as personas em necessidades de tela.',
       },
       {
         integrante: 'rafael',
-        contribuicao: 'Mapeou quais perguntas do problema são respondíveis por modelo.',
+        contribuicao: 'Mapeou quais perguntas do problema um modelo de aprendizado de máquina consegue responder.',
       },
     ],
   },
@@ -154,7 +152,7 @@ export const documentos = [
   {
     id: 'processo-hoje',
     titulo: 'O processo hoje',
-    resumo: 'como a gratificação é calculada antes do prumo existir.',
+    resumo: 'como a gratificação é calculada hoje, antes do prumo existir.',
     Conteudo: () => (
       <>
         <Tabela
@@ -163,32 +161,32 @@ export const documentos = [
             [
               'Coleta',
               'Áreas técnicas',
-              'Cada área envia seus números por planilha ou e-mail',
-              'Formato livre, sem validação na origem',
+              'Cada área manda seus números por planilha ou e-mail',
+              'Cada uma manda do seu jeito, e ninguém confere na origem',
             ],
             [
               'Consolidação',
               'CAM',
-              'Cópia manual para uma planilha mestre',
-              'Erro de digitação e de fórmula passa despercebido',
+              'Cópia feita à mão para uma planilha principal',
+              'Erro de digitação ou de fórmula passa sem ninguém ver',
             ],
             [
               'Cálculo',
               'CAM',
-              'Fórmulas encadeadas na própria planilha',
-              'Regra da portaria fica implícita na célula',
+              'Fórmulas ligadas umas às outras, dentro da própria planilha',
+              'A regra da portaria fica escondida dentro das células',
             ],
             [
               'Conferência',
               'CAM',
-              'Revisão por leitura, sem trilha',
-              'Não há como refazer o caminho de um número',
+              'Alguém lê e revisa, sem histórico do que conferiu',
+              'Não dá para refazer o caminho de um número',
             ],
             [
               'Divulgação',
               'CAM',
-              'Resultado enviado ao gestor avaliado',
-              'Contestação vira troca de e-mails',
+              'O resultado é enviado ao gestor avaliado',
+              'Quem discorda entra numa troca de e-mails',
             ],
           ]}
         />
@@ -203,12 +201,12 @@ export const documentos = [
       <>
         <Secao
           titulo="Personas"
-          descricao="Personagens fictícios construídos a partir dos papéis descritos no case. Nenhum dado real de pessoa foi usado."
+          descricao="Personagens inventados a partir dos papéis descritos no case. Nenhum dado real de pessoa foi usado."
         >
           <Grade colunas={3}>
             <Cartao titulo="Analista da CAM" etiqueta="Primária">
               <p>
-                Opera a planilha mestre há três ciclos. Conhece as regras de cor e é procurada
+                Opera a planilha principal há três ciclos. Sabe as regras de cor. É procurada
                 sempre que alguém contesta um resultado.
               </p>
               <p>
@@ -220,8 +218,8 @@ export const documentos = [
             </Cartao>
             <Cartao titulo="Gestor de área técnica" etiqueta="Secundária">
               <p>
-                Responde por informar de 4 a 8 indicadores da própria área, sempre em cima do
-                prazo, entre outras dez prioridades.
+                Informa de 4 a 8 indicadores da própria área. Faz isso sempre em cima do prazo,
+                no meio de outras dez prioridades.
               </p>
               <p>
                 <strong>Precisa:</strong> saber exatamente o que informar e até quando.
@@ -232,8 +230,8 @@ export const documentos = [
             </Cartao>
             <Cartao titulo="Coordenadora avaliada" etiqueta="Secundária">
               <p>
-                Recebe a gratificação variável e vê apenas o resultado final, sem o caminho que
-                levou até ele.
+                Recebe a gratificação variável. Vê só o resultado final, sem o caminho que levou
+                até ele.
               </p>
               <p>
                 <strong>Precisa:</strong> entender por que o valor foi aquele.
@@ -247,7 +245,7 @@ export const documentos = [
 
         <Secao
           titulo="Mapa de empatia: analista da CAM"
-          descricao="A pessoa que carrega o processo hoje."
+          descricao="A pessoa que carrega o processo hoje: o que ela diz, pensa, faz e sente, suas dores e seus ganhos."
         >
           <ListaDefinicao itens={MAPA_DE_EMPATIA.map((i) => ({ ...i }))} />
         </Secao>
@@ -257,7 +255,7 @@ export const documentos = [
   {
     id: 'benchmarking',
     titulo: 'Benchmarking',
-    resumo: 'o que as referências resolvem e o que não serve para este caso.',
+    resumo: 'o que cada referência resolve e o que não serve para o nosso caso.',
     Conteudo: () => (
       <>
         <Tabela
@@ -266,8 +264,9 @@ export const documentos = [
         />
         <div className="mt-3">
           <Nota>
-            Conclusão do benchmarking: {CONCLUSAO_BENCHMARKING} Essa combinação é o núcleo do
-            problema, e é por isso que a decisão foi construir.
+            Conclusão do benchmarking: {CONCLUSAO_BENCHMARKING} Essas três coisas juntas são o
+            centro do nosso problema. Por isso decidimos construir em vez de adotar uma
+            ferramenta pronta.
           </Nota>
         </div>
       </>
@@ -291,11 +290,11 @@ export const documentos = [
       <>
         <Lista
           itens={[
-            'Entregar, até o SR1 (03/10), um protótipo navegável com as telas de lançamento, cálculo e memória de cálculo, validado internamente pelos seis integrantes.',
-            'Ter o motor de cálculo coberto por testes automatizados nos casos-limite (faixas de fronteira, arredondamento, indicador sem lançamento e troca de versão de regra) até a Semana 6.',
-            'Demonstrar, até a Semana 9, o ciclo completo de lançamento a homologação com trilha de auditoria imutável, usando exclusivamente dados sintéticos.',
-            'Coletar, na Semana 11, feedback estruturado de pelo menos um integrante da CAM por entrevista semiestruturada e questionário, e registrar os ajustes decorrentes.',
-            'Chegar ao SR2 (05/12) com documentação técnica, análise de segurança e de privacidade publicadas junto ao MVP.',
+            'Até o SR1 (03/10), entregar um protótipo navegável com as telas de lançamento, cálculo e memória de cálculo. Os seis integrantes conferem e aprovam o protótipo entre si.',
+            'Até a Semana 6, ter o motor de cálculo (a parte que faz a conta) coberto por testes automáticos. Os testes cobrem os casos-limite, os de borda. São quatro: valor na fronteira entre faixas, arredondamento, indicador sem lançamento e troca de versão da regra.',
+            'Até a Semana 9, mostrar o ciclo inteiro, do lançamento à aprovação. Com o histórico de quem mudou o quê, sem jeito de apagar, e só com dados inventados.',
+            'Na Semana 11, colher feedback estruturado de pelo menos um integrante da CAM, por entrevista semiestruturada e questionário. Registrar os ajustes que vierem daí.',
+            'Chegar ao SR2 (05/12) com o MVP publicado junto com a documentação técnica. Publicar também a análise de segurança e a de privacidade.',
           ]}
         />
       </>

@@ -10,17 +10,17 @@ export const registro = {
     selo: 'rascunho',
     validadoPor: null,
     conteudo:
-      'Apresentar o MVP funcionando, a trajetória do semestre e as três lentes da disciplina consolidadas.',
+      'Mostrar o sistema (MVP) funcionando e contar o caminho do semestre. Apresentar as três lentes da disciplina, já juntas num só produto.',
   },
 
   avancos: {
     selo: 'rascunho',
     validadoPor: null,
     conteudo: [
-      'Demonstração do ciclo completo: lançamento, apuração, memória de cálculo, auditoria e contestação.',
-      'Pacote final submetido conforme a matriz de evidências.',
-      'Comparativo planejado × realizado publicado, com os desvios explicados.',
-      'Registro semanal completo das doze semanas, validado.',
+      'Demonstramos o ciclo completo, com as cinco etapas: lançamento, apuração, memória de cálculo, auditoria e contestação.',
+      'Entregamos o pacote final. Ele segue a matriz de evidências, a lista do que a disciplina pede.',
+      'Publicamos o comparativo entre o que planejamos e o que fizemos. Cada desvio está explicado.',
+      'O registro das doze semanas está completo e validado.',
     ],
   },
 
@@ -31,7 +31,7 @@ export const registro = {
       {
         decisao: 'A apresentação final mostra também o que não foi feito.',
         porque:
-          'Trabalho futuro declarado é sinal de que houve priorização consciente; esconder lacuna é o contrário disso.',
+          'Dizer o que fica para depois mostra que escolhemos prioridades de propósito. Esconder o que faltou seria o contrário disso.',
       },
     ],
   },
@@ -43,8 +43,8 @@ export const registro = {
     selo: 'rascunho',
     validadoPor: null,
     conteudo: [
-      'Transcrever o retorno final da banca neste bloco de feedback, com origem.',
-      'Arquivar o repositório com a documentação em versão final.',
+      'Escrever neste bloco de feedback o retorno final da banca, dizendo de quem veio.',
+      'Arquivar o repositório com a documentação na versão final.',
     ],
   },
 
@@ -52,9 +52,9 @@ export const registro = {
     selo: 'rascunho',
     validadoPor: null,
     conteudo: [
-      { integrante: 'gabriel', contribuicao: 'Narração e fechamento do pacote final.' },
-      { integrante: 'joao-pedro', contribuicao: 'Demonstração do ciclo completo.' },
-      { integrante: 'rafael', contribuicao: 'Apresentação da lente de machine learning.' },
+      { integrante: 'gabriel', contribuicao: 'Faz a narração e fecha o pacote final.' },
+      { integrante: 'joao-pedro', contribuicao: 'Demonstra o ciclo completo do sistema.' },
+      { integrante: 'rafael', contribuicao: 'Apresenta a lente de machine learning.' },
       {
         integrante: 'fernando',
         contribuicao: 'Lente de direito digital e documentação final.',
@@ -83,21 +83,21 @@ export const documentos = [
         <Tabela
           colunas={['Peça', 'Onde está']}
           linhas={[
-            ['MVP funcionando', 'Sistema: oito telas com dados sintéticos'],
+            ['MVP funcionando', 'Sistema: oito telas, com dados de teste gerados por programa'],
             ['Registro das doze semanas', 'Página inicial, seção Registro semanal'],
-            ['Documentos de pesquisa e proposta', 'Dentro de cada semana, em sanfona'],
+            ['Documentos de pesquisa e proposta', 'Dentro de cada semana, numa sanfona que abre ao clicar'],
             ['Arquitetura e modelo de dados', 'Registro, Semana 5, e docs/arquitetura.md'],
             ['Análise de segurança', 'docs/seguranca.md: STRIDE e OWASP Top 10'],
             ['Análise de privacidade', 'docs/privacidade.md: LGPD e Privacy by Design'],
-            ['Decisões de arquitetura', 'docs/decisoes.md: ADRs com o que se perdeu em troca'],
+            ['Decisões de arquitetura', 'docs/decisoes.md: cada decisão (ADR) com o que se perdeu em troca'],
             ['Uso de IA', 'Transparência no uso de IA'],
             ['Planejado × realizado', 'Registro, Semana 12'],
           ]}
         />
         <Lista
           itens={[
-            'Nenhuma peça é PDF: tudo é conteúdo do site, versionado no Git.',
-            'Nenhum dado real de pessoa ou da SESAU em nenhuma delas.',
+            'Nenhuma peça é PDF. Tudo é conteúdo do site, guardado no Git com histórico de versões.',
+            'Nenhuma peça usa dado real de pessoa ou da SESAU.',
           ]}
         />
       </>
@@ -114,25 +114,25 @@ export const documentos = [
           linhas={[
             [
               'Projeto',
-              'Problema real recortado, pesquisa com o cliente, MVP funcionando e registro semanal',
+              'Um problema real, bem delimitado. Pesquisa com o cliente, o sistema (MVP) funcionando e o registro semanal.',
               'Página inicial e sistema',
             ],
             [
               'Machine learning',
-              'Gerador sintético, modelos treinados e a tela de analytics com método declarado',
+              'Um gerador de dados de teste, os modelos treinados e a tela de analytics, que explica o método usado.',
               'Sistema → Analytics',
             ],
             [
               'Direito digital',
-              'Base legal do tratamento, Privacy by Design apontando o código, direitos dos titulares',
+              'A base legal para tratar os dados. O Privacy by Design, apontando onde está no código. Os direitos dos titulares, as pessoas donas dos dados.',
               'docs/privacidade.md',
             ],
           ]}
         />
         <Lista
           itens={[
-            'As três lentes atravessam o mesmo produto, não são três trabalhos costurados.',
-            'A lente de ML não decide pagamento: a regra da portaria é determinística e continua sendo.',
+            'As três lentes olham para o mesmo produto. Não são três trabalhos costurados um no outro.',
+            'A lente de machine learning (ML) não decide pagamento. A regra da portaria é determinística, dá sempre o mesmo resultado para os mesmos números. E continua sendo assim.',
           ]}
         />
       </>

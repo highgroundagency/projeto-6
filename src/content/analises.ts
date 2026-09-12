@@ -30,37 +30,37 @@ export const CERTEZAS: readonly ItemCSD[] = [
   {
     resumo: 'a regra está publicada',
     texto:
-      'A Portaria Conjunta nº 001/2024, no Diário Oficial do Recife nº 131 de 21/09/2024, detalha os cinco indicadores, os subindicadores e os pesos por função.',
+      'A Portaria Conjunta nº 001/2024 saiu no Diário Oficial do Recife nº 131, de 21/09/2024. Ela detalha os cinco indicadores e os itens medidos dentro de cada um. Diz também o peso de cada indicador por função.',
     fonte: 'docs/portaria-001-2024.md',
   },
   {
     resumo: 'a conta é feita à mão',
     texto:
-      'O fechamento mensal passa por planilha, e a conferência é linha a linha, feita por poucas pessoas.',
+      'Todo mês, o fechamento é feito numa planilha. A conferência é linha a linha, e poucas pessoas fazem esse trabalho.',
     fonte: 'enunciado do case e reunião de 22/08',
   },
   {
     resumo: 'o resultado vira folha',
     texto:
-      'O art. 7º manda a SEGTES pedir a implantação do resultado na folha até o 6º dia útil do segundo mês. Não é indicador de vitrine: é dinheiro no salário.',
+      'O art. 7º manda a SEGTES pedir que o resultado entre na folha de pagamento. O prazo é o 6º dia útil do segundo mês. Não é um número de vitrine: é dinheiro no salário.',
     fonte: 'Portaria, art. 7º',
   },
   {
     resumo: 'quem decide é uma comissão',
     texto:
-      'A Comissão de Avaliação de Metas reúne sete áreas da prefeitura e delibera com quórum de quatro.',
+      'A Comissão de Avaliação de Metas reúne sete áreas da prefeitura. Para decidir, precisa de quatro presentes (o quórum).',
     fonte: 'Portaria, arts. 5º e 6º',
   },
   {
     resumo: 'já tentaram, e parou',
     texto:
-      'Houve uma tentativa anterior de automatizar o cálculo, abandonada. É demanda represada, e também um aviso sobre o que não repetir.',
+      'Já tentaram automatizar o cálculo antes, e a tentativa foi abandonada. Isso mostra que a necessidade existe e está esperando. E também avisa o que não devemos repetir.',
     fonte: 'enunciado do case',
   },
   {
     resumo: 'existe prazo para recorrer',
     texto:
-      'O art. 9º dá 10 dias corridos para o gestor contestar e 5 dias úteis para a comissão responder.',
+      'O art. 9º dá ao gestor 10 dias corridos para contestar o resultado. A comissão tem 5 dias úteis para responder.',
     fonte: 'Portaria, art. 9º',
   },
 ]
@@ -70,31 +70,31 @@ export const SUPOSICOES: readonly ItemCSD[] = [
   {
     resumo: 'a nota do distrito é média simples',
     texto:
-      'A nota do distrito é a média das notas das unidades, sem ponderar por porte. A agregação real pode ser diferente, e se for vira campo da regra, não reescrita do sistema.',
+      'A nota do distrito é a média simples das notas das unidades. Unidade grande e unidade pequena pesam igual. A conta real pode ser outra. Se for, ela vira um campo na regra guardada, sem reescrever o sistema.',
     fonte: 'src/lib/calculo/motor.ts',
   },
   {
     resumo: 'a planilha real confirma o modelo',
     texto:
-      'O desenho do cálculo foi deduzido do case e da conversa com o cliente. A planilha que a Secretaria prometeu mandar é que decide se ele está certo.',
+      'Desenhamos o cálculo a partir do case e da conversa com o cliente. A Secretaria prometeu mandar a planilha real. É ela que vai dizer se acertamos.',
     fonte: 'Semana 3, nota das suposições declaradas',
   },
   {
     resumo: 'o ciclo é mensal',
     texto:
-      'Cada ciclo é um mês fechado, com envio das unidades até o dia 20. Um ciclo com outro recorte quebraria a tela de fechamento, não a conta.',
+      'Cada ciclo é um mês inteiro. As unidades enviam os números até o dia 20. Se o ciclo tivesse outro período, a tela de fechamento quebraria. A conta em si continuaria certa.',
     fonte: 'Portaria, art. 7º, lido como regra geral',
   },
   {
     resumo: 'as unidades enviam por planilha',
     texto:
-      'Hoje o número sai da unidade em planilha ou e-mail. Se houver sistema de origem, a coleta muda de forma e o lançamento manual vira exceção.',
+      'Hoje o número sai da unidade em planilha ou e-mail. Se existir um sistema de origem, a coleta muda de forma. Aí, digitar o número à mão vira exceção.',
     fonte: 'reunião de 22/08, não confirmado',
   },
   {
     resumo: 'a comissão decide fora do sistema',
     texto:
-      'O sistema registra o resultado; a deliberação da comissão continua acontecendo em reunião. Se ela quiser deliberar por dentro, entra uma tela nova.',
+      'O sistema registra o resultado. A comissão continua decidindo em reunião, fora do sistema. Se ela quiser decidir por dentro, entra uma tela nova.',
     fonte: 'leitura do art. 6º pela equipe',
   },
 ]
@@ -104,31 +104,31 @@ export const DUVIDAS: readonly ItemCSD[] = [
   {
     resumo: 'como redistribuir o peso que falta',
     texto:
-      'O art. 8º manda desconsiderar o indicador sem lançamento e redistribuir o peso proporcionalmente. Falta saber se a redistribuição é sobre os pesos do grupo ou sobre o total.',
+      'O art. 8º diz o que fazer quando um indicador fica sem número informado. Ele sai da conta, e o peso dele é dividido entre os outros, na proporção de cada um. Falta saber se essa divisão é entre os pesos do grupo ou entre o total.',
     fonte: 'a perguntar à Secretaria, entra na regra v3',
   },
   {
     resumo: 'quem publica, e onde',
     texto:
-      'A portaria diz que a comissão divulga o resultado. Não sabemos em que veículo, nem se o gestor recebe aviso individual.',
+      'A portaria diz que a comissão divulga o resultado. Não sabemos onde ela publica. Também não sabemos se cada gestor recebe um aviso.',
     fonte: 'a perguntar à Secretaria',
   },
   {
     resumo: 'como se contesta hoje',
     texto:
-      'Existe prazo, mas não sabemos se o recurso é processo em papel, e-mail ou formulário. Isso decide como a tela de contestação vai conversar com o que já existe.',
+      'O prazo para recorrer existe. Mas não sabemos como o recurso é feito hoje: em papel, por e-mail ou num formulário. A resposta define como a tela de contestação vai se encaixar no que já existe.',
     fonte: 'a perguntar à Secretaria',
   },
   {
     resumo: 'dado real, algum dia',
     texto:
-      'Hoje tudo é inventado por um gerador. Falta saber se existe caminho para o sistema receber dado de verdade, com que base legal e sob qual responsabilidade.',
+      'Hoje todos os dados são inventados por um programa gerador. Falta saber se o sistema pode um dia receber dado de verdade. E, se puder, com que base legal e quem responde por ele.',
     fonte: 'lente de Direito, docs/privacidade.md',
   },
   {
     resumo: 'a agenda da comissão cabe no semestre',
     texto:
-      'A validação com o cliente está marcada para a Semana 11. Se a agenda da comissão não abrir, a prova do sistema contra a planilha escorrega para o SR2.',
+      'A validação com o cliente está marcada para a Semana 11. Se a agenda da comissão não abrir, o teste do sistema contra a planilha atrasa para o SR2.',
     fonte: 'risco declarado na SWOT da Semana 2',
   },
 ]
@@ -162,42 +162,47 @@ export const BENCHMARKING: readonly Referencia[] = [
   {
     referencia: 'Painéis de indicadores de entes públicos',
     curto: 'painéis públicos',
-    serve: 'Transparência ativa, indicador com ficha técnica e série histórica',
+    serve:
+      'Publicam os dados por conta própria (transparência ativa). Cada indicador tem ficha técnica e histórico ao longo do tempo.',
     naoServe:
-      'São vitrines de divulgação: não calculam efeito financeiro nem guardam trilha de decisão',
+      'São vitrines de divulgação. Não calculam quanto dinheiro sai disso, nem guardam o histórico de quem decidiu o quê.',
   },
   {
     referencia: 'Sistemas de monitoramento de metas do SUS',
     curto: 'metas do SUS',
     serve:
-      'Indicador com fonte, periodicidade e meta pactuada, vocabulário que a SESAU já usa',
-    naoServe: 'Regra de cálculo fixa no sistema; nossa portaria muda e precisa ser ajustável',
+      'Cada indicador tem fonte, frequência de medição e meta combinada. É o vocabulário que a SESAU já usa.',
+    naoServe:
+      'A regra de cálculo é fixa dentro do sistema. A nossa portaria muda, então a regra precisa ser ajustável.',
   },
   {
     referencia: 'Ferramenta de OKR (acompanhamento de objetivos)',
     curto: 'ferramentas de OKR',
-    serve: 'Cadência de check-in, responsável por resultado e visualização de progresso',
-    naoServe: 'Não guarda versão de regra normativa nem produz conta conferível',
+    serve:
+      'Reuniões de acompanhamento em ritmo fixo, um responsável por cada resultado e o progresso visível.',
+    naoServe:
+      'Não guarda a regra da portaria com número de versão. Também não mostra a conta de um jeito que dê para conferir.',
   },
   {
     referencia: 'Ferramenta de OKR (gestão por resultados corporativa)',
     curto: 'gestão por resultados',
-    serve: 'Peso por objetivo e agregação de score, modelo matemático parecido com o nosso',
+    serve:
+      'Cada objetivo tem um peso, e as notas se juntam numa nota final. A conta é parecida com a nossa.',
     naoServe:
-      'Score é gerencial, não é ato administrativo com efeito em folha; e a licença por usuário não cabe no órgão',
+      'A nota ali é só para gestão. Não é um ato administrativo que mexe na folha de pagamento. E o modelo de licença por usuário não cabe no órgão.',
   },
   {
     referencia: 'Planilha atual da comissão',
     curto: 'a planilha de hoje',
-    serve: 'Flexibilidade total e custo zero de adoção',
+    serve: 'Faz o que quiserem e não custa nada para começar a usar.',
     naoServe:
-      'Sem trilha, sem versão, sem controle de acesso e com o conhecimento preso em quem a escreveu',
+      'Não guarda quem mudou o quê. Não tem versão nem controle de quem pode acessar. E só quem escreveu a planilha entende como ela funciona.',
   },
 ]
 
 /** A frase que fecha o benchmarking, e que justifica construir em vez de comprar. */
 export const CONCLUSAO_BENCHMARKING =
-  'Nenhuma ferramenta pronta junta as três coisas: regra com versão, conta aberta e registro de quem mudou.'
+  'Nenhuma ferramenta pronta junta as três coisas: regra com versão, conta aberta para conferir e registro de quem mudou.'
 
 /** A mesma conclusão em oito palavras, para caber no slide. */
 export const CONCLUSAO_CURTA = 'nenhuma junta regra com versão, conta aberta e registro'
@@ -214,9 +219,9 @@ export const SWOT: readonly Quadrante[] = [
     titulo: 'Forças',
     curto: 'cliente real, regra escrita',
     itens: [
-      'Cliente real, com processo escrito em portaria',
-      'Equipe de seis com frentes bem separadas',
-      'Problema com regra explícita: dá para modelar e testar',
+      'Temos um cliente real, e o processo dele está escrito numa portaria',
+      'Somos seis, cada um com uma frente bem definida',
+      'O problema tem regra escrita: dá para desenhar no sistema e testar',
     ],
   },
   {
@@ -225,25 +230,25 @@ export const SWOT: readonly Quadrante[] = [
     itens: [
       'Ninguém da equipe conhece o processo por dentro',
       'A portaria só chegou na quinta semana',
-      'Um semestre para um domínio com regra complexa',
+      'Só um semestre para um assunto com regra complicada',
     ],
   },
   {
     titulo: 'Oportunidades',
     curto: 'já tentaram, e parou',
     itens: [
-      'Uma tentativa anterior foi abandonada: há demanda represada',
-      'A conta aberta é ganho direto para quem é avaliado',
-      'Os mesmos dados alimentam a lente de aprendizado de máquina',
+      'Já tentaram antes e pararam: a necessidade existe e está esperando',
+      'Ver a conta aberta é ganho direto para quem é avaliado',
+      'Os mesmos dados servem para a parte de aprendizado de máquina',
     ],
   },
   {
     titulo: 'Ameaças',
     curto: 'a portaria pode mudar',
     itens: [
-      'A agenda da comissão pode inviabilizar a validação',
-      'Mudança de portaria durante o semestre',
-      'O escopo crescer para a folha de pagamento, que está fora',
+      'A agenda da comissão pode impedir a validação',
+      'A portaria pode mudar no meio do semestre',
+      'O projeto crescer até a folha de pagamento, que não faz parte dele',
     ],
   },
 ]
@@ -261,22 +266,22 @@ export const TECNICAS_DE_IDEACAO: readonly TecnicaDeIdeacao[] = [
   {
     nome: 'Brainwriting',
     minutos: 20,
-    como: 'Cada integrante escreve três ideias em silêncio, sem discutir, e passa a folha adiante. Quem recebe amplia a ideia do colega em vez de criticá-la.',
-    produto: '18 ideias escritas, sem viés de quem fala primeiro.',
+    como: 'Cada integrante escreve três ideias em silêncio, sem discutir. Depois passa a folha adiante. Quem recebe amplia a ideia do colega, em vez de criticar.',
+    produto: '18 ideias escritas, sem o peso de quem fala primeiro.',
     produtoCurto: '18 ideias no papel',
   },
   {
     nome: 'Brainstorming',
     minutos: 25,
-    como: 'Discussão aberta a partir das folhas do brainwriting, agrupando ideias parecidas e nomeando os grupos.',
-    produto: 'De 6 a 8 alternativas distintas, já agrupadas.',
+    como: 'Conversa aberta sobre as folhas do brainwriting. Juntamos as ideias parecidas e demos nome a cada grupo.',
+    produto: 'De 6 a 8 alternativas diferentes, já agrupadas.',
     produtoCurto: 'oito alternativas',
   },
   {
     nome: "Crazy 8's",
     minutos: 8,
-    como: 'Oito esboços de tela em oito minutos, individualmente, para as duas alternativas mais votadas.',
-    produto: 'Primeiras telas em papel, insumo do protótipo.',
+    como: 'Cada um desenha oito rascunhos de tela em oito minutos. Fizemos isso para as duas alternativas mais votadas.',
+    produto: 'As primeiras telas em papel, que serviram de base para o protótipo.',
     produtoCurto: 'telas em papel',
   },
 ]
@@ -369,25 +374,25 @@ export const RAZOES_DA_ESCOLHA: readonly RazaoDaEscolha[] = [
     titulo: 'Impacto',
     curto: 'ataca a causa, não o sintoma',
     texto:
-      'Ataca a causa do problema: a regra da portaria hoje só existe dentro de fórmulas de planilha.',
+      'Ataca a causa do problema. Hoje a regra da portaria só existe dentro de fórmulas de planilha.',
   },
   {
     titulo: 'Aderência',
     curto: 'mudar a regra não é mudar o programa',
     texto:
-      'Ajustar indicadores e regras pela interface faz com que mudança de portaria não vire mudança de software.',
+      'Indicadores e regras se ajustam pela tela. Assim, quando a portaria muda, o programa não precisa mudar.',
   },
   {
     titulo: 'Esforço',
     curto: 'alto, mas cabe em fatias',
     texto:
-      'Alto, mas fatiável: lançamento, cálculo e conta aberta cabem até o SR1; auditoria e gestão vêm nas sprints.',
+      'É alto, mas dá para dividir em fatias. Lançamento, cálculo e conta aberta cabem até o SR1. Auditoria e gestão vêm depois, nas sprints.',
   },
   {
     titulo: 'Sinergia',
     curto: 'o modelo entrou junto, não separado',
     texto:
-      'O modelo que prevê risco não virou produto separado: entrou como funcionalidade da mesma base.',
+      'O modelo que prevê risco não virou um produto separado. Entrou como uma funcionalidade a mais, sobre a mesma base.',
   },
 ]
 
@@ -395,7 +400,7 @@ export const RAZOES_DA_ESCOLHA: readonly RazaoDaEscolha[] = [
 export const PONTO_DE_COMPARACAO = 'a planilha melhorada fica como ponto de comparação'
 
 export const NOTA_DA_ESCOLHA =
-  'A alternativa de melhorar a planilha continua na matriz de propósito: ela é o ponto de comparação contra o qual o ganho do sistema é medido na validação da Semana 11.'
+  'A ideia de melhorar a planilha continua na matriz de propósito. Ela é o ponto de comparação. Na validação da Semana 11, o ganho do sistema será medido contra ela.'
 
 /** O mapa de empatia da analista, a pessoa que carrega o processo hoje. */
 export const MAPA_DE_EMPATIA = [
@@ -406,25 +411,25 @@ export const MAPA_DE_EMPATIA = [
   {
     termo: 'Pensa',
     definicao:
-      'Que a responsabilidade por um erro vai recair sobre ela, mesmo quando o dado veio errado da origem.',
+      'Que a culpa de qualquer erro vai cair nela. Mesmo quando o dado já chegou errado de quem enviou.',
   },
   {
     termo: 'Faz',
     definicao:
-      'Confere linha a linha, mantém cópias de segurança por versão e guarda e-mails como comprovação.',
+      'Confere linha a linha. Guarda uma cópia de segurança de cada versão. Guarda também os e-mails, como prova.',
   },
   {
     termo: 'Sente',
-    definicao: 'Insegurança no fechamento e alívio quando o ciclo passa sem contestação.',
+    definicao: 'Insegurança na hora do fechamento. Alívio quando o ciclo passa sem contestação.',
   },
   {
     termo: 'Dores',
     definicao:
-      'Retrabalho a cada mudança de regra, ausência de trilha e dependência de estar presente para o processo andar.',
+      'Refazer tudo a cada mudança de regra. Não ter registro de quem mudou o quê. E o processo só andar quando ela está presente.',
   },
   {
     termo: 'Ganhos',
     definicao:
-      'Fechar o ciclo com o cálculo explicado sozinho e conseguir tirar férias sem travar a comissão.',
+      'Fechar o ciclo com um cálculo que se explica sozinho. E conseguir tirar férias sem travar a comissão.',
   },
 ] as const

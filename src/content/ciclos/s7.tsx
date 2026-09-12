@@ -10,17 +10,17 @@ export const registro = {
     selo: 'rascunho',
     validadoPor: null,
     conteudo:
-      'Fechar o ciclo de lançamento: área técnica informa, a CAM enxerga o funil e o estado avança com trilha.',
+      'Fechar o ciclo de lançamento. A área técnica informa os números. A CAM enxerga o funil: quanto já entrou e o que falta. E cada avanço de estado fica no histórico.',
   },
 
   avancos: {
     selo: 'rascunho',
     validadoPor: null,
     conteudo: [
-      'Tela de lançamento validando valor, unidade e janela do ciclo antes de aceitar.',
-      'Dashboard da CAM com funil por área e pendências do ciclo em andamento.',
-      'Transição de estado do ciclo gravando antes e depois na trilha de auditoria.',
-      'Correção de lançamento entrando como evento novo, sem sobrescrever o anterior.',
+      'A tela de lançamento passou a conferir o envio antes de aceitar. Ela checa o valor, a unidade e a janela do ciclo. Janela é o prazo em que o ciclo ainda recebe lançamentos.',
+      'Montamos o painel (dashboard) da Comissão de Avaliação de Metas (CAM). Ele mostra o funil por área: o que cada área já enviou e o que falta. E lista as pendências do ciclo em andamento.',
+      'Quando o ciclo muda de estado, o sistema grava o estado anterior e o novo. Isso fica no histórico de quem mudou o quê.',
+      'Corrigir um lançamento agora entra como um registro novo. O anterior continua guardado, sem ser sobrescrito.',
     ],
   },
 
@@ -34,9 +34,9 @@ export const registro = {
           'Sobrescrever apaga o rastro. Quem contesta precisa ver o valor antigo, quem corrigiu e quando.',
       },
       {
-        decisao: 'A janela de lançamento é conferida na camada de escrita, não só na tela.',
+        decisao: 'A janela de lançamento é conferida na gravação, não só na tela.',
         porque:
-          'Validação de interface é conveniência; a regra tem que valer para qualquer caminho de escrita.',
+          'A conferência na tela é só uma ajuda para quem digita. A regra do prazo precisa valer para qualquer caminho que grave dados.',
       },
     ],
   },
@@ -48,8 +48,8 @@ export const registro = {
     selo: 'rascunho',
     validadoPor: null,
     conteudo: [
-      'Ligar a apuração ao motor de cálculo na Sprint 2.',
-      'Cobrir a transição de estado com teste de caso-limite.',
+      'Na Sprint 2, ligar a apuração ao motor de cálculo, que faz a conta da nota.',
+      'Escrever testes dos casos extremos para a mudança de estado do ciclo.',
     ],
   },
 
@@ -57,9 +57,12 @@ export const registro = {
     selo: 'rascunho',
     validadoPor: null,
     conteudo: [
-      { integrante: 'joao-henrique', contribuicao: 'Camada de escrita e trilha de auditoria.' },
-      { integrante: 'joao-pedro', contribuicao: 'Telas de lançamento e dashboard da CAM.' },
-      { integrante: 'fernando', contribuicao: 'Testes da janela e da transição.' },
+      {
+        integrante: 'joao-henrique',
+        contribuicao: 'Gravação dos dados e histórico de mudanças.',
+      },
+      { integrante: 'joao-pedro', contribuicao: 'Telas de lançamento e painel da CAM.' },
+      { integrante: 'fernando', contribuicao: 'Testes do prazo e da mudança de estado.' },
     ],
   },
 
@@ -78,21 +81,25 @@ export const documentos = [
   {
     id: 'fluxo',
     titulo: 'Fluxo do ciclo',
-    resumo: 'os cinco estados, quem move cada um e o que fica na trilha.',
+    resumo: 'os cinco estados do ciclo, quem move cada um e o que fica no histórico.',
     Conteudo: () => (
       <>
         <Tabela
           colunas={['Estado', 'Quem move', 'O que acontece']}
           linhas={[
-            ['rascunho', 'CAM', 'Ciclo montado, ainda sem janela aberta'],
+            ['rascunho', 'CAM', 'O ciclo foi montado, mas o prazo de envio ainda não abriu'],
             [
               'lançamento aberto',
               'Área técnica',
-              'Valores informados com evidência, dentro do prazo',
+              'A área informa os valores, com evidência, dentro do prazo',
             ],
-            ['em validação', 'CAM', 'Conferência dos lançamentos e apuração'],
-            ['homologado', 'CAM', 'Resultado fechado; gestor consulta e pode contestar'],
-            ['publicado', 'CAM', 'Ciclo encerrado; nada mais entra'],
+            ['em validação', 'CAM', 'A CAM confere os lançamentos e apura o resultado'],
+            [
+              'homologado',
+              'CAM',
+              'Resultado aprovado e fechado. O gestor consulta e pode contestar',
+            ],
+            ['publicado', 'CAM', 'Ciclo encerrado. Nada mais entra'],
           ]}
         />
       </>

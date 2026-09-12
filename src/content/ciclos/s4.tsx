@@ -9,17 +9,17 @@ export const registro = {
     selo: 'validado',
     validadoPor: 'fernando',
     conteudo:
-      'Transformar a ideia escolhida em proposta com escopo delimitado, backlog priorizado e cronograma de execução.',
+      'Transformar a ideia escolhida em proposta. Isso pede escopo definido, lista de tarefas (backlog) por prioridade e cronograma de execução.',
   },
 
   avancos: {
     selo: 'validado',
     validadoPor: 'fernando',
     conteudo: [
-      'Proposta de solução escrita em uma página.',
-      'Escopo dentro e fora definido, com o que fica explicitamente de fora.',
-      'Backlog inicial em épicos e histórias de usuário, classificado por MoSCoW.',
-      'Papéis confirmados e cronograma de execução amarrado aos marcos do semestre.',
+      'Escrevemos a proposta de solução em uma página.',
+      'Definimos o escopo. Listamos o que entra no semestre e, por escrito, o que fica de fora.',
+      'Montamos o backlog inicial: a lista de tarefas, em grupos (épicos) e histórias de usuário. Cada história recebeu uma prioridade pelo método MoSCoW: obrigatória (Must), desejável (Should) ou possível (Could).',
+      'Confirmamos o papel de cada integrante. Amarramos o cronograma de execução aos marcos do semestre.',
     ],
   },
 
@@ -30,22 +30,22 @@ export const registro = {
       {
         decisao: 'Folha de pagamento fica fora do escopo.',
         porque:
-          'O sistema calcula e publica o resultado; integrar com folha exige acesso e homologação que o semestre não comporta.',
+          'O sistema calcula o valor e publica o resultado. Ligar isso à folha de pagamento exige acesso e aprovação que o semestre não comporta.',
       },
       {
         decisao:
-          'Quatro perfis de acesso desde o protótipo, com os papéis que o cliente nomeou na reunião de 22/08: coordenação da SEAB, administrador, gerente distrital e gerente de unidade.',
+          'Quatro perfis de acesso desde o protótipo, com os papéis que o cliente nomeou na reunião de 22/08. São eles: coordenação da SEAB, administrador, gerente distrital e gerente de unidade.',
         porque:
-          'O controle de acesso é parte do problema de confiabilidade, não um enfeite para depois.',
+          'Controlar o acesso faz parte do problema de confiabilidade. Não é enfeite para depois.',
       },
       {
-        decisao: 'Auditoria é append-only: nada se apaga.',
+        decisao: 'O histórico de mudanças só cresce: nada se apaga.',
         porque:
-          'Trilha que pode ser editada não serve de prova, e é isso que a planilha já não oferece.',
+          'Um histórico que pode ser editado não serve de prova. Prova é justamente o que a planilha de hoje não oferece.',
       },
       {
-        decisao: 'Priorização por MoSCoW com o corte do SR1 nos "Must".',
-        porque: 'Deixa explícito o que é entrega mínima e o que é desejável.',
+        decisao: 'Prioridade por MoSCoW: o SR1 entrega os "Must".',
+        porque: 'Assim fica claro o que é a entrega mínima e o que é desejável.',
       },
     ],
   },
@@ -63,7 +63,7 @@ export const registro = {
       {
         origem: 'equipe',
         texto:
-          'O backlog nasceu grande demais para um semestre. O corte foi feito na revisão: 25 histórias, com os "Must" cabendo até o SR1.',
+          'A lista de tarefas nasceu grande demais para um semestre. Cortamos na revisão: ficaram 25 histórias, com os "Must" cabendo até o SR1.',
       },
     ],
   },
@@ -72,8 +72,8 @@ export const registro = {
     selo: 'validado',
     validadoPor: 'fernando',
     conteudo: [
-      'Preparar o pitch de 5 minutos do Kick-off, com fala dividida entre os seis.',
-      'Fechar o diagrama de arquitetura e o fluxo de dados para a Semana 5.',
+      'Preparar o pitch de 5 minutos do Kick-off, com a fala dividida entre os seis.',
+      'Fechar o desenho da arquitetura e o fluxo de dados para a Semana 5.',
     ],
   },
 
@@ -83,27 +83,27 @@ export const registro = {
     conteudo: [
       {
         integrante: 'gabriel',
-        contribuicao: 'Escreveu a proposta e o backlog priorizado.',
+        contribuicao: 'Escreveu a proposta e o backlog, já com as prioridades.',
       },
       {
         integrante: 'joao-henrique',
-        contribuicao: 'Delimitou o escopo técnico e as fronteiras de integração.',
+        contribuicao: 'Definiu o escopo técnico e os limites de integração.',
       },
       {
         integrante: 'joao-pedro',
-        contribuicao: 'Converteu as histórias em fluxo de telas.',
+        contribuicao: 'Transformou as histórias em fluxo de telas.',
       },
       {
         integrante: 'matheus',
-        contribuicao: 'Amarrou cada história a uma dor levantada na pesquisa.',
+        contribuicao: 'Ligou cada história a uma dor da pesquisa.',
       },
       {
         integrante: 'rafael',
-        contribuicao: 'Especificou as histórias da frente de dados e ML.',
+        contribuicao: 'Detalhou as histórias de dados e ML (aprendizado de máquina).',
       },
       {
         integrante: 'fernando',
-        contribuicao: 'Revisou o escopo sob a ótica de segurança e privacidade.',
+        contribuicao: 'Revisou o escopo pelo lado da segurança e da privacidade.',
       },
     ],
   },
@@ -122,22 +122,23 @@ export const documentos = [
   {
     id: 'proposta',
     titulo: 'Proposta em uma página',
-    resumo: 'o produto, o recorte e a aposta central.',
+    resumo: 'o que é o produto, até onde ele vai e a aposta central.',
     Conteudo: () => (
       <>
         <Lista
           itens={[
-            'O quê: um sistema web que substitui a planilha de consolidação da gratificação por desempenho.',
-            'Para quem: os quatro atores que o cliente nomeou, coordenação da SEAB, administrador da plataforma, gerentes distritais e gerentes de unidade.',
-            'Como: subindicadores preenchidos pelas unidades; indicador calculado; régua (meta e peso) por tipo de unidade, dentro da regra versionada; cálculo por função pura; memória de cálculo exibida junto de cada resultado; trilha de auditoria imutável.',
-            'Por que agora: o processo depende de poucas pessoas e não tem rastreabilidade, um erro só aparece depois do pagamento.',
-            'Como saberemos que deu certo: qualquer número do resultado responde “de onde veio?” em um clique, e o mesmo ciclo recalculado devolve o mesmo valor.',
+            'O quê: um sistema na web. Ele substitui a planilha que hoje junta os dados da gratificação por desempenho.',
+            'Para quem: os quatro papéis que o cliente nomeou. Coordenação da SEAB, administrador da plataforma, gerentes distritais e gerentes de unidade.',
+            'Como: cada unidade informa os itens medidos. O sistema calcula o indicador a partir deles. A meta e o peso variam por tipo de unidade. Eles ficam guardados na regra, que tem número de versão. O cálculo é uma conta que não depende de nada de fora. A memória de cálculo, o passo a passo da conta, aparece junto de cada resultado. O histórico de quem mudou o quê não pode ser alterado.',
+            'Por que agora: o processo depende de poucas pessoas. Ninguém consegue seguir o caminho de cada número. Um erro só aparece depois do pagamento.',
+            'Como saberemos que deu certo: qualquer número do resultado responde “de onde veio?” num clique. E o mesmo ciclo, recalculado, devolve o mesmo valor.',
           ]}
         />
         <div className="mt-3">
           <Nota>
-            Atualizado depois da reunião com o cliente de 22/08 (ver o documento da Semana 3):
-            o domínio ganhou subindicadores, tipos de unidade e a rede por distrito.
+            Atualizamos este texto depois da reunião com o cliente de 22/08 (ver o documento da
+            Semana 3). O desenho do sistema ganhou os itens medidos dentro de cada indicador.
+            Ganhou também os tipos de unidade e a rede por distrito.
           </Nota>
         </div>
       </>
@@ -154,25 +155,25 @@ export const documentos = [
             {
               titulo: 'Dentro',
               itens: [
-                'Cadastro da rede (distritos, tipos, unidades) e do catálogo de indicadores com seus subindicadores',
-                'Régua por tipo de unidade (meta e peso na regra versionada)',
-                'Lançamento por subindicador pelas unidades, com evidência e janela de revisão de 5 dias',
-                'Motor de cálculo com memória composta, subindicador por subindicador',
-                'Avaliação por unidade e a distrital (média das unidades do distrito)',
-                'Estados do ciclo, da abertura à publicação, com trilha de auditoria',
-                'Consulta do próprio resultado pelo gerente e abertura de contestação',
-                'Painel agregado por distrito e exportação em CSV',
-                'Analytics com os resultados dos modelos e o método declarado',
+                'Cadastro da rede: distritos, tipos de unidade e unidades. Cadastro da lista de indicadores, com os itens medidos de cada um',
+                'Meta e peso por tipo de unidade, guardados na regra com número de versão',
+                'Cada unidade informa seus itens medidos e anexa a evidência. Há uma janela de revisão de 5 dias',
+                'O cálculo do resultado, com a memória de cálculo montada item medido por item medido',
+                'Avaliação por unidade e avaliação do distrito (a média das unidades do distrito)',
+                'As etapas do ciclo, da abertura à publicação, com histórico de quem mudou o quê',
+                'O gerente consulta o próprio resultado e pode abrir contestação',
+                'Painel com os números reunidos por distrito e exportação em CSV',
+                'Análises (analytics) com os resultados dos modelos e o método usado, dito por escrito',
               ],
             },
             {
               titulo: 'Fora',
               itens: [
                 'Integração com folha de pagamento',
-                'Autenticação corporativa da prefeitura',
-                'Migração de dados históricos reais',
-                'Aplicativo mobile nativo',
-                'Cálculo de outras verbas que não a gratificação por desempenho',
+                'Login com a conta corporativa da prefeitura',
+                'Trazer os dados históricos reais para o sistema',
+                'Aplicativo próprio para celular (nativo)',
+                'Cálculo de qualquer outra verba além da gratificação por desempenho',
               ],
             },
           ]}
@@ -183,7 +184,7 @@ export const documentos = [
   {
     id: 'backlog',
     titulo: 'Backlog inicial',
-    resumo: 'os itens priorizados com estimativa e critério de pronto.',
+    resumo: 'os itens por prioridade, com estimativa e o que conta como pronto.',
     Conteudo: () => (
       <>
         <Tabela
@@ -191,20 +192,24 @@ export const documentos = [
           linhas={[
             [
               'Ciclo',
-              'Como SEAB, quero abrir um ciclo de avaliação para que as unidades possam lançar dados',
+              'Como SEAB, quero abrir um ciclo de avaliação para que as unidades possam informar seus dados',
               'M',
             ],
             [
               'Ciclo',
-              'Como SEAB, quero definir a janela de lançamento, com a janela de revisão nos dias finais, para controlar o prazo',
+              'Como SEAB, quero definir a janela de lançamento, com a revisão nos dias finais, para controlar o prazo',
               'M',
             ],
             [
               'Ciclo',
-              'Como SEAB, quero avançar o estado do ciclo para refletir a etapa real do processo',
+              'Como SEAB, quero avançar a etapa do ciclo para que ela reflita o ponto real do processo',
               'M',
             ],
-            ['Ciclo', 'Como SEAB, quero homologar o ciclo para congelar os resultados', 'M'],
+            [
+              'Ciclo',
+              'Como SEAB, quero aprovar o ciclo para que os resultados não mudem mais',
+              'M',
+            ],
             [
               'Ciclo',
               'Como SEAB, quero publicar o ciclo para que os gerentes vejam seus resultados',
@@ -212,12 +217,12 @@ export const documentos = [
             ],
             [
               'Régua',
-              'Como SEAB, quero cadastrar indicadores compostos por subindicadores (índice ou razão) para refletir o processo real',
+              'Como SEAB, quero cadastrar indicadores formados por itens medidos (um índice ou uma razão) para refletir o processo real',
               'M',
             ],
             [
               'Régua',
-              'Como SEAB, quero definir quais indicadores valem para cada tipo de unidade, com meta e peso próprios, para respeitar o recorte de cada tipo',
+              'Como SEAB, quero definir quais indicadores valem para cada tipo de unidade, com meta e peso próprios. Assim respeito a realidade de cada tipo',
               'M',
             ],
             [
@@ -227,17 +232,17 @@ export const documentos = [
             ],
             [
               'Régua',
-              'Como SEAB, quero ver o diff entre versões da regra para saber o que mudou',
+              'Como SEAB, quero comparar duas versões da regra para saber o que mudou',
               'S',
             ],
             [
               'Régua',
-              'Como SEAB, quero definir a vigência da regra para que cada ciclo use a versão certa',
+              'Como SEAB, quero definir de quando até quando a regra vale, para que cada ciclo use a versão certa',
               'M',
             ],
             [
               'Lançamento',
-              'Como gerente de unidade, quero lançar cada subindicador da minha unidade (valor, ou numerador e denominador) para cumprir minha parte',
+              'Como gerente de unidade, quero informar cada item medido da minha unidade (um valor, ou numerador e denominador). Assim cumpro minha parte',
               'M',
             ],
             [
@@ -247,12 +252,12 @@ export const documentos = [
             ],
             [
               'Lançamento',
-              'Como gerente de unidade, quero corrigir um lançamento na janela de revisão, com o valor antigo guardado, para acertar engano',
+              'Como gerente de unidade, quero corrigir um dado na janela de revisão, com o valor antigo guardado. Assim conserto um engano',
               'M',
             ],
             [
               'Lançamento',
-              'Como gerente distrital, quero revisar os lançamentos das minhas unidades na janela de revisão para responder pelo distrito',
+              'Como gerente distrital, quero revisar os dados informados pelas minhas unidades na janela de revisão para responder pelo distrito',
               'S',
             ],
             [
@@ -262,17 +267,17 @@ export const documentos = [
             ],
             [
               'Resultado',
-              'Como gerente de unidade, quero ver o score e a faixa da minha unidade para saber meu resultado',
+              'Como gerente de unidade, quero ver a nota e a faixa da minha unidade para saber meu resultado',
               'M',
             ],
             [
               'Resultado',
-              'Como gerente de unidade, quero abrir a memória de cálculo, com a composição de cada subindicador, para entender de onde veio o número',
+              'Como gerente de unidade, quero abrir a memória de cálculo, com a conta de cada item medido. Assim entendo de onde veio o número',
               'M',
             ],
             [
               'Resultado',
-              'Como gerente distrital, quero ver minha nota como média das unidades do distrito, com a composição aberta, para saber meu resultado',
+              'Como gerente distrital, quero ver minha nota como a média das unidades do distrito, com a conta aberta. Assim sei meu resultado',
               'M',
             ],
             [
@@ -287,7 +292,7 @@ export const documentos = [
             ],
             [
               'Resultado',
-              'Como SEAB, quero responder a contestação para encerrar o questionamento com registro',
+              'Como SEAB, quero responder à contestação para encerrar o questionamento, com tudo registrado',
               'S',
             ],
             [
@@ -297,12 +302,12 @@ export const documentos = [
             ],
             [
               'Governança',
-              'Como administrador, quero que nada possa ser apagado para que a trilha sirva de prova',
+              'Como administrador, quero que nada possa ser apagado para que o histórico sirva de prova',
               'M',
             ],
             [
               'Governança',
-              'Como SEAB, quero ver agregados por distrito para enxergar o funil do ciclo',
+              'Como SEAB, quero ver os totais por distrito para enxergar o andamento do ciclo',
               'S',
             ],
             [
@@ -312,7 +317,7 @@ export const documentos = [
             ],
             [
               'Governança',
-              'Como SEAB, quero ver o risco de não-atingimento no próximo ciclo para agir antes',
+              'Como SEAB, quero ver o risco de a meta não ser atingida no próximo ciclo para agir antes',
               'C',
             ],
           ]}

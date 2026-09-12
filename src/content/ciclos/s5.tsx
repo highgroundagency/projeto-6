@@ -21,17 +21,17 @@ export const registro = {
     selo: 'rascunho',
     validadoPor: null,
     conteudo:
-      'Fechar a arquitetura do MVP e ter o motor de cálculo rodando de ponta a ponta sobre a base sintética.',
+      'Fechar o desenho da arquitetura do MVP. Ter o motor de cálculo (a parte que faz a conta da nota) rodando de ponta a ponta. Ele roda sobre a base de teste, feita só de dados inventados.',
   },
 
   avancos: {
     selo: 'rascunho',
     validadoPor: null,
     conteudo: [
-      'Modelo de dados fechado no domínio da reunião com o cliente: distritos, tipos de unidade, unidades, indicadores compostos por subindicadores, regras versionadas com a régua por tipo, ciclos, lançamentos e trilha de auditoria.',
-      'Motor de cálculo implementado como função pura, com a memória de cálculo saindo do mesmo cálculo que a interface exibe.',
-      'Diagramas C4 de contexto e de contêiner publicados em docs/arquitetura.md.',
-      'Base sintética com semente fixa gerando os 3 distritos, as 12 unidades de 4 tipos e os 7 indicadores com seus 11 subindicadores.',
+      'Fechamos o desenho das tabelas do sistema, seguindo o que o cliente contou na reunião. Ele guarda os distritos, as unidades de saúde e o tipo de cada uma. Guarda os indicadores e os itens medidos que formam cada um. Guarda a regra da nota, com número de versão e metas e pesos por tipo de unidade. Guarda os ciclos, que são os meses avaliados, e os números informados. Por fim, guarda o histórico de quem mudou o quê.',
+      'Escrevemos o motor de cálculo, a parte do sistema que faz a conta da nota. É uma conta que não depende de nada de fora. O passo a passo que a tela mostra (a memória de cálculo) sai dessa mesma conta.',
+      'Publicamos os desenhos da arquitetura em docs/arquitetura.md. São dois, no padrão C4: o de contexto e o de contêiner. C4 é um jeito conhecido de desenhar sistemas em níveis de zoom.',
+      'Montamos a base de teste, gerada por programa e sempre igual. Ela cria os 3 distritos e as 12 unidades, de 4 tipos. Cria também os 7 indicadores e os 11 itens medidos que os formam.',
     ],
   },
 
@@ -40,14 +40,14 @@ export const registro = {
     validadoPor: null,
     conteudo: [
       {
-        decisao: 'Regra de pontuação é dado versionado, não código.',
+        decisao: 'A regra da nota fica guardada como dado, com número de versão, e não como código.',
         porque:
-          'A portaria muda. Com a regra em `if`, cada mudança vira release e o ciclo antigo deixa de reproduzir o próprio resultado.',
+          'A portaria muda. Se a regra estivesse escrita dentro do programa, toda mudança exigiria mexer no código e publicar versão nova. E o ciclo antigo deixaria de reproduzir a própria nota.',
       },
       {
-        decisao: 'O motor de cálculo não faz I/O, não lê relógio e não sorteia nada.',
+        decisao: 'O motor de cálculo não lê nem grava nada fora dele, não olha o relógio e não sorteia nada.',
         porque:
-          'É o que permite testar fronteira de faixa e arredondamento sem subir infraestrutura, e garante o mesmo número para o mesmo insumo.',
+          'Assim testamos as bordas de cada faixa e o arredondamento sem ligar servidor nenhum. E o mesmo dado de entrada dá sempre o mesmo número.',
       },
     ],
   },
@@ -56,7 +56,7 @@ export const registro = {
     selo: 'rascunho',
     validadoPor: null,
     conteudo: [
-      'Sem acesso à planilha real prometida na reunião, as metas e pesos da régua por tipo são arbitrados pela equipe e precisam de conferência com o cliente.',
+      'Ainda não temos a planilha real prometida na reunião. Por isso a equipe definiu sozinha as metas e os pesos por tipo de unidade. O cliente precisa conferir esses valores.',
     ],
   },
 
@@ -66,9 +66,9 @@ export const registro = {
     selo: 'rascunho',
     validadoPor: null,
     conteudo: [
-      'Ligar as telas de lançamento e de resultado ao motor.',
-      'Cobrir os casos-limite do cálculo com teste antes do Pré-SR1.',
-      'Levantar as perguntas de arquitetura que a banca provavelmente fará.',
+      'Ligar as telas de lançamento e de resultado ao motor de cálculo.',
+      'Escrever testes para os casos extremos da conta antes do Pré-SR1.',
+      'Listar as perguntas sobre arquitetura que a banca deve fazer.',
     ],
   },
 
@@ -76,11 +76,11 @@ export const registro = {
     selo: 'rascunho',
     validadoPor: null,
     conteudo: [
-      { integrante: 'joao-henrique', contribuicao: 'Modelo de dados e motor de cálculo.' },
-      { integrante: 'rafael', contribuicao: 'Gerador da base sintética com semente fixa.' },
+      { integrante: 'joao-henrique', contribuicao: 'Modelo de dados (o desenho das tabelas) e motor de cálculo.' },
+      { integrante: 'rafael', contribuicao: 'Gerador da base de teste, sempre igual.' },
       {
         integrante: 'fernando',
-        contribuicao: 'Testes dos casos-limite e documentação técnica.',
+        contribuicao: 'Testes dos casos extremos e documentação técnica.',
       },
     ],
   },
@@ -106,45 +106,45 @@ export const documentos = [
     id: 'nuvem',
     titulo: 'Nuvem: arquitetura nativa e fluxo de dados',
     resumo:
-      'onde cada componente roda, como eles se integram, e as decisões que a nuvem impôs ao produto.',
+      'onde cada parte do sistema roda, como elas conversam entre si, e o que a nuvem mudou no produto.',
     Conteudo: () => (
       <>
         <Secao
-          titulo="Onde cada componente executa"
-          descricao="A matriz pede componentes de infraestrutura e integração entre eles. Estes são os do MVP, e nenhum deles é servidor que a equipe administre."
+          titulo="Onde cada parte roda"
+          descricao="A matriz de avaliação pede as peças de infraestrutura e como elas se ligam. Estas são as peças do MVP. Nenhuma delas é um servidor que a equipe precise cuidar."
         >
           <Tabela
             colunas={['Componente', 'Onde roda', 'Por que ali']}
             linhas={[
               [
                 'Páginas e telas',
-                'Função serverless na Vercel, por requisição',
-                'O recorte de release depende do dia e da sessão, então não há como pré-renderizar: `force-dynamic` é consequência da regra, não preguiça',
+                'Na Vercel, como função sem servidor fixo (serverless). Roda uma vez por pedido',
+                'O que fica visível depende do dia e de quem está logado. Por isso a página não pode ser montada antes. O modo `force-dynamic` vem dessa regra, não de preguiça',
               ],
               [
                 'Porta do painel',
-                'Middleware na borda, antes da função',
-                'Barrar antes de acordar a função é mais barato e mais seguro: quem não tem sessão nunca chega ao código do painel',
+                'Num filtro (middleware) na borda da rede, antes da função',
+                'Barrar antes de acordar a função custa menos e é mais seguro. Quem não está logado nunca chega ao código do painel',
               ],
               [
-                'Assets e fontes',
-                'CDN, com hash imutável no nome do arquivo',
-                'Chunk com hash pode ter cache eterno, e a invalidação vira consequência do build',
+                'Arquivos estáticos (assets) e fontes',
+                'Numa rede de distribuição (CDN). O nome de cada arquivo leva um código (hash) que nunca muda',
+                'Arquivo com código no nome pode ficar guardado no cache para sempre. Quando o site é gerado de novo, o nome muda e o cache velho cai sozinho',
               ],
               [
                 'Modelos de ML',
-                'Fora da nuvem: treinam offline e viram JSON versionado',
-                'Carregar scikit-learn por requisição custaria segundos de partida a frio para exibir número que só muda entre deploys (ADR-022)',
+                'Fora da nuvem. Treinamos os modelos antes, fora do site, e guardamos o resultado num arquivo JSON no Git',
+                'Carregar a biblioteca scikit-learn a cada pedido custaria segundos de espera na partida. E o número só muda quando publicamos uma versão nova (ADR-022)',
               ],
               [
                 'Dados do protótipo',
-                'Memória do processo, com semente fixa',
-                'Sem banco, `git clone && npm run dev` sobe sem credencial nenhuma. O schema de verdade está escrito e desligado (ADR-011)',
+                'Na memória do programa, gerados sempre iguais',
+                'Sem banco, `git clone && npm run dev` sobe sem senha nenhuma. O desenho do banco de verdade está escrito, mas desligado (ADR-011)',
               ],
               [
                 'Persistência prevista',
-                'Postgres gerenciado, com RLS no banco',
-                'Autorização que mora no banco vale para qualquer caminho de escrita, inclusive um que ainda não existe',
+                'Postgres gerenciado pelo provedor, com as regras de acesso do banco (RLS)',
+                'Permissão que mora no banco vale para qualquer caminho de gravação. Vale até para um caminho que ainda não existe',
               ],
             ]}
           />
@@ -156,48 +156,48 @@ export const documentos = [
         >
           <Lista
             itens={[
-              'A unidade envia cada subindicador (valor direto, ou numerador e denominador) com evidência, num POST comum de formulário; zod valida na entrada e recusa com motivo.',
-              'A camada de dados grava o lançamento e ESCREVE UM EVENTO na trilha, no mesmo passo. Não há caminho que grave sem registrar.',
-              'A SEAB fecha a janela; o estado do ciclo avança um passo, e a transição também vira evento.',
-              'O motor puro compõe cada indicador dos subindicadores lançados, aplica a régua do tipo da unidade na versão da regra vigente, e devolve score, faixa e memória de cálculo com os sub-passos.',
-              'A tela exibe a memória que saiu do mesmo cálculo, nunca uma recontagem paralela.',
-              'O painel da gestão agrega e exporta em CSV; a auditoria lê a trilha, e escreve nada.',
+              'A unidade informa cada item medido, junto com a evidência. Pode ser um valor direto, ou um numerador e um denominador. O envio é um formulário comum (POST). A biblioteca zod confere os dados na entrada e recusa o que está errado, dizendo o motivo.',
+              'A camada de dados grava o lançamento e, no mesmo passo, ESCREVE UM EVENTO no histórico. Não existe caminho que grave sem registrar.',
+              'A SEAB fecha a janela de lançamento. O ciclo avança um passo, e essa mudança também vira evento no histórico.',
+              'O motor de cálculo junta os itens medidos e forma cada indicador. Aplica as metas e os pesos do tipo da unidade, na versão da regra que vale para o mês. Devolve a nota (score), a faixa e a memória de cálculo, com cada passo da conta.',
+              'A tela mostra a memória de cálculo que saiu dessa mesma conta. Nunca refaz a conta por fora.',
+              'O painel da gestão soma os resultados e exporta em CSV. A auditoria lê o histórico e não escreve nada.',
             ]}
           />
           <Nota>
-            O pipeline é síncrono de propósito. Fila e processamento em lote resolveriam volume
-            que este caso não tem: são dezenas de indicadores por competência mensal, não
-            milhões de eventos por minuto. Escolher a arquitetura pelo volume que se sonha ter é
-            como comprar caminhão para carregar feira.
+            Cada passo roda na hora, um atrás do outro, e isso é de propósito. Fila e
+            processamento em lote servem para um volume que este caso não tem. São dezenas de
+            indicadores por mês, não milhões de eventos por minuto. Escolher a arquitetura pelo
+            volume que se sonha ter é como comprar caminhão para carregar feira.
           </Nota>
         </Secao>
 
         <Secao
           titulo="O que a nuvem decidiu no produto"
-          descricao="Restrição de infraestrutura que virou decisão de desenho, não observação de rodapé."
+          descricao="Limites da nuvem que viraram decisão de desenho do produto, e não nota de rodapé."
         >
           <Tabela
             colunas={['Restrição da nuvem', 'O que mudou no produto']}
             linhas={[
               [
-                'Função sem estado, e várias instâncias ao mesmo tempo',
-                'O contador do rate limit vive na memória de uma instância: é best-effort, e está declarado como tal em vez de fingir garantia',
+                'A função não guarda estado, e várias cópias rodam ao mesmo tempo',
+                'O contador que limita tentativas (rate limit) vive na memória de uma cópia só. Ele ajuda, mas não garante. Deixamos isso escrito em vez de fingir garantia',
               ],
               [
-                'Partida a frio cobra por dependência pesada',
-                'O treino de ML saiu do runtime; a tela lê um JSON com semente, commit e data do treino',
+                'Biblioteca pesada deixa a partida lenta',
+                'O treino dos modelos de ML saiu do programa que roda no site. A tela lê um arquivo JSON com a semente, o commit e a data do treino. Semente é o número que fixa o sorteio',
               ],
               [
-                'Sistema de arquivos efêmero',
-                'Config vai para env var e para o Git, nunca para arquivo gravado em execução',
+                'O disco some a cada execução',
+                'A configuração vai para variável de ambiente e para o Git. Nunca para arquivo gravado enquanto o site roda',
               ],
               [
                 'Segredo não pode morar no repositório',
-                'A senha do painel e o segredo do cookie só existem em variável de ambiente; sem elas, o painel simplesmente não existe (responde 404)',
+                'A senha do painel e o segredo do cookie só existem em variável de ambiente. Sem elas, o painel simplesmente não existe: responde 404',
               ],
               [
-                'Deploy é um push',
-                'A vitrine foi versionada em código para abrir por commit, sem alguém abrir painel de provedor e colar valor à mão (ADR-021)',
+                'Publicar é dar um push',
+                'A vitrine ficou guardada em código e abre por commit. Ninguém precisa entrar no painel do provedor e colar valor à mão (ADR-021)',
               ],
             ]}
           />
@@ -209,32 +209,41 @@ export const documentos = [
             linhas={[
               [
                 'Base de código',
-                'Um repositório, muitos deploys: produção e prévia por branch',
+                'Um repositório só, com várias publicações: produção e uma prévia por branch',
               ],
-              ['Dependências', 'Declaradas em package.json com lockfile; nada instalado à mão'],
-              ['Configuração', 'Em variáveis de ambiente, com `.env.example` versionado'],
-              ['Serviços de apoio', 'Banco tratado como recurso plugável: driver trocável'],
+              [
+                'Dependências',
+                'Todas listadas em package.json, com lockfile. Nada instalado à mão',
+              ],
+              [
+                'Configuração',
+                'Em variáveis de ambiente, com um `.env.example` guardado no Git',
+              ],
+              [
+                'Serviços de apoio',
+                'O banco é tratado como peça que se encaixa: dá para trocar o driver',
+              ],
               [
                 'Build, release, run',
-                'Separados: `next build` congela o artefato, o deploy o publica',
+                'Separados: `next build` congela o pacote, e o deploy publica esse pacote',
               ],
               [
                 'Processos',
-                'Sem estado; o que precisa durar vai para cookie assinado ou para o Git',
+                'Sem estado. O que precisa durar vai para cookie assinado ou para o Git',
               ],
               [
                 'Concorrência',
-                'Escala horizontal por instância de função, sem sessão pegajosa',
+                'Cresce criando mais cópias da função. Nenhum usuário fica preso a uma cópia',
               ],
-              ['Descartabilidade', 'Partida rápida e desligamento sem ritual'],
+              ['Descartabilidade', 'Liga rápido e desliga sem cerimônia'],
               [
                 'Paridade dev/prod',
-                'O mesmo build de produção é o que a verificação de vazamento sobe',
+                'A verificação de vazamento roda sobre o mesmo build que vai para produção',
               ],
-              ['Logs', 'Fluxo de eventos na saída padrão, coletado pela plataforma'],
+              ['Logs', 'Os registros saem na saída padrão, e a plataforma recolhe'],
               [
                 'Processos administrativos',
-                'Semeadura e verificação como scripts do repositório',
+                'Semear a base e verificar o site são scripts do repositório',
               ],
             ]}
           />
@@ -245,7 +254,8 @@ export const documentos = [
   {
     id: 'arquitetura',
     titulo: 'Arquitetura do MVP',
-    resumo: 'as camadas, o que cada uma resolve e por que o motor fica isolado.',
+    resumo:
+      'as camadas do sistema, o que cada uma resolve e por que o motor de cálculo fica isolado.',
     Conteudo: () => (
       <>
         <Tabela
@@ -253,30 +263,30 @@ export const documentos = [
           linhas={[
             [
               'Conteúdo (content/)',
-              'Registro semanal e documentos, versionados em TSX',
-              'Entra no Git com histórico; o painel decide quando aparece, não o que diz',
+              'O diário semanal e os documentos, guardados no Git como TSX',
+              'Entra no Git com histórico. O painel decide quando aparece, não o que diz',
             ],
             [
               'Regra (lib/calculo/)',
-              'Score, faixa e memória de cálculo',
-              'Função pura: testável nos casos-limite sem subir nada',
+              'A nota (score), a faixa e a memória de cálculo',
+              'É uma conta que não depende de nada de fora. Dá para testar os casos extremos sem ligar nada',
             ],
             [
               'Dados (lib/dados/)',
               'De onde vêm unidades, indicadores e lançamentos',
-              'Isola as telas da fonte: trocar seed por banco não reescreve tela',
+              'Separa as telas da origem dos dados. Trocar a base de teste por um banco não obriga a reescrever tela',
             ],
             [
-              'Release (lib/releases.ts)',
+              'Liberação (lib/releases.ts)',
               'O que está visível hoje',
-              'Cálculo puro sobre o cronograma, com o "hoje" injetado de fora',
+              'Uma conta que não depende de nada de fora, feita sobre o cronograma. O "hoje" entra como dado, vindo de fora',
             ],
           ]}
         />
         <Lista
           itens={[
-            'Nenhuma camada acima chama a de baixo pulando a do meio: a tela fala com dados, dados falam com a fonte.',
-            'O motor de cálculo não conhece nem tela nem banco, recebe números e devolve números com a conta aberta.',
+            'Nenhuma camada pula a do meio. A tela fala com a camada de dados, e a de dados fala com a origem.',
+            'O motor de cálculo não conhece tela nem banco. Recebe números e devolve números, com a conta aberta.',
           ]}
         />
       </>
@@ -285,7 +295,8 @@ export const documentos = [
   {
     id: 'modelo',
     titulo: 'Modelo de dados',
-    resumo: 'as entidades do MVP, no domínio da reunião de 22/08, e o que cada uma guarda.',
+    resumo:
+      'as tabelas do MVP, seguindo o que o cliente contou na reunião de 22/08, e o que cada uma guarda.',
     Conteudo: () => (
       <>
         <Tabela
@@ -294,52 +305,52 @@ export const documentos = [
             [
               'Distrito sanitário',
               'Nome',
-              'Três na base sintética; cada um tem uma gerência distrital, também avaliada',
+              'Três na base de teste. Cada um tem uma gerência distrital, que também recebe nota',
             ],
             [
               'Tipo de unidade',
               'Nome e sigla (USF, CAPS, UPA, POLI)',
-              'É o tipo que decide quais indicadores valem, com que meta e peso',
+              'O tipo decide quais indicadores valem para a unidade, com qual meta e qual peso',
             ],
             [
               'Unidade',
               'Nome, distrito e tipo',
-              'Doze na base sintética; é quem lança e quem recebe a nota',
+              'Doze na base de teste. É quem informa os números e quem recebe a nota',
             ],
             [
               'Indicador',
               'Nome, unidade de medida, direção e fonte',
-              'Sete no catálogo; SEM meta e peso próprios: isso mora na régua da regra',
+              'Sete no catálogo. Não tem meta nem peso próprios: isso fica na regra',
             ],
             [
               'Subindicador',
-              'Nome e tipo (índice, ou razão com numerador e denominador)',
-              'Onze; é o que a unidade de fato preenche, e o indicador é a composição',
+              'Nome e tipo: índice, ou razão com numerador e denominador',
+              'Onze. É o item que a unidade de fato preenche. O indicador é a junção deles',
             ],
             [
               'Regra',
-              'Faixas de pontuação, régua por tipo (aplicabilidades), vigência e versão',
-              'Alterar cria versão nova; a vigente é escolhida pela competência',
+              'Faixas de nota, metas e pesos por tipo de unidade (aplicabilidades), período em que vale e versão',
+              'Mudar a regra cria uma versão nova. O mês avaliado escolhe qual versão vale',
             ],
             [
               'Ciclo',
-              'Competência, estado, janela de lançamento e início da revisão',
-              'Máquina de estados: só avança um passo por vez; os dias finais são a janela de revisão',
+              'O mês avaliado (competência), o estado, a janela de lançamento e o início da revisão',
+              'Só avança um passo por vez. Os dias finais são a janela de revisão',
             ],
             [
               'Lançamento',
               'Valor OU numerador e denominador, evidência, autor e data',
-              'Correção entra como novo lançamento, não sobrescreve',
+              'Corrigir é fazer um lançamento novo. O antigo não é sobrescrito',
             ],
             [
               'Avaliação',
-              'Score, faixa e memória de cálculo da unidade no ciclo, com sub-passos',
-              'Reproduzível: recalcular o ciclo antigo dá o mesmo número; a distrital é a média das unidades',
+              'A nota (score), a faixa e a memória de cálculo da unidade no ciclo, passo a passo',
+              'Dá para refazer: recalcular um mês antigo dá o mesmo número. A nota do distrito é a média das unidades',
             ],
             [
               'Evento de auditoria',
               'Quem, quando, o quê, antes e depois',
-              'Append-only: a trilha não é editada, só recebe',
+              'Só cresce: o histórico nunca é editado, só recebe linha nova',
             ],
           ]}
         />

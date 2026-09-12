@@ -17,10 +17,10 @@ export const registro = {
     selo: 'rascunho',
     validadoPor: null,
     conteudo: [
-      'Telas de lançamento, resultado e memória de cálculo navegáveis com dados sintéticos.',
-      'Pacote do SR1 conferido item a item contra a matriz de evidências.',
-      'Ensaio cronometrado do pitch, com corte do que não cabe em cinco minutos.',
-      'Análise de segurança e de privacidade em primeira versão.',
+      'Deixamos três telas navegáveis, com dados de teste gerados por programa: lançamento, resultado e memória de cálculo. A memória de cálculo é o passo a passo da conta.',
+      'Conferimos o pacote do SR1 item a item. Usamos como guia a matriz de evidências, a lista do que a disciplina cobra.',
+      'Ensaiamos o pitch com cronômetro na mão. O que não coube em cinco minutos foi cortado.',
+      'Escrevemos a primeira versão das análises de segurança e de privacidade.',
     ],
   },
 
@@ -31,12 +31,12 @@ export const registro = {
       {
         decisao: 'O pitch abre pela memória de cálculo, não pela arquitetura.',
         porque:
-          'É o que distingue o produto de uma planilha melhorada. Arquitetura entra se a banca perguntar.',
+          'É isso que separa o produto de uma planilha melhorada. A arquitetura só entra se a banca perguntar.',
       },
       {
         decisao: 'Nada de slide com código.',
         porque:
-          'Em cinco minutos, código na tela consome atenção e não prova nada que a demo não prove.',
+          'Em cinco minutos, código na tela só rouba atenção. E não prova nada que a demonstração já não prove.',
       },
     ],
   },
@@ -49,8 +49,8 @@ export const registro = {
     validadoPor: null,
     conteudo: [
       'Apresentar o SR1.',
-      'Registrar o retorno da banca no ciclo do SR1, com origem declarada.',
-      'Repriorizar o backlog das sprints a partir do que a banca apontar.',
+      'Anotar o retorno da banca no ciclo do SR1, dizendo de quem veio cada comentário.',
+      'Reordenar a lista de tarefas das sprints (o backlog) conforme o que a banca apontar.',
     ],
   },
 
@@ -79,21 +79,21 @@ export const documentos = [
   {
     id: 'checklist',
     titulo: 'Checklist do SR1',
-    resumo: 'o que precisa estar pronto, e o critério de pronto de cada item.',
+    resumo: 'o que precisa estar pronto, e como saber que cada item está pronto.',
     Conteudo: () => (
       <>
         <Tabela
           colunas={['Item', 'Critério de pronto']}
           linhas={[
-            ['Problema e pergunta', 'Publicados na página, com o cliente nomeado'],
-            ['Pesquisa consolidada', 'Personas, mapa de empatia, benchmarking e SWOT no site'],
+            ['Problema e pergunta', 'Os dois publicados na página, com o nome do cliente'],
+            ['Pesquisa reunida', 'Personas, mapa de empatia, benchmarking e SWOT, tudo no site'],
             [
               'Protótipo navegável',
-              'Lançamento → cálculo → memória de cálculo, sem tela morta',
+              'Do lançamento ao cálculo, e do cálculo à memória de cálculo. Sem tela morta: toda tela abre e leva a algum lugar',
             ],
-            ['Registro semanal', 'Todas as semanas vencidas publicadas e validadas'],
-            ['Análises da disciplina', 'Segurança e privacidade em primeira versão'],
-            ['Pitch', 'Cronometrado em cinco minutos, com ensaio feito'],
+            ['Registro semanal', 'Todas as semanas que já passaram estão publicadas e validadas'],
+            ['Análises da disciplina', 'Segurança e privacidade, na primeira versão'],
+            ['Pitch', 'Ensaiado e cronometrado: cabe em cinco minutos'],
           ]}
         />
       </>
@@ -102,35 +102,35 @@ export const documentos = [
   {
     id: 'pitch',
     titulo: 'Roteiro do pitch: SR1',
-    resumo: 'os cinco minutos divididos, com o que provar em cada trecho.',
+    resumo: 'os cinco minutos divididos em trechos, e o que cada trecho precisa provar.',
     Conteudo: () => (
       <>
         <Tabela
           colunas={['Tempo', 'O quê', 'O que precisa ficar claro']}
           linhas={[
-            ['0:00–0:40', 'O problema', 'Dinheiro público calculado à mão, sem rastro'],
-            ['0:40–1:30', 'A pergunta e o recorte', 'O que está dentro e o que ficou fora'],
+            ['0:00 a 0:40', 'O problema', 'Dinheiro público calculado à mão, sem deixar rastro'],
+            ['0:40 a 1:30', 'A pergunta e o recorte', 'O que o projeto cobre e o que ficou de fora'],
             [
-              '1:30–3:30',
+              '1:30 a 3:30',
               'Demonstração',
-              'Um lançamento vira score, e o score abre até a origem',
+              'Um lançamento vira nota (score), e a nota abre até a origem',
             ],
             [
-              '3:30–4:20',
+              '3:30 a 4:20',
               'Como sabemos que está certo',
-              'Regra versionada e teste de caso-limite',
+              'A regra fica guardada com número de versão. E a conta tem teste para os casos extremos',
             ],
             [
-              '4:20–5:00',
+              '4:20 a 5:00',
               'O que vem até o SR2',
-              'Sprints, validação com a CAM e as duas lentes',
+              'As sprints e a validação com a Comissão de Avaliação de Metas (CAM). E as duas lentes',
             ],
           ]}
         />
         <Lista
           itens={[
-            'Quem demonstra não é quem narra: a troca evita depender de uma pessoa só.',
-            'A demo roda com dados sintéticos, e isso é dito em voz alta na abertura.',
+            'Quem mexe na tela não é quem fala. Assim a apresentação não depende de uma pessoa só.',
+            'A demonstração roda com dados de teste, gerados por programa. Dizemos isso em voz alta logo na abertura.',
           ]}
         />
       </>

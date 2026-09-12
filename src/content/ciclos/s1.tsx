@@ -9,18 +9,18 @@ export const registro = {
   objetivo: {
     selo: 'validado',
     validadoPor: 'fernando',
-    conteudo: 'Formar a equipe, escolher o case e colocar de pé o registro público do projeto.',
+    conteudo: 'Formar a equipe e escolher o case. Colocar de pé o registro público do projeto.',
   },
 
   avancos: {
     selo: 'validado',
     validadoPor: 'fernando',
     conteudo: [
-      'Equipe 2 formada com os seis integrantes e canal de comunicação definido.',
-      'Case escolhido: a gratificação por desempenho da Secretaria de Saúde do Recife.',
-      'Papéis distribuídos por frente, cobrindo as três lentes da disciplina.',
-      'Pasta do Drive criada como repositório oficial de documentos.',
-      'Registro do projeto publicado como site próprio, no lugar do Google Site.',
+      'Formamos a Equipe 2 com os seis integrantes. Definimos o canal de comunicação.',
+      'Escolhemos o case: a gratificação por desempenho da Secretaria de Saúde do Recife.',
+      'Dividimos os papéis por frente de trabalho. As três lentes da disciplina ficaram cobertas.',
+      'Criamos a pasta do Drive. Ela é o lugar oficial dos documentos.',
+      'Publicamos o registro do projeto num site nosso, no lugar do Google Site.',
     ],
   },
 
@@ -29,23 +29,24 @@ export const registro = {
     validadoPor: 'fernando',
     conteudo: [
       {
-        decisao: 'Adotar o case da SESAU em vez de um problema hipotético.',
+        decisao: 'Trabalhar com o case real da SESAU.',
         porque:
-          'Há cliente real, dor documentada desde 2023 e chance de validar com quem opera o processo.',
+          'Há um cliente real, não um problema inventado. A dor está documentada desde 2023. E dá para validar com quem opera o processo.',
       },
       {
-        decisao: 'Registrar o projeto em site próprio, versionado em Git.',
+        decisao: 'Registrar o projeto em site próprio.',
         porque:
-          'O professor dispensou o Google Site, e o registro vira também evidência técnica da disciplina.',
+          'O professor dispensou o Google Site. Cada versão fica guardada no Git, e o registro vira também evidência técnica da disciplina.',
       },
       {
-        decisao: 'Nenhum dado real de pessoa ou da SESAU entra no repositório.',
-        porque: 'O MVP roda com dados sintéticos: elimina risco de LGPD antes que ele exista.',
+        decisao: 'Nenhum dado real entra no repositório.',
+        porque:
+          'Nem de pessoa, nem da SESAU: o protótipo (MVP) usa dados fictícios, gerados por programa. Assim o risco com a lei de proteção de dados (LGPD) some antes de existir.',
       },
       {
         decisao: 'Chamar o produto de Prumo.',
         porque:
-          'O fio de prumo diz se algo está alinhado, é exatamente o que falta ao cálculo hoje.',
+          'O fio de prumo mostra se algo está alinhado. É exatamente o que falta ao cálculo hoje.',
       },
     ],
   },
@@ -63,7 +64,7 @@ export const registro = {
       {
         origem: 'equipe',
         texto:
-          'O case só se sustenta se conseguirmos acesso à portaria e a alguém da CAM. Combinado tentar o contato já na Semana 2.',
+          'O case só se sustenta com acesso à portaria. E com alguém da Comissão de Avaliação de Metas (CAM). Combinamos tentar o contato já na Semana 2.',
       },
     ],
   },
@@ -73,8 +74,8 @@ export const registro = {
     validadoPor: 'fernando',
     conteudo: [
       'Estruturar a pesquisa: personas, mapa de empatia, benchmarking e SWOT.',
-      'Contextualizar o problema com fontes públicas sobre gratificação por desempenho no setor público.',
-      'Escrever objetivos SMART e o cronograma inicial.',
+      'Situar o problema com fontes públicas sobre gratificação por desempenho no setor público.',
+      'Escrever os objetivos SMART e o cronograma inicial.',
     ],
   },
 
@@ -84,15 +85,15 @@ export const registro = {
     conteudo: [
       {
         integrante: 'gabriel',
-        contribuicao: 'Conduziu a escolha do case e o contato inicial com o cliente.',
+        contribuicao: 'Conduziu a escolha do case e o primeiro contato com o cliente.',
       },
       {
         integrante: 'matheus',
-        contribuicao: 'Levantou o material público sobre o processo de avaliação de metas.',
+        contribuicao: 'Reuniu o material público sobre o processo de avaliação de metas.',
       },
       {
         integrante: 'joao-henrique',
-        contribuicao: 'Definiu a stack e abriu o repositório.',
+        contribuicao: 'Escolheu as tecnologias e abriu o repositório.',
       },
       {
         integrante: 'joao-pedro',
@@ -100,11 +101,11 @@ export const registro = {
       },
       {
         integrante: 'rafael',
-        contribuicao: 'Mapeou onde o módulo de ML entra no problema.',
+        contribuicao: 'Mapeou onde o módulo de aprendizado de máquina (ML) entra no problema.',
       },
       {
         integrante: 'fernando',
-        contribuicao: 'Montou a estrutura de documentação e o registro de uso de IA.',
+        contribuicao: 'Montou a estrutura da documentação e o registro de uso de IA.',
       },
     ],
   },
@@ -131,14 +132,14 @@ export const documentos = [
   {
     id: 'escolha-do-case',
     titulo: 'Por que este case',
-    resumo: 'os critérios que levaram a escolher a sesau.',
+    resumo: 'o que nos levou a escolher a sesau.',
     Conteudo: () => (
       <>
         <Lista
           itens={[
-            'Cliente real e acessível: a Secretaria opera o processo hoje e sente a dor todo ciclo.',
-            'Problema com regra explícita: existe portaria, existem indicadores, existe cálculo, dá para modelar de verdade.',
-            'Espaço para as três lentes: sistema (Projeto), previsão e perfis (ML) e tratamento de dados de servidores (Direito).',
+            'Cliente real e acessível: a Secretaria opera o processo hoje. E sente a dor todo ciclo.',
+            'Problema com regra escrita: existe portaria, existem indicadores, existe cálculo. Dá para modelar isso de verdade.',
+            'Espaço para as três lentes. O sistema cobre a lente de Projeto. Previsão e perfis cobrem a de aprendizado de máquina (ML). O tratamento de dados de servidores cobre a de Direito.',
           ]}
         />
       </>
@@ -151,9 +152,9 @@ export const documentos = [
     Conteudo: () => (
       <>
         <Citacao fonte="Descrição do case, registrada na Semana 1">
-          A consolidação da gratificação é feita à mão, em planilhas, por uma comissão pequena.
-          Uma tentativa anterior de automatizar foi abandonada por falta de recursos. O
-          conhecimento do processo está concentrado em poucas pessoas.
+          A conta da gratificação é fechada à mão, em planilhas, por uma comissão pequena. Uma
+          tentativa anterior de automatizar foi abandonada por falta de recursos. O conhecimento
+          do processo fica com poucas pessoas.
         </Citacao>
       </>
     ),

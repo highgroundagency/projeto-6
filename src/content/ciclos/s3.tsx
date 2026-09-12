@@ -15,18 +15,18 @@ export const registro = {
     selo: 'validado',
     validadoPor: 'fernando',
     conteudo:
-      'Gerar alternativas de solução com técnicas de ideação e escolher, com critério explícito, a que será desenvolvida.',
+      'Levantar várias ideias de solução com técnicas de ideação, as dinâmicas de gerar ideias em grupo. Depois, escolher uma com critérios claros. É essa que vamos construir.',
   },
 
   avancos: {
     selo: 'validado',
     validadoPor: 'fernando',
     conteudo: [
-      'Roteiro das três técnicas preparado, com tempo, material e produto esperado de cada uma.',
-      'Oito alternativas levantadas a partir da pesquisa da Semana 2.',
-      'Matriz de impacto × esforço × aderência montada para comparar as alternativas.',
-      'Critérios de decisão acordados antes da votação, para evitar escolha por preferência pessoal.',
-      'Primeira reunião com o representante do cliente realizada em 22/08, com ata registrada como documento desta semana.',
+      'Preparamos o roteiro das três dinâmicas de ideias. Para cada uma, definimos o tempo, o material e o que ela deve produzir.',
+      'Levantamos oito alternativas de solução. Todas partiram da pesquisa da Semana 2.',
+      'Montamos a matriz de priorização, uma tabela que compara as alternativas. Cada ideia recebe nota em três critérios: impacto, esforço e aderência. Aderência é o quanto a ideia cabe na realidade do órgão público.',
+      'Combinamos os critérios de decisão antes da votação. Assim ninguém escolhe só por preferência pessoal.',
+      'Fizemos a primeira reunião com o representante do cliente em 22/08. A ata está registrada como documento desta semana.',
     ],
   },
 
@@ -35,23 +35,23 @@ export const registro = {
     validadoPor: 'fernando',
     conteudo: [
       {
-        decisao: 'Fixar os critérios de avaliação antes de gerar as ideias.',
+        decisao: 'Critérios de avaliação fixados antes das ideias.',
         porque: 'Critério definido depois tende a justificar a ideia de quem fala mais alto.',
       },
       {
-        decisao: 'Aderência ao órgão público entra como critério com peso próprio.',
+        decisao: 'Aderência ao órgão público: critério com peso próprio.',
         porque:
-          'Solução tecnicamente boa que não sobrevive a pregão, portaria ou rotatividade de equipe não serve.',
+          'Solução boa na técnica pode morrer no órgão: licitação (pregão), portaria nova, troca de equipe. Se não sobrevive a isso, não serve.',
       },
       {
         decisao:
-          'Ideia escolhida: sistema com regra parametrizável e memória de cálculo auditável.',
+          'Ideia escolhida: sistema com regra parametrizável e memória de cálculo auditável. Ou seja: regra ajustável sem mudar o programa, e conta aberta para conferir.',
         porque:
-          'Ataca a causa (regra implícita na planilha) e não o sintoma (planilha bonita), e cabe no semestre.',
+          'Ela ataca a causa: a regra hoje vive escondida nas fórmulas da planilha. Uma planilha mais bonita só trataria o sintoma, e essa ideia cabe no semestre.',
       },
       {
         decisao:
-          'Remodelar o domínio do MVP já, com o que a reunião com o cliente revelou: subindicadores, tipos de unidade e a rede por distrito.',
+          'Refazer o modelo do MVP já, com o que a reunião com o cliente revelou. Mudam três coisas: os itens medidos (subindicadores), os tipos de unidade e a rede por distrito.',
         porque:
           'O que muda é o coração do modelo, não um detalhe de tela. Cada semana construída sobre o entendimento antigo custaria mais caro de desfazer.',
       },
@@ -62,8 +62,8 @@ export const registro = {
     selo: 'validado',
     validadoPor: 'fernando',
     conteudo: [
-      'Registro da dinâmica real das três técnicas pendente, esta seção é preenchida na semana com fotos e artefatos.',
-      'A planilha real de cálculo prometida na reunião ainda não chegou: a composição dos subindicadores e a agregação distrital seguem como suposições declaradas, marcadas na ata.',
+      'Ainda falta registrar como as três dinâmicas aconteceram de verdade. Esta parte é preenchida na semana, com fotos e o material produzido.',
+      'A planilha real de cálculo, prometida na reunião, ainda não chegou. Sem ela, seguimos com suposições declaradas, marcadas na ata. Uma: como os itens medidos formam o indicador. Outra: como as unidades formam a nota do distrito.',
     ],
   },
 
@@ -74,17 +74,17 @@ export const registro = {
       {
         origem: 'cliente',
         texto:
-          'O que se preenche são subindicadores (valor direto, ou numerador e denominador); o indicador é calculado. A régua depende do tipo da unidade, e a rede é secretaria, distrito sanitário e unidade, com o gerente distrital também avaliado.',
+          'O que a unidade preenche são os itens medidos, chamados subindicadores. Cada item é um valor direto ou um numerador e um denominador. O indicador é calculado a partir deles. As metas e os pesos dependem do tipo da unidade. A rede tem três níveis: secretaria, distrito sanitário e unidade. O gerente distrital também é avaliado.',
       },
       {
         origem: 'cliente',
         texto:
-          'Confirmações do que o MVP já fazia: ciclo mensal, regra versionada que muda de ano em ano, correção com histórico, visualização por nível de acesso e exportação de planilha. Pedido novo: janela de revisão de cinco dias no fim do mês.',
+          'O cliente confirmou o que o MVP já fazia. A conta é mensal. A regra muda de ano em ano e fica guardada com número de versão. Um número corrigido guarda o valor antigo no histórico. Cada perfil vê só o que é do seu nível. Dá para exportar planilha. Pedido novo: um prazo de revisão de cinco dias no fim do mês.',
       },
       {
         origem: 'equipe',
         texto:
-          'A alternativa de “só melhorar a planilha” foi mantida na matriz de propósito: serve de linha de base para comparar ganho real.',
+          'Mantivemos de propósito a alternativa de “só melhorar a planilha” na matriz. Ela é o ponto de comparação (a linha de base) para medir o ganho real do sistema.',
       },
     ],
   },
@@ -94,8 +94,8 @@ export const registro = {
     validadoPor: 'fernando',
     conteudo: [
       'Escrever a proposta de solução em uma página.',
-      'Definir escopo dentro e fora, e o backlog inicial em histórias de usuário.',
-      'Fechar o cronograma de execução até o SR1.',
+      'Definir o que entra e o que fica fora do escopo. Montar a primeira lista de tarefas (o backlog) em histórias de usuário.',
+      'Fechar o cronograma de trabalho até o marco SR1.',
     ],
   },
 
@@ -105,27 +105,28 @@ export const registro = {
     conteudo: [
       {
         integrante: 'joao-pedro',
-        contribuicao: 'Facilitou as dinâmicas e organizou o material.',
+        contribuicao: 'Conduziu as dinâmicas e organizou o material.',
       },
       {
         integrante: 'gabriel',
-        contribuicao: 'Definiu os critérios e conduziu a priorização.',
+        contribuicao: 'Definiu os critérios e conduziu a escolha.',
       },
       {
         integrante: 'matheus',
-        contribuicao: 'Trouxe as dores da pesquisa como insumo das ideias.',
+        contribuicao: 'Trouxe as dores da pesquisa para as ideias.',
       },
       {
         integrante: 'joao-henrique',
-        contribuicao: 'Estimou esforço técnico de cada alternativa.',
+        contribuicao: 'Estimou o esforço técnico de cada alternativa.',
       },
       {
         integrante: 'rafael',
-        contribuicao: 'Avaliou quais alternativas geram dado aproveitável por modelo.',
+        contribuicao:
+          'Avaliou quais alternativas geram dado útil para o modelo de aprendizado de máquina.',
       },
       {
         integrante: 'fernando',
-        contribuicao: 'Registrou a dinâmica e consolidou a justificativa da escolha.',
+        contribuicao: 'Registrou a dinâmica e escreveu a justificativa da escolha.',
       },
     ],
   },
@@ -152,13 +153,14 @@ export const documentos = [
   {
     id: 'reuniao-cliente',
     titulo: 'Reunião com o cliente (22/08)',
-    resumo: 'a ata sintetizada: o que a conversa confirmou, o que ela mudou no domínio, e o que ficou para validar.',
+    resumo:
+      'a ata resumida: o que a conversa confirmou, o que mudou no desenho do sistema e o que ficou para conferir.',
     Conteudo: () => (
       <>
         <p>
-          Primeira conversa com o representante do órgão (SECOGE/SESAU) sobre o processo real
-          da gratificação. A ata abaixo é sintetizada e sem nomes de pessoa, seguindo a regra
-          de privacidade do projeto: papel importa, identidade não.
+          Foi a primeira conversa com o representante do órgão (SECOGE/SESAU) sobre o processo
+          real da gratificação. A ata abaixo é um resumo e não cita nome de pessoa. É a regra de
+          privacidade do projeto: importa o papel, não a identidade.
         </p>
 
         <div className="mt-4">
@@ -166,24 +168,24 @@ export const documentos = [
             colunas={['O que o MVP já cobria', 'O que a reunião mudou']}
             linhas={[
               [
-                'Indicador preenchido direto, com meta e peso próprios',
-                'O que se preenche é o SUBINDICADOR: valor direto (índice) ou numerador e denominador (razão). O indicador é calculado a partir deles.',
+                'O indicador era preenchido direto, com meta e peso próprios',
+                'O que se preenche é o item medido, o SUBINDICADOR. Ele é um valor direto (um índice) ou um numerador e um denominador (uma razão). O indicador é calculado a partir desses itens.',
               ],
               [
-                'Áreas técnicas planas, todas com a mesma régua',
-                'A régua depende do TIPO da unidade (USF, CAPS, UPA, policlínica): a depender do tipo, só alguns indicadores valem, e os pesos mudam.',
+                'Áreas técnicas sem hierarquia, todas com as mesmas metas e pesos',
+                'As metas e os pesos dependem do TIPO da unidade (USF, CAPS, UPA, policlínica). Conforme o tipo, só alguns indicadores valem, e os pesos mudam.',
               ],
               [
                 'Um gestor por área',
-                'A rede é secretaria → distrito sanitário → unidade. O gerente distrital também é avaliado: a nota dele agrega as unidades do distrito.',
+                'A rede tem três níveis: secretaria, distrito sanitário e unidade. O gerente distrital também é avaliado. A nota dele junta as notas das unidades do distrito.',
               ],
               [
-                'Correção dentro da janela de lançamento',
-                'Janela de REVISÃO de cinco dias no fim do mês, com o valor antigo guardado no histórico.',
+                'Correção dentro do prazo de lançamento',
+                'Um prazo de REVISÃO de cinco dias no fim do mês. O valor antigo fica guardado no histórico.',
               ],
               [
                 'Perfis CAM, área técnica, gestor e auditoria',
-                'Os quatro atores nomeados: gerente de unidade, gerente distrital, administrador da plataforma e coordenação da SEAB.',
+                'Quatro papéis, com nome: gerente de unidade, gerente distrital, administrador da plataforma e coordenação da SEAB.',
               ],
             ]}
           />
@@ -193,43 +195,45 @@ export const documentos = [
           <Grade colunas={2}>
             <Cartao titulo="Gerente de unidade" etiqueta="ator 1">
               <p>
-                Dirige uma unidade de saúde. Preenche os subindicadores do mês e responde pela
-                nota da unidade, que segue a régua do tipo dela.
+                Dirige uma unidade de saúde. Preenche os itens medidos do mês. Responde pela
+                nota da unidade, que segue as metas e os pesos do tipo dela.
               </p>
             </Cartao>
             <Cartao titulo="Gerente distrital" etiqueta="ator 2">
               <p>
-                Acompanha as unidades do distrito (na rede real, cerca de trinta) e revisa
-                números na janela. Também é avaliado, pela agregação das unidades.
+                Acompanha as unidades do distrito, cerca de trinta na rede real. Revisa os
+                números no prazo de revisão. Também é avaliado: a nota dele junta as notas das
+                unidades.
               </p>
             </Cartao>
             <Cartao titulo="Administrador" etiqueta="ator 3">
               <p>
-                Opera a plataforma: cadastros, acessos e trilha. Administra a ferramenta, não
-                as notas.
+                Cuida da plataforma: cadastros, acessos e o histórico de quem mudou o quê.
+                Administra a ferramenta, não as notas.
               </p>
             </Cartao>
             <Cartao titulo="Coordenação da SEAB" etiqueta="ator 4">
               <p>
-                Coordena o processo: define a régua, cobra os números, faz a conta, homologa,
-                publica e responde contestação.
+                Coordena o processo. Define as metas e os pesos, cobra os números e faz a conta.
+                Aprova, publica e responde às contestações.
               </p>
             </Cartao>
           </Grade>
         </div>
 
         <p className="mt-4">
-          <strong>O que a conversa confirmou</strong> do que o MVP já fazia: ciclo mensal,
-          regra versionada que muda de ano em ano, correção com histórico, visualização por
-          nível de acesso, exportação de planilha e persistência com historicidade.
+          <strong>O que a conversa confirmou</strong> do que o MVP já fazia. A conta é mensal. A
+          regra muda de ano em ano e fica guardada com número de versão. Um número corrigido
+          guarda o valor antigo. Cada perfil vê só o que é do seu nível. Dá para exportar
+          planilha. E os dados ficam guardados com todo o histórico.
         </p>
 
         <div className="mt-3">
           <Nota>
-            Suposições declaradas, a validar com a planilha real prometida: razão =
-            numerador ÷ denominador; indicador com vários subindicadores = média simples dos
-            apurados; nota distrital = média simples das unidades. Se a planilha disser
-            diferente, vira versão nova da regra, não reescrita do sistema.
+            Suposições declaradas por nós, a conferir com a planilha real prometida. Razão =
+            numerador ÷ denominador. Indicador com vários itens medidos = média simples dos
+            itens apurados. Nota do distrito = média simples das unidades. Se a planilha disser
+            diferente, vira uma versão nova da regra, não uma reescrita do sistema.
           </Nota>
         </div>
       </>
@@ -238,12 +242,17 @@ export const documentos = [
   {
     id: 'tecnicas-ideacao',
     titulo: 'Roteiro das três técnicas',
-    resumo: 'brainwriting, brainstorming e crazy 8’s, com tempo e produto de cada.',
+    resumo:
+      'brainwriting, brainstorming e crazy 8’s: quanto tempo cada uma leva e o que produz.',
     Conteudo: () => (
       <>
         <Grade colunas={3}>
           {TECNICAS_DE_IDEACAO.map((tecnica) => (
-            <Cartao key={tecnica.nome} titulo={tecnica.nome} etiqueta={`${tecnica.minutos} min`}>
+            <Cartao
+              key={tecnica.nome}
+              titulo={tecnica.nome}
+              etiqueta={`${tecnica.minutos} min`}
+            >
               <p>{tecnica.como}</p>
               <p>
                 <strong>Produto:</strong> {tecnica.produto}
@@ -257,7 +266,8 @@ export const documentos = [
   {
     id: 'alternativas',
     titulo: 'Alternativas levantadas',
-    resumo: 'as oito ideias e a matriz de impacto, esforço e aderência.',
+    resumo:
+      'as oito ideias e a matriz de impacto, esforço e aderência: a nota de cada uma nos três critérios.',
     Conteudo: () => (
       <>
         <Tabela
