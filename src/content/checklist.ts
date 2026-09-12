@@ -170,7 +170,7 @@ export const CHECKLIST: readonly ItemChecklist[] = [
     evidencia: 'Fala distribuída entre os 6 integrantes',
     status: 'em_andamento',
     responsavel: 'joao-pedro',
-    link: '/#doc-ko-roteiro-pitch',
+    link: '/pitch',
   },
   {
     ciclo: 'ko',

@@ -84,17 +84,31 @@ O endereço é **`/pitch`**, no próprio site do projeto. Não é PowerPoint: é
 
 ## Se perguntarem
 
-O site tem um documento chamado **"Perguntas prováveis da banca"**, dentro da semana do
-Kick-off, com seis perguntas e a resposta que o repositório sustenta. Leia antes.
+O professor pode perguntar a qualquer um de nós. Estas são as perguntas mais prováveis, com
+a resposta curta. Elas NÃO estão no site de propósito: são material nosso de preparação, não
+entrega.
 
-As três respostas mais importantes, em uma linha cada:
-
-- **"Vocês falaram com o cliente?"** Sim, em 22 de agosto. A ata está no site, na Semana 3, e
-  ela mudou o desenho do sistema.
-- **"E se a portaria mudar?"** A regra é um dado com versão. O mês que já fechou continua
-  mostrando o mesmo resultado, porque cada mês aponta para a versão que usou.
-- **"Esses dados são reais?"** Não. Tudo é gerado por um programa, sempre com a mesma semente.
-  O repositório é público, e dado da prefeitura não entra nele.
+- **"Vocês já falaram com o cliente?"** Sim. Reunião em 22 de agosto com a secretaria, e a
+  ata está no site, na Semana 3. Em 5 de setembro eles mandaram a portaria e uma planilha de
+  um mês real, com os nomes trocados. A planilha não entrou no site.
+- **"E se a portaria mudar?"** A regra é guardada como dado, com número de versão. Quando
+  mudar, criamos uma versão nova. O mês que já fechou continua mostrando o mesmo resultado,
+  porque ele aponta para a versão que usou. A portaria oficial que chegou agora é o primeiro
+  caso real disso: vira a versão 3.
+- **"Qual o diferencial em relação à planilha?"** A conta aberta: cada número mostra de onde
+  veio, com o item medido, a meta e o peso. E o histórico: toda mudança tem autor, data, o
+  valor de antes e o de depois. Nenhuma ferramenta que olhamos junta as duas coisas.
+- **"Onde entra a inteligência artificial, e por que ela não decide?"** Fora da conta. Os
+  modelos treinam separado e mostram sinais numa tela à parte, cada um ao lado do chute mais
+  simples. Um deles perde para o chute, e está publicado assim mesmo. O modelo diz onde
+  olhar. Quanto alguém recebe é a portaria que diz.
+- **"Por que o banco de dados está desligado?"** Porque o sistema não precisa dele para
+  provar a ideia, e ligar um banco a um repositório público com dado da prefeitura seria o
+  risco errado na hora errada. O banco está desenhado e testado. Ligar não exige refazer
+  tela nenhuma.
+- **"Como garantem que não há dado real?"** Toda a base é gerada por um programa, sempre
+  igual. Há um teste que falha se aparecer um CPF, e-mail ou telefone. A planilha do cliente
+  não entrou no repositório, e nenhum dado real entra em prompt de inteligência artificial.
 
 E se alguém não souber uma resposta: **diga que não sabe e diga onde está**. O site tem um
 índice com oito seções no topo da página inicial, e uma seção de documentos que lista tudo que

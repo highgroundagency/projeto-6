@@ -1,14 +1,7 @@
 import { Citacao, Grade, Cartao, Lista, Nota, Secao, Tabela } from '@/components/conteudo'
 import { WIREFRAMES } from '@/components/wireframe'
 import { CSD } from '@/content/analises'
-import { integrantePorId } from '@/content/equipe'
-import {
-  DEMO_PITCH,
-  DURACAO_PITCH_SEGUNDOS,
-  SLIDES,
-  formatarTempo,
-  inicioDoSlide,
-} from '@/content/pitch'
+import { DEMO_PITCH } from '@/content/pitch'
 import { LEGENDAS_DO_WIREFRAME } from '@/content/pitch'
 import { OBJETIVOS_ESPECIFICOS, OBJETIVO_GERAL, URL_REPOSITORIO } from '@/content/produto'
 import type { Documento, RegistroSemana } from '@/lib/registro/tipos'
@@ -158,7 +151,6 @@ export const registro = {
     conteudo: [
       { tipo: 'prototipo', rotulo: 'Os slides do pitch, no site', url: '/pitch' },
       { tipo: 'documento', rotulo: 'A régua oficial', url: '#doc-ko-regua-oficial' },
-      { tipo: 'documento', rotulo: 'Roteiro do pitch', url: '#doc-ko-roteiro-pitch' },
       { tipo: 'documento', rotulo: 'Objetivo geral e específicos', url: '#doc-ko-objetivos' },
       { tipo: 'documento', rotulo: 'Matriz CSD', url: '#doc-ko-csd' },
       { tipo: 'prototipo', rotulo: 'Wireframes de baixa fidelidade', url: '#doc-ko-wireframes' },
@@ -173,33 +165,6 @@ export const registro = {
 } satisfies RegistroSemana
 
 export const documentos = [
-  {
-    id: 'roteiro-pitch',
-    titulo: `Roteiro do pitch: ${formatarTempo(DURACAO_PITCH_SEGUNDOS)}`,
-    resumo: `os ${SLIDES.length} slides, com o tempo, quem fala e o que a tela mostra em cada um.`,
-    Conteudo: () => (
-      <>
-        <Tabela
-          colunas={['Começa em', 'Slide', 'Quem fala', 'O que a tela mostra', 'Tempo']}
-          linhas={SLIDES.map((slide, indice) => [
-            formatarTempo(inicioDoSlide(indice)),
-            `${slide.numero}. ${slide.titulo}`,
-            integrantePorId(slide.quemFala).nome.split(' ')[0],
-            slide.visual,
-            formatarTempo(slide.segundos),
-          ])}
-        />
-        <div className="mt-3">
-          <Nota>
-            Soma: {formatarTempo(DURACAO_PITCH_SEGUNDOS)}. A fala de cada slide está nas notas do
-            apresentador, em /pitch, com a tecla n. Quem fala não opera: uma pessoa fica na
-            tela o tempo todo, avançando com as setas. O deck baixa o PDF de reserva pelo
-            próprio cabeçalho, para o caso de a sala não ter rede.
-          </Nota>
-        </div>
-      </>
-    ),
-  },
   {
     id: 'regua-oficial',
     titulo: 'A régua oficial: Portaria Conjunta nº 001/2024',
@@ -283,31 +248,6 @@ export const documentos = [
             A demonstração do pitch usa a unidade sintética {DEMO_PITCH.unidadeId} na regra
             v2, a deduzida em 22/08. A régua oficial vira a regra v3 na Semana 5, e o slide 7
             diz isso em voz alta.
-          </Nota>
-        </div>
-      </>
-    ),
-  },
-  {
-    id: 'perguntas',
-    titulo: 'Perguntas prováveis da banca',
-    resumo: 'o que esperamos ouvir e a resposta que o repositório sustenta.',
-    Conteudo: () => (
-      <>
-        <Lista
-          itens={[
-            '"Vocês já falaram com o cliente?" Sim. Reunião em 22/08 com a SECOGE, ata sintetizada na Semana 3; e em 05/09 o órgão enviou a portaria e uma planilha anonimizada. A validação formal da régua com a SEAB está marcada para o caminho até o SR1.',
-            '"E se a portaria mudar?" Regra é dado versionado, não código. Cria-se uma versão nova; os meses já homologados continuam reproduzindo o resultado antigo, porque cada ciclo aponta para a versão que usou. A própria chegada da portaria oficial é o primeiro caso real disso: vira a regra v3.',
-            '"Qual o diferencial em relação à planilha?" A memória de cálculo: cada número responde de onde veio, com o subindicador, a meta e o peso que o geraram. E a trilha: toda escrita tem autor, data, antes e depois. Nenhuma ferramenta pronta do benchmarking da Semana 2 versiona regra normativa nem produz memória de cálculo.',
-            '"Onde entra o machine learning, e por que ele não decide?" Fora do cálculo. Os modelos treinam offline e publicam sinais na tela de analytics, cada um com a linha de base ao lado; o classificador de meta perde para o palpite majoritário e isso está escrito. A portaria é determinística; o modelo diz onde olhar, não quanto alguém recebe.',
-            '"Por que o banco está desligado?" Porque o MVP não precisa dele para provar a tese, e ligar um banco a um repositório público com dado de servidor seria o risco errado na hora errada. O schema PostgreSQL com RLS e gatilhos está escrito e testado contra um banco real; a camada de dados isola as telas para ele entrar sem reescrever tela.',
-            '"Como garantem que não há dado real?" A base é gerada por script com semente fixa, e há teste que falha se um CPF, e-mail ou telefone aparecer nela. A planilha anonimizada do cliente não entrou no repositório, e nenhum dado real entra em prompt de IA.',
-          ]}
-        />
-        <div className="mt-3">
-          <Nota>
-            O Kick-off tem peso formativo na matriz: a nota não vem daqui, mas o direcionamento
-            que sai da arguição orienta tudo até o SR1.
           </Nota>
         </div>
       </>

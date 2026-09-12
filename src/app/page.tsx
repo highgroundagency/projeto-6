@@ -22,7 +22,7 @@ import { TimelineCiclos, TrilhaMarcos } from '@/components/registro/trilhas'
 import { ExplicacaoDosPerfis } from '@/components/sistema/perfis'
 import { carregarCiclos, temRegistro } from '@/content/ciclos/registro'
 import { EQUIPE, SELO_PAPEIS } from '@/content/equipe'
-import { INSTITUICAO, PERGUNTA_DO_PROJETO, PROBLEMA } from '@/content/produto'
+import { INSTITUICAO, O_QUE_E, PERGUNTA_DO_PROJETO, PROBLEMA } from '@/content/produto'
 import { cicloPorId } from '@/lib/cronograma'
 import { cicloCorrente, proximoMarco } from '@/lib/releases'
 import { formatarBR } from '@/lib/datas'
@@ -98,8 +98,8 @@ export default async function Pagina() {
           {/* O subtítulo diz o que o sistema FAZ, numa frase que qualquer
               pessoa entende. O problema fica para o bloco abaixo. */}
           <p className="prosa mt-7 text-base lowercase">
-            a conta da gratificação feita às claras: qualquer número da tela mostra de onde
-            veio.
+            o sistema que faz a conta do bônus dos postos de saúde do recife, e mostra de
+            onde cada número veio.
           </p>
 
           {/* Dois caminhos, um por linha: o sistema e as entregas da semana.
@@ -110,6 +110,33 @@ export default async function Pagina() {
               ver entregas ↓
             </Chamada>
           </div>
+        </section>
+
+        {/* O QUE É ISSO, em três frases, antes de tudo. Quem ler só este bloco
+            já entendeu o projeto. Veio de uma reclamação certeira: o site
+            explicava método e arquitetura e não dizia o que o Prumo é. */}
+        <section className="bloco revelar" aria-labelledby="titulo-o-que-e">
+          <h2 id="titulo-o-que-e" className="rotulo">
+            o que é isso
+          </h2>
+          <div className="mt-5 max-w-[46rem] space-y-3">
+            {O_QUE_E.map((frase, indice) => (
+              <p
+                key={frase}
+                className={indice === O_QUE_E.length - 1 ? 'fonte-display text-lg text-texto sm:text-xl' : 'text-base'}
+              >
+                {frase}
+              </p>
+            ))}
+          </div>
+          <p className="prosa mt-6 text-sm lowercase">
+            este site é o diário do projeto: o que a equipe fez a cada semana, com as entregas
+            dentro. o sistema em si fica em{' '}
+            <Link href="/sistema" className="underline underline-offset-4">
+              /sistema
+            </Link>
+            .
+          </p>
         </section>
 
         {/* A entrega da vez vem ANTES do índice: a primeira pergunta de quem
@@ -215,9 +242,8 @@ export default async function Pagina() {
             o usuário
           </h2>
           <p className="prosa mt-2 text-sm lowercase">
-            quatro papéis no sistema, e o que cada um pode e não pode fazer. quem são essas
-            pessoas, o que elas temem e o que elas precisam está nas personas e no mapa de
-            empatia.
+            quatro tipos de pessoa usam o sistema. aqui está o que cada uma pode fazer. quem
+            são elas, e o que elas temem, está nas personas e no mapa de empatia.
           </p>
           <div className="mt-6">
             <ExplicacaoDosPerfis telas={featuresLiberadas(visao)} />
@@ -290,16 +316,12 @@ export default async function Pagina() {
               chega não sabe o que é diário e o que é programa. */}
           <div className="prosa mt-4 space-y-3 text-sm">
             <p>
-              este site tem duas partes. esta página é o diário do projeto: o que a equipe fez a
-              cada semana, com as entregas dentro. o{' '}
-              <Link href="/sistema" className="underline underline-offset-4">
-                sistema
-              </Link>{' '}
-              é o programa de exemplo que faz a conta da gratificação.
+              a solução é um sistema onde cada unidade informa os números do mês, o sistema
+              faz a conta, e o gestor vê a nota com a conta aberta.
             </p>
             <p>
-              no sistema, todo mês passa pelas etapas abaixo, sempre nesta ordem e uma de cada
-              vez. cada passagem fica gravada num histórico que ninguém consegue apagar.
+              todo mês passa pelas etapas abaixo, nesta ordem. cada passo fica gravado num
+              histórico que ninguém apaga.
             </p>
           </div>
 
@@ -313,7 +335,8 @@ export default async function Pagina() {
                 icone={<ClipboardCheck size={24} strokeWidth={1.5} />}
                 titulo="1 · cada unidade informa seus números"
               >
-                quem tem o dado preenche os subindicadores e diz de onde cada número veio, dentro do prazo. nos dias finais, a janela de revisão deixa corrigir com histórico.
+                a unidade preenche os itens medidos e diz de onde cada número veio, dentro do
+                prazo. nos últimos dias dá para corrigir, e a correção fica no histórico.
               </AcaoDoFluxo>
               <Conector />
               <EstadoDoFluxo explicacao="o prazo acabou. a SEAB confere os números antes da conta.">
@@ -371,9 +394,8 @@ export default async function Pagina() {
             o processo
           </h2>
           <p className="prosa mt-2 text-sm lowercase">
-            o que a equipe estudou antes de decidir, e como a ideia foi escolhida: a matriz de
-            certezas, suposições e dúvidas, o que já existe lá fora, o retrato do projeto e as
-            três dinâmicas de ideação.
+            como a gente chegou na ideia. o que já sabíamos, o que era chute, o que já existe
+            por aí, e as dinâmicas que usamos para escolher.
           </p>
           <AtalhosDeDocumento
             documentos={escolher(documentos, [
@@ -402,8 +424,8 @@ export default async function Pagina() {
             o cronograma
           </h2>
           <p className="prosa mt-2 text-sm lowercase">
-            as dezoito semanas do semestre, com o que cada uma entrega, a data, o estado e quem
-            responde. a semana liberada leva ao registro dela.
+            as dezoito semanas do semestre. o que cada uma entrega, quando, em que pé está e
+            quem cuida.
           </p>
           <TimelineCiclos
             visiveis={visao.visiveis}
@@ -423,8 +445,8 @@ export default async function Pagina() {
             os documentos
           </h2>
           <p className="prosa mt-2 text-sm lowercase">
-            tudo que foi entregue até aqui, por semana. cada título abre o documento inteiro
-            dentro da página, sem baixar arquivo e sem trocar de aba.
+            tudo que já foi entregue, semana por semana. clique no título e o documento abre
+            aqui mesmo.
           </p>
           <Biblioteca documentos={documentos} />
         </section>

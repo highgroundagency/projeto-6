@@ -30,11 +30,13 @@ function Bloco({
   children: ReactNode
 }) {
   return (
-    <div className="grid gap-1.5 border-t border-linha py-4 first:border-t-0 sm:grid-cols-[12rem_1fr] sm:gap-6">
-      <div className="flex items-start gap-2 sm:flex-col sm:gap-1.5">
-        {/* Maior e em branco: são as âncoras que o professor procura ao varrer
-            a semana, e em cinza pequeno elas sumiam no corpo do texto. */}
-        <h4 className="rotulo pt-0.5 text-sm text-texto">{rotulo}</h4>
+    <div className="grid gap-2 border-t border-linha py-6 first:border-t-0 sm:grid-cols-[12rem_1fr] sm:gap-6">
+      <div className="flex items-start gap-3 sm:flex-col sm:gap-2">
+        {/* Maior, mais pesado e em branco: são as âncoras que o professor
+            procura ao varrer a semana. Na versão anterior o rótulo era quase
+            do mesmo peso do corpo, e "tá tudo muito igual" foi a reclamação
+            exata de quem tentou ler. */}
+        <h4 className="rotulo pt-0.5 text-base font-semibold text-texto">{rotulo}</h4>
         <Selo selo={bloco.selo} />
       </div>
       <div className="text-sm leading-relaxed">{children}</div>
@@ -43,10 +45,12 @@ function Bloco({
 }
 
 function Itens({ itens }: { itens: readonly string[] }) {
+  // Respiro entre os itens: com 1.5 de espaço, uma lista de cinco avanços
+  // virava um bloco de texto sem começo nem fim.
   return (
-    <ul className="space-y-1.5">
+    <ul className="space-y-3">
       {itens.map((item) => (
-        <li key={item} className="flex gap-2">
+        <li key={item} className="flex gap-2.5">
           <span aria-hidden className="mt-2 h-px w-3 shrink-0 bg-acento" />
           <span>{item}</span>
         </li>
@@ -120,7 +124,9 @@ export function RegistroSemana({
 
       <div className="border-t-2 border-acento px-4 py-2 sm:px-5">
         <Bloco rotulo="Objetivo da semana" bloco={registro.objetivo}>
-          <p className="fonte-display text-base leading-snug">{registro.objetivo.conteudo}</p>
+          <p className="fonte-display text-lg leading-snug text-texto">
+            {registro.objetivo.conteudo}
+          </p>
         </Bloco>
 
         <Bloco rotulo="Avanços" bloco={registro.avancos}>
@@ -128,11 +134,18 @@ export function RegistroSemana({
         </Bloco>
 
         <Bloco rotulo="Decisões" bloco={registro.decisoes}>
-          <ul className="space-y-2">
+          {/* A decisão em título de verdade, o porquê embaixo, e espaço entre
+              uma e outra. Antes eram dois parágrafos do mesmo tamanho, um
+              atrás do outro, e o leitor não sabia onde uma decisão acabava. */}
+          <ul className="space-y-5">
             {registro.decisoes.conteudo.map((decisao) => (
               <li key={decisao.decisao}>
-                <p className="font-medium">{decisao.decisao}</p>
-                <p className="text-apagado">Por quê: {decisao.porque}</p>
+                <p className="fonte-display text-base font-semibold leading-snug text-texto">
+                  {decisao.decisao}
+                </p>
+                <p className="mt-1.5 border-l border-linha-alta pl-3 text-apagado">
+                  {decisao.porque}
+                </p>
               </li>
             ))}
           </ul>
@@ -150,7 +163,7 @@ export function RegistroSemana({
           {feedback === 'nenhum' ? (
             <p className="text-apagado">Nenhum feedback registrado nesta semana.</p>
           ) : (
-            <ul className="space-y-2">
+            <ul className="space-y-3">
               {feedback.map((item) => (
                 <li key={item.texto} className="flex flex-col gap-1 sm:flex-row sm:gap-3">
                   <Etiqueta className="self-start">{ROTULO_ORIGEM[item.origem]}</Etiqueta>
@@ -166,12 +179,12 @@ export function RegistroSemana({
         </Bloco>
 
         <Bloco rotulo="Responsáveis" bloco={registro.responsaveis}>
-          <ul className="space-y-1.5">
+          <ul className="space-y-2.5">
             {registro.responsaveis.conteudo.map((item) => {
               const integrante = integrantePorId(item.integrante)
               return (
                 <li key={item.integrante} className="flex flex-wrap gap-x-2">
-                  <span className="font-medium">{integrante.nome}</span>
+                  <span className="font-semibold text-texto">{integrante.nome}</span>
                   <span aria-hidden className="text-acento">
                     →
                   </span>

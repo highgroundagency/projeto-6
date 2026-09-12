@@ -24,11 +24,26 @@ export const CLIENTE = {
 } as const
 
 /**
+ * O QUE É ISSO, em três frases.
+ *
+ * Nasceu de uma reclamação certeira do dono do projeto: "até agora eu não
+ * entendi o que esse projeto faz". O site explicava o problema, a equipe, o
+ * método e a arquitetura, e não dizia em lugar nenhum, em português de gente,
+ * o que o Prumo é. Isto vai logo abaixo do título, antes de qualquer outra
+ * coisa. Se um visitante ler só isto, ele já entendeu.
+ */
+export const O_QUE_E = [
+  'A prefeitura do Recife paga um bônus para quem cuida bem dos postos de saúde.',
+  'Hoje essa conta é feita à mão, numa planilha, e quase ninguém consegue conferir.',
+  'O Prumo é um sistema que faz essa conta e mostra, número por número, de onde cada resultado veio.',
+] as const
+
+/**
  * O problema em três linhas — abre o registro e o pitch.
  */
 export const PROBLEMA = [
-  'Desde 2023, a Secretaria de Saúde do Recife paga um extra no salário de gestores quando as metas da saúde são atingidas. As metas estão num documento oficial, a portaria.',
-  'Todo mês, dezenas de números vindos de várias áreas precisam virar uma nota para cada gestor. Hoje essa conta é feita à mão, em planilhas.',
+  'Desde 2023, a prefeitura do Recife paga um extra no salário de quem dirige um posto de saúde e bate as metas do mês. As metas estão num documento oficial, chamado portaria.',
+  'Todo mês, dezenas de números de várias áreas viram uma nota para cada gestor. Hoje essa conta é feita à mão, numa planilha.',
   'O resultado: erros difíceis de achar, contas difíceis de conferir, e um processo que depende da memória de poucas pessoas.',
 ] as const
 
