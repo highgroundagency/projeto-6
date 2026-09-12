@@ -84,9 +84,10 @@ O endereço é **`/pitch`**, no próprio site do projeto. Não é PowerPoint: é
 
 ## Se perguntarem
 
-O professor pode perguntar a qualquer um de nós. Estas são as perguntas mais prováveis, com
-a resposta curta. Elas NÃO estão no site de propósito: são material nosso de preparação, não
-entrega.
+O professor pode perguntar a qualquer um de nós. A lista completa, com mais de cinquenta
+perguntas conferidas contra o site e o código, está em `docs/perguntas-da-banca.md`. Ela NÃO
+está no site de propósito: é material nosso de preparação, não entrega. Abaixo, as seis mais
+prováveis.
 
 - **"Vocês já falaram com o cliente?"** Sim. Reunião em 22 de agosto com a secretaria, e a
   ata está no site, na Semana 3. Em 5 de setembro eles mandaram a portaria e uma planilha de
