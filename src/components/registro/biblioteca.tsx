@@ -124,12 +124,19 @@ export function Biblioteca({ documentos }: { documentos: readonly DocumentoNoSit
  * conteúdo dos documentos: elas APONTAM para eles. Conteúdo duplicado é
  * conteúdo que diverge.
  */
-export function AtalhosDeDocumento({ documentos }: { documentos: readonly DocumentoNoSite[] }) {
+export function AtalhosDeDocumento({
+  documentos,
+  comSemana = true,
+}: {
+  documentos: readonly DocumentoNoSite[]
+  /** Falso quando todos vêm da mesma semana: repetir o rótulo em toda linha é ruído. */
+  comSemana?: boolean
+}) {
   if (documentos.length === 0) return null
   return (
     <ul className="mt-5 border-t border-linha">
       {documentos.map((doc) => (
-        <Linha key={doc.ancora} doc={doc} />
+        <Linha key={doc.ancora} doc={doc} comSemana={comSemana} />
       ))}
     </ul>
   )

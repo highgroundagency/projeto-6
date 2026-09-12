@@ -35,14 +35,17 @@ export async function AtalhoDoPitch({ className }: { className?: string }) {
   return (
     <Link
       href="/pitch"
-      title="Pitch do Kick-off"
+      title="A apresentação do Kick-off"
       className={cn(
         'inline-flex shrink-0 items-center gap-1.5 border border-linha-alta px-1.5 py-1 text-xs lowercase transition-colors hover:border-acento hover:text-acento sm:px-2',
         className,
       )}
     >
       <Presentation aria-hidden size={13} strokeWidth={1.5} />
-      <span className="sr-only sm:not-sr-only">pitch</span>
+      {/* "kick-off" e não "pitch": pitch é o nome interno, e quem avalia
+          procura pela palavra que o professor usa. No celular continua só o
+          ícone, senão o cabeçalho estoura em 360px. */}
+      <span className="sr-only sm:not-sr-only">kick-off</span>
     </Link>
   )
 }

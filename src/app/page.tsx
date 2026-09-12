@@ -16,6 +16,7 @@ import {
   listarDocumentos,
 } from '@/components/registro/biblioteca'
 import { CronogramaPublico } from '@/components/registro/cronograma-publico'
+import { EntregaDaVez } from '@/components/registro/entrega-da-vez'
 import { CicloSemRegistro, RegistroSemana } from '@/components/registro/registro-semana'
 import { TimelineCiclos, TrilhaMarcos } from '@/components/registro/trilhas'
 import { ExplicacaoDosPerfis } from '@/components/sistema/perfis'
@@ -23,12 +24,12 @@ import { carregarCiclos, temRegistro } from '@/content/ciclos/registro'
 import { EQUIPE, SELO_PAPEIS } from '@/content/equipe'
 import { INSTITUICAO, PERGUNTA_DO_PROJETO, PROBLEMA } from '@/content/produto'
 import { cicloPorId } from '@/lib/cronograma'
-import { cicloCorrente } from '@/lib/releases'
+import { cicloCorrente, proximoMarco } from '@/lib/releases'
 import { formatarBR } from '@/lib/datas'
 import { ehSemanaCorrente } from '@/lib/releases'
 import { featuresLiberadas } from '@/lib/sistema'
 import { temaAtual } from '@/lib/tema'
-import { obterVisao } from '@/lib/visao'
+import { obterVisao, podeVer } from '@/lib/visao'
 
 /**
  * A página. Não uma porta de entrada para outras páginas: o site inteiro.
@@ -68,6 +69,13 @@ export default async function Pagina() {
   )
   const hoje = cicloCorrente(visao.hoje)
 
+  // A ENTREGA DA VEZ: o próximo marco do cronograma, com o que ele já publicou.
+  // Os documentos saem dos módulos JÁ CARREGADOS, então um marco ainda fechado
+  // aparece com nome e data (que são públicos: é o calendário da disciplina) e
+  // sem uma linha do que ele vai entregar.
+  const marco = proximoMarco(visao.hoje)
+  const moduloDoMarco = marco ? carregados.find((c) => c.id === marco.id) : undefined
+
   return (
     <>
       <FaixaAdmin visao={visao} />
@@ -103,6 +111,18 @@ export default async function Pagina() {
             </Chamada>
           </div>
         </section>
+
+        {/* A entrega da vez vem ANTES do índice: a primeira pergunta de quem
+            abre o site no dia é "o que é hoje", não "o que tem aqui". */}
+        {marco ? (
+          <EntregaDaVez
+            marco={marco}
+            hoje={visao.hoje}
+            objetivo={moduloDoMarco?.modulo.registro.objetivo.conteudo ?? null}
+            documentos={documentos.filter((doc) => doc.ciclo === marco.id)}
+            slidesLiberados={marco.id === 'ko' && podeVer(visao, 'ko')}
+          />
+        ) : null}
 
         {/* O índice das oito seções, logo abaixo do hero: ele é o mapa e a
             ordem de leitura para quem chega para avaliar. */}

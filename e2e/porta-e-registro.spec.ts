@@ -1,4 +1,6 @@
 import { expect, test } from '@playwright/test'
+import { CRONOGRAMA } from '@/lib/cronograma'
+import { hojeEmRecife } from '@/lib/datas'
 import {
   CICLO_DA_SEMANA,
   CICLO_OCULTO,
@@ -112,14 +114,41 @@ test.describe('registro do projeto', () => {
     }
   })
 
-  test('o topo de TODA página oferece o pitch enquanto ele é a entrega da vez', async ({
+  test('a entrega da vez tem nome, data e caminho para a apresentação', async ({ page }) => {
+    // O defeito que originou este teste: o site tinha o Kick-off inteiro
+    // publicado e a palavra "Kick-off" não aparecia em navegação nenhuma. O
+    // índice lista as oito seções do briefing, e nenhuma é a apresentação.
+    await page.goto('/')
+
+    const entrega = page.locator('#entrega')
+    await expect(entrega).toBeVisible()
+    await expect(entrega.getByRole('heading', { name: 'a entrega da vez' })).toBeVisible()
+
+    // O nome do marco vem do cronograma, não de um literal.
+    const marco = CRONOGRAMA.find((c) => c.tipo === 'marco' && c.data >= hojeEmRecife())
+    expect(marco, 'nenhum marco à frente no cronograma').toBeTruthy()
+    await expect(entrega.getByText(marco!.rotulo, { exact: false }).first()).toBeVisible()
+
+    if (DEVE_OFERECER_PITCH) {
+      await expect(entrega.getByRole('link', { name: /ver a apresentação/ })).toBeVisible()
+      // E a palavra que o professor usa está no topo de toda página.
+      await expect(page.locator('header').getByRole('link', { name: 'kick-off' })).toBeVisible()
+      // A rota curta não quebra: quem digita /kickoff cai nos slides.
+      await page.goto('/kickoff')
+      await expect(page).toHaveURL(/\/pitch$/)
+    }
+  })
+
+  test('o topo de TODA página oferece a apresentação enquanto ela é a entrega da vez', async ({
     page,
   }) => {
     // Não só a inicial: a primeira versão do atalho ficou lá, e quem abrisse o
     // sistema ou a arquitetura não tinha caminho nenhum até os slides.
+    // O rótulo é "kick-off" e não "pitch": pitch é o nome interno da equipe, e
+    // quem avalia procura pela palavra que o professor usa.
     for (const rota of ['/', '/sistema', '/arquitetura', '/transparencia-ia', '/status']) {
       await page.goto(rota)
-      const link = page.getByRole('link', { name: 'pitch', exact: true })
+      const link = page.getByRole('link', { name: 'kick-off', exact: true })
 
       if (DEVE_OFERECER_PITCH) {
         await expect(link, rota).toBeVisible()

@@ -77,7 +77,8 @@ src/
 ├── components/
 │   ├── base/            botão, selo, marca, rodapé, cabeçalho, fluxo, faixa do admin
 │   ├── pitch/           o deck do Kick-off: slides no servidor, teclado no cliente
-│   ├── registro/        topo, trilhas, cartão do registro semanal
+│   ├── registro/        topo, trilhas, cartão da semana, entrega da vez,
+│   │                    biblioteca de documentos e cronograma público
 │   ├── sistema/         primitivos, ícones, sanfona da tela, tutorial, perfis
 │   │   └── telas/       o corpo das 8 telas, sem gate por dentro (ADR-023)
 │   ├── conteudo.tsx     primitivos usados pelo conteúdo dos ciclos
