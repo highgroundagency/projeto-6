@@ -1095,3 +1095,44 @@ do checklist apontavam para a semana, não para o documento. Fica em aberto um i
 checklist do professor: a apresentação salva na pasta do Drive da equipe, referenciada no
 site. A variável está prevista no código e vazia; sem a URL da pasta, o site não mostra link
 nenhum.
+
+## ADR-040 · O texto do site passou a ser escrito para quem lê na hora
+
+**Contexto.** Na véspera do Kick-off, o dono do projeto leu o registro da Semana 5 e
+devolveu: "linguagem de máquina, longo demais, tá tudo igual, e até agora eu não entendi o que
+esse projeto faz". Ele tem razão nas quatro. O site foi escrito como folha de especificação,
+e folha de especificação é lida por quem já sabe do que se trata. Quem lê o registro é um
+professor com dezoito projetos para avaliar e seis estudantes que, no meio de uma arguição,
+vão abrir o site para responder uma pergunta sobre uma parte que não construíram. Texto que
+exige contexto prévio é texto que falha exatamente na hora em que é lido.
+
+**Decisão 1: "o que é isso" antes de qualquer outra coisa.** Três frases logo abaixo do
+título, em `src/content/produto.ts`: quem paga, o que está quebrado, o que o Prumo faz. Se um
+visitante ler só isso, ele entendeu. O site inteiro explicava método e arquitetura sem nunca
+dizer isso.
+
+**Decisão 2: uma cartilha de escrita, aplicada a todo o conteúdo dos ciclos.** Frase de até
+quinze palavras. Uma ideia por frase. Nada de lista dentro de frase. Palavra técnica só se a
+própria frase explicar o que ela é; senão, a palavra comum: "item medido" no lugar de
+"subindicador", "histórico de quem mudou o quê" no lugar de "trilha de auditoria", "a regra
+guardada com número de versão" no lugar de "regra versionada". Primeira pessoa do plural é
+bem-vinda: é um diário de equipe, e gente escreve "fechamos", "decidimos". A regra de ouro da
+reescrita: muda como está dito, nunca o que está dito. Todo número, data, nome, id, URL e
+artigo continua exatamente igual, e nenhum fato é acrescentado. Cada arquivo passou por um
+redator e por um conferente que abriu o diff e checou fato a fato.
+
+**Decisão 3: hierarquia visual no cartão da semana.** Os rótulos dos oito blocos ficaram
+maiores e mais pesados. Cada decisão ganhou título de verdade, com o porquê embaixo atrás de
+uma linha, e espaço entre uma e outra. Os itens dos avanços ganharam respiro. Sem cor nova:
+o laranja já está no limite da regra 11, então a hierarquia vem de tamanho, peso e espaço.
+
+**Decisão 4: material de preparação não é entrega.** "Roteiro do pitch" e "Perguntas
+prováveis da banca" estavam publicados como documentos do Kick-off, ao lado da portaria e da
+matriz CSD. Saíram do site. As perguntas foram para `docs/perguntas-da-banca.md`, conferidas
+uma a uma contra o repositório, e o roteiro continua em `docs/pitch-kickoff.md`. O site
+mostra o que a equipe entregou; o que a equipe usa para se preparar fica no repositório.
+
+**Consequência.** A regra de escrita passa a valer para todo texto novo de ciclo, e o
+comentário de cabeçalho de `src/content/produto.ts` aponta para esta ADR. O que NÃO mudou:
+os slides já seguiam a mesma regra desde a ADR-036, com teto de palavras e lista de palavras
+proibidas em teste. Faltava aplicar ao site o que o deck já cumpria.
