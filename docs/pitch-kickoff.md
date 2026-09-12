@@ -60,10 +60,11 @@ vale ponto com a banca, ela entra entre parênteses depois da palavra simples, c
 
 - **Começa em** 0:00 · **dura** 0:20 · **quem fala:** Gabriel · **10 palavras na tela**
 - **Frase da tela:** o cálculo da gratificação, aberto para qualquer um conferir
-- **O que a tela mostra:** Wordmark, a pílula do marco e os seis nomes da equipe.
+- **O que a tela mostra:** Wordmark, a pílula do marco e os nomes da equipe inteira.
 - **A fala:**
   1. Bom dia. Somos a Equipe 2 de Sistemas de Informação, e este é o Prumo.
-  1. Estamos os seis aqui, e qualquer um de nós responde qualquer pergunta no fim.
+  1. Somos sete: o Kerry entrou nesta semana, e hoje apresentam os seis que vinham desde agosto.
+  1. Estamos todos aqui, e qualquer um de nós responde qualquer pergunta no fim.
   1. O cliente é a Secretaria de Saúde do Recife.
 
 ### Slide 2: o caminho de hoje

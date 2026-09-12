@@ -36,13 +36,14 @@ test.describe('página inicial', () => {
     await expect(page.getByRole('heading', { name: 'Evolução do projeto' })).toBeVisible()
     await expect(page.getByRole('heading', { name: 'Registro semanal' })).toBeVisible()
 
-    // Os seis integrantes, com nome.
+    // A equipe inteira, com nome. A lista cresce quando alguém entra.
     for (const nome of [
       'Gabriel',
       'Matheus',
       'João Henrique',
       'João Pedro',
       'Rafael',
+      'Kerry',
       'Fernando',
     ]) {
       await expect(page.getByText(nome, { exact: false }).first()).toBeVisible()

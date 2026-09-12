@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
-import { EQUIPE } from './equipe'
+import { EQUIPE, INTEGRANTES_FUNDADORES } from './equipe'
 import {
   ARQUIVO_PDF,
   CONTAGENS_PITCH,
@@ -56,10 +56,15 @@ describe('o pitch do Kick-off', () => {
     expect(inicioDoSlide(SLIDES.length)).toBe(DURACAO_PITCH_SEGUNDOS)
   })
 
-  it('distribui a fala entre os seis integrantes, e só entre eles', () => {
+  it('distribui a fala entre quem já estava na equipe, e só entre integrantes', () => {
     const ids = new Set(EQUIPE.map((i) => i.id))
     for (const slide of SLIDES) expect(ids.has(slide.quemFala)).toBe(true)
-    expect(new Set(SLIDES.map((s) => s.quemFala)).size).toBe(EQUIPE.length)
+    // Contra os FUNDADORES, não contra a equipe inteira. Quem entra no meio do
+    // semestre aparece na capa, porque está na sala, e não recebe bloco de
+    // fala num pitch que já estava dividido e ensaiado: dar um seria inventar
+    // participação. Quando a pessoa nova tiver semanas de trabalho atrás dela,
+    // ela entra no roteiro do SR1 como qualquer outra.
+    expect(new Set(SLIDES.map((s) => s.quemFala)).size).toBe(INTEGRANTES_FUNDADORES.length)
     // Ninguém fala menos de trinta segundos nem mais de um minuto e meio.
     for (const [, segundos] of tempoPorIntegrante()) {
       // A faixa acompanhou o deck: com 9 minutos entre seis pessoas, a média

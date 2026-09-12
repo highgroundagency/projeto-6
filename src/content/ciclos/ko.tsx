@@ -1,8 +1,14 @@
 import { Citacao, Grade, Cartao, Lista, Nota, Secao, Tabela } from '@/components/conteudo'
 import { WIREFRAMES } from '@/components/wireframe'
 import { CSD } from '@/content/analises'
-import { DEMO_PITCH } from '@/content/pitch'
-import { LEGENDAS_DO_WIREFRAME } from '@/content/pitch'
+import {
+  ARQUIVO_PDF,
+  DEMO_PITCH,
+  DURACAO_PITCH_SEGUNDOS,
+  LEGENDAS_DO_WIREFRAME,
+  SLIDES,
+  formatarTempo,
+} from '@/content/pitch'
 import { OBJETIVOS_ESPECIFICOS, OBJETIVO_GERAL, URL_REPOSITORIO } from '@/content/produto'
 import type { Documento, RegistroSemana } from '@/lib/registro/tipos'
 
@@ -28,6 +34,7 @@ export const registro = {
       'O briefing oficial do Kick-off chegou na véspera. É o documento que diz o que o Kick-off precisa ter. Ele traz sete critérios de avaliação. E pede uma estrutura mínima de oito seções para o site. Conferimos o nosso material contra ele. Achamos três peças que não existiam em lugar nenhum. Eram o objetivo geral com os específicos. A matriz CSD, a lista de certezas, suposições e dúvidas. E os wireframes de baixa fidelidade, os desenhos simples das telas. Produzimos as três nesta semana. Estão nos documentos abaixo, com a data verdadeira.',
       'A apresentação cresceu de nove para dezessete slides. O tempo foi de 4:55 para 9:00, dentro dos dez minutos que o professor liberou. Os slides novos cobrem exatamente os critérios que faltavam. São eles: os objetivos, as fontes da pesquisa, a matriz CSD e o benchmarking com a SWOT. E também as técnicas de ideação, a justificativa da escolha, os wireframes e o cronograma com responsável.',
       'O site ganhou o índice das oito seções no topo. Ganhou a biblioteca com todos os documentos publicados. E ganhou o cronograma das 18 semanas. Cada entrega mostra o estado e o responsável. Até aqui esse cronograma só existia atrás da senha do painel administrativo.',
+      'Kerry Muniz entrou na equipe nesta semana. O nome dele está na capa da apresentação, porque ele está na sala. Ele não recebeu bloco de fala: o roteiro já estava dividido e ensaiado, e dar um a quem chegou ontem seria inventar participação. A frente dele começa na Semana 5, apoiando pesquisa e validação.',
     ],
   },
 
@@ -169,6 +176,37 @@ export const registro = {
 } satisfies RegistroSemana
 
 export const documentos = [
+  {
+    id: 'apresentacao',
+    titulo: 'A apresentação do Kick-off',
+    resumo: 'os dezessete slides, o que tem em cada um, e o caminho para abrir e para baixar.',
+    Conteudo: () => (
+      <>
+        <p>
+          A apresentação não é um arquivo à parte: ela é uma página deste mesmo site, com o
+          sistema rodando de verdade dentro de um dos slides. São {SLIDES.length} slides e{' '}
+          {formatarTempo(DURACAO_PITCH_SEGUNDOS)} de fala.
+        </p>
+        <p>
+          <a href="/pitch" className="underline underline-offset-4 hover:text-acento">
+            Abrir a apresentação →
+          </a>{' '}
+          <span className="text-apagado">ou</span>{' '}
+          <a
+            href={ARQUIVO_PDF}
+            download
+            className="underline underline-offset-4 hover:text-acento"
+          >
+            baixar em PDF
+          </a>
+          . O PDF tem as mesmas telas, para o caso de a sala ficar sem rede.
+        </p>
+        <div className="mt-4">
+          <Lista itens={SLIDES.map((slide) => `${slide.numero}. ${slide.titulo}`)} />
+        </div>
+      </>
+    ),
+  },
   {
     id: 'regua-oficial',
     titulo: 'A regra oficial: Portaria Conjunta nº 001/2024',

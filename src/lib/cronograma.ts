@@ -99,7 +99,7 @@ export const CRONOGRAMA = [
     peso: 0,
     evidencias: [
       'Pitch: problema, objetivos, análises, ideação, solução e cronograma',
-      'Fala distribuída entre os 6 integrantes',
+      'Fala distribuída entre quem apresenta',
       'Objetivo geral e objetivos específicos',
       'Matriz CSD',
       'Wireframes de baixa fidelidade',

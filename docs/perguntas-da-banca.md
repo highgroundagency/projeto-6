@@ -1,6 +1,6 @@
 # Perguntas que a banca pode fazer, e a resposta curta
 
-Para os seis. O professor pode perguntar a qualquer um de nós, sobre qualquer parte. Leia
+Para os sete. O professor pode perguntar a qualquer um de nós, sobre qualquer parte. Leia
 tudo uma vez. Não precisa decorar: precisa saber que a resposta existe e onde ela mora.
 
 Cada resposta aqui foi conferida contra o que está no site e no código. Nada é chute. Se a
@@ -161,7 +161,10 @@ Porque tudo fica versionado no mesmo lugar. Cada documento é lido dentro da pá
 ## O projeto e a equipe
 
 **Como dividiram o trabalho? Como sei que não foi um só?**
-Cada um tem papel e frente declarados no site. Toda semana tem o bloco de responsáveis dizendo quem fez o quê. No pitch os seis falam, e há teste que quebra se alguém sumir.
+Cada um tem papel e frente declarados no site. Toda semana tem o bloco de responsáveis dizendo quem fez o quê. No pitch falam os seis que vinham desde agosto, e há teste que quebra se alguém sumir.
+
+**⚠ Vocês são seis ou sete? Por que aquele nome na capa não apresenta?**
+Sete. O Kerry Muniz entrou nesta semana, no dia do Kick-off. Ele está na capa porque está na sala, e não recebeu bloco de fala porque o roteiro já estava dividido e ensaiado. Dar um a quem chegou ontem seria inventar participação. A partir da Semana 5 ele aparece no registro, apoiando pesquisa e validação, e a frente própria dele será combinada com a equipe.
 
 **⚠ Quanto foi feito com inteligência artificial, e quem conferiu?**
 Bastante, e está tudo escrito: o registro de uso de IA tem 46 linhas com data, o que foi gerado e os arquivos. A regra é "gerado não é entregue": nada entra sem revisão e sem teste. O ponto desconfortável: quem validou as 46 linhas foi sempre a mesma pessoa, o Gabriel.

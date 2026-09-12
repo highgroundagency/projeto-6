@@ -220,7 +220,7 @@ export const SWOT: readonly Quadrante[] = [
     curto: 'cliente real, regra escrita',
     itens: [
       'Temos um cliente real, e o processo dele está escrito numa portaria',
-      'Somos seis, cada um com uma frente bem definida',
+      'Somos sete, com frentes separadas e pouca sobreposição',
       'O problema tem regra escrita: dá para desenhar no sistema e testar',
     ],
   },

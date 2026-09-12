@@ -16,7 +16,8 @@ import { OBJETIVO_GERAL, OBJETIVOS_ESPECIFICOS } from '@/content/produto'
  *
  * Fonte única do roteiro: a rota `/pitch` renderiza estes slides, o registro
  * do ciclo `ko` mostra a mesma tabela, `docs/pitch-kickoff.md` é gerado a partir
- * dela e `pitch.test.ts` confere que a soma fecha em 4:55, que os seis falam e
+ * dela e `pitch.test.ts` confere que a soma fecha no tempo, que todo mundo que
+ * já estava na equipe fala e
  * que nenhum número dito no palco diverge do que o repositório sustenta.
  *
  * Só texto e números aqui, nada de JSX: o arquivo é importado tanto por
@@ -31,7 +32,7 @@ import { OBJETIVO_GERAL, OBJETIVOS_ESPECIFICOS } from '@/content/produto'
  * apresentador — a plateia lia em vez de ouvir. O componente só escolhe a
  * forma do visual; as palavras vêm daqui.
  *
- * PALAVRA DIFÍCIL É PALAVRA FORA. Quem apresenta são os seis, e nem todos
+ * PALAVRA DIFÍCIL É PALAVRA FORA. Quem apresenta são seis pessoas, e nem todas
  * estão dentro de cada parte do projeto: a pessoa precisa ENTENDER o slide
  * enquanto lê. Então nada de "consolidar", "régua", "aplicabilidade",
  * "homologar" ou "memória de cálculo" na tela. Onde o termo técnico vale
@@ -127,12 +128,13 @@ export const SLIDES = [
     numero: 1,
     titulo: 'prumo',
     apoio: 'o cálculo da gratificação, aberto para qualquer um conferir',
-    visual: 'Wordmark, a pílula do marco e os seis nomes da equipe.',
+    visual: 'Wordmark, a pílula do marco e os nomes da equipe inteira.',
     segundos: 20,
     quemFala: 'gabriel',
     notas: [
       'Bom dia. Somos a Equipe 2 de Sistemas de Informação, e este é o Prumo.',
-      'Estamos os seis aqui, e qualquer um de nós responde qualquer pergunta no fim.',
+      'Somos sete: o Kerry entrou nesta semana, e hoje apresentam os seis que vinham desde agosto.',
+      'Estamos todos aqui, e qualquer um de nós responde qualquer pergunta no fim.',
       'O cliente é a Secretaria de Saúde do Recife.',
     ],
   },

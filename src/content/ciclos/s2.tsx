@@ -290,7 +290,7 @@ export const documentos = [
       <>
         <Lista
           itens={[
-            'Até o SR1 (03/10), entregar um protótipo navegável com as telas de lançamento, cálculo e memória de cálculo. Os seis integrantes conferem e aprovam o protótipo entre si.',
+            'Até o SR1 (03/10), entregar um protótipo navegável com as telas de lançamento, cálculo e memória de cálculo. A equipe inteira confere e aprova o protótipo entre si.',
             'Até a Semana 6, ter o motor de cálculo (a parte que faz a conta) coberto por testes automáticos. Os testes cobrem os casos-limite, os de borda. São quatro: valor na fronteira entre faixas, arredondamento, indicador sem lançamento e troca de versão da regra.',
             'Até a Semana 9, mostrar o ciclo inteiro, do lançamento à aprovação. Com o histórico de quem mudou o quê, sem jeito de apagar, e só com dados inventados.',
             'Na Semana 11, colher feedback estruturado de pelo menos um integrante da CAM, por entrevista semiestruturada e questionário. Registrar os ajustes que vierem daí.',

@@ -87,7 +87,7 @@ src/
 ├── content/
 │   ├── ciclos/          um arquivo por ciclo + registry server-only
 │   ├── analises.ts      CSD, benchmarking, SWOT, ideação e mapa de empatia, como dado
-│   ├── equipe.ts        os 6 integrantes e seus papéis
+│   ├── equipe.ts        a equipe, os papéis e em que ciclo cada um entrou
 │   ├── checklist.ts     status das evidências da matriz
 │   ├── travas.ts        travas de release versionadas: liberar um ciclo por commit
 │   ├── pitch.ts         fonte única do pitch: slides, tempos, quem fala, notas

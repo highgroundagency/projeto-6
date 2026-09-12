@@ -121,9 +121,11 @@ export async function Slides() {
         </h1>
         <p className="slide-apoio text-texto">{capa.apoio}</p>
         <p className="mt-6 text-sm">{CLIENTE.orgao}</p>
-        {/* OS SEIS NOMES na capa. O briefing manda a equipe inteira estar
-            presente e diz que o professor pode perguntar a qualquer um: quem
-            assiste precisa saber de quem é cada rosto antes da primeira fala. */}
+        {/* A EQUIPE INTEIRA na capa, não só quem fala. O briefing manda todo
+            mundo estar presente e diz que o professor pode perguntar a
+            qualquer um: quem assiste precisa saber de quem é cada rosto antes
+            da primeira fala. Quem entrou depois do início aparece igual, e a
+            nota do slide diz desde quando. */}
         <ul className="mt-5 flex flex-wrap gap-x-5 gap-y-1 text-sm">
           {EQUIPE.map((integrante) => (
             <li key={integrante.id}>{integrante.nome}</li>

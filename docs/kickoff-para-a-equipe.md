@@ -24,8 +24,8 @@ perguntar, a gente responde; mas o palco é do problema e do caminho até a idei
 
 ## As regras da sala
 
-- **Todos os seis presentes, com a câmera aberta.** Não é formalidade: é parte do que está
-  sendo avaliado.
+- **Todos presentes, com a câmera aberta.** Os sete, incluindo o Kerry, que entrou esta
+  semana. Não é formalidade: é parte do que está sendo avaliado.
 - **Só quem está falando fica com o microfone ligado.** Os outros mudos, sempre.
 - **O professor pode perguntar a qualquer um de nós.** Não existe "essa parte não é minha".
   Por isso este texto existe, e por isso o site tem a seção de documentos: a resposta de
@@ -65,6 +65,10 @@ em qualquer slide e a fala daquele slide aparece, junto com o cronômetro.
 | 9, 10, 11 | as técnicas de ideação, por que a ideia venceu e os wireframes | João Pedro |
 | 12, 13 | a demonstração ao vivo e a regra guardada como dado | João Henrique |
 | 14, 15 | os dados, os modelos e os riscos | Rafael |
+
+O Kerry entrou esta semana e não tem bloco de fala: o roteiro já estava dividido e ensaiado.
+Ele está na capa, está na sala e responde pergunta como qualquer um. Se perguntarem a ele
+algo que ele ainda não sabe, a resposta certa é dizer que entrou agora e passar a bola.
 
 A divisão é uma sugestão que já está no site. Se alguém quiser trocar, troque antes do ensaio,
 não no dia.

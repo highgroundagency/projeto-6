@@ -1,3 +1,5 @@
+import type { CicloId } from '@/lib/cronograma'
+
 /**
  * Equipe 2 — CESAR School, Sistemas de Informação, 2026.2.
  *
@@ -15,6 +17,16 @@ export interface Integrante {
   readonly iniciais: string
   readonly papel: string
   readonly frente: string
+  /**
+   * Ciclo em que a pessoa entrou na equipe. Ausente quer dizer desde a
+   * Semana 1.
+   *
+   * Existe para o site não precisar fingir que o time sempre foi o mesmo.
+   * Quem entra no meio não tem histórico nas semanas anteriores, não aparece
+   * como responsável por elas e não recebe fala num pitch que já estava
+   * ensaiado. O campo é o que permite dizer isso em vez de escondê-lo.
+   */
+  readonly desde?: CicloId
 }
 
 export const EQUIPE = [
@@ -60,12 +72,35 @@ export const EQUIPE = [
     papel: 'Qualidade, documentação e governança',
     frente: 'Testes, documentação técnica, LGPD e registro de uso de IA.',
   },
+  {
+    id: 'kerry',
+    nome: 'Kerry Muniz',
+    iniciais: 'KM',
+    // NÃO é a frente dele: é onde ele apoia enquanto a frente não é definida.
+    // Ele chegou no dia do Kick-off, e inventar um papel fechado para quem
+    // acabou de entrar seria escrever no registro uma coisa que não aconteceu.
+    papel: 'Apoio em pesquisa e validação',
+    frente:
+      'Entrou na equipe no Kick-off. Apoia o benchmarking e os instrumentos de validação, e a frente própria será combinada com a equipe.',
+    desde: 'ko',
+  },
 ] as const satisfies readonly Integrante[]
 
 export type IntegranteId = (typeof EQUIPE)[number]['id']
 
 /** Selo dos papéis: vira 'validado' quando a equipe confirmar a distribuição. */
 export const SELO_PAPEIS = 'validado' as const
+
+/**
+ * Quem já estava na equipe antes do Kick-off.
+ *
+ * É a lista que responde por tudo que aconteceu até aqui: o registro das
+ * semanas 1 a 4, os papéis validados e a fala do pitch. Quem entrou depois
+ * aparece na equipe e no que vem pela frente, nunca no passado.
+ */
+export const INTEGRANTES_FUNDADORES: readonly Integrante[] = (
+  EQUIPE as readonly Integrante[]
+).filter((integrante) => !integrante.desde)
 
 /**
  * O nome curto, sem ambiguidade.
