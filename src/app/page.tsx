@@ -24,7 +24,7 @@ import { carregarCiclos, temRegistro } from '@/content/ciclos/registro'
 import { EQUIPE, SELO_PAPEIS } from '@/content/equipe'
 import { INSTITUICAO, O_QUE_E, PERGUNTA_DO_PROJETO, PROBLEMA } from '@/content/produto'
 import { cicloPorId } from '@/lib/cronograma'
-import { cicloCorrente, proximoMarco } from '@/lib/releases'
+import { cicloCorrente, pitchEmDestaque, proximoMarco } from '@/lib/releases'
 import { formatarBR } from '@/lib/datas'
 import { ehSemanaCorrente } from '@/lib/releases'
 import { featuresLiberadas } from '@/lib/sistema'
@@ -147,7 +147,13 @@ export default async function Pagina() {
             hoje={visao.hoje}
             objetivo={moduloDoMarco?.modulo.registro.objetivo.conteudo ?? null}
             documentos={documentos.filter((doc) => doc.ciclo === marco.id)}
-            slidesLiberados={marco.id === 'ko' && podeVer(visao, 'ko')}
+            // MESMA REGRA DO TOPO, não uma parecida. Enquanto o Kick-off era o
+            // próximo marco isto dizia `marco.id === 'ko'`, e as duas contas
+            // davam o mesmo resultado. Na segunda-feira seguinte o próximo
+            // marco virou o SR1, o topo continuou oferecendo a apresentação por
+            // mais dez dias e este bloco parou: dois lugares respondendo
+            // diferente à mesma pergunta. A janela mora em `pitchEmDestaque`.
+            slidesLiberados={podeVer(visao, 'ko') && pitchEmDestaque(visao.hoje)}
           />
         ) : null}
 

@@ -212,17 +212,37 @@ test.describe('registro do projeto', () => {
     // Semana 2 é a que tem personas, benchmarking e SWOT.
     await page.locator('details[data-ciclo="s2"] > summary').click()
 
-    const swot = page.locator('#doc-s2-swot')
-    await expect(swot).toBeVisible()
-    await expect(swot).not.toHaveAttribute('open', '')
+    // A ÂNCORA MORA NO CORPO, não no `<details>`: o navegador só abre
+    // `<details>` que sejam ANCESTRAIS do alvo do fragmento, nunca o alvo em
+    // si. Enquanto o id ficou na sanfona, o link rolava até ela e a deixava
+    // fechada. O teste agora fala das duas peças separadas, de propósito.
+    const corpo = page.locator('#doc-s2-swot')
+    const sanfona = page.locator('details:has(> #doc-s2-swot)')
 
-    await swot.locator('summary').click()
-    await expect(swot).toHaveAttribute('open', '')
+    await expect(sanfona).toBeVisible()
+    await expect(sanfona).not.toHaveAttribute('open', '')
+    await expect(corpo).toBeHidden()
+
+    await sanfona.locator('summary').click()
+    await expect(sanfona).toHaveAttribute('open', '')
+    await expect(corpo).toBeVisible()
 
     // O documento é conteúdo renderizado, não link para PDF nem aba nova.
     for (const quadrante of ['Forças', 'Fraquezas', 'Oportunidades', 'Ameaças']) {
-      await expect(swot.getByText(quadrante, { exact: true })).toBeVisible()
+      await expect(corpo.getByText(quadrante, { exact: true })).toBeVisible()
     }
+  })
+
+  test('a âncora de um documento abre o documento, não só rola até ele', async ({ page }) => {
+    // A regressão que este teste guarda: com o id no próprio `<details>`, ir
+    // para `/#doc-s2-swot` rolava até a sanfona FECHADA. Quem clicava na
+    // biblioteca chegava numa tela que não mostrava nada, e o bloco de
+    // evidências parecia não levar a lugar nenhum.
+    await page.goto('/#doc-s2-swot')
+
+    await expect(page.locator('details[data-ciclo="s2"]')).toHaveAttribute('open', '')
+    await expect(page.locator('details:has(> #doc-s2-swot)')).toHaveAttribute('open', '')
+    await expect(page.locator('#doc-s2-swot').getByText('Forças', { exact: true })).toBeVisible()
   })
 
   test('nenhuma evidência manda o professor para fora ou para lugar nenhum', async ({

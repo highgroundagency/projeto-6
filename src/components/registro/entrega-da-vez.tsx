@@ -70,7 +70,12 @@ export function EntregaDaVez({
 
       {slidesLiberados ? (
         <div className="mt-7 flex flex-wrap items-center gap-x-6 gap-y-3">
-          <Chamada href="/pitch">ver a apresentação →</Chamada>
+          {/* Nos dez dias seguintes ao Kick-off este bloco já mostra o SR1, e a
+              apresentação continua à mão. Sem o complemento, "ver a apresentação"
+              embaixo do título "SR1" prometeria slides que ainda não existem. */}
+          <Chamada href="/pitch">
+            ver a apresentação{marco.id === 'ko' ? '' : ' do kick-off'} →
+          </Chamada>
           <a
             href={ARQUIVO_PDF}
             download
