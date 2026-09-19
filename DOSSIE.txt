@@ -242,9 +242,7 @@ feedback de professor ou de cliente seria fabricar evidência.
 
   Evidências  [validado, validado por fernando]
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  - [documento] Personas e mapa de empatia -> #doc-s2-personas
-  - [documento] Benchmarking -> #doc-s2-benchmarking
-  - [documento] Análise SWOT -> #doc-s2-swot
+  - nada registrado.
 
   Documentos de entrega desta semana (5)
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -421,8 +419,7 @@ feedback de professor ou de cliente seria fabricar evidência.
 
   Evidências  [validado, validado por fernando]
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  - [documento] Matriz de priorização -> /#ciclo-s3
-  - [documento] Reunião com o cliente registrada -> #doc-s3-reuniao-cliente
+  - nada registrado.
 
   Documentos de entrega desta semana (4)
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -560,8 +557,7 @@ feedback de professor ou de cliente seria fabricar evidência.
 
   Evidências  [validado, validado por fernando]
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  - [documento] Proposta e escopo -> /#ciclo-s4
-  - [documento] Backlog inicial -> /#ciclo-s4
+  - nada registrado.
 
   Documentos de entrega desta semana (3)
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -759,11 +755,6 @@ feedback de professor ou de cliente seria fabricar evidência.
   Evidências  [validado, validado por gabriel]
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   - [prototipo] Os slides do pitch, no site -> /pitch
-  - [documento] A regra oficial -> #doc-ko-regua-oficial
-  - [documento] Objetivo geral e específicos -> #doc-ko-objetivos
-  - [documento] Matriz CSD -> #doc-ko-csd
-  - [prototipo] Wireframes de baixa fidelidade -> #doc-ko-wireframes
-  - [documento] Os sete critérios do Kick-off -> #doc-ko-criterios
   - [codigo] Roteiro, PDF e portaria transcrita ->
     https://github.com/highgroundagency/projeto-6/tree/main/docs
 
@@ -993,9 +984,6 @@ feedback de professor ou de cliente seria fabricar evidência.
 
   Evidências  [rascunho]
   ~~~~~~~~~~~~~~~~~~~~~~
-  - [documento] Arquitetura do MVP -> #doc-s5-arquitetura
-  - [documento] Modelo de dados -> #doc-s5-modelo
-  - [documento] Nuvem: arquitetura nativa e fluxo de dados -> #doc-s5-nuvem
   - [codigo] Motor de cálculo no repositório ->
     https://github.com/highgroundagency/projeto-6
 
@@ -1139,8 +1127,6 @@ feedback de professor ou de cliente seria fabricar evidência.
 
   Evidências  [rascunho]
   ~~~~~~~~~~~~~~~~~~~~~~
-  - [documento] Checklist do SR1 -> #doc-s6-checklist
-  - [documento] Roteiro do pitch -> #doc-s6-pitch
   - [prototipo] Protótipo navegável -> /sistema
 
   Documentos de entrega desta semana (2)
@@ -1219,8 +1205,6 @@ feedback de professor ou de cliente seria fabricar evidência.
 
   Evidências  [rascunho]
   ~~~~~~~~~~~~~~~~~~~~~~
-  - [documento] Pacote de entrega do SR1 -> #doc-sr1-pacote
-  - [documento] Direito: base legal e dados pessoais -> #doc-sr1-direito-base-legal
   - [prototipo] Protótipo apresentado -> /sistema
 
   Documentos de entrega desta semana (2)
@@ -1327,7 +1311,6 @@ feedback de professor ou de cliente seria fabricar evidência.
   ~~~~~~~~~~~~~~~~~~~~~~
   - [prototipo] Tela de lançamento -> /sistema/lancamento
   - [prototipo] Dashboard da CAM -> /sistema/cam
-  - [documento] Fluxo do ciclo -> #doc-s7-fluxo
 
   Documentos de entrega desta semana (1)
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1399,8 +1382,6 @@ feedback de professor ou de cliente seria fabricar evidência.
   Evidências  [rascunho]
   ~~~~~~~~~~~~~~~~~~~~~~
   - [prototipo] Meu resultado -> /sistema/meu-resultado
-  - [testes] Casos-limite do motor -> #doc-s8-casos
-  - [documento] Como o score é calculado -> #doc-s8-calculo
 
   Documentos de entrega desta semana (2)
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1487,7 +1468,6 @@ feedback de professor ou de cliente seria fabricar evidência.
   ~~~~~~~~~~~~~~~~~~~~~~
   - [prototipo] Auditoria -> /sistema/auditoria
   - [dashboard] Painel da gestão -> /sistema/gestao
-  - [documento] O que a trilha registra -> #doc-s9-trilha
 
   Documentos de entrega desta semana (1)
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1562,8 +1542,6 @@ feedback de professor ou de cliente seria fabricar evidência.
   Evidências  [rascunho]
   ~~~~~~~~~~~~~~~~~~~~~~
   - [dashboard] Tela de análises (analytics) -> /sistema/analytics
-  - [documento] Método e limitações -> #doc-s10-metodo
-  - [documento] Os seis cadernos -> #doc-s10-cadernos
   - [codigo] Cadernos (notebooks) e modelos ->
     https://github.com/highgroundagency/projeto-6
 
@@ -1650,8 +1628,7 @@ feedback de professor ou de cliente seria fabricar evidência.
 
   Evidências  [rascunho]
   ~~~~~~~~~~~~~~~~~~~~~~
-  - [documento] Roteiro da entrevista -> #doc-s11-roteiro
-  - [documento] Tarefas do teste de usabilidade -> #doc-s11-tarefas
+  - nada registrado.
 
   Documentos de entrega desta semana (2)
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1731,11 +1708,7 @@ feedback de professor ou de cliente seria fabricar evidência.
 
   Evidências  [rascunho]
   ~~~~~~~~~~~~~~~~~~~~~~
-  - [documento] Planejado × realizado -> #doc-s12-planejado
-  - [documento] Trabalho futuro declarado -> #doc-s12-futuro
-  - [documento] Nuvem: trade-offs de infraestrutura e evolução -> #doc-s12-nuvem
-  - [documento] Direito: Privacy by Design e direitos dos titulares ->
-    #doc-s12-direito-titulares
+  - nada registrado.
 
   Documentos de entrega desta semana (4)
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1886,8 +1859,6 @@ feedback de professor ou de cliente seria fabricar evidência.
 
   Evidências  [rascunho]
   ~~~~~~~~~~~~~~~~~~~~~~
-  - [documento] Pacote final do SR2 -> #doc-sr2-pacote
-  - [documento] As três lentes -> #doc-sr2-lentes
   - [prototipo] Sistema funcionando -> /sistema
 
   Documentos de entrega desta semana (2)

@@ -68,11 +68,7 @@ export const registro = {
   evidencias: {
     selo: 'rascunho',
     validadoPor: null,
-    conteudo: [
-      { tipo: 'documento', rotulo: 'Checklist do SR1', url: '#doc-s6-checklist' },
-      { tipo: 'documento', rotulo: 'Roteiro do pitch', url: '#doc-s6-pitch' },
-      { tipo: 'prototipo', rotulo: 'Protótipo navegável', url: '/sistema' },
-    ],
+    conteudo: [{ tipo: 'prototipo', rotulo: 'Protótipo navegável', url: '/sistema' }],
   },
 } satisfies RegistroSemana
 
@@ -87,12 +83,18 @@ export const documentos = [
           colunas={['Item', 'Critério de pronto']}
           linhas={[
             ['Problema e pergunta', 'Os dois publicados na página, com o nome do cliente'],
-            ['Pesquisa reunida', 'Personas, mapa de empatia, benchmarking e SWOT, tudo no site'],
+            [
+              'Pesquisa reunida',
+              'Personas, mapa de empatia, benchmarking e SWOT, tudo no site',
+            ],
             [
               'Protótipo navegável',
               'Do lançamento ao cálculo, e do cálculo à memória de cálculo. Sem tela morta: toda tela abre e leva a algum lugar',
             ],
-            ['Registro semanal', 'Todas as semanas que já passaram estão publicadas e validadas'],
+            [
+              'Registro semanal',
+              'Todas as semanas que já passaram estão publicadas e validadas',
+            ],
             ['Análises da disciplina', 'Segurança e privacidade, na primeira versão'],
             ['Pitch', 'Ensaiado e cronometrado: cabe em cinco minutos'],
           ]}
@@ -109,8 +111,16 @@ export const documentos = [
         <Tabela
           colunas={['Tempo', 'O quê', 'O que precisa ficar claro']}
           linhas={[
-            ['0:00 a 0:40', 'O problema', 'Dinheiro público calculado à mão, sem deixar rastro'],
-            ['0:40 a 1:30', 'A pergunta e o recorte', 'O que o projeto cobre e o que ficou de fora'],
+            [
+              '0:00 a 0:40',
+              'O problema',
+              'Dinheiro público calculado à mão, sem deixar rastro',
+            ],
+            [
+              '0:40 a 1:30',
+              'A pergunta e o recorte',
+              'O que o projeto cobre e o que ficou de fora',
+            ],
             [
               '1:30 a 3:30',
               'Demonstração',

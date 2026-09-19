@@ -66,11 +66,7 @@ export const registro = {
   evidencias: {
     selo: 'rascunho',
     validadoPor: null,
-    conteudo: [
-      { tipo: 'documento', rotulo: 'Pacote final do SR2', url: '#doc-sr2-pacote' },
-      { tipo: 'documento', rotulo: 'As três lentes', url: '#doc-sr2-lentes' },
-      { tipo: 'prototipo', rotulo: 'Sistema funcionando', url: '/sistema' },
-    ],
+    conteudo: [{ tipo: 'prototipo', rotulo: 'Sistema funcionando', url: '/sistema' }],
   },
 } satisfies RegistroSemana
 
@@ -86,11 +82,17 @@ export const documentos = [
           linhas={[
             ['MVP funcionando', 'Sistema: oito telas, com dados de teste gerados por programa'],
             ['Registro das doze semanas', 'Página inicial, seção Registro semanal'],
-            ['Documentos de pesquisa e proposta', 'Dentro de cada semana, numa sanfona que abre ao clicar'],
+            [
+              'Documentos de pesquisa e proposta',
+              'Dentro de cada semana, numa sanfona que abre ao clicar',
+            ],
             ['Arquitetura e modelo de dados', 'Registro, Semana 5, e docs/arquitetura.md'],
             ['Análise de segurança', 'docs/seguranca.md: STRIDE e OWASP Top 10'],
             ['Análise de privacidade', 'docs/privacidade.md: LGPD e Privacy by Design'],
-            ['Decisões de arquitetura', 'docs/decisoes.md: cada decisão (ADR) com o que se perdeu em troca'],
+            [
+              'Decisões de arquitetura',
+              'docs/decisoes.md: cada decisão (ADR) com o que se perdeu em troca',
+            ],
             ['Uso de IA', 'Transparência no uso de IA'],
             ['Planejado × realizado', 'Registro, Semana 12'],
           ]}

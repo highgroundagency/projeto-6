@@ -79,8 +79,6 @@ export const registro = {
     validadoPor: null,
     conteudo: [
       { tipo: 'dashboard', rotulo: 'Tela de análises (analytics)', url: '/sistema/analytics' },
-      { tipo: 'documento', rotulo: 'Método e limitações', url: '#doc-s10-metodo' },
-      { tipo: 'documento', rotulo: 'Os seis cadernos', url: '#doc-s10-cadernos' },
       { tipo: 'codigo', rotulo: 'Cadernos (notebooks) e modelos', url: URL_REPOSITORIO },
     ],
   },

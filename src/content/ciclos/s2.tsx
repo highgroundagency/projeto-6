@@ -8,12 +8,7 @@ import {
   Secao,
   Tabela,
 } from '@/components/conteudo'
-import {
-  BENCHMARKING,
-  CONCLUSAO_BENCHMARKING,
-  MAPA_DE_EMPATIA,
-  SWOT,
-} from '@/content/analises'
+import { BENCHMARKING, CONCLUSAO_BENCHMARKING, MAPA_DE_EMPATIA, SWOT } from '@/content/analises'
 import type { Documento, RegistroSemana } from '@/lib/registro/tipos'
 
 export const registro = {
@@ -56,8 +51,7 @@ export const registro = {
       },
       {
         decisao: 'Regra de pontuação ganha versão nova em vez de ser editada.',
-        porque:
-          'Um ciclo já aprovado precisa continuar dando o mesmo resultado para sempre.',
+        porque: 'Um ciclo já aprovado precisa continuar dando o mesmo resultado para sempre.',
       },
       {
         decisao: 'A analista da CAM é a persona primária.',
@@ -124,7 +118,8 @@ export const registro = {
       },
       {
         integrante: 'rafael',
-        contribuicao: 'Mapeou quais perguntas do problema um modelo de aprendizado de máquina consegue responder.',
+        contribuicao:
+          'Mapeou quais perguntas do problema um modelo de aprendizado de máquina consegue responder.',
       },
     ],
   },
@@ -132,19 +127,7 @@ export const registro = {
   evidencias: {
     selo: 'validado',
     validadoPor: 'fernando',
-    conteudo: [
-      {
-        tipo: 'documento',
-        rotulo: 'Personas e mapa de empatia',
-        url: '#doc-s2-personas',
-      },
-      {
-        tipo: 'documento',
-        rotulo: 'Benchmarking',
-        url: '#doc-s2-benchmarking',
-      },
-      { tipo: 'documento', rotulo: 'Análise SWOT', url: '#doc-s2-swot' },
-    ],
+    conteudo: [],
   },
 } satisfies RegistroSemana
 

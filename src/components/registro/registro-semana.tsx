@@ -197,7 +197,15 @@ export function RegistroSemana({
 
         <Bloco rotulo="Evidências" bloco={registro.evidencias}>
           {registro.evidencias.conteudo.length === 0 ? (
-            <p className="text-apagado">Sem evidências anexadas nesta semana.</p>
+            /* O bloco não repete os documentos que estão logo abaixo: quando a
+               entrega da semana SÃO eles, ele aponta para lá em vez de listar
+               os mesmos títulos duas vezes, uma delas em cartão que não abre
+               nada. Evidência aqui é só o que mora fora deste cartão. */
+            <p className="text-apagado">
+              {documentos.length > 0
+                ? 'As entregas desta semana são os documentos logo abaixo.'
+                : 'Sem evidências anexadas nesta semana.'}
+            </p>
           ) : (
             <ul className="flex flex-wrap gap-2">
               {registro.evidencias.conteudo.map((evidencia) => {
@@ -233,10 +241,18 @@ export function RegistroSemana({
 
           <div className="mt-4">
             {documentos.map((doc) => (
+              /* A ÂNCORA MORA NO CORPO, não no `<details>`.
+                 Com o id no próprio `<details>`, clicar numa evidência ou num
+                 item da biblioteca rolava até a sanfona e parava ali: o
+                 documento continuava fechado, e a impressão era de link que
+                 não leva a lugar nenhum. O navegador só abre `<details>` que
+                 são ANCESTRAIS do alvo, nunca o alvo em si. Com o id no corpo,
+                 a mesma regra abre o documento e a semana que o contém, sem
+                 uma linha de JavaScript. Navegador antigo continua rolando
+                 sem abrir, que é exatamente o que já fazia. */
               <details
                 key={doc.id}
-                id={`doc-${ciclo.id}-${doc.id}`}
-                className="group/doc scroll-mt-24 border border-linha bg-fundo [&+&]:mt-[-1px]"
+                className="group/doc border border-linha bg-fundo [&+&]:mt-[-1px]"
               >
                 <summary className="flex cursor-pointer list-none items-start justify-between gap-4 px-4 py-3 transition-colors hover:bg-superficie [&::-webkit-details-marker]:hidden">
                   <span className="min-w-0">
@@ -250,7 +266,10 @@ export function RegistroSemana({
                     className="mt-1 shrink-0 text-acento transition-transform group-open/doc:rotate-180"
                   />
                 </summary>
-                <div className="border-t border-linha px-4 py-5">
+                <div
+                  id={`doc-${ciclo.id}-${doc.id}`}
+                  className="scroll-mt-32 border-t border-linha px-4 py-5"
+                >
                   <doc.Conteudo />
                 </div>
               </details>
@@ -279,7 +298,13 @@ export function RegistroSemana({
  * e 11/09 não achava onde estava, e a suíte de ponta a ponta ficava vermelha
  * exigindo uma pílula que a página não tinha como mostrar.
  */
-export function CicloSemRegistro({ ciclo, atual = false }: { ciclo: CicloId; atual?: boolean }) {
+export function CicloSemRegistro({
+  ciclo,
+  atual = false,
+}: {
+  ciclo: CicloId
+  atual?: boolean
+}) {
   const dados = cicloPorId(ciclo)
   return (
     <article

@@ -87,10 +87,7 @@ export const registro = {
   evidencias: {
     selo: 'rascunho',
     validadoPor: null,
-    conteudo: [
-      { tipo: 'documento', rotulo: 'Roteiro da entrevista', url: '#doc-s11-roteiro' },
-      { tipo: 'documento', rotulo: 'Tarefas do teste de usabilidade', url: '#doc-s11-tarefas' },
-    ],
+    conteudo: [],
   },
 } satisfies RegistroSemana
 

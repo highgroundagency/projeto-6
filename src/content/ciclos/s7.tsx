@@ -73,7 +73,6 @@ export const registro = {
     conteudo: [
       { tipo: 'prototipo', rotulo: 'Tela de lançamento', url: '/sistema/lancamento' },
       { tipo: 'prototipo', rotulo: 'Dashboard da CAM', url: '/sistema/cam' },
-      { tipo: 'documento', rotulo: 'Fluxo do ciclo', url: '#doc-s7-fluxo' },
     ],
   },
 } satisfies RegistroSemana

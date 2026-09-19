@@ -111,10 +111,7 @@ export const registro = {
   evidencias: {
     selo: 'validado',
     validadoPor: 'fernando',
-    conteudo: [
-      { tipo: 'documento', rotulo: 'Proposta e escopo', url: '/#ciclo-s4' },
-      { tipo: 'documento', rotulo: 'Backlog inicial', url: '/#ciclo-s4' },
-    ],
+    conteudo: [],
   },
 } satisfies RegistroSemana
 

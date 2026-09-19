@@ -77,7 +77,6 @@ export const registro = {
     conteudo: [
       { tipo: 'prototipo', rotulo: 'Auditoria', url: '/sistema/auditoria' },
       { tipo: 'dashboard', rotulo: 'Painel da gestão', url: '/sistema/gestao' },
-      { tipo: 'documento', rotulo: 'O que a trilha registra', url: '#doc-s9-trilha' },
     ],
   },
 } satisfies RegistroSemana

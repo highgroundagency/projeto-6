@@ -40,12 +40,14 @@ export const registro = {
     validadoPor: null,
     conteudo: [
       {
-        decisao: 'A regra da nota fica guardada como dado, com número de versão, e não como código.',
+        decisao:
+          'A regra da nota fica guardada como dado, com número de versão, e não como código.',
         porque:
           'A portaria muda. Se a regra estivesse escrita dentro do programa, toda mudança exigiria mexer no código e publicar versão nova. E o ciclo antigo deixaria de reproduzir a própria nota.',
       },
       {
-        decisao: 'O motor de cálculo não lê nem grava nada fora dele, não olha o relógio e não sorteia nada.',
+        decisao:
+          'O motor de cálculo não lê nem grava nada fora dele, não olha o relógio e não sorteia nada.',
         porque:
           'Assim testamos as bordas de cada faixa e o arredondamento sem ligar servidor nenhum. E o mesmo dado de entrada dá sempre o mesmo número.',
       },
@@ -76,13 +78,19 @@ export const registro = {
     selo: 'rascunho',
     validadoPor: null,
     conteudo: [
-      { integrante: 'joao-henrique', contribuicao: 'Modelo de dados (o desenho das tabelas) e motor de cálculo.' },
+      {
+        integrante: 'joao-henrique',
+        contribuicao: 'Modelo de dados (o desenho das tabelas) e motor de cálculo.',
+      },
       { integrante: 'rafael', contribuicao: 'Gerador da base de teste, sempre igual.' },
       {
         integrante: 'fernando',
         contribuicao: 'Testes dos casos extremos e documentação técnica.',
       },
-      { integrante: 'kerry', contribuicao: 'Acompanha o desenho da arquitetura e anota dúvidas.' },
+      {
+        integrante: 'kerry',
+        contribuicao: 'Acompanha o desenho da arquitetura e anota dúvidas.',
+      },
     ],
   },
 
@@ -90,13 +98,6 @@ export const registro = {
     selo: 'rascunho',
     validadoPor: null,
     conteudo: [
-      { tipo: 'documento', rotulo: 'Arquitetura do MVP', url: '#doc-s5-arquitetura' },
-      { tipo: 'documento', rotulo: 'Modelo de dados', url: '#doc-s5-modelo' },
-      {
-        tipo: 'documento',
-        rotulo: 'Nuvem: arquitetura nativa e fluxo de dados',
-        url: '#doc-s5-nuvem',
-      },
       { tipo: 'codigo', rotulo: 'Motor de cálculo no repositório', url: URL_REPOSITORIO },
     ],
   },

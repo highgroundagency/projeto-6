@@ -157,15 +157,6 @@ export const registro = {
     validadoPor: 'gabriel',
     conteudo: [
       { tipo: 'prototipo', rotulo: 'Os slides do pitch, no site', url: '/pitch' },
-      { tipo: 'documento', rotulo: 'A regra oficial', url: '#doc-ko-regua-oficial' },
-      { tipo: 'documento', rotulo: 'Objetivo geral e específicos', url: '#doc-ko-objetivos' },
-      { tipo: 'documento', rotulo: 'Matriz CSD', url: '#doc-ko-csd' },
-      {
-        tipo: 'prototipo',
-        rotulo: 'Wireframes de baixa fidelidade',
-        url: '#doc-ko-wireframes',
-      },
-      { tipo: 'documento', rotulo: 'Os sete critérios do Kick-off', url: '#doc-ko-criterios' },
       {
         tipo: 'codigo',
         rotulo: 'Roteiro, PDF e portaria transcrita',

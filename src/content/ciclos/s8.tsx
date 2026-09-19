@@ -73,11 +73,7 @@ export const registro = {
   evidencias: {
     selo: 'rascunho',
     validadoPor: null,
-    conteudo: [
-      { tipo: 'prototipo', rotulo: 'Meu resultado', url: '/sistema/meu-resultado' },
-      { tipo: 'testes', rotulo: 'Casos-limite do motor', url: '#doc-s8-casos' },
-      { tipo: 'documento', rotulo: 'Como o score é calculado', url: '#doc-s8-calculo' },
-    ],
+    conteudo: [{ tipo: 'prototipo', rotulo: 'Meu resultado', url: '/sistema/meu-resultado' }],
   },
 } satisfies RegistroSemana
 

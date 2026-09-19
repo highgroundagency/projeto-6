@@ -69,15 +69,7 @@ export const registro = {
   evidencias: {
     selo: 'rascunho',
     validadoPor: null,
-    conteudo: [
-      { tipo: 'documento', rotulo: 'Pacote de entrega do SR1', url: '#doc-sr1-pacote' },
-      {
-        tipo: 'documento',
-        rotulo: 'Direito: base legal e dados pessoais',
-        url: '#doc-sr1-direito-base-legal',
-      },
-      { tipo: 'prototipo', rotulo: 'Protótipo apresentado', url: '/sistema' },
-    ],
+    conteudo: [{ tipo: 'prototipo', rotulo: 'Protótipo apresentado', url: '/sistema' }],
   },
 } satisfies RegistroSemana
 

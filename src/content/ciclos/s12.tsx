@@ -73,20 +73,7 @@ export const registro = {
   evidencias: {
     selo: 'rascunho',
     validadoPor: null,
-    conteudo: [
-      { tipo: 'documento', rotulo: 'Planejado × realizado', url: '#doc-s12-planejado' },
-      { tipo: 'documento', rotulo: 'Trabalho futuro declarado', url: '#doc-s12-futuro' },
-      {
-        tipo: 'documento',
-        rotulo: 'Nuvem: trade-offs de infraestrutura e evolução',
-        url: '#doc-s12-nuvem',
-      },
-      {
-        tipo: 'documento',
-        rotulo: 'Direito: Privacy by Design e direitos dos titulares',
-        url: '#doc-s12-direito-titulares',
-      },
-    ],
+    conteudo: [],
   },
 } satisfies RegistroSemana
 

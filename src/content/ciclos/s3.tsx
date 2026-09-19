@@ -134,18 +134,7 @@ export const registro = {
   evidencias: {
     selo: 'validado',
     validadoPor: 'fernando',
-    conteudo: [
-      {
-        tipo: 'documento',
-        rotulo: 'Matriz de priorização',
-        url: '/#ciclo-s3',
-      },
-      {
-        tipo: 'documento',
-        rotulo: 'Reunião com o cliente registrada',
-        url: '#doc-s3-reuniao-cliente',
-      },
-    ],
+    conteudo: [],
   },
 } satisfies RegistroSemana
 
