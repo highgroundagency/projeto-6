@@ -28,6 +28,18 @@ export interface ItemCSD {
 /** O que sabemos, com origem verificável. */
 export const CERTEZAS: readonly ItemCSD[] = [
   {
+    resumo: 'a conta de hoje é manual',
+    texto:
+      'A Secretaria confirmou: o cálculo é feito à mão, com PROCV e fórmulas arrastadas célula a célula. A planilha que ela enviou mostra o resultado disso, com três réguas diferentes convivendo no mesmo arquivo.',
+    fonte: 'resposta da Secretaria e a planilha enviada em 22/09',
+  },
+  {
+    resumo: 'a média é das notas',
+    texto:
+      'Cada subindicador vira nota antes de qualquer média, e a média é dessas notas. Em alguns indicadores a média ainda passa por uma segunda régua. Assumimos o contrário até ver a planilha, e corrigimos na regra v3.',
+    fonte: 'planilha do cliente, conferida fórmula a fórmula',
+  },
+  {
     resumo: 'a regra está publicada',
     texto:
       'A Portaria Conjunta nº 001/2024 saiu no Diário Oficial do Recife nº 131, de 21/09/2024. Ela detalha os cinco indicadores e os itens medidos dentro de cada um. Diz também o peso de cada indicador por função.',
@@ -74,22 +86,10 @@ export const SUPOSICOES: readonly ItemCSD[] = [
     fonte: 'src/lib/calculo/motor.ts',
   },
   {
-    resumo: 'a planilha real confirma o modelo',
-    texto:
-      'Desenhamos o cálculo a partir do case e da conversa com o cliente. A Secretaria prometeu mandar a planilha real. É ela que vai dizer se acertamos.',
-    fonte: 'Semana 3, nota das suposições declaradas',
-  },
-  {
     resumo: 'o ciclo é mensal',
     texto:
       'Cada ciclo é um mês inteiro. As unidades enviam os números até o dia 20. Se o ciclo tivesse outro período, a tela de fechamento quebraria. A conta em si continuaria certa.',
     fonte: 'Portaria, art. 7º, lido como regra geral',
-  },
-  {
-    resumo: 'as unidades enviam por planilha',
-    texto:
-      'Hoje o número sai da unidade em planilha ou e-mail. Se existir um sistema de origem, a coleta muda de forma. Aí, digitar o número à mão vira exceção.',
-    fonte: 'reunião de 22/08, não confirmado',
   },
   {
     resumo: 'a comissão decide fora do sistema',
@@ -102,10 +102,10 @@ export const SUPOSICOES: readonly ItemCSD[] = [
 /** O que não sabemos, e a quem vamos perguntar. */
 export const DUVIDAS: readonly ItemCSD[] = [
   {
-    resumo: 'como redistribuir o peso que falta',
+    resumo: 'há um peso em vigor fora da portaria',
     texto:
-      'O art. 8º diz o que fazer quando um indicador fica sem número informado. Ele sai da conta, e o peso dele é dividido entre os outros, na proporção de cada um. Falta saber se essa divisão é entre os pesos do grupo ou entre o total.',
-    fonte: 'a perguntar à Secretaria, entra na regra v3',
+      'A planilha tem duas colunas de peso: a da portaria e a "atual, excepcional". Elas não são iguais, e um subindicador está hoje com peso zero. Falta saber quem decidiu isso, quando, e até quando vale.',
+    fonte: 'planilha do cliente, aba de pesos',
   },
   {
     resumo: 'quem publica, e onde',

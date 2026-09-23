@@ -27,7 +27,7 @@ declarada de produto.
    recusa com motivo, antes de qualquer escrita.
 2. A camada de dados grava o lançamento **e escreve o evento na trilha no mesmo passo**. Não
    existe caminho de escrita que não registre.
-3. A CAM fecha a janela; o estado do ciclo avança um passo e a transição também vira evento.
+3. A SEAB fecha a janela; o estado do ciclo avança um passo e a transição também vira evento.
 4. O motor puro recebe lançamentos, indicadores e a versão da regra vigente na competência, e
    devolve score, faixa e memória de cálculo.
 5. A tela exibe a memória que saiu do mesmo cálculo, nunca uma recontagem paralela.

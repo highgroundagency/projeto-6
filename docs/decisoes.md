@@ -1136,3 +1136,52 @@ mostra o que a equipe entregou; o que a equipe usa para se preparar fica no repo
 comentário de cabeçalho de `src/content/produto.ts` aponta para esta ADR. O que NÃO mudou:
 os slides já seguiam a mesma regra desde a ADR-036, com teto de palavras e lista de palavras
 proibidas em teste. Faltava aplicar ao site o que o deck já cumpria.
+
+## ADR-041 · A regra v3 nasce da planilha do cliente, e as anteriores continuam de pé
+
+**Contexto.** A Secretaria enviou, em 22/09, uma versão anonimizada da planilha que usa hoje.
+Lidas as fórmulas, três coisas que a equipe tinha assumido estavam erradas: a média é das
+**notas** dos subindicadores, não dos valores; indicador sem lançamento **sai da conta e leva o
+peso junto** (art. 8º), em vez de zerar; e a nota é de 0 a 1, não de 0 a 10. A planilha ainda
+mostrou duas coisas que não estavam em lista de dúvida nenhuma: existe subindicador em que
+passar do alvo também perde ponto, e numerador maior que denominador é marcado como ERRO.
+
+**Decisão.** Publicar a `regra-v3` em vez de corrigir o motor. `RegraDePontuacao` ganha
+`metodo`, `graduacoes` e `segundaGraduacao`, todos opcionais; ausentes querem dizer o método
+antigo, então as regras v1 e v2 continuam no arquivo, sem uma vírgula alterada, e os meses que
+fecharam sob elas devolvem os mesmos números. A terceira direção (`faixa_ideal`) não precisou
+de campo novo no cálculo: ela é uma lista de degraus não monótona, e a ordem da lista resolve.
+
+**Consequência.** O motor passou a ter dois caminhos, e isso é dívida real: quem mexer nele
+precisa conferir os dois. Em troca, a promessa central do produto ficou demonstrável em vez de
+prometida, porque a primeira mudança grande de regra aconteceu sem tocar em resultado
+publicado. A checagem de numerador maior que denominador ficou **condicionada à regra** pelo
+mesmo motivo: ligá-la para todos mudaria mês homologado, e um lançamento malformado antigo
+continua valendo o que valia no dia em que foi publicado.
+
+**O que se perdeu.** O método de atingimento fica no código para sempre, mesmo que nenhuma
+regra nova volte a usá-lo. Apagá-lo seria apagar a capacidade de recalcular 2026.
+
+## ADR-042 · Os tipos de unidade passam a ser os da portaria, e as regras antigas são re-chaveadas
+
+**Contexto.** O catálogo tinha quatro tipos: USF, CAPS, UPA e Policlínica. Os dois últimos
+**não existem na portaria**, que nomeia USF, UBT, UBT Mista, CAPS, CECON, UCIS e MAC. A
+planilha confirmou os sete, e ainda mostrou que eles têm porte (USF 1 a 8, MAC 1 a 4, CAPS II
+ou III e CAPS III 24h).
+
+**Decisão.** Corrigir a lista de tipos e remapear as doze unidades sintéticas. As regras v1 e
+v2 apontavam para `upa` e `poli`, tipos que deixaram de existir: em vez de reescrevê-las ou de
+deixar quatro unidades sem aplicabilidade nenhuma nos meses publicados, elas são
+**re-chaveadas** por `TIPO_ANTIGO_VIROU`, que diz de que tipo novo cada tipo antigo virou.
+Mesma meta, mesmo peso, nome do tipo corrigido. Um tipo antigo vira dois quando as unidades
+dele foram para lugares diferentes.
+
+**Consequência.** Nenhuma unidade perde nota em mês publicado. O `id` de cada unidade continua
+o antigo (`upa-andorinha` hoje é a UBT Andorinha), porque ele aparece em URL, teste e documento
+de ciclo, e trocá-lo custaria muito para não mudar nada que o visitante veja.
+
+**O que se perdeu.** O porte ficou de fora, declarado em comentário em vez de escondido: ele
+multiplica a régua por oito na USF e não muda a forma do motor. E o schema guardado em
+`supabase/migrations/` ainda tem `cam` no enum de perfil, onde o aplicativo já diz `seab` desde
+a ADR-034. O schema não está no caminho de execução, então a divergência não quebra nada, mas
+ela existe e está registrada aqui em vez de ser descoberta depois.

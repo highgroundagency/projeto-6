@@ -173,7 +173,7 @@ export const documentos = [
                 'Um prazo de REVISÃO de cinco dias no fim do mês. O valor antigo fica guardado no histórico.',
               ],
               [
-                'Perfis CAM, área técnica, gestor e auditoria',
+                'Perfis SEAB, área técnica, gestor e auditoria',
                 'Quatro papéis, com nome: gerente de unidade, gerente distrital, administrador da plataforma e coordenação da SEAB.',
               ],
             ]}

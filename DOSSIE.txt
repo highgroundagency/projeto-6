@@ -437,7 +437,7 @@ feedback de professor ou de cliente seria fabricar evidência.
        Áreas técnicas sem hierarquia, todas com as mesmas metas e pesos | As metas e os pesos dependem do TIPO da unidade (USF, CAPS, UPA, policlínica). Conforme o tipo, só alguns indicadores valem, e os pesos mudam.
        Um gestor por área | A rede tem três níveis: secretaria, distrito sanitário e unidade. O gerente distrital também é avaliado. A nota dele junta as notas das unidades do distrito.
        Correção dentro do prazo de lançamento | Um prazo de REVISÃO de cinco dias no fim do mês. O valor antigo fica guardado no histórico.
-       Perfis CAM, área técnica, gestor e auditoria | Quatro papéis, com nome: gerente de unidade, gerente distrital, administrador da plataforma e coordenação da SEAB.
+       Perfis SEAB, área técnica, gestor e auditoria | Quatro papéis, com nome: gerente de unidade, gerente distrital, administrador da plataforma e coordenação da SEAB.
 
       Gerente de unidade
       ator 1Dirige uma unidade de saúde. Preenche os itens medidos do mês. Responde pela nota da unidade, que segue as metas e os pesos do tipo dela.
@@ -838,6 +838,8 @@ feedback de professor ou de cliente seria fabricar evidência.
 
        Certezas | De onde vem
 
+       A Secretaria confirmou: o cálculo é feito à mão, com PROCV e fórmulas arrastadas célula a célula. A planilha que ela enviou mostra o resultado disso, com três réguas diferentes convivendo no mesmo arquivo. | resposta da Secretaria e a planilha enviada em 22/09
+       Cada subindicador vira nota antes de qualquer média, e a média é dessas notas. Em alguns indicadores a média ainda passa por uma segunda régua. Assumimos o contrário até ver a planilha, e corrigimos na regra v3. | planilha do cliente, conferida fórmula a fórmula
        A Portaria Conjunta nº 001/2024 saiu no Diário Oficial do Recife nº 131, de 21/09/2024. Ela detalha os cinco indicadores e os itens medidos dentro de cada um. Diz também o peso de cada indicador por função. | docs/portaria-001-2024.md
        Todo mês, o fechamento é feito numa planilha. A conferência é linha a linha, e poucas pessoas fazem esse trabalho. | enunciado do case e reunião de 22/08
        O art. 7º manda a SEGTES pedir que o resultado entre na folha de pagamento. O prazo é o 6º dia útil do segundo mês. Não é um número de vitrine: é dinheiro no salário. | Portaria, art. 7º
@@ -850,16 +852,14 @@ feedback de professor ou de cliente seria fabricar evidência.
        Suposições | De onde vem
 
        A nota do distrito é a média simples das notas das unidades. Unidade grande e unidade pequena pesam igual. A conta real pode ser outra. Se for, ela vira um campo na regra guardada, sem reescrever o sistema. | src/lib/calculo/motor.ts
-       Desenhamos o cálculo a partir do case e da conversa com o cliente. A Secretaria prometeu mandar a planilha real. É ela que vai dizer se acertamos. | Semana 3, nota das suposições declaradas
        Cada ciclo é um mês inteiro. As unidades enviam os números até o dia 20. Se o ciclo tivesse outro período, a tela de fechamento quebraria. A conta em si continuaria certa. | Portaria, art. 7º, lido como regra geral
-       Hoje o número sai da unidade em planilha ou e-mail. Se existir um sistema de origem, a coleta muda de forma. Aí, digitar o número à mão vira exceção. | reunião de 22/08, não confirmado
        O sistema registra o resultado. A comissão continua decidindo em reunião, fora do sistema. Se ela quiser decidir por dentro, entra uma tela nova. | leitura do art. 6º pela equipe
 
       Dúvidas
 
        Dúvidas | De onde vem
 
-       O art. 8º diz o que fazer quando um indicador fica sem número informado. Ele sai da conta, e o peso dele é dividido entre os outros, na proporção de cada um. Falta saber se essa divisão é entre os pesos do grupo ou entre o total. | a perguntar à Secretaria, entra na regra v3
+       A planilha tem duas colunas de peso: a da portaria e a "atual, excepcional". Elas não são iguais, e um subindicador está hoje com peso zero. Falta saber quem decidiu isso, quando, e até quando vale. | planilha do cliente, aba de pesos
        A portaria diz que a comissão divulga o resultado. Não sabemos onde ela publica. Também não sabemos se cada gestor recebe um aviso. | a perguntar à Secretaria
        O prazo para recorrer existe. Mas não sabemos como o recurso é feito hoje: em papel, por e-mail ou num formulário. A resposta define como a tela de contestação vai se encaixar no que já existe. | a perguntar à Secretaria
        Hoje todos os dados são inventados por um programa gerador. Falta saber se o sistema pode um dia receber dado de verdade. E, se puder, com que base legal e quem responde por ele. | lente de Direito, docs/privacidade.md
@@ -987,7 +987,7 @@ feedback de professor ou de cliente seria fabricar evidência.
   - [codigo] Motor de cálculo no repositório ->
     https://github.com/highgroundagency/projeto-6
 
-  Documentos de entrega desta semana (3)
+  Documentos de entrega desta semana (4)
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   >>> NUVEM: ARQUITETURA NATIVA E FLUXO DE DADOS
@@ -1068,15 +1068,52 @@ feedback de professor ou de cliente seria fabricar evidência.
       Entidade | Guarda | Observação
 
        Distrito sanitário | Nome | Três na base de teste. Cada um tem uma gerência distrital, que também recebe nota
-       Tipo de unidade | Nome e sigla (USF, CAPS, UPA, POLI) | O tipo decide quais indicadores valem para a unidade, com qual meta e qual peso
+       Tipo de unidade | Nome e sigla (USF, UBT, UBT Mista, CAPS, CECON, UCIS, MAC) | Sete, os mesmos que a portaria nomeia. O tipo decide quais indicadores valem para a unidade, com qual meta e qual peso
        Unidade | Nome, distrito e tipo | Doze na base de teste. É quem informa os números e quem recebe a nota
-       Indicador | Nome, unidade de medida, direção e fonte | Sete no catálogo. Não tem meta nem peso próprios: isso fica na regra
-       Subindicador | Nome e tipo: índice, ou razão com numerador e denominador | Onze. É o item que a unidade de fato preenche. O indicador é a junção deles
+       Indicador | Nome, unidade de medida, direção e fonte | Oito no catálogo. Não tem meta nem peso próprios: isso fica na regra
+       Subindicador | Nome e tipo: índice, ou razão com numerador e denominador | Doze. É o item que a unidade de fato preenche. O indicador é a junção deles
        Regra | Faixas de nota, metas e pesos por tipo de unidade (aplicabilidades), período em que vale e versão | Mudar a regra cria uma versão nova. O mês avaliado escolhe qual versão vale
        Ciclo | O mês avaliado (competência), o estado, a janela de lançamento e o início da revisão | Só avança um passo por vez. Os dias finais são a janela de revisão
        Lançamento | Valor OU numerador e denominador, evidência, autor e data | Corrigir é fazer um lançamento novo. O antigo não é sobrescrito
        Avaliação | A nota (score), a faixa e a memória de cálculo da unidade no ciclo, passo a passo | Dá para refazer: recalcular um mês antigo dá o mesmo número. A nota do distrito é a média das unidades
        Evento de auditoria | Quem, quando, o quê, antes e depois | Só cresce: o histórico nunca é editado, só recebe linha nova
+
+  >>> A PLANILHA DO CLIENTE, LIDA FÓRMULA A FÓRMULA
+      âncora no site: #doc-s5-planilha
+      o que a planilha real ensinou, o que ela corrigiu no nosso motor, e as três coisas
+      que ela mostra sobre o problema.
+
+      A Secretaria enviou uma versão anonimizada da planilha que usa hoje. Ela não entra no repositório: o que entra é a regra que a gente aprendeu lendo as fórmulas dela. Não há nome, CPF, e-mail nem telefone de ninguém neste documento, e não havia no arquivo.
+
+      O que a gente tinha assumido errado
+      Três suposições estavam escritas no código como suposições, de propósito. A planilha respondeu as três.
+
+       O que a gente fazia | O que a planilha faz | Quem estava certo
+
+       Média dos valores dos subindicadores, e uma nota no fim | Cada subindicador vira nota primeiro, e a média é das notas | A planilha. Os dois caminhos dão números diferentes, e quem está perto de um degrau sente a diferença
+       Indicador sem lançamento zera e puxa a nota para baixo | Ele sai da conta, e o peso dele sai do denominador junto | A planilha, e é a redistribuição que o art. 8º manda. A fórmula do resultado geral faz exatamente isso
+       Nota de 0 a 10, com faixas de atingimento | Nota de 0 a 1, por degraus escritos dentro da própria régua | A planilha. A escala de 0 a 10 era invenção nossa
+
+      Nenhuma das três custou uma linha do motor. Todas as três eram dado: entraram como a regra v3, e as regras v1 e v2 continuam publicadas, devolvendo os mesmos números dos meses que já fecharam. Era exatamente para isto que a regra virou dado.
+
+      O que ela ensinou que a gente nem sabia perguntar
+      Coisas que não estavam em nenhuma das nossas listas de dúvida.
+
+       - Existe uma terceira direção. Há subindicador em que passar do alvo TAMBÉM perde ponto: atender pouco é subtratamento, atender demais no mesmo mês costuma ser procedimento picado. Uma régua de "maior é melhor" e "menor é melhor" não sabe dizer isso, e premiaria o exagero.
+       - Numerador maior que denominador é ERRO, não desempenho acima de 100%. A planilha escreve a palavra ERRO na célula. O nosso motor deixava passar, e uma vírgula fora do lugar virava nota cheia em silêncio.
+       - Os tipos de unidade são sete, e a gente tinha quatro, dos quais dois não existem. UPA e Policlínica não estão na portaria. Os tipos certos são USF, UBT, UBT Mista, CAPS, CECON, UCIS e MAC, e ainda têm porte (USF 1 a 8, MAC 1 a 4).
+       - A classificação final é por nome, não por percentual: aparecem "Satisfatório" e "Excelente" escritos na planilha. As nossas faixas chamavam isso de "parcial" e "integral", que não é como ninguém lá fala.
+
+      As três coisas que a planilha mostra sobre o problema
+      Não são descuido de ninguém. São o que acontece quando a fórmula é arrastada célula a célula e editada à mão durante anos. É o problema que este projeto existe para resolver, e agora ele tem evidência em vez de retórica.
+
+       Quantas linhas | O que acontece nelas | Efeito
+
+       190 de 228 | Seguem a régua certa: pesos 0,2 / 0,2 / 0,2 / 0,4, somando 1,0 | Nenhum. É a conta correta, e é a maioria
+       6 | Usam pesos 0,2 / 0,2 / 0,8 / 0,5, que somam 1,1 | Quem cai nessas linhas é avaliado numa régua diferente de todo mundo. São dois tipos de unidade que a portaria não nomeia
+       32 | Usam uma função que só existe no Google Planilhas | Aberta no Excel, a célula não recalcula: mostra o último número que o Google gravou. São as linhas dos oito distritos
+
+      O que o Prumo oferece contra isso não é uma planilha melhor. É a conta num lugar só, escrita como dado versionado, com teste que falha quando a soma dos pesos de um tipo não fecha. Uma régua diferente para seis linhas deixa de ser possível, em vez de deixar de ser notada.
 
 --- S6 · Semana 6: Pré-SR1 · 26/09/2026 ----------------------------------------------------
 
@@ -1263,16 +1300,15 @@ feedback de professor ou de cliente seria fabricar evidência.
 
   Objetivo da semana  [rascunho]
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  Fechar o ciclo de lançamento. A área técnica informa os números. A CAM enxerga o funil:
+  Fechar o ciclo de lançamento. A área técnica informa os números. A SEAB enxerga o funil:
   quanto já entrou e o que falta. E cada avanço de estado fica no histórico.
 
   Avanços  [rascunho]
   ~~~~~~~~~~~~~~~~~~~
   - A tela de lançamento passou a conferir o envio antes de aceitar. Ela checa o valor, a
     unidade e a janela do ciclo. Janela é o prazo em que o ciclo ainda recebe lançamentos.
-  - Montamos o painel (dashboard) da Comissão de Avaliação de Metas (CAM). Ele mostra o
-    funil por área: o que cada área já enviou e o que falta. E lista as pendências do ciclo
-    em andamento.
+  - Montamos o painel (dashboard) da SEAB. Ele mostra o funil por área: o que cada área já
+    enviou e o que falta. E lista as pendências do ciclo em andamento.
   - Quando o ciclo muda de estado, o sistema grava o estado anterior e o novo. Isso fica no
     histórico de quem mudou o quê.
   - Corrigir um lançamento agora entra como um registro novo. O anterior continua guardado,
@@ -1303,14 +1339,14 @@ feedback de professor ou de cliente seria fabricar evidência.
   Responsáveis  [rascunho]
   ~~~~~~~~~~~~~~~~~~~~~~~~
   - João Henrique Micucci: Gravação dos dados e histórico de mudanças.
-  - João Pedro Mamede: Telas de lançamento e painel da CAM.
+  - João Pedro Mamede: Telas de lançamento e painel da SEAB.
   - Fernando Cavalcanti: Testes do prazo e da mudança de estado.
   - Kerry Muniz: Apoia a conferência do painel e do histórico.
 
   Evidências  [rascunho]
   ~~~~~~~~~~~~~~~~~~~~~~
   - [prototipo] Tela de lançamento -> /sistema/lancamento
-  - [prototipo] Dashboard da CAM -> /sistema/cam
+  - [prototipo] Painel da SEAB -> /sistema/cam
 
   Documentos de entrega desta semana (1)
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1321,11 +1357,11 @@ feedback de professor ou de cliente seria fabricar evidência.
 
       Estado | Quem move | O que acontece
 
-       rascunho | CAM | O ciclo foi montado, mas o prazo de envio ainda não abriu
+       rascunho | SEAB | O ciclo foi montado, mas o prazo de envio ainda não abriu
        lançamento aberto | Área técnica | A área informa os valores, com evidência, dentro do prazo
-       em validação | CAM | A CAM confere os lançamentos e apura o resultado
+       em validação | SEAB | A SEAB confere os lançamentos e apura o resultado
        homologado | CAM | Resultado aprovado e fechado. O gestor consulta e pode contestar
-       publicado | CAM | Ciclo encerrado. Nada mais entra
+       publicado | SEAB | Ciclo encerrado. Nada mais entra
 
 --- S8 · Semana 8: Sprint 2 · 24/10/2026 ---------------------------------------------------
 
@@ -2862,6 +2898,9 @@ Os porquês completos estão em `docs/decisoes.md`. Os títulos, aqui:
   - ADR-038 · A capa e o fechamento ganharam uma xilogravura, no traço de J. Borges
   - ADR-039 · O briefing oficial do Kick-off chegou, e o deck dobrou de tamanho
   - ADR-040 · O texto do site passou a ser escrito para quem lê na hora
+  - ADR-041 · A regra v3 nasce da planilha do cliente, e as anteriores continuam de pé
+  - ADR-042 · Os tipos de unidade passam a ser os da portaria, e as regras antigas são
+    re-chaveadas
 
 ============================================================================================
 13.  COMO RODAR E COMO CONFERIR

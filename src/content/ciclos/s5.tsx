@@ -311,8 +311,8 @@ export const documentos = [
             ],
             [
               'Tipo de unidade',
-              'Nome e sigla (USF, CAPS, UPA, POLI)',
-              'O tipo decide quais indicadores valem para a unidade, com qual meta e qual peso',
+              'Nome e sigla (USF, UBT, UBT Mista, CAPS, CECON, UCIS, MAC)',
+              'Sete, os mesmos que a portaria nomeia. O tipo decide quais indicadores valem para a unidade, com qual meta e qual peso',
             ],
             [
               'Unidade',
@@ -322,12 +322,12 @@ export const documentos = [
             [
               'Indicador',
               'Nome, unidade de medida, direção e fonte',
-              'Sete no catálogo. Não tem meta nem peso próprios: isso fica na regra',
+              'Oito no catálogo. Não tem meta nem peso próprios: isso fica na regra',
             ],
             [
               'Subindicador',
               'Nome e tipo: índice, ou razão com numerador e denominador',
-              'Onze. É o item que a unidade de fato preenche. O indicador é a junção deles',
+              'Doze. É o item que a unidade de fato preenche. O indicador é a junção deles',
             ],
             [
               'Regra',
@@ -356,6 +356,98 @@ export const documentos = [
             ],
           ]}
         />
+      </>
+    ),
+  },
+  {
+    id: 'planilha',
+    titulo: 'A planilha do cliente, lida fórmula a fórmula',
+    resumo:
+      'o que a planilha real ensinou, o que ela corrigiu no nosso motor, e as três coisas que ela mostra sobre o problema.',
+    Conteudo: () => (
+      <>
+        <Nota>
+          A Secretaria enviou uma versão anonimizada da planilha que usa hoje. Ela não entra no
+          repositório: o que entra é a regra que a gente aprendeu lendo as fórmulas dela. Não há
+          nome, CPF, e-mail nem telefone de ninguém neste documento, e não havia no arquivo.
+        </Nota>
+
+        <Secao
+          titulo="O que a gente tinha assumido errado"
+          descricao="Três suposições estavam escritas no código como suposições, de propósito. A planilha respondeu as três."
+        >
+          <Tabela
+            colunas={['O que a gente fazia', 'O que a planilha faz', 'Quem estava certo']}
+            linhas={[
+              [
+                'Média dos valores dos subindicadores, e uma nota no fim',
+                'Cada subindicador vira nota primeiro, e a média é das notas',
+                'A planilha. Os dois caminhos dão números diferentes, e quem está perto de um degrau sente a diferença',
+              ],
+              [
+                'Indicador sem lançamento zera e puxa a nota para baixo',
+                'Ele sai da conta, e o peso dele sai do denominador junto',
+                'A planilha, e é a redistribuição que o art. 8º manda. A fórmula do resultado geral faz exatamente isso',
+              ],
+              [
+                'Nota de 0 a 10, com faixas de atingimento',
+                'Nota de 0 a 1, por degraus escritos dentro da própria régua',
+                'A planilha. A escala de 0 a 10 era invenção nossa',
+              ],
+            ]}
+          />
+          <Nota>
+            Nenhuma das três custou uma linha do motor. Todas as três eram dado: entraram como a
+            regra v3, e as regras v1 e v2 continuam publicadas, devolvendo os mesmos números dos
+            meses que já fecharam. Era exatamente para isto que a regra virou dado.
+          </Nota>
+        </Secao>
+
+        <Secao
+          titulo="O que ela ensinou que a gente nem sabia perguntar"
+          descricao="Coisas que não estavam em nenhuma das nossas listas de dúvida."
+        >
+          <Lista
+            itens={[
+              'Existe uma terceira direção. Há subindicador em que passar do alvo TAMBÉM perde ponto: atender pouco é subtratamento, atender demais no mesmo mês costuma ser procedimento picado. Uma régua de "maior é melhor" e "menor é melhor" não sabe dizer isso, e premiaria o exagero.',
+              'Numerador maior que denominador é ERRO, não desempenho acima de 100%. A planilha escreve a palavra ERRO na célula. O nosso motor deixava passar, e uma vírgula fora do lugar virava nota cheia em silêncio.',
+              'Os tipos de unidade são sete, e a gente tinha quatro, dos quais dois não existem. UPA e Policlínica não estão na portaria. Os tipos certos são USF, UBT, UBT Mista, CAPS, CECON, UCIS e MAC, e ainda têm porte (USF 1 a 8, MAC 1 a 4).',
+              'A classificação final é por nome, não por percentual: aparecem "Satisfatório" e "Excelente" escritos na planilha. As nossas faixas chamavam isso de "parcial" e "integral", que não é como ninguém lá fala.',
+            ]}
+          />
+        </Secao>
+
+        <Secao
+          titulo="As três coisas que a planilha mostra sobre o problema"
+          descricao="Não são descuido de ninguém. São o que acontece quando a fórmula é arrastada célula a célula e editada à mão durante anos. É o problema que este projeto existe para resolver, e agora ele tem evidência em vez de retórica."
+        >
+          <Tabela
+            colunas={['Quantas linhas', 'O que acontece nelas', 'Efeito']}
+            linhas={[
+              [
+                '190 de 228',
+                'Seguem a régua certa: pesos 0,2 / 0,2 / 0,2 / 0,4, somando 1,0',
+                'Nenhum. É a conta correta, e é a maioria',
+              ],
+              [
+                '6',
+                'Usam pesos 0,2 / 0,2 / 0,8 / 0,5, que somam 1,1',
+                'Quem cai nessas linhas é avaliado numa régua diferente de todo mundo. São dois tipos de unidade que a portaria não nomeia',
+              ],
+              [
+                '32',
+                'Usam uma função que só existe no Google Planilhas',
+                'Aberta no Excel, a célula não recalcula: mostra o último número que o Google gravou. São as linhas dos oito distritos',
+              ],
+            ]}
+          />
+          <Nota>
+            O que o Prumo oferece contra isso não é uma planilha melhor. É a conta num lugar só,
+            escrita como dado versionado, com teste que falha quando a soma dos pesos de um tipo
+            não fecha. Uma régua diferente para seis linhas deixa de ser possível, em vez de
+            deixar de ser notada.
+          </Nota>
+        </Secao>
       </>
     ),
   },

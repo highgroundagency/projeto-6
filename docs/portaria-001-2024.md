@@ -216,9 +216,15 @@ O de maior peso, e o único cujo conteúdo muda inteiro conforme o tipo de unida
 | 11 | Casos novos de tuberculose testados para HIV | 75% |
 
 - Etapa 02: nota de cada subindicador = **resultado ÷ meta**.
-- Etapa 03: desempenho da eSF = média ponderada: subindicadores 1 a 7 (do Ministério da Saúde)
-  com pesos 0,1 / 0,1 / 0,2 / 0,1 / 0,2 / 0,2 / 0,1, o conjunto valendo 0,7; subindicadores 8 a
-  11 (da SESAU) com pesos 0,3 / 0,2 / 0,3 / 0,2, o conjunto valendo 0,3.
+- Etapa 03: desempenho da eSF = média ponderada. Os pesos absolutos, conferidos contra a
+  planilha do cliente, são: subindicadores 1 a 7 (do Ministério da Saúde) com
+  0,05 / 0,05 / 0,1 / 0,05 / 0,1 / 0,1 / 0,05, somando **0,5**; subindicadores 8 a 11 (da
+  SESAU) com 0,15 / 0,1 / 0,15 / 0,1, somando **0,5**.
+  > **Correção de 23/09.** Esta transcrição dizia que os dois blocos valiam 0,7 e 0,3. A
+  > planilha enviada pela Secretaria mostra a divisão **meio a meio**. As proporções DENTRO de
+  > cada bloco estavam certas (0,1 / 0,1 / 0,2 / 0,1 / 0,2 / 0,2 / 0,1 e 0,3 / 0,2 / 0,3 / 0,2,
+  > que é o que se obtém dividindo os absolutos acima pelo peso do bloco); o corte entre blocos
+  > estava errado.
 - Etapa 04: desempenho da unidade = soma do desempenho das eSF ÷ nº de eSF. Etapa 05:
   multiplica-se pelo peso.
 - Base: PEC e SISAB. Peso: **40%**. Mensal, aferição até o 15º dia útil do mês subsequente.
@@ -276,8 +282,13 @@ Só para funções distritais.
 | Régua por tipo de unidade | Aplicabilidade tipo × indicador → meta e peso, na regra versionada | Indicador 4 muda inteiro por tipo (USF, CAPS, UBT, UCIS, CECON, MAC); pesos mudam por função | Confirmado |
 | Periodicidade | Ciclo mensal | Art. 2º: metas mensais; Indicador 3 é bimestral | Confirmado, com exceção a modelar |
 | Nota do distrito | Média simples das unidades do distrito | Média das notas das unidades, em todos os indicadores distritais | Confirmado |
-| Composição do indicador | Média simples dos **valores** apurados dos subindicadores, depois gradua contra a meta do tipo | Média simples das **notas** dos subindicadores, cada uma já graduada ou dividida pela meta; o Indicador 4 usa média **ponderada** com pesos por subindicador | **Diverge**: vira `regra-v3` na Semana 5 |
-| Indicador sem lançamento | `zera_com_aviso` no seed | Art. 8º: desconsidera e **redistribui o peso** proporcionalmente | **Diverge**: o motor já tem `ignora`; falta a redistribuição |
+| Composição do indicador | Média simples das **notas** dos subindicadores, pela régua de degraus da regra, com segunda gradação onde a portaria manda | Idem. Confirmado célula a célula na planilha do cliente | **Resolvido na `regra-v3`** |
+| Indicador sem lançamento | `ignora`: sai da conta e o peso sai do denominador junto | Art. 8º: desconsidera e **redistribui o peso** proporcionalmente. A fórmula do Resultado Geral divide pela soma dos pesos de quem TEM valor | **Resolvido na `regra-v3`** |
+| Direção do indicador | Três: maior melhor, menor melhor e **faixa ideal** | Há subindicador em que passar do alvo também perde ponto | **Resolvido na `regra-v3`** |
+| Numerador maior que denominador | Rejeitado a partir da v3, com aviso | A planilha escreve **ERRO** na célula | **Resolvido na `regra-v3`** |
+| Tipos de unidade | USF, UBT, UBT Mista, CAPS, CECON, UCIS e MAC | Os mesmos sete, com porte (USF 1 a 8, MAC 1 a 4, CAPS II/III e CAPS III 24h) | **Corrigido**; o porte fica para depois |
+| Escala da nota | 0 a 1 por indicador, 0 a 100 no resultado | 0 a 1 em tudo | Confirmado, com a multiplicação por 100 declarada |
+| Rótulo da classificação | insatisfatório, regular, satisfatório, excelente | "Satisfatório" e "Excelente" aparecem escritos na planilha | Confirmado nos nomes; os **percentuais** seguem arbitrados |
 | Quem consolida e homologa | Coordenação da SEAB no sistema | CAM (Art. 5º e 6º), com apoio da SECOGE, quórum de 4 | Perfil do sistema é operacional; a CAM homologa fora dele |
 | Contestação | Tela de contestação sem prazo | Art. 9º: 10 dias corridos para recorrer, 5 dias úteis para responder | Prazo entra na `regra-v3` |
 | Faixa de pagamento | Faixas do seed (sem, parcial, integral) | Art. 10: insatisfatório não recebe; a partir de regular, valor × média ponderada | A ligar às faixas do Decreto nº 36.482/2023, que a equipe ainda não tem |

@@ -10,7 +10,7 @@ export const registro = {
     selo: 'rascunho',
     validadoPor: null,
     conteudo:
-      'Fechar o ciclo de lançamento. A área técnica informa os números. A CAM enxerga o funil: quanto já entrou e o que falta. E cada avanço de estado fica no histórico.',
+      'Fechar o ciclo de lançamento. A área técnica informa os números. A SEAB enxerga o funil: quanto já entrou e o que falta. E cada avanço de estado fica no histórico.',
   },
 
   avancos: {
@@ -18,7 +18,7 @@ export const registro = {
     validadoPor: null,
     conteudo: [
       'A tela de lançamento passou a conferir o envio antes de aceitar. Ela checa o valor, a unidade e a janela do ciclo. Janela é o prazo em que o ciclo ainda recebe lançamentos.',
-      'Montamos o painel (dashboard) da Comissão de Avaliação de Metas (CAM). Ele mostra o funil por área: o que cada área já enviou e o que falta. E lista as pendências do ciclo em andamento.',
+      'Montamos o painel (dashboard) da SEAB. Ele mostra o funil por área: o que cada área já enviou e o que falta. E lista as pendências do ciclo em andamento.',
       'Quando o ciclo muda de estado, o sistema grava o estado anterior e o novo. Isso fica no histórico de quem mudou o quê.',
       'Corrigir um lançamento agora entra como um registro novo. O anterior continua guardado, sem ser sobrescrito.',
     ],
@@ -61,7 +61,7 @@ export const registro = {
         integrante: 'joao-henrique',
         contribuicao: 'Gravação dos dados e histórico de mudanças.',
       },
-      { integrante: 'joao-pedro', contribuicao: 'Telas de lançamento e painel da CAM.' },
+      { integrante: 'joao-pedro', contribuicao: 'Telas de lançamento e painel da SEAB.' },
       { integrante: 'fernando', contribuicao: 'Testes do prazo e da mudança de estado.' },
       { integrante: 'kerry', contribuicao: 'Apoia a conferência do painel e do histórico.' },
     ],
@@ -72,7 +72,7 @@ export const registro = {
     validadoPor: null,
     conteudo: [
       { tipo: 'prototipo', rotulo: 'Tela de lançamento', url: '/sistema/lancamento' },
-      { tipo: 'prototipo', rotulo: 'Dashboard da CAM', url: '/sistema/cam' },
+      { tipo: 'prototipo', rotulo: 'Painel da SEAB', url: '/sistema/cam' },
     ],
   },
 } satisfies RegistroSemana
@@ -87,19 +87,19 @@ export const documentos = [
         <Tabela
           colunas={['Estado', 'Quem move', 'O que acontece']}
           linhas={[
-            ['rascunho', 'CAM', 'O ciclo foi montado, mas o prazo de envio ainda não abriu'],
+            ['rascunho', 'SEAB', 'O ciclo foi montado, mas o prazo de envio ainda não abriu'],
             [
               'lançamento aberto',
               'Área técnica',
               'A área informa os valores, com evidência, dentro do prazo',
             ],
-            ['em validação', 'CAM', 'A CAM confere os lançamentos e apura o resultado'],
+            ['em validação', 'SEAB', 'A SEAB confere os lançamentos e apura o resultado'],
             [
               'homologado',
               'CAM',
               'Resultado aprovado e fechado. O gestor consulta e pode contestar',
             ],
-            ['publicado', 'CAM', 'Ciclo encerrado. Nada mais entra'],
+            ['publicado', 'SEAB', 'Ciclo encerrado. Nada mais entra'],
           ]}
         />
       </>

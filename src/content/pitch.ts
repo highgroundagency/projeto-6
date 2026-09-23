@@ -119,7 +119,7 @@ export const CONTAGENS_PITCH = {
   /** Linhas de "Privacy by Design: onde está no código" em docs/privacidade.md. */
   principiosPrivacidade: 6,
   /** Linhas do registro semanal em docs/uso-de-ia.md. */
-  usosDeIa: 51,
+  usosDeIa: 53,
 } as const
 
 export const SLIDES = [
@@ -506,8 +506,8 @@ export const ROTULOS_DA_BASE = {
 } as const
 
 export const LEGENDAS_DA_BASE = {
-  unidades: 'em 3 distritos, de 4 tipos',
-  subindicadores: 'dentro de 7 indicadores',
+  unidades: 'em 3 distritos, de 7 tipos',
+  subindicadores: 'dentro de 8 indicadores',
   competencias: 'sempre com os mesmos números',
 } as const
 
