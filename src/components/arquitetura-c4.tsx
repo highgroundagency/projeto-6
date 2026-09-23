@@ -249,14 +249,36 @@ function Seta({
   )
 }
 
-function Tela({ largura, altura, titulo, children }: { largura: number; altura: number; titulo: string; children: ReactNode }) {
+/**
+ * `larguraMinima` é o que separa um desenho legível de um desenho bonitinho.
+ *
+ * Um SVG com `width: 100%` encolhe até caber, e encolher texto de 10px num
+ * container de 896px vira poeira de 5px. A largura mínima faz o invólucro
+ * ROLAR na horizontal em vez de espremer, que é a troca certa: rolar é um
+ * incômodo, ilegível é um desenho perdido. Quanto maior o desenho, maior o
+ * piso, e o de componentes tem o maior de todos porque é o que vai para o
+ * projetor.
+ */
+function Tela({
+  largura,
+  altura,
+  titulo,
+  larguraMinima = 720,
+  children,
+}: {
+  largura: number
+  altura: number
+  titulo: string
+  larguraMinima?: number
+  children: ReactNode
+}) {
   return (
     <div className="overflow-x-auto">
       <svg
         viewBox={`0 0 ${largura} ${altura}`}
         role="img"
         aria-label={titulo}
-        style={{ minWidth: 720, width: '100%', height: 'auto', display: 'block' }}
+        style={{ minWidth: larguraMinima, width: '100%', height: 'auto', display: 'block' }}
       >
         <defs>
           <marker
@@ -509,6 +531,252 @@ export function DiagramaConteineres() {
         ry={470}
         larguraRotulo={132}
       />
+    </Tela>
+  )
+}
+
+/* ── nível 3: componentes ───────────────────────────────────────────────── */
+
+/**
+ * As camadas como COLUNAS, e não como faixas empilhadas.
+ *
+ * A versão em mermaid deste mesmo desenho sai com 3283px de altura, porque o
+ * motor de layout empilha uma fronteira embaixo da outra. Altura é o pior
+ * formato possível para projetar: o público lê as três primeiras caixas e perde
+ * o resto. Em colunas, a dependência anda da esquerda para a direita, cabe num
+ * projetor de proporção larga, e a camada de domínio fica onde a leitura
+ * termina, que é exatamente o que ela é.
+ *
+ * O QUE O DESENHO PRECISA PROVAR: que a dependência aponta para dentro. Duas
+ * setas pulam camada de propósito (a tela chama o motor e o repositório direto,
+ * sem passar pela aplicação), e isso é verdade no código, então está no desenho.
+ * O que não acontece nunca é uma seta SAIR do domínio: a coluna do motor recebe
+ * setas e não emite nenhuma para fora dela. É a afirmação que
+ * `src/lib/pureza.test.ts` transforma em teste.
+ */
+
+const COL_W = 214
+const COL_X = [276, 616, 956, 1296, 1636] as const
+const CX = COL_X.map((x) => x + COL_W / 2)
+const LIN_Y = [64, 200, 336, 472] as const
+const CY = LIN_Y.map((y) => y + 42)
+
+export function DiagramaComponentes() {
+  return (
+    <Tela
+      largura={1890}
+      altura={806}
+      larguraMinima={1400}
+      titulo="Diagrama de componentes do App Router"
+    >
+      {/* fronteiras: uma por camada, na ordem da dependência */}
+      <Fronteira x={COL_X[0] - 14} y={48} w={COL_W + 28} h={546} nome="apresentação" nota="server components" />
+      <Fronteira x={COL_X[1] - 14} y={48} w={COL_W + 28} h={546} nome="portões" nota="release, depois perfil" />
+      <Fronteira x={COL_X[2] - 14} y={48} w={COL_W + 28} h={546} nome="aplicação" nota="rotas e estado" />
+      <Fronteira x={COL_X[3] - 14} y={48} w={COL_W + 28} h={546} nome="domínio" nota="puro: sem I/O, sem relógio" />
+      <Fronteira x={COL_X[4] - 14} y={48} w={COL_W + 28} h={546} nome="acesso a dados" nota="driver único" />
+
+      <Caixa x={24} y={200} w={160} h={84} tipo="pessoa" nome="Usuário" desc="os quatro perfis, mais o professor" variante="pessoa" />
+
+      {/* apresentação */}
+      <Caixa x={COL_X[0]} y={LIN_Y[0]} w={COL_W} h={84} tipo="componente" nome="app/page.tsx" desc="as oito seções e o diário semanal" />
+      <Caixa x={COL_X[0]} y={LIN_Y[1]} w={COL_W} h={84} tipo="componente" nome="sistema/telas" desc="as oito telas, sem portão por dentro" />
+      <Caixa x={COL_X[0]} y={LIN_Y[2]} w={COL_W} h={84} tipo="componente" nome="memoria.tsx" desc="a conta aberta; só exibe, não recalcula" />
+
+      {/* portões */}
+      <Caixa x={COL_X[1]} y={LIN_Y[0]} w={COL_W} h={84} tipo="borda" nome="middleware.ts" desc="barra /admin antes de acordar a função" />
+      <Caixa x={COL_X[1]} y={LIN_Y[1]} w={COL_W} h={84} tipo="componente" nome="exigirFeature + exigirPerfil" desc="os dois portões, nessa ordem" tamanhoNome={11} />
+      <Caixa x={COL_X[1]} y={LIN_Y[2]} w={COL_W} h={84} tipo="componente" nome="lib/features.ts" desc="tela → ciclo que a libera, e perfis" />
+      <Caixa x={COL_X[1]} y={LIN_Y[3]} w={COL_W} h={84} tipo="componente" nome="lib/admin/guard.ts" desc="sessão, senha e tentativas" />
+
+      {/* aplicação */}
+      <Caixa x={COL_X[2]} y={LIN_Y[0]} w={COL_W} h={84} tipo="rotas" nome="app/api/**/route.ts" desc="onze rotas de escrita" />
+      <Caixa x={COL_X[2]} y={LIN_Y[1]} w={COL_W} h={84} tipo="componente" nome="lib/visao.ts" desc="resolve admin, data simulada e ciclos" />
+      <Caixa x={COL_X[2]} y={LIN_Y[2]} w={COL_W} h={84} tipo="componente" nome="lib/config/store.ts" desc="estado de release, driver trocável" />
+
+      {/* domínio */}
+      <Caixa x={COL_X[3]} y={LIN_Y[0]} w={COL_W} h={84} tipo="puro" nome="calculo/motor.ts" desc="a nota, a faixa e a memória" variante="foco" />
+      <Caixa x={COL_X[3]} y={LIN_Y[1]} w={COL_W} h={84} tipo="puro" nome="lib/releases.ts" desc="o que está visível hoje" />
+      <Caixa x={COL_X[3]} y={LIN_Y[2]} w={COL_W} h={84} tipo="puro" nome="lib/cronograma.ts" desc="fonte única das datas" />
+      <Caixa x={COL_X[3]} y={LIN_Y[3]} w={COL_W} h={84} tipo="puro" nome="lib/datas.ts" desc="aritmética civil em Recife" />
+
+      {/* acesso a dados */}
+      <Caixa x={COL_X[4]} y={LIN_Y[0]} w={COL_W} h={84} tipo="componente" nome="lib/dados/index.ts" desc="repositório; a tela nunca fala com o seed" />
+      <Caixa x={COL_X[4]} y={LIN_Y[1]} w={COL_W} h={84} tipo="componente" nome="dados/mapeadores.ts" desc="traduz a forma da origem" />
+
+      <Cilindro x={COL_X[2]} y={704} w={COL_W} h={72} tipo="arquivo" nome="config-site.json" desc="estado de release em dev" />
+      <Cilindro x={COL_X[4]} y={704} w={COL_W} h={72} tipo="base de dados" nome="seed em memória" desc="base sintética, semente fixa" />
+
+      {/* quem entra */}
+      <Seta pontos="184,242 276,242" rotulo="usa o sistema" rx={230} ry={242} larguraRotulo={104} />
+      <Seta pontos={`184,268 228,268 228,${CY[0]} ${COL_X[0]},${CY[0]}`} rotulo="lê o registro" rx={252} ry={CY[0]} larguraRotulo={100} />
+      <Seta pontos={`184,216 206,216 206,24 ${CX[1]},24 ${CX[1]},${LIN_Y[0]}`} rotulo="pede /admin" rx={470} ry={24} larguraRotulo={104} />
+
+      {/* a cadeia pela ordem das camadas */}
+      <Seta pontos={`490,${CY[1]} ${COL_X[1]},${CY[1]}`} rotulo="passa pelos portões" rx={553} ry={CY[1]} larguraRotulo={136} />
+      <Seta pontos={`${CX[1]},284 ${CX[1]},336`} rotulo="consulta ciclo e perfis" rx={CX[1]} ry={310} larguraRotulo={146} />
+      <Seta pontos={`830,${CY[1]} ${COL_X[2]},${CY[1]}`} rotulo="pergunta release e perfil" rx={893} ry={CY[1]} larguraRotulo={156} />
+      <Seta pontos={`1170,${CY[1]} ${COL_X[3]},${CY[1]}`} rotulo="calcula os ciclos visíveis" rx={1233} ry={CY[1]} larguraRotulo={156} />
+      <Seta pontos={`${CX[3]},284 ${CX[3]},336`} rotulo="lê as dezoito datas" rx={CX[3]} ry={310} larguraRotulo={132} />
+      <Seta pontos={`1510,250 1560,250 1560,506 1510,506`} rotulo="compara datas civis" rx={1560} ry={378} larguraRotulo={136} />
+
+      {/* as duas que pulam camada, e são verdade */}
+      <Seta pontos={`490,252 524,252 524,626 1270,626 1270,${CY[0]} ${COL_X[3]},${CY[0]}`} rotulo="calcula e recebe a memória" rx={880} ry={626} larguraRotulo={176} />
+      <Seta pontos={`490,266 552,266 552,662 1610,662 1610,${CY[0]} ${COL_X[4]},${CY[0]}`} rotulo="pede unidades e lançamentos" rx={1080} ry={662} larguraRotulo={186} />
+      <Seta pontos={`${CX[2]},${LIN_Y[0]} ${CX[2]},40 ${CX[4]},40 ${CX[4]},${LIN_Y[0]}`} rotulo="grava lançamento e contestação" rx={1400} ry={40} larguraRotulo={200} />
+
+      {/* até a origem */}
+      <Seta pontos={`${CX[4]},148 ${CX[4]},200`} rotulo="converte a forma" rx={CX[4]} ry={174} larguraRotulo={120} />
+      <Seta pontos={`1800,284 1800,704`} rotulo="lê a base sintética" rx={1800} ry={470} larguraRotulo={132} />
+      <Seta pontos={`1120,420 1120,704`} rotulo="lê e grava em dev" rx={1120} ry={560} larguraRotulo={128} />
+    </Tela>
+  )
+}
+
+/* ── nível 4: código ────────────────────────────────────────────────────── */
+
+/**
+ * Caixa de classe: cabeçalho com o nome e lista de campos alinhada à esquerda.
+ *
+ * Diferente da `Caixa` dos outros níveis, que centraliza tudo: aqui a leitura é
+ * de lista, e lista centralizada é ilegível. Os campos são os REAIS de
+ * `src/lib/calculo/tipos.ts`. Desenho que inventa atributo ensina errado, e
+ * quem for conferir abre o arquivo e compara.
+ */
+function CaixaDeClasse({
+  x,
+  y,
+  w,
+  h,
+  nome,
+  estereotipo,
+  campos,
+}: {
+  x: number
+  y: number
+  w: number
+  h: number
+  nome: string
+  estereotipo?: string
+  campos: readonly string[]
+}) {
+  return (
+    <g>
+      <rect
+        x={x}
+        y={y}
+        width={w}
+        height={h}
+        rx={12}
+        style={{ fill: 'var(--color-cartao)', stroke: 'var(--color-linha)', strokeWidth: 1.25 }}
+      />
+      <line
+        x1={x}
+        y1={y + 40}
+        x2={x + w}
+        y2={y + 40}
+        style={{ stroke: 'var(--color-linha)', strokeWidth: 1 }}
+      />
+      <foreignObject x={x} y={y} width={w} height={h}>
+        <div style={{ height: '100%', boxSizing: 'border-box', padding: '7px 12px 10px' }}>
+          <div style={{ height: 33, textAlign: 'center' }}>
+            {estereotipo ? (
+              <div style={{ fontSize: 9.5, color: 'var(--color-apagado)' }}>«{estereotipo}»</div>
+            ) : null}
+            <div style={{ fontSize: 13, fontWeight: 650, color: 'var(--color-texto)' }}>{nome}</div>
+          </div>
+          <ul style={{ margin: '13px 0 0', padding: 0, listStyle: 'none' }}>
+            {campos.map((campo) => (
+              <li
+                key={campo}
+                style={{ fontSize: 10.5, lineHeight: 1.5, color: 'var(--color-apagado)' }}
+              >
+                {campo}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </foreignObject>
+    </g>
+  )
+}
+
+export function DiagramaCodigo() {
+  return (
+    <Tela largura={1930} altura={570} larguraMinima={1300} titulo="Diagrama de classes do domínio do cálculo">
+      <CaixaDeClasse
+        x={40}
+        y={40}
+        w={260}
+        h={212}
+        nome="RegraDePontuacao"
+        campos={['id, versao', 'vigenteDe, vigenteAte', 'metodo', 'pontuacaoMaxima', 'semLancamento', 'tetoAtingimento', 'arredondamento']}
+      />
+      <CaixaDeClasse
+        x={40}
+        y={300}
+        w={260}
+        h={190}
+        nome="Lancamento"
+        campos={['subindicadorId', 'valor', 'numerador', 'denominador', 'registradoEm', 'autor, evidencia']}
+      />
+
+      <CaixaDeClasse x={440} y={40} w={240} h={124} nome="Aplicabilidade" campos={['tipoUnidadeId', 'indicadorId', 'meta', 'peso']} />
+      <CaixaDeClasse x={440} y={196} w={240} h={100} nome="GraduacaoSubindicador" campos={['subindicadorId', 'degraus: Degrau[]']} />
+      <CaixaDeClasse x={440} y={328} w={240} h={124} nome="Degrau" campos={['de', 'ate', 'nota (0 a 1)']} />
+
+      <CaixaDeClasse
+        x={820}
+        y={128}
+        w={280}
+        h={262}
+        nome="Motor"
+        estereotipo="módulo puro"
+        campos={['calcularAvaliacao()', 'apurarSubindicador()', 'notaDoDegrau()', 'calcularAtingimento()', 'faixaDoScore()', 'regraVigente()', 'arredondar()']}
+      />
+
+      <CaixaDeClasse x={1240} y={40} w={250} h={140} nome="Avaliacao" campos={['unidadeId, cicloId', 'score (0 a 100)', 'faixa', 'avisos[]']} />
+      <CaixaDeClasse
+        x={1240}
+        y={228}
+        w={250}
+        h={190}
+        nome="MemoriaDeCalculo"
+        campos={['regraId, versaoRegra', 'metodo', 'somaPesos', 'somaContribuicoes', 'score', 'formula']}
+      />
+
+      <CaixaDeClasse
+        x={1630}
+        y={40}
+        w={250}
+        h={212}
+        nome="PassoMemoria"
+        campos={['indicador, meta', 'valor', 'mediaDasNotas', 'nota', 'pontos, peso', 'contribuicao']}
+      />
+      <CaixaDeClasse
+        x={1630}
+        y={300}
+        w={250}
+        h={172}
+        nome="PassoSubindicador"
+        campos={['numerador, denominador', 'valor', 'nota', 'aviso']}
+      />
+
+      {/* a regra e as partes que ela guarda */}
+      <Seta pontos="300,102 440,102" rotulo="meta e peso por tipo" rx={370} ry={102} larguraRotulo={136} />
+      <Seta pontos="300,246 440,246" rotulo="a régua de cada um" rx={370} ry={246} larguraRotulo={128} />
+      <Seta pontos="680,246 716,246 716,390 680,390" rotulo="ordena os degraus" rx={716} ry={318} larguraRotulo={126} />
+
+      {/* o que entra no motor */}
+      <Seta pontos="680,102 750,102 750,180 820,180" rotulo="aplica por tipo" rx={750} ry={141} larguraRotulo={106} />
+      <Seta pontos="680,390 750,390 750,330 820,330" rotulo="gradua o valor" rx={750} ry={360} larguraRotulo={104} />
+      <Seta pontos="300,420 370,420 370,528 960,528 960,390" rotulo="apura o último de cada subindicador" rx={620} ry={528} larguraRotulo={218} />
+
+      {/* o que sai, e a conta que vem junto */}
+      <Seta pontos="1100,180 1170,180 1170,110 1240,110" rotulo="número e memória" rx={1170} ry={145} larguraRotulo={124} />
+      <Seta pontos="1365,180 1365,228" rotulo="carrega a conta" rx={1365} ry={204} larguraRotulo={110} />
+      <Seta pontos="1490,300 1560,300 1560,200 1630,200" rotulo="uma linha por indicador" rx={1560} ry={250} larguraRotulo={148} />
+      <Seta pontos="1755,252 1755,300" rotulo="e um por subindicador" rx={1755} ry={276} larguraRotulo={146} />
     </Tela>
   )
 }

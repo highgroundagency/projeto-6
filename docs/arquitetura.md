@@ -303,7 +303,11 @@ C4Container
 
 Abertura do contêiner com mais lógica de negócio, o **Next.js App Router**. O estilo é
 **monólito modularizado em camadas**, e o desenho existe para deixar isso visível: cada
-camada é uma fronteira, e nenhuma seta pula a camada do meio.
+camada é uma fronteira, e a dependência anda numa direção só.
+
+A camada é RELAXADA, e o desenho não esconde: a tela chama o motor e o repositório direto,
+sem passar pela aplicação. Duas setas pulam camada, e elas estão lá porque é o que o código
+faz. O que não acontece nunca é uma seta SAIR do domínio, e essa é a regra que vale.
 
 A regra que o desenho tem de sustentar é a inversão de dependência para dentro: a camada de
 domínio não conhece tela, rota, banco nem relógio. Toda seta que a cruza aponta **para ela**,

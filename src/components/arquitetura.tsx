@@ -12,7 +12,12 @@ import {
   UserRound,
   type LucideIcon,
 } from 'lucide-react'
-import { DiagramaConteineres, DiagramaContexto } from '@/components/arquitetura-c4'
+import {
+  DiagramaCodigo,
+  DiagramaComponentes,
+  DiagramaConteineres,
+  DiagramaContexto,
+} from '@/components/arquitetura-c4'
 import { AcaoDoFluxo, Conector, EstadoDoFluxo, Fluxo } from '@/components/base/fluxo'
 import { URL_REPOSITORIO } from '@/content/produto'
 
@@ -49,7 +54,7 @@ const CLASSES: readonly Classe[] = [
   {
     icone: Ruler,
     nome: 'Tipo de unidade',
-    campos: ['nome', 'sigla (USF, CAPS, UPA, POLI)'],
+    campos: ['nome', 'sigla (USF, UBT, CAPS, CECON, UCIS, MAC)'],
     ligacoes: ['decide a régua de N unidades'],
     nota: 'é o tipo que diz quais indicadores valem, e com que meta e peso',
   },
@@ -226,6 +231,33 @@ export function ConteudoArquitetura() {
         </p>
         <div className="mt-5 rounded-2xl border border-linha bg-cartao p-3 shadow-[0_1px_2px_var(--color-sombra)] sm:p-5">
           <DiagramaConteineres />
+        </div>
+      </section>
+
+      <section id="componentes" className="mt-12 scroll-mt-6" aria-label="Desenho de componentes">
+        <Rotulado eyebrow="C4 · nível 3 · componentes" titulo="Por dentro da aplicação" />
+        <p className="mt-2 max-w-prose text-sm leading-relaxed text-apagado">
+          Abrindo o contêiner com mais lógica: cada coluna é uma camada, e a dependência anda
+          da esquerda para a direita. Duas setas pulam camada de propósito, porque a tela chama
+          o motor e o repositório direto, e isso é verdade no código. O que não acontece nunca é
+          uma seta sair da coluna do domínio: ela recebe e não emite.
+        </p>
+        {/* FULL-BLEED: o desenho escapa do max-w-4xl e usa a largura da janela.
+            Num projetor de 1920 isso é a diferença entre 10px e 5px de texto. */}
+        <div className="relative left-1/2 mt-5 w-[calc(100vw-2rem)] max-w-[1640px] -translate-x-1/2 rounded-2xl border border-linha bg-cartao p-3 shadow-[0_1px_2px_var(--color-sombra)] sm:p-5">
+          <DiagramaComponentes />
+        </div>
+      </section>
+
+      <section id="codigo" className="mt-12 scroll-mt-6" aria-label="Desenho de código">
+        <Rotulado eyebrow="C4 · nível 4 · código" titulo="O motor por dentro" />
+        <p className="mt-2 max-w-prose text-sm leading-relaxed text-apagado">
+          O último nível abre o componente de maior risco, porque é o único em que um erro vira
+          dinheiro errado no salário de alguém. Os campos são os do arquivo de tipos, não uma
+          versão simplificada: desenho que inventa atributo ensina errado.
+        </p>
+        <div className="relative left-1/2 mt-5 w-[calc(100vw-2rem)] max-w-[1640px] -translate-x-1/2 rounded-2xl border border-linha bg-cartao p-3 shadow-[0_1px_2px_var(--color-sombra)] sm:p-5">
+          <DiagramaCodigo />
         </div>
       </section>
 

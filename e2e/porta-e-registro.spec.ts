@@ -286,7 +286,7 @@ test.describe('registro do projeto', () => {
 })
 
 test.describe('arquitetura em desenhos', () => {
-  test('a home tem a porta, e a página tem os quatro desenhos e o prompt', async ({ page }) => {
+  test('a home tem a porta, e a página tem os quatro níveis do C4 e o prompt', async ({ page }) => {
     await page.goto('/')
     // A seção da home é a porta de entrada: clicou, apareceu. O escopo é a
     // seção, porque "Arquitetura" também é título de documento de ciclo.
@@ -299,6 +299,15 @@ test.describe('arquitetura em desenhos', () => {
     await expect(page.getByRole('heading', { name: 'Arquitetura' })).toBeVisible()
     await expect(page.getByRole('heading', { name: 'O sistema visto de fora' })).toBeVisible()
     await expect(page.getByRole('heading', { name: 'As peças da caixa' })).toBeVisible()
+    // Os quatro níveis do C4 moram aqui, e é o que a AV1 de Arquitetura cobra.
+    await expect(page.getByRole('heading', { name: 'Por dentro da aplicação' })).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'O motor por dentro' })).toBeVisible()
+    await expect(
+      page.getByRole('img', { name: 'Diagrama de componentes do App Router' }),
+    ).toBeVisible()
+    await expect(
+      page.getByRole('img', { name: 'Diagrama de classes do domínio do cálculo' }),
+    ).toBeVisible()
     await expect(page.getByRole('heading', { name: 'O caminho de um número' })).toBeVisible()
     await expect(page.getByRole('heading', { name: 'O que o sistema guarda' })).toBeVisible()
 

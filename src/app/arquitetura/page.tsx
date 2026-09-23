@@ -7,7 +7,7 @@ import { Rodape } from '@/components/base/rodape'
 export const metadata: Metadata = {
   title: 'Arquitetura',
   description:
-    'Os desenhos C4 do Prumo: contexto, contêineres, o caminho de um número e as classes do domínio.',
+    'Os quatro níveis do C4 do Prumo: contexto, contêineres, componentes por camada e o motor de cálculo por dentro.',
 }
 
 /**
@@ -32,9 +32,9 @@ export default function PaginaArquitetura() {
           </div>
           <h1 className="fonte-display mt-3 text-3xl">Arquitetura</h1>
           <p className="mt-2 max-w-prose text-sm leading-relaxed text-apagado">
-            O Prumo por dentro, em quatro desenhos: quem usa, de que peças ele é feito, o
-            caminho que um número percorre até virar nota, e o que o sistema guarda. Sem
-            precisar abrir o repositório.
+            O Prumo por dentro, nos quatro níveis do C4: quem usa, de que peças ele é feito,
+            como as camadas se separam por dentro e o que o motor faz com um número. Mais o
+            caminho que esse número percorre até virar nota. Sem precisar abrir o repositório.
           </p>
         </header>
 
