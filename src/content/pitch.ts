@@ -119,7 +119,7 @@ export const CONTAGENS_PITCH = {
   /** Linhas de "Privacy by Design: onde está no código" em docs/privacidade.md. */
   principiosPrivacidade: 6,
   /** Linhas do registro semanal em docs/uso-de-ia.md. */
-  usosDeIa: 53,
+  usosDeIa: 55,
 } as const
 
 export const SLIDES = [
@@ -628,6 +628,14 @@ export function textoNaTela(id: SlideId): readonly string[] {
 /** Slide 6: o modelo perde para o chute, e a gente diz isso em voz alta. */
 export const FRASE_DO_MODELO =
   'nossa previsão erra mais que o chute mais simples, e publicamos assim mesmo'
+
+/**
+ * Os números que o slide mostrou no Kick-off, congelados. O pitch é registro de
+ * um dia que já passou: se lesse `resultados.json` ao vivo, o re-treino sobre a
+ * base nova (que agora supera a referência) faria o slide contradizer a própria
+ * frase acima.
+ */
+export const MODELO_NO_KICKOFF = { acuracia: 0.667, referencia: 0.833 } as const
 
 /** Quantas palavras aquele slide põe na tela. */
 export function palavrasNaTela(id: SlideId): number {

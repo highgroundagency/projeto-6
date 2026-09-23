@@ -2320,56 +2320,44 @@ própria. Passos que apontam para tela ainda não liberada são descartados.
 
 Nenhum resultado desta lista entra no cálculo da gratificação.
 
-  - base: sintética, gerada por ml/gerador.py com semente fixa
-  - gerado em: 2026-08-16
+  - base: planilha de desempenho por unidade, sem dado de pessoa, tratada em ml/notebooks
+  - gerado em: 2026-09-23
   - semente: 20262
-  - scikit-learn: 1.9.0
-  - commit: 5fab13e
+  - scikit-learn: 1.8.0
+  - commit: 628b773
 
   classificacao
   ~~~~~~~~~~~~~
-  pergunta: Este indicador vai bater a meta na próxima competência?
-  método: Random Forest com 400 árvores e classes reequilibradas, sobre atingimento
-  anterior, média móvel, peso e direção. Separação treino/teste temporal.
-  - métricas: acuracia=0.667 · precisao=0.143 · revocacao=0.2 · f1=0.167 ·
-    amostras_teste=30 · positivos_no_teste=5 · supera_referencia=false
-  - linha de base: chutar sempre a classe majoritária (acurácia 0.833)
-  - ESTE MODELO NÃO SUPERA A LINHA DE BASE, e fica publicado dizendo isso.
-  limitação declarada: Classe positiva é minoria: acurácia isolada engana, e por isso a
-  referência vai ao lado. Treinado sobre base sintética — o modelo aprende a regra que
-  gerou os dados, não a rede real.
-
-  classificacao_tendencia
-  ~~~~~~~~~~~~~~~~~~~~~~~
-  pergunta: Este indicador vai melhorar em relação à competência anterior?
-  método: Random Forest com 400 árvores e classes reequilibradas. Mesmo conjunto de
-  atributos e mesma separação temporal do modelo anterior — só o alvo muda.
-  - métricas: acuracia=0.767 · precisao=0.737 · revocacao=0.875 · f1=0.8 ·
-    amostras_teste=30 · positivos_no_teste=16 · supera_referencia=true
-  - linha de base: chutar sempre a classe majoritária (acurácia 0.533)
-  limitação declarada: Alvo equilibrado, mas a série tem seis competências. O resultado
-  sustenta priorização de atenção, não decisão sobre pagamento — que segue determinística
-  pela portaria.
+  pergunta: A unidade fica abaixo de 90% no resultado geral?
+  método: CatBoost, escolhido entre XGBoost, LightGBM, CatBoost e o stacking dos três pelo
+  F1 na validação cruzada em 5 partes. Hiperparâmetros por grid search, peso de classe e
+  separação estratificada de 75% e 25%.
+  - métricas: acuracia=1 · precisao=1 · revocacao=1 · f1=1 · amostras_teste=48 ·
+    positivos_no_teste=22 · supera_referencia=true
+  - linha de base: chutar sempre a classe mais comum (acurácia 0.542)
+  limitação declarada: O resultado geral é calculado a partir das mesmas notas, então o
+  modelo aprende a regra da portaria. Serve para mostrar quais indicadores mais pesam, não
+  para substituir o cálculo.
 
   regressao
   ~~~~~~~~~
-  pergunta: Qual atingimento esperar na próxima competência?
-  método: Random Forest com 300 árvores sobre os mesmos atributos. Separação treino/teste
-  temporal.
-  - métricas: mae=0.1051 · r2=0.239 · amostras_teste=30
-  - linha de base: média do treino (mae 0.1179)
-  limitação declarada: Seis competências é série curta. O R² aqui mede consistência do
-  gerador, não capacidade de prever a rede real.
+  pergunta: Qual resultado geral esperar a partir das notas dos indicadores?
+  método: XGBoost com hiperparâmetros por grid search (500 árvores, profundidade 2).
+  Validação cruzada em 5 partes e separação de 75% e 25%.
+  - métricas: mae=0.0051 · r2=0.99 · amostras_teste=48
+  - linha de base: média do treino (mae 0.0701)
+  limitação declarada: O resultado geral é uma soma ponderada das mesmas notas, por isso o
+  erro é tão baixo. O modelo mostra o que mais pesa, não substitui o cálculo.
 
   clustering
   ~~~~~~~~~~
-  pergunta: Quais áreas se comportam de forma parecida?
-  método: K-Means com k=3 sobre atingimento médio, volatilidade e taxa de meta, com
-  atributos padronizados.
-  - métricas: silhueta=0.357 · k=3
+  pergunta: Quais unidades têm desempenho parecido nos quatro indicadores?
+  método: K-Means com k=4, escolhido pelo cotovelo e pela silhueta, sobre as notas dos
+  quatro indicadores padronizadas.
+  - métricas: silhueta=0.71 · k=4
   - linha de base: silhueta de referência
-  limitação declarada: Agrupa ÁREAS, nunca pessoas. Dez áreas é amostra pequena: o k foi
-  escolhido pela silhueta, e mudaria com mais dados.
+  limitação declarada: Agrupa unidades, nunca pessoas. Os grupos refletem sobretudo o tipo
+  de unidade.
 
 ============================================================================================
 8.  CHECKLIST DAS EVIDÊNCIAS DA MATRIZ
@@ -2814,8 +2802,8 @@ banca pergunte. Auditoria que só encontra acerto não auditou nada.
 11.  AS REGRAS QUE NÃO SE NEGOCIAM
 ============================================================================================
 
-
-
+  
+  
   1. **Nenhum dado real** de pessoa ou da SESAU entra no repositório, no seed ou em prompt de
      IA. Tudo sintético. Há teste que falha se um CPF, e-mail ou telefone aparecer na base.
   2. **Datas só mudam em `src/lib/cronograma.ts`.** É a fonte única de verdade; header,
@@ -2848,7 +2836,7 @@ banca pergunte. Auditoria que só encontra acerto não auditou nada.
   11. **Um acento só.** `--color-acento` é o laranja da CESAR e aparece em no máximo três
      lugares por tela: número grande, chamada sólida e pílula/ícone do fluxo. Se precisar de
      mais uma cor para diferenciar alguma coisa, use hairline e caixa alta, não cor.
-
+  
 
 ============================================================================================
 12.  DECISÕES DE ARQUITETURA (ADRS)
@@ -2901,6 +2889,7 @@ Os porquês completos estão em `docs/decisoes.md`. Os títulos, aqui:
   - ADR-041 · A regra v3 nasce da planilha do cliente, e as anteriores continuam de pé
   - ADR-042 · Os tipos de unidade passam a ser os da portaria, e as regras antigas são
     re-chaveadas
+  - ADR-043 · A lente de ML vive só nos cadernos, sobre a planilha por unidade
 
 ============================================================================================
 13.  COMO RODAR E COMO CONFERIR

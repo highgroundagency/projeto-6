@@ -5,43 +5,38 @@ Os modelos vivem aqui, fora do app. Treino é offline; o site lê o resultado.
 ## Rodar
 
 ```bash
-pip install numpy pandas scikit-learn
-python ml/gerador.py     # escreve ml/dados/lancamentos.csv
-python ml/exportar.py    # treina, avalia e escreve src/content/ml/resultados.json
+pip install pandas scikit-learn matplotlib seaborn xgboost lightgbm catboost jupyter
 ```
 
-Os dois comandos são determinísticos: mesma semente, mesmos números. É isso que
-torna a tela de analytics auditável — quem duvidar de um número roda e confere.
+Abra `ml/notebooks/` e rode os seis cadernos **em ordem**. Todo o código está dentro deles.
 
-## O que tem aqui
+| Caderno | Faz | Escreve |
+| --- | --- | --- |
+| `01-eda` | Exploração da planilha: distribuições, assimetria, correlação, classes do alvo | nada |
+| `02-preprocessamento` | Conversão de tipos, ausentes, duplicados, outliers, feature engineering e encoding | `ml/saidas/unidades.csv` e `ml/saidas/unidades_features.csv` |
+| `03-classificacao` | XGBoost, LightGBM, CatBoost e stacking, com grid search, para prever se a unidade fica abaixo de 90% | `ml/saidas/classificacao.json` |
+| `04-regressao` | XGBoost com grid search para prever o resultado geral | `ml/saidas/regressao.json` |
+| `05-clustering` | K-Means sobre as unidades | `ml/saidas/clustering.json` |
+| `06-conclusoes` | Matriz de confusão, resultados finais e exportação para o app | `src/content/ml/resultados.json` |
 
-| Arquivo | Para quê |
-| --- | --- |
-| `gerador.py` | Base sintética, espelhando `src/lib/seed/` do app: 10 áreas, 30 indicadores, 6 competências |
-| `modelos.py` | Classificação, regressão e clustering, com linha de base ao lado de cada um |
-| `exportar.py` | Empacota os resultados em JSON com semente, commit e versão do sklearn |
-| `notebooks/` | Os seis cadernos da disciplina: EDA, pré-processamento, os três modelos e as conclusões |
+`ml/saidas/` é gerada e fica fora do Git. O que é versionado é o resultado final, porque é
+ele que a tela de analytics lê.
 
-## Três decisões que valem ser lidas
-
-**A separação treino/teste é temporal, não aleatória.** Sortear linhas deixaria
-o modelo ver competências futuras do mesmo indicador — o erro clássico de
-vazamento em série temporal. As cinco primeiras competências treinam, a última
-testa.
-
-**Todo modelo é publicado com a linha de base.** Acurácia sem referência engana:
-num alvo desbalanceado, chutar a classe majoritária já acerta a maioria. O
-classificador de "vai bater a meta" **não supera** o palpite majoritário nesta
-base, e isso está publicado na tela em vez de escondido — o caderno 03 explica
-que a pergunta é mal posta, não o modelo que é ruim.
-
-**Nenhuma saída daqui entra no cálculo da gratificação.** A regra da portaria é
-determinística e continua sendo. O modelo informa onde olhar; ele não decide
-quanto alguém recebe. E o clustering agrupa **áreas**, nunca pessoas.
+O problema e o dataset (etapas 1 e 2) estão descritos em [`documento-problema-e-dados.md`](documento-problema-e-dados.md).
 
 ## Dados
 
-Nada aqui é real. `gerador.py` produz tudo com semente fixa (20262), e o
-vocabulário é verossímil no domínio da saúde pública sem que nenhum número, meta
-ou pessoa venha da SESAU. Quando houver dado real, com base legal para tratá-lo,
-os modelos precisam ser reavaliados do zero.
+`ml/data/base nova completa.csv`: uma linha por unidade de saúde (tipo e distrito), com
+lançamentos, metas e notas de cada indicador da Portaria Conjunta nº 001/2024. Não tem nome,
+CPF, matrícula nem nenhum dado de pessoa. As 48 linhas `DS` são de distrito, avaliado com
+outra régua, e ficam fora dos modelos. Seis linhas de NDI e SAE que não seguem os pesos da
+portaria também saem.
+
+## Observações
+
+- Todo modelo é comparado com uma referência simples (classe mais comum, média do treino).
+- O resultado geral é uma soma ponderada das notas dos indicadores, então as métricas da
+  classificação e da regressão são altas. Os modelos servem para mostrar quais indicadores
+  mais pesam, não para substituir o cálculo.
+- Nenhuma saída daqui entra no cálculo da gratificação. O clustering agrupa **unidades**,
+  nunca pessoas.

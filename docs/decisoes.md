@@ -1185,3 +1185,27 @@ multiplica a régua por oito na USF e não muda a forma do motor. E o schema gua
 `supabase/migrations/` ainda tem `cam` no enum de perfil, onde o aplicativo já diz `seab` desde
 a ADR-034. O schema não está no caminho de execução, então a divergência não quebra nada, mas
 ela existe e está registrada aqui em vez de ser descoberta depois.
+
+## ADR-043 · A lente de ML vive só nos cadernos, sobre a planilha por unidade
+
+**Contexto.** `ml/` tinha três módulos Python (gerador, modelos, exportador) e seis cadernos
+que só chamavam funções deles. O código de verdade ficava fora do lugar em que a disciplina o
+lê, e a base era sintética, sobre "áreas técnicas" que deixaram de existir na ADR-034.
+
+**Decisão.** Os módulos saem e todo o código entra nos cadernos, sem importação de arquivo
+local. A base passa a ser `ml/data/base nova completa.csv`, uma linha por unidade. O caderno 02
+escreve a tabela limpa em `ml/saidas/`, os cadernos 03 a 05 escrevem um JSON cada, e o 06 junta
+os três em `src/content/ml/resultados.json`, com o mesmo contrato que a tela já lia (ADR-022).
+A classificação compara XGBoost, LightGBM, CatBoost e o stacking dos três (regressão logística
+como metamodelo), cada um com grid search, e fica com o de maior F1 na validação cruzada; a
+regressão é só XGBoost, também com grid search. A separação temporal e a pergunta de tendência
+saem, porque a base nova é um retrato de um ciclo, não uma série.
+
+**Consequência.** A classificação e a regressão têm métrica alta porque o resultado geral é
+uma soma ponderada das mesmas notas, e os cadernos dizem isso em vez de vender previsão. A
+limpeza achou seis linhas de NDI e SAE em que a planilha soma o indicador 3 com peso 80% em
+vez de 20%; elas saem da modelagem. O slide 14 do Kick-off deixou de ler o JSON e guarda os
+números que mostrou naquele dia, para não passar a contradizer a própria frase.
+
+**O que se perdeu.** O vínculo com `src/lib/seed/`: o cálculo do app e a lente de ML agora
+falam de bases diferentes.

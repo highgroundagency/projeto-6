@@ -22,9 +22,7 @@ import type { Direcao, Lancamento, Subindicador } from '@/lib/calculo/tipos'
  *    mostra método, métrica E a linha de base, porque acurácia sem referência
  *    engana: num alvo desbalanceado, chutar a classe majoritária já acerta a
  *    maioria. Um modelo que não supera a referência é publicado dizendo isso.
- *    ATENÇÃO: o treino atual é anterior à remodelagem pós-reunião (ADR-034) e
- *    fala de "áreas"; o re-treino no domínio novo está no marco de ML do
- *    cronograma. A tela avisa em vez de esconder.
+ *    O treino é sobre a planilha de desempenho por unidade (ADR-043).
  *
  * 2. HEURÍSTICAS EXPLICÁVEIS sobre a base atual, que respondem "onde olhar
  *    agora" com o dado que está na tela, sem depender do treino.
@@ -125,16 +123,11 @@ export async function TelaAnalytics() {
   return (
     <>
       <div className="mb-5 space-y-3">
-        <Aviso tom="alerta">
-          Os modelos abaixo foram treinados ANTES da remodelagem que a reunião com o cliente
-          pediu: eles falam de áreas técnicas, e a base de hoje fala de unidades e
-          subindicadores. O re-treino no domínio novo está no marco de ML do cronograma. Os
-          painéis de heurística logo abaixo já usam a base nova.
-        </Aviso>
         <Aviso>
           {ML.aviso} Base <strong>{ML.base}</strong>. Treino de <Num>{ML.gerado_em}</Num>,
           semente <Num>{ML.semente}</Num>, scikit-learn <Num>{ML.versao_sklearn}</Num>, commit{' '}
-          <Num>{ML.commit}</Num>, os mesmos dois comandos reproduzem cada número desta tela.
+          <Num>{ML.commit}</Num>. Rodar os seis cadernos de <Num>ml/notebooks</Num> em ordem
+          reproduz cada número desta tela.
         </Aviso>
       </div>
 
@@ -210,20 +203,17 @@ export async function TelaAnalytics() {
                 </ul>
               ) : null}
 
-              {m.metricas.areas ? (
+              {m.metricas.grupos ? (
                 <ul className="mt-4 divide-y divide-linha border-y border-linha text-sm">
-                  {m.metricas.areas.map((a) => (
+                  {m.metricas.grupos.map((g) => (
                     <li
-                      key={a.area_id}
+                      key={g.nome}
                       className="flex flex-wrap items-baseline justify-between gap-2 py-2"
                     >
-                      <Num className="text-xs">{a.area_id}</Num>
-                      <span className="flex items-baseline gap-3">
-                        <span className="text-xs">
-                          média <Num>{a.atingimento_medio}</Num> · vol{' '}
-                          <Num>{a.volatilidade}</Num>
-                        </span>
-                        <Etiqueta>{a.grupo}</Etiqueta>
+                      <span className="text-xs">{g.nome}</span>
+                      <span className="flex items-baseline gap-3 text-xs">
+                        <Num>{g.unidades}</Num> unidades · resultado médio{' '}
+                        <Num>{g.resultado_medio}</Num>
                       </span>
                     </li>
                   ))}

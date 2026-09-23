@@ -14,7 +14,6 @@ import {
   TECNICAS_DE_IDEACAO,
 } from '@/content/analises'
 import { EQUIPE, nomeCurto } from '@/content/equipe'
-import resultados from '@/content/ml/resultados.json'
 import {
   CAMINHO_DO_NUMERO,
   COMPROMISSOS_ATE_O_SR1,
@@ -26,6 +25,7 @@ import {
   DEMO_PITCH,
   ETAPAS_DO_MES,
   FRASE_DO_MODELO,
+  MODELO_NO_KICKOFF,
   LEGENDAS_DA_BASE,
   LEGENDAS_DE_RISCO,
   ROTULOS_DA_BASE,
@@ -98,13 +98,6 @@ export async function Slides() {
     cronograma,
     fechamento,
   ] = SLIDES
-
-  // O JSON dos modelos é heterogêneo; só o classificador tem acurácia e referência.
-  const classificador = resultados.modelos.find((m) => m.modelo === 'classificacao')
-  const acuracia = classificador?.metricas?.acuracia
-  const referencia = classificador?.referencia?.acuracia
-  const comparacao =
-    typeof acuracia === 'number' && typeof referencia === 'number' ? { acuracia, referencia } : null
 
   return (
     <>
@@ -380,14 +373,9 @@ export async function Slides() {
         </dl>
         <p className="mt-6 max-w-prose text-sm">
           {FRASE_DO_MODELO}
-          {comparacao ? (
-            <>
-              :{' '}
-              <span className="numero text-texto">{decimal(comparacao.acuracia)}</span> contra{' '}
-              <span className="numero text-texto">{decimal(comparacao.referencia)}</span>
-            </>
-          ) : null}
-          .
+          :{' '}
+          <span className="numero text-texto">{decimal(MODELO_NO_KICKOFF.acuracia)}</span> contra{' '}
+          <span className="numero text-texto">{decimal(MODELO_NO_KICKOFF.referencia)}</span>.
         </p>
       </Quadro>
 
