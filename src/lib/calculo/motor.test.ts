@@ -561,6 +561,7 @@ describe('calcularAvaliacaoDistrital', () => {
       memoria: {
         regraId: REGRA_V1.id,
         versaoRegra: 1,
+        metodo: 'atingimento',
         passos: [],
         somaPesos: 1,
         somaContribuicoes: 0,
@@ -659,5 +660,219 @@ describe('troca de versão da regra entre ciclos', () => {
   it('em caso de sobreposição, vence a versão mais nova', () => {
     const sobreposta = { ...REGRA_V2, vigenteDe: '2026-01' }
     expect(regraVigente('2026-03', [REGRA_V1, sobreposta])?.versao).toBe(2)
+  })
+})
+
+/**
+ * O MÉTODO DE NOTAS (regra v3).
+ *
+ * Tudo aqui nasceu da planilha do cliente, conferida fórmula a fórmula: cada
+ * subindicador vira nota antes de qualquer média, a média das notas pode passar
+ * por uma segunda régua, e o peso de quem não tem lançamento sai do denominador
+ * junto com ele.
+ */
+describe('método de notas', () => {
+  const UNIDADE_N: Unidade = { id: 'u-n', nome: 'USF Notas', distritoId: 'd1', tipoId: 'usf' }
+
+  const IND_DOIS_SUBS: Indicador = {
+    id: 'ind-dois',
+    nome: 'Indicador com dois subindicadores',
+    unidadeMedida: '%',
+    direcao: 'maior_melhor',
+    fonte: 'teste',
+    periodicidade: 'mensal',
+  }
+
+  const IND_FAIXA: Indicador = {
+    id: 'ind-faixa',
+    nome: 'Indicador de faixa ideal',
+    unidadeMedida: 'procedimentos',
+    direcao: 'faixa_ideal',
+    fonte: 'teste',
+    periodicidade: 'mensal',
+  }
+
+  const SUB_A: Subindicador = { id: 's-a', indicadorId: 'ind-dois', nome: 'A', tipo: 'indice' }
+  const SUB_B: Subindicador = { id: 's-b', indicadorId: 'ind-dois', nome: 'B', tipo: 'indice' }
+  const SUB_F: Subindicador = { id: 's-f', indicadorId: 'ind-faixa', nome: 'F', tipo: 'indice' }
+
+  const DEGRAUS_PADRAO = [
+    { de: null, ate: 50, nota: 0 },
+    { de: 50, ate: 75, nota: 0.5 },
+    { de: 75, ate: null, nota: 1 },
+  ]
+
+  const REGRA_V3: RegraDePontuacao = {
+    id: 'regra-teste-v3',
+    versao: 3,
+    descricao: 'Método de notas',
+    vigenteDe: '2026-01',
+    vigenteAte: null,
+    faixas: [],
+    pontuacaoMaxima: 1,
+    faixasGratificacao: [
+      { de: 0, ate: 70, rotulo: 'regular', percentual: 50 },
+      { de: 70, ate: null, rotulo: 'satisfatório', percentual: 80 },
+    ],
+    aplicabilidades: [
+      { tipoUnidadeId: 'usf', indicadorId: 'ind-dois', meta: 75, peso: 0.6 },
+      { tipoUnidadeId: 'usf', indicadorId: 'ind-faixa', meta: 8, peso: 0.4 },
+    ],
+    arredondamento: { casas: 2, modo: 'meio_para_cima' },
+    tetoAtingimento: 1.5,
+    semLancamento: 'ignora',
+    metodo: 'notas',
+    graduacoes: [
+      { subindicadorId: 's-a', degraus: DEGRAUS_PADRAO },
+      { subindicadorId: 's-b', degraus: DEGRAUS_PADRAO },
+      {
+        subindicadorId: 's-f',
+        degraus: [
+          { de: null, ate: 4, nota: 0.25 },
+          { de: 4, ate: 6, nota: 0.5 },
+          { de: 6, ate: 12, nota: 1 },
+          { de: 12, ate: 16, nota: 0.5 },
+          { de: 16, ate: null, nota: 0.25 },
+        ],
+      },
+    ],
+  }
+
+  function lanc(subindicadorId: string, valor: number): Lancamento {
+    return {
+      id: `l-${subindicadorId}`,
+      subindicadorId,
+      unidadeId: 'u-n',
+      cicloId: 'c1',
+      valor,
+      numerador: null,
+      denominador: null,
+      evidencia: 'teste',
+      autor: 'teste',
+      registradoEm: '2026-01-10T12:00:00.000Z',
+      status: 'validado',
+    }
+  }
+
+  function avaliar(lancamentos: readonly Lancamento[], regra = REGRA_V3): Avaliacao {
+    return calcularAvaliacao({
+      unidade: UNIDADE_N,
+      cicloId: 'c1',
+      indicadores: [IND_DOIS_SUBS, IND_FAIXA],
+      subindicadores: [SUB_A, SUB_B, SUB_F],
+      lancamentos,
+      regra,
+    })
+  }
+
+  it('gradua CADA subindicador antes de tirar a média, e isso muda o resultado', () => {
+    // 40 e 80 têm média 60. Graduar a média daria nota 0,5.
+    // Graduar cada um dá 0 e 1, cuja média é 0,5 também — só que por outro
+    // caminho. O caso que separa de verdade é 40 e 76: média 58 (nota 0,5),
+    // contra notas 0 e 1, média 0,5. Use 60 e 76: média 68 → 0,5; notas 0,5 e
+    // 1 → média 0,75. É essa diferença que a planilha do cliente revelou.
+    const av = avaliar([lanc('s-a', 60), lanc('s-b', 76), lanc('s-f', 8)])
+    const passo = av.memoria.passos.find((p) => p.indicadorId === 'ind-dois')
+    expect(passo?.subPassos.map((s) => s.nota)).toEqual([0.5, 1])
+    expect(passo?.mediaDasNotas).toBe(0.75)
+    expect(passo?.nota).toBe(0.75)
+  })
+
+  it('a segunda gradação rebaixa a média quando a regra manda', () => {
+    const comSegunda: RegraDePontuacao = {
+      ...REGRA_V3,
+      segundaGraduacao: [
+        {
+          indicadorId: 'ind-dois',
+          degraus: [
+            { de: null, ate: 0.5, nota: 0 },
+            { de: 0.5, ate: 0.8, nota: 0.5 },
+            { de: 0.8, ate: null, nota: 1 },
+          ],
+        },
+      ],
+    }
+    const av = avaliar([lanc('s-a', 60), lanc('s-b', 76), lanc('s-f', 8)], comSegunda)
+    const passo = av.memoria.passos.find((p) => p.indicadorId === 'ind-dois')
+    // A média continua 0,75; a NOTA cai para 0,5 porque a segunda régua manda.
+    expect(passo?.mediaDasNotas).toBe(0.75)
+    expect(passo?.nota).toBe(0.5)
+  })
+
+  it('a faixa ideal tira nota de quem passa do alvo, não só de quem fica abaixo', () => {
+    const notaDe = (valor: number) => {
+      const av = avaliar([lanc('s-f', valor)])
+      return av.memoria.passos.find((p) => p.indicadorId === 'ind-faixa')?.nota
+    }
+    expect(notaDe(3)).toBe(0.25)
+    expect(notaDe(5)).toBe(0.5)
+    expect(notaDe(8)).toBe(1)
+    expect(notaDe(14)).toBe(0.5)
+    expect(notaDe(20)).toBe(0.25)
+  })
+
+  it('tira o peso do denominador junto com o indicador sem lançamento (art. 8º)', () => {
+    // Só o indicador de peso 0,6, com nota 1. Se o peso 0,4 do outro continuasse
+    // no denominador, o score seria 60. Redistribuído, é 100.
+    const av = avaliar([lanc('s-a', 90), lanc('s-b', 90)])
+    expect(av.memoria.somaPesos).toBe(0.6)
+    expect(av.memoria.somaContribuicoes).toBe(0.6)
+    expect(av.score).toBe(100)
+  })
+
+  it('a conta fecha: soma das contribuições ÷ soma dos pesos', () => {
+    const av = avaliar([lanc('s-a', 90), lanc('s-b', 90), lanc('s-f', 5)])
+    // ind-dois: notas 1 e 1 → 1 × 0,6 = 0,6. ind-faixa: 0,5 × 0,4 = 0,2.
+    expect(av.memoria.somaContribuicoes).toBe(0.8)
+    expect(av.memoria.somaPesos).toBe(1)
+    expect(av.score).toBe(80)
+    expect(av.faixa?.rotulo).toBe('satisfatório')
+  })
+
+  it('valor fora de todos os degraus vira aviso, não zero silencioso', () => {
+    const semCobertura: RegraDePontuacao = {
+      ...REGRA_V3,
+      graduacoes: [{ subindicadorId: 's-a', degraus: [{ de: 0, ate: 10, nota: 1 }] }],
+    }
+    const av = avaliar([lanc('s-a', 90)], semCobertura)
+    expect(av.avisos.join(' ')).toContain('não caiu em nenhum degrau')
+  })
+
+  it('a memória diz qual método produziu aquele número', () => {
+    expect(avaliar([lanc('s-a', 90)]).memoria.metodo).toBe('notas')
+  })
+})
+
+describe('numerador maior que denominador', () => {
+  const SUB_RAZAO: Subindicador = {
+    id: 's-r',
+    indicadorId: 'i',
+    nome: 'Razão',
+    tipo: 'razao',
+  }
+  const LANC_INVALIDO: Lancamento = {
+    id: 'l-r',
+    subindicadorId: 's-r',
+    unidadeId: 'u',
+    cicloId: 'c1',
+    valor: null,
+    numerador: 900,
+    denominador: 100,
+    evidencia: 'teste',
+    autor: 'teste',
+    registradoEm: '2026-01-10T12:00:00.000Z',
+    status: 'validado',
+  }
+
+  it('é aceito quando a regra não pede a checagem, porque mês publicado não muda', () => {
+    const passo = apurarSubindicador(SUB_RAZAO, LANC_INVALIDO)
+    expect(passo.valor).toBe(900)
+    expect(passo.aviso).toBeUndefined()
+  })
+
+  it('é rejeitado quando a regra pede, como a planilha do cliente faz', () => {
+    const passo = apurarSubindicador(SUB_RAZAO, LANC_INVALIDO, 'meio_para_cima', true)
+    expect(passo.valor).toBeNull()
+    expect(passo.aviso).toContain('numerador maior que o denominador')
   })
 })

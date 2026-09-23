@@ -1,9 +1,12 @@
 import type {
   Aplicabilidade,
+  Degrau,
   Avaliacao,
   AvaliacaoDistrital,
   Direcao,
   FaixaGratificacao,
+  GraduacaoIndicador,
+  GraduacaoSubindicador,
   Indicador,
   Lancamento,
   ModoArredondamento,
@@ -76,7 +79,11 @@ export function calcularAtingimento(
 ): { bruto: number; comTeto: number; aplicouTeto: boolean } {
   let bruto: number
 
-  if (direcao === 'maior_melhor') {
+  // `faixa_ideal` cai no ramo de `maior_melhor` de propósito: esta função é do
+  // método de ATINGIMENTO, que não sabe exprimir um teto. Quem usa faixa ideal
+  // usa o método de notas, onde o teto é um degrau. Cair aqui é sinal de regra
+  // mal montada, e o aviso do passo diz isso.
+  if (direcao !== 'menor_melhor') {
     bruto = meta === 0 ? (valor > 0 ? teto : 1) : valor / meta
   } else {
     bruto = valor === 0 ? teto : meta / valor
@@ -87,6 +94,37 @@ export function calcularAtingimento(
 
   const comTeto = Math.min(bruto, teto)
   return { bruto, comTeto, aplicouTeto: comTeto < bruto }
+}
+
+/**
+ * A nota do primeiro degrau que contém o valor, ou `null` se nenhum contém.
+ *
+ * A ORDEM DA LISTA MANDA, e é isso que deixa a faixa ideal caber sem campo
+ * novo: basta pôr o degrau de nota cheia entre os dois de nota menor. Buraco na
+ * régua devolve `null` em vez de zero, porque "não previsto" e "previsto e vale
+ * zero" são coisas diferentes na hora de contestar uma nota.
+ */
+export function notaDoDegrau(valor: number, degraus: readonly Degrau[]): number | null {
+  const degrau = degraus.find(
+    (d) => (d.de === null || valor >= d.de) && (d.ate === null || valor < d.ate),
+  )
+  return degrau ? degrau.nota : null
+}
+
+/** A régua de um subindicador na regra, quando ela existe. */
+export function graduacaoDoSubindicador(
+  regra: RegraDePontuacao,
+  subindicadorId: string,
+): GraduacaoSubindicador | null {
+  return regra.graduacoes?.find((g) => g.subindicadorId === subindicadorId) ?? null
+}
+
+/** A segunda régua de um indicador na regra, quando ela existe. */
+export function segundaGraduacaoDoIndicador(
+  regra: RegraDePontuacao,
+  indicadorId: string,
+): GraduacaoIndicador | null {
+  return regra.segundaGraduacao?.find((g) => g.indicadorId === indicadorId) ?? null
 }
 
 /** Faixa cujo intervalo `[de, ate)` contém o atingimento. */
@@ -142,6 +180,17 @@ export function apurarSubindicador(
   subindicador: Subindicador,
   lancamento: Lancamento | undefined,
   modo: ModoArredondamento = 'meio_para_cima',
+  /**
+   * Rejeitar razão com numerador maior que o denominador?
+   *
+   * Vem da REGRA, e o padrão é não rejeitar, embora numerador maior que
+   * denominador seja sempre um lançamento malformado. O motivo não é técnico: é
+   * a promessa de que um mês já publicado devolve para sempre o mesmo número.
+   * As regras v1 e v2 fecharam meses sem esta checagem; ligá-la para todo mundo
+   * mudaria resultado homologado, que é exatamente o que este produto existe
+   * para impedir. A checagem entra com a v3, junto com o resto do método novo.
+   */
+  rejeitarRazaoInvalida = false,
 ): PassoSubindicador {
   const base = {
     subindicadorId: subindicador.id,
@@ -177,6 +226,18 @@ export function apurarSubindicador(
       denominador,
       valor: null,
       aviso: 'denominador zero: proporção impossível de apurar',
+    }
+  }
+  // A planilha do cliente marca esta célula como ERRO, e está certa: numerador
+  // maior que denominador é lançamento malformado, não desempenho acima de
+  // 100%. Sem a checagem, o erro de digitação vira nota cheia em silêncio.
+  if (rejeitarRazaoInvalida && numerador > denominador) {
+    return {
+      ...base,
+      numerador,
+      denominador,
+      valor: null,
+      aviso: 'numerador maior que o denominador: lançamento inconsistente',
     }
   }
 
@@ -218,7 +279,13 @@ interface Composicao {
   subPassos: PassoSubindicador[]
   /** Valor composto do indicador; null quando nenhum subindicador foi apurado. */
   valor: number | null
+  /** Só no método de notas: média das notas dos subindicadores apurados. */
+  mediaDasNotas: number | null
+  /** Só no método de notas: a nota depois da segunda gradação. */
+  nota: number | null
   avisoComposicao: string | null
+  /** O indicador tem resultado para entrar na conta? */
+  temResultado: boolean
 }
 
 /**
@@ -252,6 +319,7 @@ export function calcularAvaliacao({
   regra,
 }: EntradaCalculo): Avaliacao {
   const { casas, modo } = regra.arredondamento
+  const porNotas = regra.metodo === 'notas'
   const avisos: string[] = []
 
   const lancamentosDaUnidade = lancamentos.filter(
@@ -265,7 +333,7 @@ export function calcularAvaliacao({
 
     const subs = subindicadores.filter((s) => s.indicadorId === indicador.id)
     const subPassos = subs.map((sub) =>
-      apurarSubindicador(sub, lancamentoVigenteDoSub(lancamentosDaUnidade, sub.id), modo),
+      apurarSubindicador(sub, lancamentoVigenteDoSub(lancamentosDaUnidade, sub.id), modo, porNotas),
     )
 
     const apurados = subPassos.filter((p) => p.valor !== null)
@@ -279,18 +347,104 @@ export function calcularAvaliacao({
         ? `${subPassos.length - apurados.length} de ${subPassos.length} subindicadores sem valor apurado: a média usou os que existem.`
         : null
 
-    return [{ indicador, aplicabilidade, subPassos, valor, avisoComposicao }]
+    if (!porNotas) {
+      return [
+        {
+          indicador,
+          aplicabilidade,
+          subPassos,
+          valor,
+          mediaDasNotas: null,
+          nota: null,
+          avisoComposicao,
+          temResultado: valor !== null,
+        },
+      ]
+    }
+
+    // MÉTODO DE NOTAS. Cada subindicador vira nota pela régua da regra ANTES de
+    // qualquer média. É a diferença que a planilha do cliente revelou: graduar
+    // no fim, sobre a média dos valores, dá número diferente de graduar cada um
+    // e tirar a média das notas, e quem está perto de um degrau sente.
+    const comNota = subPassos.map((passo) => {
+      if (passo.valor === null) return passo
+      const graduacao = graduacaoDoSubindicador(regra, passo.subindicadorId)
+      if (!graduacao) {
+        return {
+          ...passo,
+          nota: null,
+          aviso: `Sem régua de notas para "${passo.subindicador}" na regra ${regra.id}.`,
+        }
+      }
+      const nota = notaDoDegrau(passo.valor, graduacao.degraus)
+      return nota === null
+        ? {
+            ...passo,
+            nota: null,
+            aviso: `Valor ${passo.valor} não caiu em nenhum degrau da régua de "${passo.subindicador}".`,
+          }
+        : { ...passo, nota }
+    })
+
+    const comNotaApurada = comNota.filter((p) => p.nota !== null && p.nota !== undefined)
+    const mediaDasNotas =
+      comNotaApurada.length === 0
+        ? null
+        : arredondar(
+            comNotaApurada.reduce((soma, p) => soma + (p.nota ?? 0), 0) / comNotaApurada.length,
+            4,
+            modo,
+          )
+
+    // Segunda gradação: a média volta para uma régua antes de virar a nota do
+    // indicador. Sem entrada na regra, a média JÁ É a nota.
+    const segunda = segundaGraduacaoDoIndicador(regra, indicador.id)
+    const nota =
+      mediaDasNotas === null
+        ? null
+        : segunda
+          ? notaDoDegrau(mediaDasNotas, segunda.degraus)
+          : mediaDasNotas
+
+    // OS DEFEITOS DE RÉGUA SOBEM AQUI, não lá embaixo. Subindicador sem régua,
+    // ou com valor fora de todos os degraus, deixa o indicador sem nota; com
+    // `semLancamento: 'ignora'` ele é filtrado antes do passo, e o aviso morreria
+    // junto. Um número que some da conta sem uma linha dizendo por quê é o pior
+    // caso possível num sistema que existe para ser conferido.
+    for (const passo of comNota) {
+      if (passo.nota === null && passo.aviso) avisos.push(`${indicador.nome}: ${passo.aviso}`)
+    }
+
+    const avisoNotas =
+      mediaDasNotas !== null && nota === null
+        ? `Média ${mediaDasNotas} não caiu em nenhum degrau da segunda régua de "${indicador.nome}".`
+        : comNotaApurada.length > 0 && comNotaApurada.length < subPassos.length
+          ? `${subPassos.length - comNotaApurada.length} de ${subPassos.length} subindicadores sem nota: a média usou os que existem.`
+          : avisoComposicao
+
+    return [
+      {
+        indicador,
+        aplicabilidade,
+        subPassos: comNota,
+        valor,
+        mediaDasNotas,
+        nota,
+        avisoComposicao: avisoNotas,
+        temResultado: nota !== null,
+      },
+    ]
   })
 
   const considerados =
-    regra.semLancamento === 'ignora' ? composicoes.filter((c) => c.valor !== null) : composicoes
+    regra.semLancamento === 'ignora' ? composicoes.filter((c) => c.temResultado) : composicoes
 
   const somaPesos = considerados.reduce((soma, c) => soma + c.aplicabilidade.peso, 0)
 
   if (somaPesos <= 0) {
     // Dois estados diferentes merecem explicações diferentes: um tipo sem
     // aplicabilidade na regra NÃO é uma unidade que deixou de lançar.
-    const ignorados = composicoes.filter((c) => c.valor === null)
+    const ignorados = composicoes.filter((c) => !c.temResultado)
     const semAplicaveis = composicoes.length === 0
     return {
       unidadeId: unidade.id,
@@ -300,6 +454,7 @@ export function calcularAvaliacao({
       memoria: {
         regraId: regra.id,
         versaoRegra: regra.versao,
+        metodo: porNotas ? 'notas' : 'atingimento',
         passos: [],
         somaPesos: 0,
         somaContribuicoes: 0,
@@ -309,9 +464,16 @@ export function calcularAvaliacao({
           ? 'Sem indicadores aplicáveis com peso: score 0.'
           : 'Sem lançamento em nenhum indicador aplicável, e a regra manda ignorá-los: score 0.',
       },
+      // Os avisos já acumulados VÃO JUNTO. Sem isso, a unidade que perdeu todos
+      // os indicadores por defeito de régua receberia só "nenhum teve
+      // lançamento", que é verdade e esconde a causa.
       avisos: semAplicaveis
-        ? ['Nenhum indicador aplicável com peso positivo para o tipo desta unidade neste ciclo.']
+        ? [
+            ...avisos,
+            'Nenhum indicador aplicável com peso positivo para o tipo desta unidade neste ciclo.',
+          ]
         : [
+            ...avisos,
             `Nenhum dos ${ignorados.length} indicadores aplicáveis teve lançamento neste ciclo; a regra manda ignorá-los. Ignorados: ${ignorados
               .map((c) => c.indicador.nome)
               .join('; ')}.`,
@@ -320,7 +482,7 @@ export function calcularAvaliacao({
   }
 
   const passos: PassoMemoria[] = considerados.map(
-    ({ indicador, aplicabilidade, subPassos, valor, avisoComposicao }) => {
+    ({ indicador, aplicabilidade, subPassos, valor, mediaDasNotas, nota, avisoComposicao }) => {
       const pesoNormalizado = arredondar(aplicabilidade.peso / somaPesos, 6, modo)
       const base = {
         indicadorId: indicador.id,
@@ -331,6 +493,48 @@ export function calcularAvaliacao({
         meta: aplicabilidade.meta,
         peso: aplicabilidade.peso,
         pesoNormalizado,
+      }
+
+      if (porNotas) {
+        if (nota === null) {
+          const aviso = `Indicador "${indicador.nome}" sem nota apurada neste ciclo: pontuação zerada.`
+          avisos.push(aviso)
+          return {
+            ...base,
+            valor,
+            mediaDasNotas,
+            nota: null,
+            atingimentoBruto: null,
+            atingimento: null,
+            aplicouTeto: false,
+            faixa: 'sem nota',
+            pontos: 0,
+            contribuicao: 0,
+            aviso,
+          }
+        }
+
+        if (avisoComposicao) avisos.push(`${indicador.nome}: ${avisoComposicao}`)
+
+        // A NOTA JÁ É O PONTO. Não há atingimento nem teto aqui: a régua de
+        // degraus é que diz quanto o valor vale, e ela pode subir, descer ou
+        // ter um platô no meio. `pontuacaoMaxima` da regra é 1, então a mesma
+        // divisão do fim continua valendo sem exceção.
+        return {
+          ...base,
+          valor,
+          mediaDasNotas,
+          nota,
+          atingimentoBruto: null,
+          atingimento: null,
+          aplicouTeto: false,
+          faixa: segundaGraduacaoDoIndicador(regra, indicador.id)
+            ? 'nota da régua, com segunda gradação sobre a média'
+            : 'nota da régua de degraus',
+          pontos: nota,
+          contribuicao: arredondar(nota * aplicabilidade.peso, casas, modo),
+          ...(avisoComposicao ? { aviso: avisoComposicao } : {}),
+        }
       }
 
       if (valor === null) {
@@ -436,13 +640,15 @@ export function calcularAvaliacao({
     memoria: {
       regraId: regra.id,
       versaoRegra: regra.versao,
+      metodo: porNotas ? 'notas' : 'atingimento',
       passos,
       somaPesos: arredondar(somaPesos, 4, modo),
       somaContribuicoes,
       pontuacaoMaxima: regra.pontuacaoMaxima,
       score: scoreLimitado,
-      formula:
-        'indicador = média dos subindicadores apurados; score = (Σ pontos × peso) ÷ (Σ peso × pontuação máxima) × 100',
+      formula: porNotas
+        ? 'subindicador → nota pela régua; indicador = média das notas (com segunda gradação quando há); score = (Σ nota × peso) ÷ (Σ peso dos que têm nota) × 100'
+        : 'indicador = média dos subindicadores apurados; score = (Σ pontos × peso) ÷ (Σ peso × pontuação máxima) × 100',
     },
     avisos,
   }

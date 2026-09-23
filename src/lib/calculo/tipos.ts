@@ -9,7 +9,16 @@
  * pessoa ou da SESAU entra no repositório.
  */
 
-export type Direcao = 'maior_melhor' | 'menor_melhor'
+/**
+ * Para onde o indicador deve andar.
+ *
+ * `faixa_ideal` é a terceira, e ela existe porque a planilha do cliente tem
+ * subindicador em que passar do alvo TAMBÉM perde ponto: há régua em que ficar
+ * entre 65 e 85 vale nota cheia e 90 vale menos. Com duas direções só, o motor
+ * premiaria o excesso. Ela só tem sentido no método de notas: no método de
+ * atingimento não há como exprimir um teto sem inverter a conta.
+ */
+export type Direcao = 'maior_melhor' | 'menor_melhor' | 'faixa_ideal'
 
 export type Periodicidade = 'mensal' | 'bimestral' | 'trimestral' | 'semestral' | 'anual'
 
@@ -170,6 +179,62 @@ export interface Lancamento {
   readonly status: StatusLancamento
 }
 
+/**
+ * Um degrau da régua: o intervalo do VALOR apurado e a nota que ele vale.
+ *
+ * Intervalo `[de, ate)`, igual ao resto do sistema. `de: null` é "sem piso" e
+ * `ate: null` é "sem teto". A ordem da lista manda: vence o primeiro degrau que
+ * contém o valor, então uma régua não monótona (a faixa ideal) se escreve sem
+ * campo novo, só pondo o degrau de nota cheia no meio.
+ */
+export interface Degrau {
+  readonly de: number | null
+  readonly ate: number | null
+  /** Nota de 0 a 1. É a escala da planilha do cliente, não a de 0 a 10. */
+  readonly nota: number
+}
+
+/**
+ * Como um subindicador vira nota, no método de notas.
+ *
+ * MORA NA REGRA VERSIONADA porque é exatamente o que muda de versão para
+ * versão. A régua de um mesmo subindicador já mudou na prática sem mudar a
+ * portaria, e é isso que a coluna "peso atual (excepcional)" da planilha do
+ * cliente registra.
+ */
+export interface GraduacaoSubindicador {
+  readonly subindicadorId: string
+  readonly degraus: readonly Degrau[]
+}
+
+/**
+ * A SEGUNDA gradação: a média das notas dos subindicadores passa por outra
+ * régua antes de virar a nota do indicador.
+ *
+ * Não é detalhe: sem ela, uma média de 0,6 valeria 0,6. Com ela, a mesma média
+ * pode valer 0,5, porque a portaria gradua de novo no fim (Indicador 2,
+ * etapa 03). Indicador sem entrada aqui usa a própria média.
+ */
+export interface GraduacaoIndicador {
+  readonly indicadorId: string
+  readonly degraus: readonly Degrau[]
+}
+
+/**
+ * Como a regra transforma o que foi lançado em pontos.
+ *
+ * - `atingimento`: valor composto ÷ meta, graduado UMA vez no fim. Foi o que a
+ *   equipe assumiu antes de ver a planilha, e é o que as regras v1 e v2 usam.
+ * - `notas`: cada subindicador vira nota primeiro, a média das notas vira a
+ *   nota do indicador, e há uma segunda gradação opcional. É o que a planilha
+ *   do cliente faz, conferido fórmula a fórmula.
+ *
+ * As duas convivem de propósito. Um ciclo fechado sob a v2 tem de continuar
+ * devolvendo o mesmo número depois da v3, e regra é dado: trocar o método é
+ * publicar uma versão nova, nunca editar a vigente.
+ */
+export type MetodoDeCalculo = 'atingimento' | 'notas'
+
 /** Faixa de atingimento → pontos. Intervalo fechado à esquerda, aberto à direita. */
 export interface FaixaPontuacao {
   /** Atingimento mínimo, em fração (0.9 = 90%). */
@@ -232,6 +297,12 @@ export interface RegraDePontuacao {
   /** Teto de atingimento, em fração. 1.5 = ninguém passa de 150%. */
   readonly tetoAtingimento: number
   readonly semLancamento: TratamentoSemLancamento
+  /** Ausente quer dizer `atingimento`: é o que as regras v1 e v2 já publicadas usam. */
+  readonly metodo?: MetodoDeCalculo
+  /** Só no método de notas: a régua de cada subindicador. */
+  readonly graduacoes?: readonly GraduacaoSubindicador[]
+  /** Só no método de notas: a régua aplicada sobre a média, quando existe. */
+  readonly segundaGraduacao?: readonly GraduacaoIndicador[]
 }
 
 /** A conta de um subindicador dentro do passo do indicador. */
@@ -243,6 +314,8 @@ export interface PassoSubindicador {
   readonly denominador: number | null
   /** Valor apurado: o próprio valor no 'indice', a proporção em % na 'razao'. */
   readonly valor: number | null
+  /** Nota de 0 a 1 no método de notas. Ausente no método de atingimento. */
+  readonly nota?: number | null
   readonly aviso?: string
 }
 
@@ -261,6 +334,10 @@ export interface PassoMemoria {
   readonly atingimento: number | null
   readonly aplicouTeto: boolean
   readonly faixa: string
+  /** Média das notas dos subindicadores, ANTES da segunda gradação. */
+  readonly mediaDasNotas?: number | null
+  /** Nota do indicador depois da segunda gradação. No método de notas, é o que vira pontos. */
+  readonly nota?: number | null
   readonly pontos: number
   readonly peso: number
   readonly pesoNormalizado: number
@@ -271,6 +348,8 @@ export interface PassoMemoria {
 export interface MemoriaDeCalculo {
   readonly regraId: string
   readonly versaoRegra: number
+  /** Qual caminho a conta seguiu. A tela muda de coluna por causa dele. */
+  readonly metodo: MetodoDeCalculo
   readonly passos: readonly PassoMemoria[]
   readonly somaPesos: number
   readonly somaContribuicoes: number
