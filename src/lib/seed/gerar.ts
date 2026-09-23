@@ -18,11 +18,14 @@ import type {
 import {
   APLICABILIDADES_V1,
   APLICABILIDADES_V2,
+  APLICABILIDADES_V3,
   COMPORTAMENTOS,
+  GRADUACOES_V3,
   DISTRITOS,
   INDICADORES,
   NOMES_GERENTES,
   NOMES_GERENTES_DISTRITAIS,
+  SEGUNDA_GRADUACAO_V3,
   SUBINDICADORES,
   TIPOS_UNIDADE,
   UNIDADES,
@@ -102,7 +105,7 @@ const REGRAS: readonly RegraDePontuacao[] = [
     descricao:
       'Revisão a partir de abril: patamar de entrada sobe de 70% para 75%, a faixa intermediária é desdobrada e a régua de dois tipos muda.',
     vigenteDe: '2026-04',
-    vigenteAte: null,
+    vigenteAte: '2026-05',
     faixas: [
       { de: 0, ate: 0.75, pontos: 0 },
       { de: 0.75, ate: 0.85, pontos: 3 },
@@ -121,6 +124,53 @@ const REGRAS: readonly RegraDePontuacao[] = [
     arredondamento: { casas: 2, modo: 'meio_para_cima' },
     tetoAtingimento: 1.5,
     semLancamento: 'zera_com_aviso',
+  },
+  {
+    /**
+     * A v3 é a primeira regra escrita COM a planilha do cliente na mão.
+     *
+     * Ela troca três coisas que a equipe tinha assumido errado, e nenhuma delas
+     * custou uma linha do motor que já existia: mudou o dado.
+     *
+     * 1. `metodo: 'notas'`. Cada subindicador vira nota pela régua antes de
+     *    qualquer média, e a média das notas é que vira a nota do indicador.
+     *    Antes a média era dos VALORES e a gradação vinha uma vez só, no fim.
+     * 2. `semLancamento: 'ignora'`. O indicador sem lançamento sai da conta e o
+     *    peso dele sai do denominador junto, que é a redistribuição do art. 8º
+     *    e é exatamente o que a fórmula do Resultado Geral da planilha faz.
+     * 3. `pontuacaoMaxima: 1`. A nota já é de 0 a 1, como na planilha. A escala
+     *    de 0 a 10 era invenção nossa, e some sem exceção no motor: a mesma
+     *    divisão do fim continua valendo.
+     *
+     * `faixas` fica vazio de propósito: no método de notas não existe régua de
+     * atingimento, e uma lista fingida ali seria pior que o vazio.
+     */
+    id: 'regra-v3',
+    versao: 3,
+    descricao:
+      'Primeira regra conferida contra a planilha do cliente: nota por subindicador, média das notas, segunda gradação no prontuário e peso redistribuído quando falta lançamento.',
+    vigenteDe: '2026-06',
+    vigenteAte: null,
+    faixas: [],
+    pontuacaoMaxima: 1,
+    faixasGratificacao: [
+      // Os RÓTULOS vêm da planilha, onde a classificação aparece escrita à mão:
+      // "Satisfatório" em 0,74 e "Excelente" em 0,82. Os PERCENTUAIS continuam
+      // arbitrados por nós, porque eles moram no Decreto nº 36.482/2023, que a
+      // equipe ainda não tem. Separar as duas coisas é o que impede o site de
+      // apresentar suposição nossa como se fosse norma.
+      { de: 0, ate: 50, rotulo: 'insatisfatório', percentual: 0 },
+      { de: 50, ate: 70, rotulo: 'regular', percentual: 50 },
+      { de: 70, ate: 80, rotulo: 'satisfatório', percentual: 80 },
+      { de: 80, ate: null, rotulo: 'excelente', percentual: 100 },
+    ],
+    aplicabilidades: APLICABILIDADES_V3,
+    arredondamento: { casas: 2, modo: 'meio_para_cima' },
+    tetoAtingimento: 1.5,
+    semLancamento: 'ignora',
+    metodo: 'notas',
+    graduacoes: GRADUACOES_V3,
+    segundaGraduacao: SEGUNDA_GRADUACAO_V3,
   },
 ]
 

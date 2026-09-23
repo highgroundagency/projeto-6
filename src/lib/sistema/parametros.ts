@@ -8,7 +8,7 @@ import type { FeatureId } from '@/lib/features'
  * significaria quatro coisas ao mesmo tempo — o ciclo filtrado na auditoria, a
  * competência do painel da gestão, o ciclo do resultado e o da contestação. Pior
  * que o conflito seria `ok`/`erro`: um lançamento bem-sucedido pintaria a faixa
- * verde também no dashboard da CAM, que não fez nada.
+ * verde também no painel da SEAB, que não fez nada.
  *
  * Por isso cada tela leva um prefixo. É feio de ler na barra de endereço e é a
  * única forma de o estado de uma tela não vazar para a vizinha.

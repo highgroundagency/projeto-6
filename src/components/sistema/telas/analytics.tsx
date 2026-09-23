@@ -10,7 +10,7 @@ import {
   type DadosDoSistema,
 } from '@/lib/dados/consultas'
 import { ML, ROTULO_MODELO } from '@/lib/ml'
-import type { Lancamento, Subindicador } from '@/lib/calculo/tipos'
+import type { Direcao, Lancamento, Subindicador } from '@/lib/calculo/tipos'
 
 /**
  * Tela de analytics (§10.3).
@@ -44,7 +44,7 @@ function apurado(sub: Subindicador, lancamento: Lancamento): number | null {
 function metaDoLancamento(
   dados: DadosDoSistema,
   lancamento: Lancamento,
-): { meta: number; direcao: 'maior_melhor' | 'menor_melhor'; indicador: string } | null {
+): { meta: number; direcao: Direcao; indicador: string } | null {
   const sub = dados.subindicadorPorId(lancamento.subindicadorId)
   const unidade = dados.unidadePorId(lancamento.unidadeId)
   const ciclo = dados.cicloPorId(lancamento.cicloId)
@@ -72,6 +72,10 @@ function atingimentoMedioPorUnidade(
       const regua = metaDoLancamento(dados, lancamento)
       const valor = apurado(sub, lancamento)
       if (!regua || valor === null) continue
+      // Indicador de faixa ideal fica FORA desta média de propósito: "atingimento"
+      // não quer dizer nada quando passar do alvo também é pior. Entrar com ele
+      // aqui inflaria a média da unidade com um número que não existe.
+      if (regua.direcao === 'faixa_ideal') continue
       const { comTeto } = calcularAtingimento(valor, regua.meta, regua.direcao, 1.5)
       valores.push(comTeto)
     }

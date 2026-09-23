@@ -3,6 +3,14 @@ import { Etiqueta } from '@/components/base/selo'
 import type { Avaliacao, PassoSubindicador } from '@/lib/calculo/tipos'
 import { cn } from '@/lib/utils'
 
+/**
+ * A tabela muda de coluna conforme o MÉTODO da regra, e só nisso.
+ *
+ * No método de atingimento a coluna do meio é "Atingimento", uma porcentagem do
+ * alvo. No método de notas ela é "Nota", de 0 a 1, tirada da régua de degraus.
+ * Usar o mesmo rótulo para as duas faria a tela mentir na coluna que mais
+ * importa, que é justamente a que explica a nota para quem vai contestá-la.
+ */
 const COLUNAS = [
   'Indicador',
   'Valor',
@@ -51,6 +59,7 @@ export function MemoriaDeCalculo({
   compacta?: boolean
 }) {
   const { memoria } = avaliacao
+  const porNotas = memoria.metodo === 'notas'
   const corpo = compacta ? 'text-sm' : 'text-xs'
 
   return (
@@ -76,11 +85,23 @@ export function MemoriaDeCalculo({
             não dizia para que ela serve, e quem não é da área ficava perdido. */}
         {compacta ? null : (
         <p className="como-ler max-w-prose text-sm leading-relaxed">
-          Como ler: cada linha é um indicador, e o valor dele nasce dos subindicadores que a
-          unidade preencheu, listados dentro da própria linha. O valor composto é comparado com
-          a meta do tipo da unidade e vira pontos. Os pontos são multiplicados pelo peso (o
-          quanto aquele item vale). A soma de tudo, dividida pelo máximo possível, dá a nota de
-          0 a 100.
+          {porNotas ? (
+            <>
+              Como ler: cada linha é um indicador. Dentro dela, cada subindicador que a unidade
+              preencheu vira uma nota de 0 a 1, pela régua da regra. A média dessas notas é a
+              nota do indicador. Ela é multiplicada pelo peso (o quanto aquele item vale), e a
+              soma disso, dividida pela soma dos pesos que entraram na conta, dá a nota de 0 a
+              100. Indicador sem lançamento sai da conta, e o peso dele sai junto.
+            </>
+          ) : (
+            <>
+              Como ler: cada linha é um indicador, e o valor dele nasce dos subindicadores que a
+              unidade preencheu, listados dentro da própria linha. O valor composto é comparado
+              com a meta do tipo da unidade e vira pontos. Os pontos são multiplicados pelo peso
+              (o quanto aquele item vale). A soma de tudo, dividida pelo máximo possível, dá a
+              nota de 0 a 100.
+            </>
+          )}
         </p>
         )}
 
@@ -110,11 +131,13 @@ export function MemoriaDeCalculo({
           >
             <thead>
               <tr className="border-b border-linha bg-superficie">
-                {COLUNAS.filter((coluna) => !(compacta && coluna === 'Faixa')).map((coluna) => (
+                {COLUNAS.filter((coluna) => !(compacta && coluna === 'Faixa'))
+                  .map((coluna) => (coluna === 'Atingimento' && porNotas ? 'Nota' : coluna))
+                  .map((coluna) => (
                   <th key={coluna} className="rotulo px-2 py-1.5 text-left whitespace-nowrap">
                     {coluna}
                   </th>
-                ))}
+                  ))}
               </tr>
             </thead>
             <tbody>
@@ -127,7 +150,11 @@ export function MemoriaDeCalculo({
                     <span className="font-sans">{passo.indicador}</span>
                     {compacta ? null : (
                       <span className="mt-0.5 block text-[0.65rem] text-apagado">
-                        {passo.direcao === 'maior_melhor' ? 'maior é melhor' : 'menor é melhor'}{' '}
+                        {passo.direcao === 'maior_melhor'
+                          ? 'maior é melhor'
+                          : passo.direcao === 'menor_melhor'
+                            ? 'menor é melhor'
+                            : 'há uma faixa ideal'}{' '}
                         · {passo.unidadeMedida}
                       </span>
                     )}
@@ -137,6 +164,9 @@ export function MemoriaDeCalculo({
                           <li key={sub.subindicadorId} className="text-[0.65rem] text-apagado">
                             <span className="font-sans">{sub.subindicador}</span>:{' '}
                             {descreverSubPasso(sub)}
+                            {sub.nota === null || sub.nota === undefined ? null : (
+                              <span className="text-texto"> → nota {sub.nota}</span>
+                            )}
                           </li>
                         ))}
                       </ul>
@@ -151,7 +181,11 @@ export function MemoriaDeCalculo({
                   </td>
                   <td className="px-2 py-1.5 whitespace-nowrap">{passo.meta}</td>
                   <td className="px-2 py-1.5 whitespace-nowrap">
-                    {porcentagem(passo.atingimento)}
+                    {porNotas ? (
+                      (passo.nota ?? <span className="text-alerta">sem nota</span>)
+                    ) : (
+                      porcentagem(passo.atingimento)
+                    )}
                     {passo.aplicouTeto ? (
                       <span
                         className="ml-1 text-[0.65rem] text-acento"
