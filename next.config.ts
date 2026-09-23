@@ -32,12 +32,13 @@ const nextConfig: NextConfig = {
    *
    * O rastreador do Next segue `import`, não `readFile(join(process.cwd(),
    * ...))`. Sem esta lista, `/transparencia-ia` (que renderiza
-   * `docs/uso-de-ia.md`) e `/pitch/pdf` funcionam no repositório e somem no
+   * `docs/uso-de-ia.md`), `/pitch/pdf` e `/ml/pdf` funcionam no repositório e somem no
    * deploy, porque os arquivos não entram no pacote da função.
    */
   outputFileTracingIncludes: {
     '/transparencia-ia': ['./docs/*.md'],
     '/pitch/pdf': ['./docs/pitch-kickoff.pdf'],
+    '/ml/pdf': ['./docs/ml-av1.pdf'],
   },
   async headers() {
     return [

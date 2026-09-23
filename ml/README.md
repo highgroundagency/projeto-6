@@ -8,7 +8,7 @@ Os modelos vivem aqui, fora do app. Treino é offline; o site lê o resultado.
 pip install pandas scikit-learn matplotlib seaborn xgboost lightgbm catboost jupyter
 ```
 
-Abra `ml/notebooks/` e rode os seis cadernos **em ordem**. Todo o código está dentro deles.
+Abra `ml/notebooks/` e rode os cadernos **em ordem**. Todo o código está dentro deles.
 
 | Caderno | Faz | Escreve |
 | --- | --- | --- |
@@ -18,11 +18,15 @@ Abra `ml/notebooks/` e rode os seis cadernos **em ordem**. Todo o código está 
 | `04-regressao` | XGBoost com grid search para prever o resultado geral | `ml/saidas/regressao.json` |
 | `05-clustering` | K-Means sobre as unidades | `ml/saidas/clustering.json` |
 | `06-conclusoes` | Matriz de confusão, resultados finais e exportação para o app | `src/content/ml/resultados.json` |
+| `07-numeros-da-apresentacao` | Nenhuma análise nova: repete as contas de 01 e 02 e grava os números que os slides da AV1 desenham em `/ml` | `src/content/ml/apresentacao.json` |
 
 `ml/saidas/` é gerada e fica fora do Git. O que é versionado é o resultado final, porque é
 ele que a tela de analytics lê.
 
 O problema e o dataset (etapas 1 e 2) estão descritos em [`documento-problema-e-dados.md`](documento-problema-e-dados.md).
+Os slides da AV1 moram na rota `/ml` do site, com o roteiro em [`docs/ml-av1.md`](../docs/ml-av1.md):
+se mudar a análise em 01 ou 02, rode o 07 de novo, porque `src/content/apresentacao-ml.test.ts`
+confere os números dos slides contra o que 01 e 02 imprimiram.
 
 ## Dados
 

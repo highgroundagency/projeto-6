@@ -1,10 +1,15 @@
 /**
- * Gera o PDF e as capturas do pitch a partir da própria rota `/pitch`, na
- * identidade do site. Nada é desenhado à parte: o que sai daqui é o que a
- * banca vê no navegador.
+ * Gera o PDF e as capturas de um deck a partir da própria rota, na identidade
+ * do site. Nada é desenhado à parte: o que sai daqui é o que a banca vê no
+ * navegador.
  *
- *   docs/pitch-kickoff.pdf     uma página por slide, 16:9, tema escuro
- *   docs/pitch/slide-NN.png    a captura de cada slide, 1280 × 720
+ *   npm run pitch-pdf          o Kick-off, de /pitch
+ *     docs/pitch-kickoff.pdf     uma página por slide, 16:9, tema escuro
+ *     docs/pitch/slide-NN.png    a captura de cada slide, 1280 × 720
+ *
+ *   npm run pitch-pdf -- ml    a AV1 de machine learning, de /ml
+ *     docs/ml-av1.pdf
+ *     docs/ml-av1/slide-NN.png
  *
  * NADA DISTO VAI PARA `public/`, e é decisão, não descuido. Arquivo estático
  * não passa por `obterVisao()`: enquanto as capturas moraram em `public/`,
@@ -12,7 +17,7 @@
  * 404. O PDF é servido pela rota `/pitch/pdf`, que confere o release antes de
  * ler o arquivo daqui.
  *
- * Uso: npm run pitch-pdf    (exige `npm run build` antes)
+ * Uso: npm run pitch-pdf [-- ml]    (exige `npm run build` antes)
  *
  * Sobe o servidor de produção com a vitrine fechada e entra com sessão de
  * admin, para que o script funcione mesmo antes de o Kick-off virar público.
@@ -23,6 +28,7 @@ import { existsSync, mkdirSync } from 'node:fs'
 import { join } from 'node:path'
 import { chromium } from '@playwright/test'
 import { SLIDES } from '../src/content/pitch'
+import { SLIDES_ML } from '../src/content/apresentacao-ml'
 import { criarTokenSessao, NOME_COOKIE_SESSAO } from '../src/lib/admin/sessao'
 
 const PORTA = Number(process.env.PORTA_PITCH ?? 3213)
@@ -30,8 +36,20 @@ const BASE = `http://127.0.0.1:${PORTA}`
 const SEGREDO = 'pitch-pdf-segredo-longo-o-suficiente'
 const CHROMIUM_DO_AMBIENTE = '/opt/pw-browsers/chromium'
 const RAIZ = process.cwd()
-const PASTA_CAPTURAS = join(RAIZ, 'docs', 'pitch')
-const PDF = join(RAIZ, 'docs', 'pitch-kickoff.pdf')
+
+/** Os decks que este script sabe fotografar. O Kick-off é o padrão. */
+const DECKS = {
+  pitch: { rota: '/pitch', total: SLIDES.length, pdf: 'pitch-kickoff.pdf', capturas: 'pitch' },
+  ml: { rota: '/ml', total: SLIDES_ML.length, pdf: 'ml-av1.pdf', capturas: 'ml-av1' },
+} as const
+
+const escolhido = (process.argv[2] ?? 'pitch') as keyof typeof DECKS
+if (!(escolhido in DECKS)) {
+  throw new Error(`Deck desconhecido: ${escolhido}. Use um de: ${Object.keys(DECKS).join(', ')}`)
+}
+const DECK = DECKS[escolhido]
+const PASTA_CAPTURAS = join(RAIZ, 'docs', DECK.capturas)
+const PDF = join(RAIZ, 'docs', DECK.pdf)
 
 /**
  * A porta precisa estar livre ANTES de subir o servidor. Se um servidor
@@ -107,9 +125,9 @@ async function main() {
     ])
 
     const pagina = await contexto.newPage()
-    const resposta = await pagina.goto(`${BASE}/pitch#slide-1`, { waitUntil: 'networkidle' })
+    const resposta = await pagina.goto(`${BASE}${DECK.rota}#slide-1`, { waitUntil: 'networkidle' })
     if (!resposta || resposta.status() !== 200) {
-      throw new Error(`/pitch respondeu ${resposta?.status() ?? 'nada'}`)
+      throw new Error(`${DECK.rota} respondeu ${resposta?.status() ?? 'nada'}`)
     }
     await pagina.evaluate(() => document.fonts.ready)
     await pagina.waitForSelector('[data-modo="deck"]')
@@ -137,14 +155,14 @@ async function main() {
 
     // ---- capturas, slide a slide, avançando com a seta como no palco ----
     mkdirSync(PASTA_CAPTURAS, { recursive: true })
-    for (const slide of SLIDES) {
-      await pagina.waitForSelector(`[data-slide="${slide.numero}"][data-ativo]`)
+    for (let numero = 1; numero <= DECK.total; numero++) {
+      await pagina.waitForSelector(`[data-slide="${numero}"][data-ativo]`)
       await pagina.waitForTimeout(250)
-      const caminho = join(PASTA_CAPTURAS, `slide-${String(slide.numero).padStart(2, '0')}.png`)
+      const caminho = join(PASTA_CAPTURAS, `slide-${String(numero).padStart(2, '0')}.png`)
       await pagina.screenshot({ path: caminho, fullPage: false })
       console.log(`  ${caminho}`)
 
-      if (slide.numero < SLIDES.length) await pagina.keyboard.press('ArrowRight')
+      if (numero < DECK.total) await pagina.keyboard.press('ArrowRight')
     }
 
     // ---- o PDF: CSS de impressão, uma página por slide ----

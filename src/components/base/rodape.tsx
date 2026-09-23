@@ -50,6 +50,12 @@ export function Rodape({ className }: { className?: string }) {
           arquitetura
         </Link>
         <Link
+          href="/ml"
+          className="underline decoration-linha-alta underline-offset-4 lowercase transition-colors hover:text-acento hover:decoration-acento"
+        >
+          machine learning
+        </Link>
+        <Link
           href="/transparencia-ia"
           className="underline decoration-linha-alta underline-offset-4 lowercase transition-colors hover:text-acento hover:decoration-acento"
         >

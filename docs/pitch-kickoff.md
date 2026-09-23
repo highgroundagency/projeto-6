@@ -122,7 +122,7 @@ vale ponto com a banca, ela entra entre parênteses depois da palavra simples, c
 
 ### Slide 7: o que sabemos, e o que ainda é chute
 
-- **Começa em** 2:55 · **dura** 0:30 · **quem fala:** Matheus · **59 palavras na tela**
+- **Começa em** 2:55 · **dura** 0:30 · **quem fala:** Matheus · **60 palavras na tela**
 - **Frase da tela:** certeza tem fonte. aposta a gente declara. pergunta a gente leva para o cliente.
 - **O que a tela mostra:** As três colunas da matriz, com a contagem e dois exemplos de cada.
 - **A fala:**

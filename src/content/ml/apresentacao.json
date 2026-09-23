@@ -1,0 +1,2356 @@
+{
+  "gerado_em": "2026-09-23",
+  "fonte": "ml/data/base nova completa.csv",
+  "cadernos": [
+    "01-eda",
+    "02-preprocessamento"
+  ],
+  "base": {
+    "linhas": 244,
+    "colunas": 260,
+    "celulas": 63440,
+    "tipos_na_leitura": {
+      "texto": 201,
+      "inteiro": 48,
+      "decimal": 11
+    },
+    "categoricas": [
+      {
+        "coluna": "Tipo de unidade",
+        "valores": 20
+      },
+      {
+        "coluna": "Distrito Sanitário",
+        "valores": 8
+      }
+    ],
+    "numericas": 258,
+    "papeis": [
+      {
+        "papel": "Meta",
+        "colunas": 67
+      },
+      {
+        "papel": "Desempenho",
+        "colunas": 60
+      },
+      {
+        "papel": "Quantidade atendida",
+        "colunas": 40
+      },
+      {
+        "papel": "Total avaliado",
+        "colunas": 38
+      },
+      {
+        "papel": "Valor informado",
+        "colunas": 28
+      },
+      {
+        "papel": "Desempenho consolidado",
+        "colunas": 24
+      },
+      {
+        "papel": "Desempenho geral",
+        "colunas": 1
+      }
+    ],
+    "linhas_distrito": 48,
+    "unidades": 196,
+    "fora_da_regra": 6,
+    "modeladas": 190,
+    "tipos_nas_modeladas": 17,
+    "familias_nas_modeladas": [
+      "CAPS",
+      "CECO",
+      "MAC",
+      "UBT",
+      "UCIS",
+      "USF"
+    ],
+    "colunas_correlacionadas": 161
+  },
+  "classes": {
+    "abaixo_de_90": 89,
+    "noventa_ou_mais": 101
+  },
+  "distribuicao": [
+    {
+      "coluna": "ind1",
+      "histograma": {
+        "contagens": [
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          108,
+          0,
+          0,
+          0,
+          0,
+          0,
+          83,
+          1,
+          0,
+          0,
+          0,
+          0,
+          2
+        ],
+        "de": 0.0,
+        "ate": 1.0
+      },
+      "assimetria": -0.38,
+      "valores_distintos": 8,
+      "degraus": [
+        {
+          "valor": 0.5,
+          "unidades": 108
+        },
+        {
+          "valor": 0.75,
+          "unidades": 81
+        }
+      ],
+      "minimo": 0.0,
+      "maximo": 1.0
+    },
+    {
+      "coluna": "ind2",
+      "histograma": {
+        "contagens": [
+          5,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          191
+        ],
+        "de": 0.0,
+        "ate": 0.5
+      },
+      "assimetria": -6.07,
+      "valores_distintos": 2,
+      "degraus": [
+        {
+          "valor": 0.5,
+          "unidades": 191
+        },
+        {
+          "valor": 0.0,
+          "unidades": 5
+        }
+      ],
+      "minimo": 0.0,
+      "maximo": 0.5
+    },
+    {
+      "coluna": "ind3",
+      "histograma": {
+        "contagens": [
+          5,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          171,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          18
+        ],
+        "de": 0.79,
+        "ate": 3.11
+      },
+      "assimetria": 1.31,
+      "valores_distintos": 8,
+      "degraus": [
+        {
+          "valor": 1.89,
+          "unidades": 171
+        },
+        {
+          "valor": 3.11,
+          "unidades": 18
+        }
+      ],
+      "minimo": 0.79,
+      "maximo": 3.11
+    },
+    {
+      "coluna": "ind4",
+      "histograma": {
+        "contagens": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          5,
+          134,
+          14,
+          4,
+          4,
+          3,
+          4,
+          2,
+          7,
+          2,
+          6,
+          7,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          1
+        ],
+        "de": 0.664,
+        "ate": 1.169
+      },
+      "assimetria": 2.31,
+      "valores_distintos": 45,
+      "degraus": [
+        {
+          "valor": 0.8,
+          "unidades": 132
+        },
+        {
+          "valor": 0.825,
+          "unidades": 14
+        }
+      ],
+      "minimo": 0.664,
+      "maximo": 1.169
+    },
+    {
+      "coluna": "geral",
+      "histograma": {
+        "contagens": [
+          1,
+          0,
+          4,
+          9,
+          76,
+          74,
+          13,
+          2,
+          0,
+          0,
+          1,
+          6,
+          5,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          3,
+          0,
+          2
+        ],
+        "de": 0.646,
+        "ate": 1.9049
+      },
+      "assimetria": 3.84,
+      "valores_distintos": 54,
+      "degraus": [
+        {
+          "valor": 0.8974,
+          "unidades": 72
+        },
+        {
+          "valor": 0.9474,
+          "unidades": 56
+        }
+      ],
+      "minimo": 0.646,
+      "maximo": 1.9049
+    }
+  ],
+  "por_familia": [
+    {
+      "grupo": "USF",
+      "n": 130,
+      "q1": 0.8974,
+      "mediana": 0.8974,
+      "q3": 0.9474,
+      "bigode_baixo": 0.8474,
+      "bigode_alto": 0.9474,
+      "fora": [
+        0.7974,
+        0.7974,
+        0.7974
+      ]
+    },
+    {
+      "grupo": "UBT",
+      "n": 20,
+      "q1": 0.8941,
+      "mediana": 0.9074,
+      "q3": 0.9399,
+      "bigode_baixo": 0.8841,
+      "bigode_alto": 0.9574,
+      "fora": [
+        0.8074
+      ]
+    },
+    {
+      "grupo": "MAC",
+      "n": 19,
+      "q1": 0.7894,
+      "mediana": 1.2147,
+      "q3": 1.2488,
+      "bigode_baixo": 0.646,
+      "bigode_alto": 1.2703,
+      "fora": []
+    },
+    {
+      "grupo": "CAPS",
+      "n": 18,
+      "q1": 0.9203,
+      "mediana": 0.9451,
+      "q3": 0.9671,
+      "bigode_baixo": 0.9081,
+      "bigode_alto": 0.985,
+      "fora": [
+        0.8339
+      ]
+    },
+    {
+      "grupo": "SAE",
+      "n": 3,
+      "q1": 1.3476,
+      "mediana": 1.879,
+      "q3": 1.892,
+      "bigode_baixo": 0.8161,
+      "bigode_alto": 1.9049,
+      "fora": []
+    },
+    {
+      "grupo": "NDI",
+      "n": 3,
+      "q1": 1.7788,
+      "mediana": 1.7923,
+      "q3": 1.7956,
+      "bigode_baixo": 1.7652,
+      "bigode_alto": 1.7989,
+      "fora": []
+    },
+    {
+      "grupo": "UCIS",
+      "n": 2,
+      "q1": 0.9766,
+      "mediana": 0.9935,
+      "q3": 1.0105,
+      "bigode_baixo": 0.9597,
+      "bigode_alto": 1.0274,
+      "fora": []
+    },
+    {
+      "grupo": "CECO",
+      "n": 1,
+      "q1": 1.0018,
+      "mediana": 1.0018,
+      "q3": 1.0018,
+      "bigode_baixo": 1.0018,
+      "bigode_alto": 1.0018,
+      "fora": []
+    }
+  ],
+  "por_distrito": [
+    {
+      "grupo": "I",
+      "n": 18,
+      "q1": 0.8974,
+      "mediana": 0.9474,
+      "q3": 1.1442,
+      "bigode_baixo": 0.7974,
+      "bigode_alto": 1.2703,
+      "fora": []
+    },
+    {
+      "grupo": "II",
+      "n": 28,
+      "q1": 0.8974,
+      "mediana": 0.9255,
+      "q3": 0.9474,
+      "bigode_baixo": 0.8474,
+      "bigode_alto": 0.9769,
+      "fora": [
+        0.7524,
+        1.2181
+      ]
+    },
+    {
+      "grupo": "III",
+      "n": 19,
+      "q1": 0.8974,
+      "mediana": 0.9474,
+      "q3": 1.0991,
+      "bigode_baixo": 0.7491,
+      "bigode_alto": 1.2652,
+      "fora": [
+        1.7923,
+        1.9049
+      ]
+    },
+    {
+      "grupo": "IV",
+      "n": 30,
+      "q1": 0.8974,
+      "mediana": 0.9024,
+      "q3": 0.9474,
+      "bigode_baixo": 0.8974,
+      "bigode_alto": 1.0018,
+      "fora": [
+        0.7974,
+        1.0274,
+        1.2146,
+        1.7652,
+        1.879
+      ]
+    },
+    {
+      "grupo": "V",
+      "n": 29,
+      "q1": 0.8974,
+      "mediana": 0.8974,
+      "q3": 0.9474,
+      "bigode_baixo": 0.8841,
+      "bigode_alto": 0.9628,
+      "fora": [
+        0.7531,
+        0.776,
+        0.8028,
+        0.8074
+      ]
+    },
+    {
+      "grupo": "VI",
+      "n": 21,
+      "q1": 0.8974,
+      "mediana": 0.9474,
+      "q3": 0.9474,
+      "bigode_baixo": 0.8841,
+      "bigode_alto": 0.9779,
+      "fora": [
+        1.2553,
+        1.7989
+      ]
+    },
+    {
+      "grupo": "VII",
+      "n": 24,
+      "q1": 0.8974,
+      "mediana": 0.8974,
+      "q3": 0.9474,
+      "bigode_baixo": 0.8974,
+      "bigode_alto": 0.9574,
+      "fora": [
+        1.2667
+      ]
+    },
+    {
+      "grupo": "VIII",
+      "n": 27,
+      "q1": 0.8974,
+      "mediana": 0.9474,
+      "q3": 0.9474,
+      "bigode_baixo": 0.8974,
+      "bigode_alto": 0.9474,
+      "fora": [
+        0.646,
+        0.7974
+      ]
+    }
+  ],
+  "correlacao": {
+    "colunas": [
+      "ind1",
+      "ind2",
+      "ind3",
+      "ind4",
+      "geral"
+    ],
+    "matriz": [
+      [
+        1.0,
+        0.065,
+        0.188,
+        0.161,
+        0.365
+      ],
+      [
+        0.065,
+        1.0,
+        0.11,
+        -0.043,
+        0.163
+      ],
+      [
+        0.188,
+        0.11,
+        1.0,
+        0.358,
+        0.791
+      ],
+      [
+        0.161,
+        -0.043,
+        0.358,
+        1.0,
+        0.357
+      ],
+      [
+        0.365,
+        0.163,
+        0.791,
+        0.357,
+        1.0
+      ]
+    ]
+  },
+  "mais_correlatas": [
+    {
+      "coluna": "Desempenho consolidado — Indicador 3.1",
+      "r": 0.921
+    },
+    {
+      "coluna": "Desempenho consolidado — Indicador 3",
+      "r": 0.791
+    },
+    {
+      "coluna": "Desempenho consolidado — Subindicador 4.IX",
+      "r": -0.757
+    },
+    {
+      "coluna": "Desempenho consolidado — Indicador 5",
+      "r": 0.661
+    },
+    {
+      "coluna": "Desempenho — Subindicador 4.IX.3.I",
+      "r": -0.655
+    },
+    {
+      "coluna": "Desempenho consolidado — Subindicador 4.IV",
+      "r": -0.573
+    },
+    {
+      "coluna": "Desempenho — Subindicador 4.IV.1",
+      "r": -0.501
+    },
+    {
+      "coluna": "Desempenho consolidado — Subindicador 4.II",
+      "r": 0.492
+    },
+    {
+      "coluna": "Desempenho — Subindicador 4.IV.2",
+      "r": -0.43
+    },
+    {
+      "coluna": "Desempenho consolidado — Indicador 1.1",
+      "r": 0.365
+    },
+    {
+      "coluna": "Desempenho consolidado — Indicador 1",
+      "r": 0.365
+    },
+    {
+      "coluna": "Desempenho consolidado — Indicador 4",
+      "r": 0.357
+    },
+    {
+      "coluna": "Valor informado — Subindicador 4.I.12",
+      "r": 0.23
+    },
+    {
+      "coluna": "Total avaliado — Subindicador 2.2",
+      "r": 0.219
+    },
+    {
+      "coluna": "Quantidade atendida — Subindicador 2.2",
+      "r": 0.212
+    }
+  ],
+  "faltantes": {
+    "na_leitura": 0,
+    "depois_da_conversao": 0,
+    "colunas_com_ausente": 0
+  },
+  "outliers": [
+    {
+      "coluna": "ind1",
+      "unidades": 2,
+      "percentual": 1.0
+    },
+    {
+      "coluna": "ind2",
+      "unidades": 5,
+      "percentual": 2.6
+    },
+    {
+      "coluna": "ind3",
+      "unidades": 25,
+      "percentual": 12.8
+    },
+    {
+      "coluna": "ind4",
+      "unidades": 35,
+      "percentual": 17.9
+    },
+    {
+      "coluna": "geral",
+      "unidades": 29,
+      "percentual": 14.8
+    }
+  ],
+  "outliers_geral_por_familia": {
+    "MAC": 18,
+    "SAE": 3,
+    "NDI": 3,
+    "USF": 3,
+    "UCIS": 1,
+    "UBT": 1
+  },
+  "inconsistencias": {
+    "colunas_constantes": 96,
+    "colunas_fracao_e_percentual": 49,
+    "metas_escritas_de_dois_jeitos": [
+      {
+        "coluna": "Meta — Subindicador 4.II.2",
+        "escritas": [
+          "100%",
+          "1.00"
+        ],
+        "valor": 1.0
+      },
+      {
+        "coluna": "Meta — Subindicador 4.IX.2",
+        "escritas": [
+          "20",
+          "2000%"
+        ],
+        "valor": 20.0
+      },
+      {
+        "coluna": "Meta — Subindicador 4.IX.3",
+        "escritas": [
+          "4",
+          "400%"
+        ],
+        "valor": 4.0
+      },
+      {
+        "coluna": "Meta — Subindicador 4.IX.3.1",
+        "escritas": [
+          "8",
+          "800%"
+        ],
+        "valor": 8.0
+      }
+    ],
+    "celulas_com_virgula_de_milhar": 114,
+    "linhas_com_virgula_de_milhar": {
+      "DS": 24
+    },
+    "colunas_de_pontos": 4
+  },
+  "dispersao": [
+    {
+      "esperado": 1.3876,
+      "lancado": 0.8161,
+      "fora": true
+    },
+    {
+      "esperado": 1.3732,
+      "lancado": 1.9049,
+      "fora": true
+    },
+    {
+      "esperado": 1.3291,
+      "lancado": 1.879,
+      "fora": true
+    },
+    {
+      "esperado": 1.1816,
+      "lancado": 1.7923,
+      "fora": true
+    },
+    {
+      "esperado": 1.193,
+      "lancado": 1.7989,
+      "fora": true
+    },
+    {
+      "esperado": 1.1356,
+      "lancado": 1.7652,
+      "fora": true
+    },
+    {
+      "esperado": 0.918,
+      "lancado": 0.9175,
+      "fora": false
+    },
+    {
+      "esperado": 0.9785,
+      "lancado": 0.9779,
+      "fora": false
+    },
+    {
+      "esperado": 0.9386,
+      "lancado": 0.9381,
+      "fora": false
+    },
+    {
+      "esperado": 0.9775,
+      "lancado": 0.9769,
+      "fora": false
+    },
+    {
+      "esperado": 0.9839,
+      "lancado": 0.9834,
+      "fora": false
+    },
+    {
+      "esperado": 0.9316,
+      "lancado": 0.931,
+      "fora": false
+    },
+    {
+      "esperado": 0.9486,
+      "lancado": 0.9481,
+      "fora": false
+    },
+    {
+      "esperado": 0.9433,
+      "lancado": 0.9428,
+      "fora": false
+    },
+    {
+      "esperado": 0.9213,
+      "lancado": 0.9208,
+      "fora": false
+    },
+    {
+      "esperado": 0.8345,
+      "lancado": 0.8339,
+      "fora": false
+    },
+    {
+      "esperado": 0.9855,
+      "lancado": 0.985,
+      "fora": false
+    },
+    {
+      "esperado": 0.9647,
+      "lancado": 0.9642,
+      "fora": false
+    },
+    {
+      "esperado": 0.9633,
+      "lancado": 0.9628,
+      "fora": false
+    },
+    {
+      "esperado": 0.9207,
+      "lancado": 0.9201,
+      "fora": false
+    },
+    {
+      "esperado": 0.9087,
+      "lancado": 0.9081,
+      "fora": false
+    },
+    {
+      "esperado": 0.9687,
+      "lancado": 0.9681,
+      "fora": false
+    },
+    {
+      "esperado": 0.948,
+      "lancado": 0.9474,
+      "fora": false
+    },
+    {
+      "esperado": 0.9133,
+      "lancado": 0.9128,
+      "fora": false
+    },
+    {
+      "esperado": 1.0024,
+      "lancado": 1.0018,
+      "fora": false
+    },
+    {
+      "esperado": 0.9603,
+      "lancado": 0.9597,
+      "fora": false
+    },
+    {
+      "esperado": 1.028,
+      "lancado": 1.0274,
+      "fora": false
+    },
+    {
+      "esperado": 1.2149,
+      "lancado": 1.2147,
+      "fora": false
+    },
+    {
+      "esperado": 1.2474,
+      "lancado": 1.2472,
+      "fora": false
+    },
+    {
+      "esperado": 1.2705,
+      "lancado": 1.2703,
+      "fora": false
+    },
+    {
+      "esperado": 1.2195,
+      "lancado": 1.2193,
+      "fora": false
+    },
+    {
+      "esperado": 1.2669,
+      "lancado": 1.2667,
+      "fora": false
+    },
+    {
+      "esperado": 1.2506,
+      "lancado": 1.2504,
+      "fora": false
+    },
+    {
+      "esperado": 1.222,
+      "lancado": 1.2218,
+      "fora": false
+    },
+    {
+      "esperado": 1.1975,
+      "lancado": 1.1973,
+      "fora": false
+    },
+    {
+      "esperado": 1.2555,
+      "lancado": 1.2553,
+      "fora": false
+    },
+    {
+      "esperado": 1.2183,
+      "lancado": 1.2181,
+      "fora": false
+    },
+    {
+      "esperado": 1.2654,
+      "lancado": 1.2652,
+      "fora": false
+    },
+    {
+      "esperado": 1.2148,
+      "lancado": 1.2146,
+      "fora": false
+    },
+    {
+      "esperado": 0.8028,
+      "lancado": 0.8028,
+      "fora": false
+    },
+    {
+      "esperado": 0.7524,
+      "lancado": 0.7524,
+      "fora": false
+    },
+    {
+      "esperado": 0.7491,
+      "lancado": 0.7491,
+      "fora": false
+    },
+    {
+      "esperado": 0.776,
+      "lancado": 0.776,
+      "fora": false
+    },
+    {
+      "esperado": 0.646,
+      "lancado": 0.646,
+      "fora": false
+    },
+    {
+      "esperado": 0.7531,
+      "lancado": 0.7531,
+      "fora": false
+    },
+    {
+      "esperado": 0.8364,
+      "lancado": 0.8364,
+      "fora": false
+    },
+    {
+      "esperado": 0.958,
+      "lancado": 0.9574,
+      "fora": false
+    },
+    {
+      "esperado": 0.908,
+      "lancado": 0.9074,
+      "fora": false
+    },
+    {
+      "esperado": 0.958,
+      "lancado": 0.9574,
+      "fora": false
+    },
+    {
+      "esperado": 0.908,
+      "lancado": 0.9074,
+      "fora": false
+    },
+    {
+      "esperado": 0.908,
+      "lancado": 0.9074,
+      "fora": false
+    },
+    {
+      "esperado": 0.908,
+      "lancado": 0.9074,
+      "fora": false
+    },
+    {
+      "esperado": 0.908,
+      "lancado": 0.9074,
+      "fora": false
+    },
+    {
+      "esperado": 0.958,
+      "lancado": 0.9574,
+      "fora": false
+    },
+    {
+      "esperado": 0.908,
+      "lancado": 0.9074,
+      "fora": false
+    },
+    {
+      "esperado": 0.958,
+      "lancado": 0.9574,
+      "fora": false
+    },
+    {
+      "esperado": 0.808,
+      "lancado": 0.8074,
+      "fora": false
+    },
+    {
+      "esperado": 0.958,
+      "lancado": 0.9574,
+      "fora": false
+    },
+    {
+      "esperado": 0.908,
+      "lancado": 0.9074,
+      "fora": false
+    },
+    {
+      "esperado": 0.908,
+      "lancado": 0.9074,
+      "fora": false
+    },
+    {
+      "esperado": 0.8847,
+      "lancado": 0.8841,
+      "fora": false
+    },
+    {
+      "esperado": 0.8847,
+      "lancado": 0.8841,
+      "fora": false
+    },
+    {
+      "esperado": 0.8847,
+      "lancado": 0.8841,
+      "fora": false
+    },
+    {
+      "esperado": 0.8847,
+      "lancado": 0.8841,
+      "fora": false
+    },
+    {
+      "esperado": 0.9347,
+      "lancado": 0.9341,
+      "fora": false
+    },
+    {
+      "esperado": 0.898,
+      "lancado": 0.8974,
+      "fora": false
+    },
+    {
+      "esperado": 0.898,
+      "lancado": 0.8974,
+      "fora": false
+    },
+    {
+      "esperado": 0.948,
+      "lancado": 0.9474,
+      "fora": false
+    },
+    {
+      "esperado": 0.898,
+      "lancado": 0.8974,
+      "fora": false
+    },
+    {
+      "esperado": 0.898,
+      "lancado": 0.8974,
+      "fora": false
+    },
+    {
+      "esperado": 0.898,
+      "lancado": 0.8974,
+      "fora": false
+    },
+    {
+      "esperado": 0.948,
+      "lancado": 0.9474,
+      "fora": false
+    },
+    {
+      "esperado": 0.948,
+      "lancado": 0.9474,
+      "fora": false
+    },
+    {
+      "esperado": 0.898,
+      "lancado": 0.8974,
+      "fora": false
+    },
+    {
+      "esperado": 0.898,
+      "lancado": 0.8974,
+      "fora": false
+    },
+    {
+      "esperado": 0.898,
+      "lancado": 0.8974,
+      "fora": false
+    },
+    {
+      "esperado": 0.948,
+      "lancado": 0.9474,
+      "fora": false
+    },
+    {
+      "esperado": 0.898,
+      "lancado": 0.8974,
+      "fora": false
+    },
+    {
+      "esperado": 0.948,
+      "lancado": 0.9474,
+      "fora": false
+    },
+    {
+      "esperado": 0.898,
+      "lancado": 0.8974,
+      "fora": false
+    },
+    {
+      "esperado": 0.898,
+      "lancado": 0.8974,
+      "fora": false
+    },
+    {
+      "esperado": 0.898,
+      "lancado": 0.8974,
+      "fora": false
+    },
+    {
+      "esperado": 0.898,
+      "lancado": 0.8974,
+      "fora": false
+    },
+    {
+      "esperado": 0.948,
+      "lancado": 0.9474,
+      "fora": false
+    },
+    {
+      "esperado": 0.948,
+      "lancado": 0.9474,
+      "fora": false
+    },
+    {
+      "esperado": 0.898,
+      "lancado": 0.8974,
+      "fora": false
+    },
+    {
+      "esperado": 0.898,
+      "lancado": 0.8974,
+      "fora": false
+    },
+    {
+      "esperado": 0.898,
+      "lancado": 0.8974,
+      "fora": false
+    },
+    {
+      "esperado": 0.948,
+      "lancado": 0.9474,
+      "fora": false
+    },
+    {
+      "esperado": 0.898,
+      "lancado": 0.8974,
+      "fora": false
+    },
+    {
+      "esperado": 0.898,
+      "lancado": 0.8974,
+      "fora": false
+    },
+    {
+      "esperado": 0.898,
+      "lancado": 0.8974,
+      "fora": false
+    },
+    {
+      "esperado": 0.948,
+      "lancado": 0.9474,
+      "fora": false
+    },
+    {
+      "esperado": 0.898,
+      "lancado": 0.8974,
+      "fora": false
+    },
+    {
+      "esperado": 0.798,
+      "lancado": 0.7974,
+      "fora": false
+    },
+    {
+      "esperado": 0.898,
+      "lancado": 0.8974,
+      "fora": false
+    },
+    {
+      "esperado": 0.948,
+      "lancado": 0.9474,
+      "fora": false
+    },
+    {
+      "esperado": 0.898,
+      "lancado": 0.8974,
+      "fora": false
+    },
+    {
+      "esperado": 0.798,
+      "lancado": 0.7974,
+      "fora": false
+    },
+    {
+      "esperado": 0.898,
+      "lancado": 0.8974,
+      "fora": false
+    },
+    {
+      "esperado": 0.898,
+      "lancado": 0.8974,
+      "fora": false
+    },
+    {
+      "esperado": 0.948,
+      "lancado": 0.9474,
+      "fora": false
+    },
+    {
+      "esperado": 0.898,
+      "lancado": 0.8974,
+      "fora": false
+    },
+    {
+      "esperado": 0.948,
+      "lancado": 0.9474,
+      "fora": false
+    },
+    {
+      "esperado": 0.898,
+      "lancado": 0.8974,
+      "fora": false
+    },
+    {
+      "esperado": 0.898,
+      "lancado": 0.8974,
+      "fora": false
+    },
+    {
+      "esperado": 0.948,
+      "lancado": 0.9474,
+      "fora": false
+    },
+    {
+      "esperado": 0.948,
+      "lancado": 0.9474,
+      "fora": false
+    },
+    {
+      "esperado": 0.948,
+      "lancado": 0.9474,
+      "fora": false
+    },
+    {
+      "esperado": 0.948,
+      "lancado": 0.9474,
+      "fora": false
+    },
+    {
+      "esperado": 0.898,
+      "lancado": 0.8974,
+      "fora": false
+    },
+    {
+      "esperado": 0.948,
+      "lancado": 0.9474,
+      "fora": false
+    },
+    {
+      "esperado": 0.898,
+      "lancado": 0.8974,
+      "fora": false
+    },
+    {
+      "esperado": 0.798,
+      "lancado": 0.7974,
+      "fora": false
+    },
+    {
+      "esperado": 0.948,
+      "lancado": 0.9474,
+      "fora": false
+    },
+    {
+      "esperado": 0.898,
+      "lancado": 0.8974,
+      "fora": false
+    },
+    {
+      "esperado": 0.948,
+      "lancado": 0.9474,
+      "fora": false
+    },
+    {
+      "esperado": 0.898,
+      "lancado": 0.8974,
+      "fora": false
+    },
+    {
+      "esperado": 0.898,
+      "lancado": 0.8974,
+      "fora": false
+    },
+    {
+      "esperado": 0.898,
+      "lancado": 0.8974,
+      "fora": false
+    },
+    {
+      "esperado": 0.898,
+      "lancado": 0.8974,
+      "fora": false
+    },
+    {
+      "esperado": 0.948,
+      "lancado": 0.9474,
+      "fora": false
+    },
+    {
+      "esperado": 0.898,
+      "lancado": 0.8974,
+      "fora": false
+    },
+    {
+      "esperado": 0.898,
+      "lancado": 0.8974,
+      "fora": false
+    },
+    {
+      "esperado": 0.898,
+      "lancado": 0.8974,
+      "fora": false
+    },
+    {
+      "esperado": 0.898,
+      "lancado": 0.8974,
+      "fora": false
+    },
+    {
+      "esperado": 0.898,
+      "lancado": 0.8974,
+      "fora": false
+    },
+    {
+      "esperado": 0.948,
+      "lancado": 0.9474,
+      "fora": false
+    },
+    {
+      "esperado": 0.948,
+      "lancado": 0.9474,
+      "fora": false
+    },
+    {
+      "esperado": 0.948,
+      "lancado": 0.9474,
+      "fora": false
+    },
+    {
+      "esperado": 0.948,
+      "lancado": 0.9474,
+      "fora": false
+    },
+    {
+      "esperado": 0.948,
+      "lancado": 0.9474,
+      "fora": false
+    },
+    {
+      "esperado": 0.898,
+      "lancado": 0.8974,
+      "fora": false
+    },
+    {
+      "esperado": 0.898,
+      "lancado": 0.8974,
+      "fora": false
+    },
+    {
+      "esperado": 0.898,
+      "lancado": 0.8974,
+      "fora": false
+    },
+    {
+      "esperado": 0.898,
+      "lancado": 0.8974,
+      "fora": false
+    },
+    {
+      "esperado": 0.898,
+      "lancado": 0.8974,
+      "fora": false
+    },
+    {
+      "esperado": 0.898,
+      "lancado": 0.8974,
+      "fora": false
+    },
+    {
+      "esperado": 0.898,
+      "lancado": 0.8974,
+      "fora": false
+    },
+    {
+      "esperado": 0.898,
+      "lancado": 0.8974,
+      "fora": false
+    },
+    {
+      "esperado": 0.948,
+      "lancado": 0.9474,
+      "fora": false
+    },
+    {
+      "esperado": 0.898,
+      "lancado": 0.8974,
+      "fora": false
+    },
+    {
+      "esperado": 0.948,
+      "lancado": 0.9474,
+      "fora": false
+    },
+    {
+      "esperado": 0.948,
+      "lancado": 0.9474,
+      "fora": false
+    },
+    {
+      "esperado": 0.948,
+      "lancado": 0.9474,
+      "fora": false
+    },
+    {
+      "esperado": 0.948,
+      "lancado": 0.9474,
+      "fora": false
+    },
+    {
+      "esperado": 0.948,
+      "lancado": 0.9474,
+      "fora": false
+    },
+    {
+      "esperado": 0.948,
+      "lancado": 0.9474,
+      "fora": false
+    },
+    {
+      "esperado": 0.948,
+      "lancado": 0.9474,
+      "fora": false
+    },
+    {
+      "esperado": 0.898,
+      "lancado": 0.8974,
+      "fora": false
+    },
+    {
+      "esperado": 0.948,
+      "lancado": 0.9474,
+      "fora": false
+    },
+    {
+      "esperado": 0.948,
+      "lancado": 0.9474,
+      "fora": false
+    },
+    {
+      "esperado": 0.948,
+      "lancado": 0.9474,
+      "fora": false
+    },
+    {
+      "esperado": 0.898,
+      "lancado": 0.8974,
+      "fora": false
+    },
+    {
+      "esperado": 0.848,
+      "lancado": 0.8474,
+      "fora": false
+    },
+    {
+      "esperado": 0.898,
+      "lancado": 0.8974,
+      "fora": false
+    },
+    {
+      "esperado": 0.948,
+      "lancado": 0.9474,
+      "fora": false
+    },
+    {
+      "esperado": 0.898,
+      "lancado": 0.8974,
+      "fora": false
+    },
+    {
+      "esperado": 0.898,
+      "lancado": 0.8974,
+      "fora": false
+    },
+    {
+      "esperado": 0.898,
+      "lancado": 0.8974,
+      "fora": false
+    },
+    {
+      "esperado": 0.898,
+      "lancado": 0.8974,
+      "fora": false
+    },
+    {
+      "esperado": 0.948,
+      "lancado": 0.9474,
+      "fora": false
+    },
+    {
+      "esperado": 0.948,
+      "lancado": 0.9474,
+      "fora": false
+    },
+    {
+      "esperado": 0.948,
+      "lancado": 0.9474,
+      "fora": false
+    },
+    {
+      "esperado": 0.948,
+      "lancado": 0.9474,
+      "fora": false
+    },
+    {
+      "esperado": 0.898,
+      "lancado": 0.8974,
+      "fora": false
+    },
+    {
+      "esperado": 0.948,
+      "lancado": 0.9474,
+      "fora": false
+    },
+    {
+      "esperado": 0.948,
+      "lancado": 0.9474,
+      "fora": false
+    },
+    {
+      "esperado": 0.898,
+      "lancado": 0.8974,
+      "fora": false
+    },
+    {
+      "esperado": 0.898,
+      "lancado": 0.8974,
+      "fora": false
+    },
+    {
+      "esperado": 0.948,
+      "lancado": 0.9474,
+      "fora": false
+    },
+    {
+      "esperado": 0.898,
+      "lancado": 0.8974,
+      "fora": false
+    },
+    {
+      "esperado": 0.948,
+      "lancado": 0.9474,
+      "fora": false
+    },
+    {
+      "esperado": 0.898,
+      "lancado": 0.8974,
+      "fora": false
+    },
+    {
+      "esperado": 0.898,
+      "lancado": 0.8974,
+      "fora": false
+    },
+    {
+      "esperado": 0.948,
+      "lancado": 0.9474,
+      "fora": false
+    },
+    {
+      "esperado": 0.898,
+      "lancado": 0.8974,
+      "fora": false
+    },
+    {
+      "esperado": 0.898,
+      "lancado": 0.8974,
+      "fora": false
+    },
+    {
+      "esperado": 0.948,
+      "lancado": 0.9474,
+      "fora": false
+    },
+    {
+      "esperado": 0.948,
+      "lancado": 0.9474,
+      "fora": false
+    },
+    {
+      "esperado": 0.898,
+      "lancado": 0.8974,
+      "fora": false
+    },
+    {
+      "esperado": 0.948,
+      "lancado": 0.9474,
+      "fora": false
+    },
+    {
+      "esperado": 0.898,
+      "lancado": 0.8974,
+      "fora": false
+    },
+    {
+      "esperado": 0.898,
+      "lancado": 0.8974,
+      "fora": false
+    },
+    {
+      "esperado": 0.898,
+      "lancado": 0.8974,
+      "fora": false
+    },
+    {
+      "esperado": 0.948,
+      "lancado": 0.9474,
+      "fora": false
+    },
+    {
+      "esperado": 0.898,
+      "lancado": 0.8974,
+      "fora": false
+    },
+    {
+      "esperado": 0.948,
+      "lancado": 0.9474,
+      "fora": false
+    },
+    {
+      "esperado": 0.948,
+      "lancado": 0.9474,
+      "fora": false
+    },
+    {
+      "esperado": 0.948,
+      "lancado": 0.9474,
+      "fora": false
+    },
+    {
+      "esperado": 0.948,
+      "lancado": 0.9474,
+      "fora": false
+    },
+    {
+      "esperado": 0.898,
+      "lancado": 0.8974,
+      "fora": false
+    },
+    {
+      "esperado": 0.898,
+      "lancado": 0.8974,
+      "fora": false
+    },
+    {
+      "esperado": 0.898,
+      "lancado": 0.8974,
+      "fora": false
+    },
+    {
+      "esperado": 0.948,
+      "lancado": 0.9474,
+      "fora": false
+    },
+    {
+      "esperado": 0.898,
+      "lancado": 0.8974,
+      "fora": false
+    }
+  ],
+  "linhas_fora_da_regra": [
+    {
+      "tipo": "SAE",
+      "distrito": "I",
+      "esperado": 1.3876,
+      "lancado": 0.8161,
+      "peso_do_ind3_nos_pontos": 0.2
+    },
+    {
+      "tipo": "SAE",
+      "distrito": "III",
+      "esperado": 1.3732,
+      "lancado": 1.9049,
+      "peso_do_ind3_nos_pontos": 0.8
+    },
+    {
+      "tipo": "SAE",
+      "distrito": "IV",
+      "esperado": 1.3291,
+      "lancado": 1.879,
+      "peso_do_ind3_nos_pontos": 0.8
+    },
+    {
+      "tipo": "NDI",
+      "distrito": "III",
+      "esperado": 1.1816,
+      "lancado": 1.7923,
+      "peso_do_ind3_nos_pontos": 0.8
+    },
+    {
+      "tipo": "NDI",
+      "distrito": "VI",
+      "esperado": 1.193,
+      "lancado": 1.7989,
+      "peso_do_ind3_nos_pontos": 0.8
+    },
+    {
+      "tipo": "NDI",
+      "distrito": "IV",
+      "esperado": 1.1356,
+      "lancado": 1.7652,
+      "peso_do_ind3_nos_pontos": 0.8
+    }
+  ],
+  "features_novas": [
+    {
+      "coluna": "taxa_ind1",
+      "histograma": {
+        "contagens": [
+          10,
+          9,
+          10,
+          3,
+          13,
+          9,
+          9,
+          25,
+          5,
+          9,
+          9,
+          2,
+          16,
+          7,
+          7,
+          5,
+          12,
+          11,
+          5,
+          14
+        ],
+        "de": 0.6977,
+        "ate": 0.9798
+      },
+      "assimetria": 0.11,
+      "media": 0.838,
+      "desvio": 0.082,
+      "minimo": 0.698,
+      "maximo": 0.98,
+      "por_classe": {
+        "noventa_ou_mais": {
+          "n": 101,
+          "q1": 0.859,
+          "mediana": 0.8994,
+          "q3": 0.94,
+          "bigode_baixo": 0.7583,
+          "bigode_alto": 0.9798,
+          "fora": [
+            0.7039,
+            0.7078,
+            0.7089,
+            0.7181,
+            0.7194,
+            0.7293,
+            0.7297,
+            0.7327,
+            0.7371
+          ]
+        },
+        "abaixo_de_90": {
+          "n": 89,
+          "q1": 0.75,
+          "mediana": 0.7878,
+          "q3": 0.8098,
+          "bigode_baixo": 0.6977,
+          "bigode_alto": 0.8879,
+          "fora": []
+        }
+      }
+    },
+    {
+      "coluna": "ind3_x_ind4",
+      "histograma": {
+        "contagens": [
+          6,
+          1,
+          0,
+          0,
+          0,
+          5,
+          150,
+          11,
+          4,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          4,
+          8
+        ],
+        "de": 0.7797,
+        "ate": 3.11
+      },
+      "assimetria": 2.69,
+      "media": 1.602,
+      "desvio": 0.399,
+      "minimo": 0.78,
+      "maximo": 3.11,
+      "por_classe": {
+        "noventa_ou_mais": {
+          "n": 101,
+          "q1": 1.512,
+          "mediana": 1.512,
+          "q3": 1.6098,
+          "bigode_baixo": 1.4492,
+          "bigode_alto": 1.7511,
+          "fora": [
+            1.769,
+            1.8064,
+            1.89,
+            2.9187,
+            2.9195,
+            2.9436,
+            2.9817,
+            3.054,
+            3.0548,
+            3.0587,
+            3.0703,
+            3.0812,
+            3.0906,
+            3.0983,
+            3.11
+          ]
+        },
+        "abaixo_de_90": {
+          "n": 89,
+          "q1": 1.512,
+          "mediana": 1.512,
+          "q3": 1.512,
+          "bigode_baixo": 1.512,
+          "bigode_alto": 1.512,
+          "fora": [
+            0.7797,
+            0.792,
+            0.8091,
+            0.823,
+            0.8257,
+            0.88,
+            0.9565,
+            1.4492,
+            1.4492,
+            1.4492,
+            1.4492,
+            1.5592,
+            1.6845
+          ]
+        }
+      }
+    },
+    {
+      "coluna": "ind3_abaixo_meta",
+      "histograma": {
+        "contagens": [
+          183,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          7
+        ],
+        "de": 0.0,
+        "ate": 1.0
+      },
+      "assimetria": 4.96,
+      "media": 0.037,
+      "desvio": 0.189,
+      "minimo": 0.0,
+      "maximo": 1.0,
+      "por_classe": {
+        "noventa_ou_mais": {
+          "n": 101,
+          "q1": 0.0,
+          "mediana": 0.0,
+          "q3": 0.0,
+          "bigode_baixo": 0.0,
+          "bigode_alto": 0.0,
+          "fora": []
+        },
+        "abaixo_de_90": {
+          "n": 89,
+          "q1": 0.0,
+          "mediana": 0.0,
+          "q3": 0.0,
+          "bigode_baixo": 0.0,
+          "bigode_alto": 0.0,
+          "fora": [
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ]
+        }
+      }
+    },
+    {
+      "coluna": "indicadores_na_meta",
+      "histograma": {
+        "contagens": [
+          6,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          182,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          2
+        ],
+        "de": 0.0,
+        "ate": 2.0
+      },
+      "assimetria": -2.18,
+      "media": 0.979,
+      "desvio": 0.205,
+      "minimo": 0.0,
+      "maximo": 2.0,
+      "por_classe": {
+        "noventa_ou_mais": {
+          "n": 101,
+          "q1": 1.0,
+          "mediana": 1.0,
+          "q3": 1.0,
+          "bigode_baixo": 1.0,
+          "bigode_alto": 1.0,
+          "fora": [
+            2.0,
+            2.0
+          ]
+        },
+        "abaixo_de_90": {
+          "n": 89,
+          "q1": 1.0,
+          "mediana": 1.0,
+          "q3": 1.0,
+          "bigode_baixo": 1.0,
+          "bigode_alto": 1.0,
+          "fora": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      }
+    },
+    {
+      "coluna": "desvio_indicadores",
+      "histograma": {
+        "contagens": [
+          5,
+          1,
+          0,
+          0,
+          1,
+          0,
+          0,
+          70,
+          95,
+          0,
+          0,
+          6,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          12
+        ],
+        "de": 0.2001,
+        "ate": 1.2491
+      },
+      "assimetria": 1.81,
+      "media": 0.669,
+      "desvio": 0.166,
+      "minimo": 0.2,
+      "maximo": 1.249,
+      "por_classe": {
+        "noventa_ou_mais": {
+          "n": 101,
+          "q1": 0.6174,
+          "mediana": 0.6174,
+          "q3": 0.6565,
+          "bigode_baixo": 0.6054,
+          "bigode_alto": 0.6589,
+          "fora": [
+            1.1979,
+            1.1987,
+            1.1991,
+            1.2016,
+            1.2029,
+            1.2037,
+            1.2442,
+            1.2447,
+            1.2449,
+            1.2455,
+            1.2456,
+            1.2491
+          ]
+        },
+        "abaixo_de_90": {
+          "n": 89,
+          "q1": 0.6603,
+          "mediana": 0.6603,
+          "q3": 0.6603,
+          "bigode_baixo": 0.6603,
+          "bigode_alto": 0.6603,
+          "fora": [
+            0.2001,
+            0.2279,
+            0.2366,
+            0.2375,
+            0.2376,
+            0.2587,
+            0.4279,
+            0.6626,
+            0.6626,
+            0.6626,
+            0.6626,
+            0.7781,
+            0.7996,
+            0.7996,
+            0.7996,
+            0.7997,
+            0.801
+          ]
+        }
+      }
+    },
+    {
+      "coluna": "media_blocos_ind4",
+      "histograma": {
+        "contagens": [
+          3,
+          4,
+          6,
+          3,
+          4,
+          7,
+          7,
+          17,
+          12,
+          17,
+          22,
+          17,
+          17,
+          12,
+          18,
+          10,
+          5,
+          4,
+          2,
+          3
+        ],
+        "de": 0.8592,
+        "ate": 0.93
+      },
+      "assimetria": -0.3,
+      "media": 0.896,
+      "desvio": 0.015,
+      "minimo": 0.859,
+      "maximo": 0.93,
+      "por_classe": {
+        "noventa_ou_mais": {
+          "n": 101,
+          "q1": 0.8911,
+          "mediana": 0.9,
+          "q3": 0.9096,
+          "bigode_baixo": 0.8678,
+          "bigode_alto": 0.93,
+          "fora": []
+        },
+        "abaixo_de_90": {
+          "n": 89,
+          "q1": 0.8844,
+          "mediana": 0.894,
+          "q3": 0.9038,
+          "bigode_baixo": 0.8592,
+          "bigode_alto": 0.9225,
+          "fora": []
+        }
+      }
+    }
+  ],
+  "correlacao_features": [
+    {
+      "coluna": "ind3_x_ind4",
+      "nova": true,
+      "com_geral": 0.933,
+      "com_abaixo_de_90": -0.338
+    },
+    {
+      "coluna": "ind3",
+      "nova": false,
+      "com_geral": 0.906,
+      "com_abaixo_de_90": -0.311
+    },
+    {
+      "coluna": "desvio_indicadores",
+      "nova": true,
+      "com_geral": 0.818,
+      "com_abaixo_de_90": -0.174
+    },
+    {
+      "coluna": "ind4",
+      "nova": false,
+      "com_geral": 0.491,
+      "com_abaixo_de_90": -0.235
+    },
+    {
+      "coluna": "indicadores_na_meta",
+      "nova": true,
+      "com_geral": 0.408,
+      "com_abaixo_de_90": -0.213
+    },
+    {
+      "coluna": "ind3_abaixo_meta",
+      "nova": true,
+      "com_geral": -0.373,
+      "com_abaixo_de_90": 0.208
+    },
+    {
+      "coluna": "ind1",
+      "nova": false,
+      "com_geral": 0.369,
+      "com_abaixo_de_90": -0.701
+    },
+    {
+      "coluna": "taxa_ind1",
+      "nova": true,
+      "com_geral": 0.325,
+      "com_abaixo_de_90": -0.629
+    },
+    {
+      "coluna": "ind2",
+      "nova": false,
+      "com_geral": 0.265,
+      "com_abaixo_de_90": -0.175
+    },
+    {
+      "coluna": "media_blocos_ind4",
+      "nova": true,
+      "com_geral": 0.113,
+      "com_abaixo_de_90": -0.255
+    }
+  ],
+  "redundantes": [
+    {
+      "a": "desvio_indicadores",
+      "b": "ind3",
+      "correlacao": 0.97
+    },
+    {
+      "a": "ind3_x_ind4",
+      "b": "ind3",
+      "correlacao": 0.96
+    },
+    {
+      "a": "taxa_ind1",
+      "b": "ind1",
+      "correlacao": 0.84
+    }
+  ],
+  "descartadas": {
+    "assimetria_ind4": 1.96,
+    "assimetria_log_ind4": 1.89,
+    "correlacao_porte_geral": -0.001,
+    "subindicador_2_3_para_ind2": {
+      "0.0": {
+        "0.0": 5,
+        "0.5": 0
+      },
+      "0.5": {
+        "0.0": 0,
+        "0.5": 34
+      },
+      "1.0": {
+        "0.0": 0,
+        "0.5": 151
+      }
+    }
+  },
+  "codificacao": {
+    "one_hot": [
+      {
+        "coluna": "familia",
+        "valores": 6
+      },
+      {
+        "coluna": "distrito",
+        "valores": 8
+      }
+    ],
+    "label_encoding": {
+      "coluna": "tipo",
+      "valores": 17
+    },
+    "ordinal": {
+      "coluna": "nivel_tipo",
+      "de": 0,
+      "ate": 8
+    },
+    "linhas": 190,
+    "colunas_finais": 28,
+    "nivel_mac": [
+      {
+        "nivel": 1,
+        "n": 10,
+        "q1": 1.2184,
+        "mediana": 1.2345,
+        "q3": 1.2541,
+        "bigode_baixo": 1.1973,
+        "bigode_alto": 1.2703,
+        "fora": []
+      },
+      {
+        "nivel": 2,
+        "n": 2,
+        "q1": 1.2272,
+        "mediana": 1.2399,
+        "q3": 1.2525,
+        "bigode_baixo": 1.2146,
+        "bigode_alto": 1.2652,
+        "fora": []
+      },
+      {
+        "nivel": 3,
+        "n": 2,
+        "q1": 0.765,
+        "mediana": 0.7776,
+        "q3": 0.7902,
+        "bigode_baixo": 0.7524,
+        "bigode_alto": 0.8028,
+        "fora": []
+      },
+      {
+        "nivel": 4,
+        "n": 5,
+        "q1": 0.7491,
+        "mediana": 0.7531,
+        "q3": 0.776,
+        "bigode_baixo": 0.7491,
+        "bigode_alto": 0.776,
+        "fora": [
+          0.646,
+          0.8364
+        ]
+      }
+    ],
+    "escala": [
+      {
+        "coluna": "ind1",
+        "media": 0.6,
+        "desvio": 0.138
+      },
+      {
+        "coluna": "ind2",
+        "media": 0.487,
+        "desvio": 0.08
+      },
+      {
+        "coluna": "ind3",
+        "media": 1.929,
+        "desvio": 0.363
+      },
+      {
+        "coluna": "ind4",
+        "media": 0.827,
+        "desvio": 0.057
+      },
+      {
+        "coluna": "taxa_ind1",
+        "media": 0.838,
+        "desvio": 0.082
+      },
+      {
+        "coluna": "ind3_x_ind4",
+        "media": 1.602,
+        "desvio": 0.399
+      },
+      {
+        "coluna": "desvio_indicadores",
+        "media": 0.669,
+        "desvio": 0.166
+      },
+      {
+        "coluna": "media_blocos_ind4",
+        "media": 0.896,
+        "desvio": 0.015
+      }
+    ]
+  }
+}

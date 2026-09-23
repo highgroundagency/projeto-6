@@ -83,6 +83,7 @@ src/
 ├── components/
 │   ├── base/            botão, selo, marca, rodapé, cabeçalho, fluxo, faixa do admin
 │   ├── pitch/           o deck do Kick-off: slides no servidor, teclado no cliente
+│   ├── ml/              os slides da AV1 de machine learning e os gráficos em HTML
 │   ├── registro/        topo, trilhas, cartão da semana, entrega da vez,
 │   │                    biblioteca de documentos e cronograma público
 │   ├── sistema/         primitivos, ícones, sanfona da tela, tutorial, perfis
@@ -97,6 +98,7 @@ src/
 │   ├── checklist.ts     status das evidências da matriz
 │   ├── travas.ts        travas de release versionadas: liberar um ciclo por commit
 │   ├── pitch.ts         fonte única do pitch: slides, tempos, quem fala, notas
+│   ├── apresentacao-ml.ts  o texto dos slides da AV1 de ML; os números vêm do JSON do caderno 07
 │   ├── tutoriais.ts     o aprendizado guiado de cada perfil
 │   └── produto.ts       nome, problema, pergunta e objetivos do projeto
 └── lib/
@@ -119,8 +121,9 @@ supabase/
 
 ml/                      lente de machine learning — treina offline, o app lê o JSON
 ├── data/                a planilha de desempenho por unidade que os cadernos leem
-└── notebooks/           os seis cadernos, com todo o código; o 06 escreve
-                         src/content/ml/resultados.json
+└── notebooks/           os cadernos, com todo o código; o 06 escreve
+                         src/content/ml/resultados.json e o 07, os números
+                         dos slides da AV1 (src/content/ml/apresentacao.json)
 ```
 
 ## Onde os dados vivem
@@ -142,8 +145,8 @@ execução.
 | `npm test` | Vitest |
 | `npm run typecheck` | `tsc --noEmit` — quebra se um ciclo publicado estiver incompleto |
 | `npm run verificar-vazamento` | Prova que conteúdo futuro não vaza (exige `npm run build` antes) |
-| `npm run roteiro` | Regenera a seção slide a slide de `docs/pitch-kickoff.md` a partir de `pitch.ts` |
-| `npm run pitch-pdf` | Gera `public/pitch-kickoff.pdf` e as capturas de `docs/pitch/` a partir de `/pitch` (exige `npm run build` antes) |
+| `npm run roteiro` | Regenera a seção slide a slide de `docs/pitch-kickoff.md` e de `docs/ml-av1.md` a partir do conteúdo dos decks |
+| `npm run pitch-pdf` | Gera `docs/pitch-kickoff.pdf` e as capturas de `docs/pitch/` a partir de `/pitch`; com `-- ml`, `docs/ml-av1.pdf` e `docs/ml-av1/` a partir de `/ml` (exige `npm run build` antes) |
 | `npm run e2e` | Playwright |
 | `npm run testar-rls` | Políticas do schema guardado contra um Postgres real (exige `DATABASE_URL_TESTE`) |
 | `npm run semear` | Semeia a base sintética num Postgres com o schema aplicado (exige `DATABASE_URL`) |

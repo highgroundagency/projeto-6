@@ -1221,10 +1221,16 @@ html:fullscreen .ajuda-deck {
   }
 
   /* O papel é o estado final: nenhuma animação, nenhum atraso. Sem isto, a
-     página sai congelada no primeiro quadro, com metade do slide invisível. */
-  .slide *,
-  .slide *::before,
-  .slide *::after {
+     página sai congelada no primeiro quadro, com metade do slide invisível.
+
+     MENOS O QUE MORA DENTRO DE UM SVG. Ali `transform` não é animação: é o
+     atributo que põe cada peça no lugar, e a propriedade CSS vence o
+     atributo. Zerada, a faixa do Recife saía no PDF sem os cactos, sem os
+     pássaros e sem os raios do sol, todos empilhados na origem do desenho,
+     e o PDF do Kick-off saiu assim. O próprio <svg> continua zerado. */
+  .slide :not(svg *),
+  .slide :not(svg *)::before,
+  .slide :not(svg *)::after {
     animation: none !important;
     opacity: 1 !important;
     transform: none !important;
@@ -1240,4 +1246,131 @@ html:fullscreen .ajuda-deck {
   .horizonte {
     display: block !important;
   }
+}
+
+/* ---------------------------------------------------------------------------
+   A AV1 DE MACHINE LEARNING (/ml)
+
+   O mesmo deck do Kick-off, com duas diferenças que o conteúdo pede. A
+   primeira: os slides carregam gráfico, então o título e a frase de apoio
+   cedem um degrau para o visual caber em 1280x720 sem cortar. A segunda: os
+   gráficos são HTML pintado com tokens (src/components/ml/graficos.tsx), e
+   cada cor daqui é uma mistura do texto com transparente ou o próprio acento.
+   Nenhum hexadecimal: no claro, tudo acompanha sozinho (regra 10 da casa).
+
+   Nenhuma posição usa `transform`: a folha de impressão acima zera toda
+   transformação dentro de `.slide`, e o ponto sairia fora do lugar no PDF.
+--------------------------------------------------------------------------- */
+
+.slide-ml .slide-titulo {
+  max-width: 40ch;
+  font-size: clamp(1.45rem, 2.9vw, 2.2rem);
+}
+
+.slide-ml .slide-apoio {
+  max-width: 72ch;
+  margin-top: 0.55rem;
+  font-size: clamp(0.95rem, 1.3vw, 1.1rem);
+  line-height: 1.5;
+}
+
+[data-modo='deck'] .slide-ml {
+  padding-top: 32px;
+  padding-bottom: 60px;
+}
+
+/* A capa sobe: centralizada, a lista de nove nomes caía em cima da faixa do
+   Recife. No alto, o texto termina antes de o desenho começar. */
+.capa-ml {
+  justify-content: flex-start;
+}
+
+[data-modo='deck'] .capa-ml {
+  padding-top: 56px;
+}
+
+/* O cursor do wordmark desce abaixo da linha de base e encostava na frase. */
+.capa-ml .slide-apoio {
+  margin-top: 1.1rem;
+}
+
+.graf-barra {
+  background: color-mix(in srgb, var(--color-texto) 62%, transparent);
+}
+
+.graf-trilho {
+  background: color-mix(in srgb, var(--color-texto) 7%, transparent);
+}
+
+.graf-zero,
+.graf-bigode {
+  background: var(--color-linha-alta);
+}
+
+.graf-caixa {
+  border: 1px solid var(--color-linha-alta);
+  background: color-mix(in srgb, var(--color-texto) 16%, transparent);
+}
+
+.graf-mediana {
+  background: var(--color-texto);
+}
+
+.graf-ponto {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  margin: 0 0 -3px -3px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--color-texto) 48%, transparent);
+}
+
+/* Nas caixas a altura vem de `top: 50%`, e não de `bottom`. */
+.graf-ponto-meio {
+  margin: -3px 0 0 -3px;
+}
+
+.graf-ponto-acento {
+  z-index: 1;
+  width: 11px;
+  height: 11px;
+  margin: 0 0 -5.5px -5.5px;
+  background: var(--color-acento);
+  box-shadow: 0 0 0 2px var(--color-fundo);
+}
+
+.graf-corte {
+  border-left: 1px dashed var(--color-acento);
+}
+
+.graf-eixo {
+  border-color: var(--color-linha-alta);
+}
+
+.graf-diagonal {
+  stroke: var(--color-linha-alta);
+  stroke-width: 1;
+  stroke-dasharray: 4 3;
+}
+
+.graf-celula {
+  border: 1px solid var(--color-fundo);
+}
+
+.graf-celula-acento {
+  outline: 2px solid var(--color-acento);
+  outline-offset: -2px;
+}
+
+/* A planilha inteira em grade. 52 por 49 quadros, e não 260 por 244: célula
+   de um pixel e meio vira cinza liso no projetor. */
+.graf-ausentes {
+  border-color: var(--color-linha-alta);
+  background-color: color-mix(in srgb, var(--color-texto) 5%, transparent);
+  background-image:
+    linear-gradient(to right, var(--color-linha) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--color-linha) 1px, transparent 1px);
+  background-size:
+    calc(100% / 52) 100%,
+    100% calc(100% / 49);
 }

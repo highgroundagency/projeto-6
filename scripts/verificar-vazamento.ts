@@ -12,6 +12,8 @@
  *   6. `/pitch`, a primeira rota protegida por CICLO e não por funcionalidade,
  *      responde 404 enquanto o Kick-off estiver oculto e 200 para o admin; e
  *      nenhum texto de slide chega ao bundle do cliente.
+ *   7. `/ml`, a AV1 de machine learning, responde 200 e também não põe texto
+ *      de slide no bundle do cliente.
  *
  * Uso: npm run verificar-vazamento    (exige `npm run build` antes)
  */
@@ -23,6 +25,7 @@ import { IDS_CICLOS, type CicloId } from '../src/lib/cronograma'
 import { hojeEmRecife } from '../src/lib/datas'
 import { FEATURES, PERFIL_PADRAO, type PerfilId } from '../src/lib/features'
 import { SLIDES, textoNaTela } from '../src/content/pitch'
+import { SLIDES_ML, textoNaTela as textoNaTelaML } from '../src/content/apresentacao-ml'
 import { ciclosVisiveis, calcularReleaseAtual, ADIANTAMENTO_PADRAO } from '../src/lib/releases'
 import { TRAVAS_VERSIONADAS } from '../src/content/travas'
 import { criarTokenSessao, NOME_COOKIE_SESSAO } from '../src/lib/admin/sessao'
@@ -137,7 +140,7 @@ async function main() {
     // ---- 1 e 2: HTML e payload RSC das páginas públicas ----
     // `/registro` saiu da lista: virou redirecionamento para `/#registro`, e o
     // registro semanal agora é uma seção da raiz. Conferir a raiz é conferir ele.
-    for (const rota of ['/', '/transparencia-ia', '/arquitetura']) {
+    for (const rota of ['/', '/transparencia-ia', '/arquitetura', '/ml']) {
       const html = await (await fetch(`${BASE}${rota}`)).text()
       const flight = await (await fetch(`${BASE}${rota}`, { headers: { RSC: '1' } })).text()
 
@@ -318,6 +321,26 @@ async function main() {
       conferir(
         vazando.length === 0,
         `bundle do cliente sem o texto do slide ${slide.numero}${
+          vazando.length ? ` (encontrado em ${vazando.map((v) => v.caminho).join(', ')})` : ''
+        }`,
+      )
+    }
+
+    // ---- 7: a AV1 de machine learning ----
+    // Sem portão de release (é entrega de outra disciplina, como /arquitetura),
+    // então o visitante recebe 200. Mas o deck reaproveita o MESMO componente
+    // cliente do pitch, e a garantia dele é não receber texto: se uma frase de
+    // slide aparecer em `.next/static`, alguém passou conteúdo por props.
+    const ml = await fetch(`${BASE}/ml`)
+    conferir(ml.status === 200, `/ml responde 200 para o visitante — recebeu ${ml.status}`)
+    for (const slide of SLIDES_ML) {
+      const textos = [slide.titulo, ...textoNaTelaML(slide.id)].filter(
+        (t) => t.length >= 20 && t.split(/\s+/).length >= 4,
+      )
+      const vazando = conteudos.filter((a) => textos.some((t) => a.texto.includes(t)))
+      conferir(
+        vazando.length === 0,
+        `bundle do cliente sem o texto do slide ${slide.numero} da AV1 de ML${
           vazando.length ? ` (encontrado em ${vazando.map((v) => v.caminho).join(', ')})` : ''
         }`,
       )
