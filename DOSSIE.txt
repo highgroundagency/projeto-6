@@ -2344,7 +2344,7 @@ Nenhum resultado desta lista entra no cálculo da gratificação.
   pergunta: Qual resultado geral esperar a partir das notas dos indicadores?
   método: XGBoost com hiperparâmetros por grid search (500 árvores, profundidade 2).
   Validação cruzada em 5 partes e separação de 75% e 25%.
-  - métricas: mae=0.0051 · r2=0.99 · amostras_teste=48
+  - métricas: mae=0.0044 · r2=0.984 · amostras_teste=48
   - linha de base: média do treino (mae 0.0701)
   limitação declarada: O resultado geral é uma soma ponderada das mesmas notas, por isso o
   erro é tão baixo. O modelo mostra o que mais pesa, não substitui o cálculo.
@@ -2802,8 +2802,8 @@ banca pergunte. Auditoria que só encontra acerto não auditou nada.
 11.  AS REGRAS QUE NÃO SE NEGOCIAM
 ============================================================================================
 
-  
-  
+
+
   1. **Nenhum dado real** de pessoa ou da SESAU entra no repositório, no seed ou em prompt de
      IA. Tudo sintético. Há teste que falha se um CPF, e-mail ou telefone aparecer na base.
   2. **Datas só mudam em `src/lib/cronograma.ts`.** É a fonte única de verdade; header,
@@ -2836,7 +2836,7 @@ banca pergunte. Auditoria que só encontra acerto não auditou nada.
   11. **Um acento só.** `--color-acento` é o laranja da CESAR e aparece em no máximo três
      lugares por tela: número grande, chamada sólida e pílula/ícone do fluxo. Se precisar de
      mais uma cor para diferenciar alguma coisa, use hairline e caixa alta, não cor.
-  
+
 
 ============================================================================================
 12.  DECISÕES DE ARQUITETURA (ADRS)

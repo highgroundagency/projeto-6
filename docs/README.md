@@ -10,6 +10,7 @@
 | [`privacidade.md`](privacidade.md) | Banca (lente de Direito) | Dados tratados em produção, base legal do art. 7º, III, Privacy by Design apontando o código, direitos dos titulares e retenção |
 | [`decisoes.md`](decisoes.md) | Equipe e banca | ADRs de cinco linhas — o que foi decidido, por quê e o que se perdeu em troca |
 | [`validacao.md`](validacao.md) | Equipe | O que já é testado automaticamente e os instrumentos da validação com o cliente na Semana 11 |
+| [`retomada.md`](retomada.md) | Equipe | Onde o trabalho parou, o que a planilha do cliente mudou, o que continua aberto e as regras que mais pegam quem chega. Nota de trabalho, não entrega |
 | [`perguntas-da-banca.md`](perguntas-da-banca.md) | Equipe | Banco de perguntas que a banca pode fazer, com a resposta curta e onde ela está no repositório: material de preparação, não entrega |
 | [`perguntas-para-a-sesau.md`](perguntas-para-a-sesau.md) | Equipe | O que perguntar ao cliente sobre a regra, o processo e os dados, com o que ele já respondeu e o que a planilha respondeu sozinha |
 | [`perguntas-para-a-banca.md`](perguntas-para-a-banca.md) | Equipe | O caminho contrário: as decisões que dependem de quem avalia, em ordem de força, cada uma com a posição que a equipe já tem e o que muda conforme a resposta |
