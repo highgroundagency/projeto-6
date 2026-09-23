@@ -18,6 +18,8 @@ import { SLIDES, formatarTempo, inicioDoSlide, palavrasNaTela } from '../src/con
 import {
   ETAPAS,
   SLIDES_ML,
+  type SlideML,
+  type SlideMLId,
   inicioDoSlideML,
   palavrasNaTela as palavrasNaTelaML,
 } from '../src/content/apresentacao-ml'
@@ -44,17 +46,20 @@ function corpo(): string {
 
 /** A AV1 de machine learning: sem "quem fala", com a etapa da avaliação. */
 function corpoML(): string {
-  return SLIDES_ML.map((slide, indice) => {
+  return (SLIDES_ML as readonly SlideML[]).map((slide, indice) => {
     const falas = slide.notas.map((nota) => `  1. ${nota}`).join('\n')
     const etapa = slide.etapa ? `etapa ${slide.etapa}, ${ETAPAS[slide.etapa]}` : 'abertura e fechamento'
     return [
       `### Slide ${slide.numero}: ${slide.titulo}`,
       '',
-      `- **Começa em** ${formatarTempo(inicioDoSlideML(indice))} · **dura** ${formatarTempo(slide.segundos)} · **${etapa}** · **${palavrasNaTelaML(slide.id)} palavras na tela**`,
+      `- **Começa em** ${formatarTempo(inicioDoSlideML(indice))} · **dura** ${formatarTempo(slide.segundos)} · **${etapa}** · **${palavrasNaTelaML(slide.id as SlideMLId)} palavras na tela**`,
       `- **Frase da tela:** ${slide.apoio}`,
       `- **O que a tela mostra:** ${slide.visual}`,
       '- **A fala:**',
       falas,
+      ...(slide.perguntas?.length
+        ? ['- **Se perguntarem** (fora do tempo):', ...slide.perguntas.map((p) => `  - ${p}`)]
+        : []),
     ].join('\n')
   }).join('\n\n')
 }

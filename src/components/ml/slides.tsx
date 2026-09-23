@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react'
+import { Fragment, type ReactNode } from 'react'
 import { MarcaCesar } from '@/components/base/marca'
 import {
   Barra,
@@ -22,7 +22,9 @@ import {
   DATA_DA_ENTREGA_FINAL,
   DECISOES_DO_TRATAMENTO,
   DESCARTADAS,
+  DESTAQUES_DA_EDA_DAS_FEATURES,
   DESTAQUES_ML,
+  DOMINIOS,
   ETAPAS,
   FEATURES_NOVAS,
   FICHA_DA_ORIGEM,
@@ -44,11 +46,13 @@ import {
   ROTULO_DA_ENTREGA_FINAL,
   ROTULO_DA_ETAPA,
   ROTULO_DO_ALVO,
+  ROTULO_SE_PERGUNTAREM,
   ROTULOS_DA_CODIFICACAO,
   ROTULOS_DA_CORRELACAO,
   ROTULOS_DA_DISPERSAO,
   ROTULOS_DA_DISTRIBUICAO,
   ROTULOS_DA_EDA_DAS_FEATURES,
+  ROTULOS_DAS_CAIXAS,
   ROTULOS_DAS_CLASSES,
   ROTULOS_DOS_FALTANTES,
   ROTULOS_DOS_GRUPOS,
@@ -57,6 +61,7 @@ import {
   TAREFAS_ML,
   USOS_ML,
   decimal,
+  enxuto,
   formatarTempo,
   inicioDoSlideML,
   milhar,
@@ -84,7 +89,8 @@ import { cn } from '@/lib/utils'
  *
  * O ACENTO, SLIDE A SLIDE. O cursor do rodapé já é um uso; cada slide gasta no
  * máximo mais dois, e sempre no ponto que a fala aponta: o peso de 40%, o
- * corte de 90%, a célula do ind3, as seis linhas fora da regra.
+ * corte de 90%, a célula do ind3, as seis linhas fora da regra, as duas barras
+ * que o slide 19 discute.
  */
 export function SlidesML() {
   const [
@@ -116,6 +122,8 @@ export function SlidesML() {
   const maiorPapel = Math.max(...B.papeis.map((p) => p.colunas))
   const maiorOutlier = Math.max(...dados.outliers.map((o) => o.percentual))
   const cruas = dados.mais_correlatas.slice(0, COLUNAS_CRUAS_NO_SLIDE)
+  const familiasFora = new Set<string>(B.familias_fora_da_regra)
+  const formatarCaixa = (valor: number) => decimal(valor, 3)
 
   return (
     <>
@@ -146,7 +154,7 @@ export function SlidesML() {
       {/* 2 · O roteiro, na ordem das etapas da avaliação. */}
       <Quadro slide={roteiro}>
         <Titulo slide={roteiro} />
-        <ol className="cascata mt-8 grid sm:grid-cols-2 md:grid-cols-5">
+        <ol className="cascata mt-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5">
           {ROTEIRO_ML.map((parada, indice) => {
             const etapa = (indice + 1) as keyof typeof ETAPAS
             return (
@@ -189,14 +197,14 @@ export function SlidesML() {
       {/* 4 · O objetivo e as três tarefas, cada uma com o alvo. */}
       <Quadro slide={objetivo}>
         <Titulo slide={objetivo} />
-        <ol className="cascata mt-7 grid md:grid-cols-3">
+        <ol className="cascata mt-7 grid grid-cols-1 md:grid-cols-3">
           {TAREFAS_ML.map((tarefa, indice) => (
             <li key={tarefa.tarefa} className="bloco-raso flex flex-col md:-ml-px">
               <span className="ordinal">0{indice + 1}</span>
               <p className="rotulo mt-2">{tarefa.tarefa}</p>
-              <p className="titulo-bloco mt-1 text-xl">{tarefa.pergunta}</p>
+              <p className="titulo-bloco mb-4 mt-1 text-xl">{tarefa.pergunta}</p>
               <div className="mt-auto border-t pt-3">
-                <p className="rotulo mt-3">{ROTULO_DO_ALVO}</p>
+                <p className="rotulo">{ROTULO_DO_ALVO}</p>
                 <p className="numero mt-1 text-2xl text-texto">{tarefa.alvo}</p>
                 <p className="text-sm">{tarefa.tipoDoAlvo}</p>
               </div>
@@ -208,7 +216,7 @@ export function SlidesML() {
       {/* 5 · Para que serve, e o limite. */}
       <Quadro slide={uso}>
         <Titulo slide={uso} />
-        <ul className="cascata mt-7 grid sm:grid-cols-2 md:grid-cols-4">
+        <ul className="cascata mt-7 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4">
           {USOS_ML.map((item, indice) => (
             <li key={item.titulo} className="bloco-raso md:-ml-px">
               <span className="ordinal">0{indice + 1}</span>
@@ -225,12 +233,12 @@ export function SlidesML() {
       {/* 6 · A origem: o funil de linhas e a ficha do arquivo. */}
       <Quadro slide={origem}>
         <Titulo slide={origem} />
-        <div className="mt-7 grid gap-8 md:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)]">
-          <ol className="cascata grid">
+        <div className="mt-6 grid grid-cols-1 gap-8 md:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)]">
+          <ol className="cascata grid grid-cols-1">
             {FUNIL_ML.map((etapa) => (
-              <li key={etapa.rotulo} className="bloco-raso">
+              <li key={etapa.rotulo} className="bloco-raso !py-4">
                 <div className="flex items-baseline gap-4">
-                  <span className="odometro fonte-display numero w-24 shrink-0 text-5xl leading-none">
+                  <span className="odometro fonte-display numero w-28 shrink-0 text-5xl leading-none">
                     {etapa.numero}
                   </span>
                   <div className="min-w-0 flex-1">
@@ -242,9 +250,9 @@ export function SlidesML() {
               </li>
             ))}
           </ol>
-          <dl className="cascata grid content-start">
+          <dl className="cascata grid grid-cols-1 content-start">
             {FICHA_DA_ORIGEM.map((item) => (
-              <div key={item.rotulo} className="bloco-raso">
+              <div key={item.rotulo} className="bloco-raso !py-3">
                 <dt className="rotulo">{item.rotulo}</dt>
                 <dd className="mt-1 text-sm text-texto">{item.valor}</dd>
               </div>
@@ -256,30 +264,26 @@ export function SlidesML() {
       {/* 7 · As colunas: os sete papéis e os tipos antes e depois. */}
       <Quadro slide={colunas}>
         <Titulo slide={colunas} />
-        <div className="mt-7 grid gap-8 md:grid-cols-[minmax(0,1.35fr)_minmax(0,1fr)]">
-          <ul className="grid gap-2.5">
+        <div className="mt-7 grid grid-cols-1 gap-8 md:grid-cols-[minmax(0,1.35fr)_minmax(0,1fr)]">
+          <ul className="grid grid-cols-1 gap-2.5">
             {B.papeis.map((papel) => (
               <li
                 key={papel.papel}
-                className="grid grid-cols-[13.5rem_minmax(0,1fr)_2.5rem] items-center gap-3"
+                className="grid grid-cols-[minmax(0,1fr)_4rem_2rem] items-center gap-3 sm:grid-cols-[13.5rem_minmax(0,1fr)_2.5rem]"
               >
                 <span className="min-w-0">
-                  <span className="block truncate text-sm text-texto">
-                    {papel.papel.toLowerCase()}
-                  </span>
-                  <span className="block truncate text-xs">
-                    {PAPEIS_DAS_COLUNAS[papel.papel]}
-                  </span>
+                  <span className="block text-sm text-texto">{papel.papel.toLowerCase()}</span>
+                  <span className="block text-xs">{PAPEIS_DAS_COLUNAS[papel.papel]}</span>
                 </span>
                 <Barra fracao={papel.colunas / maiorPapel} />
                 <span className="numero text-right text-sm text-texto">{papel.colunas}</span>
               </li>
             ))}
           </ul>
-          <div className="grid content-start gap-6">
+          <div className="grid grid-cols-1 content-start gap-6">
             <div>
               <p className="rotulo">{ROTULOS_DOS_TIPOS.leitura}</p>
-              <ul className="mt-3 grid gap-2">
+              <ul className="mt-3 grid grid-cols-1 gap-2">
                 {(['texto', 'inteiro', 'decimal'] as const).map((tipo) => (
                   <li
                     key={tipo}
@@ -287,7 +291,9 @@ export function SlidesML() {
                   >
                     <span className="text-texto">{ROTULOS_DOS_TIPOS[tipo]}</span>
                     <Barra fracao={B.tipos_na_leitura[tipo] / B.colunas} />
-                    <span className="numero text-right text-texto">{B.tipos_na_leitura[tipo]}</span>
+                    <span className="numero text-right text-texto">
+                      {B.tipos_na_leitura[tipo]}
+                    </span>
                   </li>
                 ))}
               </ul>
@@ -303,7 +309,10 @@ export function SlidesML() {
                   {B.categoricas.map((c) => `${c.coluna.toLowerCase()}: ${c.valores}`).join(' · ')}
                 </span>
                 <span className="numero fonte-display text-4xl leading-none">{B.numericas}</span>
-                <span className="self-center text-sm text-texto">{ROTULOS_DOS_TIPOS.numericas}</span>
+                <span className="text-sm">
+                  <span className="block text-texto">{ROTULOS_DOS_TIPOS.numericas}</span>
+                  {ROTULOS_DOS_TIPOS.contagens}
+                </span>
               </div>
             </div>
           </div>
@@ -313,14 +322,14 @@ export function SlidesML() {
       {/* 8 · A tabela modelada e as classes. */}
       <Quadro slide={tabela}>
         <Titulo slide={tabela} />
-        <div className="mt-7 grid gap-8 md:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)]">
-          <dl className="cascata grid">
+        <div className="mt-6 grid grid-cols-1 gap-8 md:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)]">
+          <dl className="cascata grid grid-cols-1">
             {COLUNAS_MODELADAS.map((coluna) => {
               const ehAlvo = 'alvo' in coluna && coluna.alvo
               return (
                 <div
                   key={coluna.coluna}
-                  className="bloco-raso grid grid-cols-[8.5rem_minmax(0,1fr)] items-baseline gap-3 !py-2.5"
+                  className="bloco-raso grid grid-cols-1 items-baseline gap-x-3 gap-y-1 !py-2 sm:grid-cols-[8.5rem_minmax(0,1fr)]"
                 >
                   <dt className="numero text-base text-texto">{coluna.coluna}</dt>
                   <dd className="min-w-0 text-sm">
@@ -331,7 +340,7 @@ export function SlidesML() {
               )
             })}
           </dl>
-          <div className="grid content-start">
+          <div className="grid grid-cols-1 content-start">
             <p className="rotulo">{ROTULOS_DAS_CLASSES.titulo}</p>
             <div className="mt-3 grid grid-cols-2">
               {[
@@ -339,7 +348,7 @@ export function SlidesML() {
                 { rotulo: ROTULOS_DAS_CLASSES.abaixo, valor: classes.abaixo_de_90 },
               ].map((classe) => (
                 <div key={classe.rotulo} className="bloco-raso -ml-px first:ml-0">
-                  <p className="odometro fonte-display numero text-6xl leading-none">
+                  <p className="odometro fonte-display numero text-5xl leading-none sm:text-6xl">
                     {classe.valor}
                   </p>
                   <p className="numero mt-2 text-sm text-texto">
@@ -351,8 +360,14 @@ export function SlidesML() {
             </div>
             {/* A classe positiva (abaixo de 90%, o 1 do alvo) leva o acento. */}
             <div aria-hidden className="mt-4 flex h-3 gap-px">
-              <span className="graf-barra" style={{ flexBasis: `${(classes.noventa_ou_mais / totalClasses) * 100}%` }} />
-              <span className="bg-acento" style={{ flexBasis: `${(classes.abaixo_de_90 / totalClasses) * 100}%` }} />
+              <span
+                className="graf-barra"
+                style={{ flexBasis: `${(classes.noventa_ou_mais / totalClasses) * 100}%` }}
+              />
+              <span
+                className="bg-acento"
+                style={{ flexBasis: `${(classes.abaixo_de_90 / totalClasses) * 100}%` }}
+              />
             </div>
             <p className="mt-4 text-sm">{ROTULOS_DAS_CLASSES.nota}</p>
           </div>
@@ -367,16 +382,19 @@ export function SlidesML() {
             const comum = nota.degraus[0]
             return (
               <li key={nota.coluna} className="min-w-0">
-                <p className="flex items-baseline justify-between gap-2">
+                <p className="flex flex-col items-start gap-0.5">
                   <span className="numero text-base text-texto">{nota.coluna}</span>
-                  <span className="truncate text-xs">{NOMES_DAS_NOTAS[nota.coluna]}</span>
+                  <span className="text-xs">{NOMES_DAS_NOTAS[nota.coluna]}</span>
                 </p>
-                <Histograma className="graf-eixo mt-2 h-36 border-b" contagens={nota.histograma.contagens} />
-                <p className="numero mt-1 flex justify-between text-[0.65rem]">
+                <Histograma
+                  className="graf-eixo mt-2 h-32 border-b"
+                  contagens={nota.histograma.contagens}
+                />
+                <p className="numero mt-1 flex justify-between text-xs">
                   <span>{decimal(nota.histograma.de)}</span>
                   <span>{decimal(nota.histograma.ate)}</span>
                 </p>
-                <dl className="mt-3 grid gap-1 text-sm">
+                <dl className="mt-3 grid grid-cols-1 gap-1 text-sm">
                   <div className="flex items-baseline justify-between gap-2">
                     <dt className="rotulo">{ROTULOS_DA_DISTRIBUICAO.assimetria}</dt>
                     <dd className="numero text-texto">{decimal(nota.assimetria)}</dd>
@@ -395,37 +413,54 @@ export function SlidesML() {
         </ul>
       </Quadro>
 
-      {/* 10 · Família e distrito, na mesma escala, com o corte de 90%. */}
+      {/* 10 · Família e distrito, na mesma escala, com o corte de 90%. As
+          famílias que só existem nas seis linhas fora da regra levam asterisco:
+          a caixa delas é feita dos valores que o slide 14 tira. */}
       <Quadro slide={grupos}>
         <Titulo slide={grupos} />
-        <div className="mt-8 grid gap-10 md:grid-cols-2">
+        <div className="mt-6 grid grid-cols-1 gap-10 md:grid-cols-2">
           {[
-            { titulo: ROTULOS_DOS_GRUPOS.familia, linhas: dados.por_familia },
-            { titulo: ROTULOS_DOS_GRUPOS.distrito, linhas: dados.por_distrito },
+            {
+              titulo: ROTULOS_DOS_GRUPOS.familia,
+              linhas: dados.por_familia.map((linha) => ({
+                rotulo: familiasFora.has(linha.grupo) ? `${linha.grupo}*` : linha.grupo,
+                caixa: linha,
+              })),
+            },
+            {
+              titulo: ROTULOS_DOS_GRUPOS.distrito,
+              linhas: dados.por_distrito.map((linha) => ({ rotulo: linha.grupo, caixa: linha })),
+            },
           ].map((painel) => (
             <div key={painel.titulo} className="min-w-0">
-              <p className="rotulo mb-3">{painel.titulo}</p>
+              <p className="rotulo mb-1">{painel.titulo}</p>
               <Caixas
-                de={0.6}
-                ate={2}
+                de={DOMINIOS.grupos.de}
+                ate={DOMINIOS.grupos.ate}
                 marcas={[0.6, 1, 1.4, 1.8]}
                 corte={0.9}
                 rotuloDoCorte={ROTULOS_DOS_GRUPOS.corte}
-                linhas={painel.linhas.map((linha) => ({ rotulo: linha.grupo, caixa: linha }))}
+                rotuloDoN={ROTULOS_DOS_GRUPOS.n}
+                rotulosDaTabela={ROTULOS_DAS_CAIXAS}
+                formatar={formatarCaixa}
+                linhas={painel.linhas}
               />
             </div>
           ))}
         </div>
+        <p className="mt-4 text-xs">{ROTULOS_DOS_GRUPOS.asterisco}</p>
       </Quadro>
 
-      {/* 11 · A correlação: a matriz das notas e as colunas cruas. */}
+      {/* 11 · A correlação: a matriz das notas e as colunas cruas, com o valor
+          sem as seis linhas ao lado. É a coluna da direita que mostra que os
+          blocos do ind4 e o ind5 só sobem por causa delas. */}
       <Quadro slide={correlacao}>
         <Titulo slide={correlacao} />
-        <div className="mt-7 grid items-start gap-10 md:grid-cols-[minmax(0,0.85fr)_minmax(0,1fr)]">
+        <div className="mt-6 grid grid-cols-1 items-start gap-10 md:grid-cols-[minmax(0,0.8fr)_minmax(0,1fr)]">
           <div className="min-w-0">
             <p className="rotulo mb-3">{ROTULOS_DA_CORRELACAO.matriz}</p>
             <MapaDeCalor
-              className="max-w-[22rem]"
+              className="max-w-[21rem]"
               colunas={dados.correlacao.colunas}
               matriz={dados.correlacao.matriz}
               destaque={[2, 4]}
@@ -436,15 +471,26 @@ export function SlidesML() {
             <p className="rotulo mb-3">
               {ROTULOS_DA_CORRELACAO.colunas} · {ROTULOS_DA_CORRELACAO.escala}
             </p>
-            <ul className="grid gap-2.5">
+            <div className="grid grid-cols-[minmax(0,1fr)_3.5rem_5.5rem] gap-x-3 border-b border-linha-alta pb-1 text-xs sm:grid-cols-[9.5rem_minmax(0,1fr)_3.5rem_5.5rem]">
+              <span className="hidden sm:block" />
+              <span />
+              <span className="numero text-right">{ROTULOS_DA_CORRELACAO.todas}</span>
+              <span className="numero text-right">{ROTULOS_DA_CORRELACAO.semAsSeis}</span>
+            </div>
+            <ul className="mt-2 grid grid-cols-1 gap-2">
               {cruas.map((coluna) => (
                 <li
                   key={coluna.coluna}
-                  className="grid grid-cols-[9.5rem_minmax(0,1fr)_3rem] items-center gap-3 text-sm"
+                  className="grid grid-cols-[minmax(0,1fr)_3.5rem_5.5rem] items-center gap-x-3 text-sm sm:grid-cols-[9.5rem_minmax(0,1fr)_3.5rem_5.5rem]"
                 >
                   <span className="truncate text-texto">{rotuloDaColuna(coluna.coluna)}</span>
-                  <BarraDivergente valor={coluna.r} />
-                  <span className="numero text-right">{decimal(coluna.r)}</span>
+                  <BarraDivergente className="hidden sm:block" valor={coluna.r} />
+                  <span className="numero text-right text-texto">{decimal(coluna.r)}</span>
+                  <span className="numero text-right">
+                    {coluna.r_modeladas === null
+                      ? ROTULOS_DA_CORRELACAO.constante
+                      : decimal(coluna.r_modeladas)}
+                  </span>
                 </li>
               ))}
             </ul>
@@ -455,10 +501,10 @@ export function SlidesML() {
       {/* 12 · Ausentes e outliers. */}
       <Quadro slide={faltantes}>
         <Titulo slide={faltantes} />
-        <div className="mt-7 grid items-start gap-10 md:grid-cols-2">
+        <div className="mt-6 grid grid-cols-1 items-start gap-10 md:grid-cols-2">
           <div className="min-w-0">
             <p className="rotulo mb-3">{ROTULOS_DOS_FALTANTES.mapa}</p>
-            <MapaDeAusentes className="flex aspect-[260/150] w-full items-center justify-center">
+            <MapaDeAusentes className="flex aspect-[260/140] w-full items-center justify-center">
               <div className="border border-linha-alta bg-fundo px-5 py-3 text-center">
                 <p className="odometro fonte-display numero text-6xl leading-none">
                   {dados.faltantes.depois_da_conversao}
@@ -469,10 +515,11 @@ export function SlidesML() {
             <p className="numero mt-2 text-xs">
               {ROTULOS_DOS_FALTANTES.dimensoes} = {milhar(B.celulas)}
             </p>
+            <p className="numero text-xs">{ROTULOS_DOS_FALTANTES.porColuna}</p>
           </div>
           <div className="min-w-0">
             <p className="rotulo mb-3">{ROTULOS_DOS_FALTANTES.outliers}</p>
-            <ul className="grid gap-3">
+            <ul className="grid grid-cols-1 gap-3">
               {dados.outliers.map((outlier) => (
                 <li
                   key={outlier.coluna}
@@ -487,7 +534,7 @@ export function SlidesML() {
                 </li>
               ))}
             </ul>
-            <p className="mt-5 text-sm text-texto">{ROTULOS_DOS_FALTANTES.macNoGeral}</p>
+            <p className="mt-5 text-sm text-texto">{ROTULOS_DOS_FALTANTES.divisao}</p>
           </div>
         </div>
       </Quadro>
@@ -495,7 +542,7 @@ export function SlidesML() {
       {/* 13 · As inconsistências, cada uma com o tamanho. */}
       <Quadro slide={inconsistencias}>
         <Titulo slide={inconsistencias} />
-        <ul className="cascata mt-7 grid sm:grid-cols-2 md:grid-cols-3">
+        <ul className="cascata mt-7 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
           {INCONSISTENCIAS_ML.map((item) => (
             <li key={item.texto} className="bloco-raso md:-ml-px">
               <p className="odometro fonte-display numero text-5xl leading-none">{item.numero}</p>
@@ -505,52 +552,72 @@ export function SlidesML() {
         </ul>
       </Quadro>
 
-      {/* 14 · As seis linhas fora da regra: o gráfico que vira argumento. */}
+      {/* 14 · As seis linhas fora da regra: o gráfico que vira pergunta para
+          a Secretaria. */}
       <Quadro slide={foraDaRegra}>
         <Titulo slide={foraDaRegra} />
-        <div className="mt-5 grid items-center gap-10 md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
+        <div className="mt-5 grid grid-cols-1 items-center gap-10 md:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)]">
           <Dispersao
             className="mx-auto w-full max-w-[21rem]"
-            de={0.6}
-            ate={2}
+            de={DOMINIOS.dispersao.de}
+            ate={DOMINIOS.dispersao.ate}
             marcas={[0.6, 1, 1.4, 1.8]}
             rotuloX={ROTULOS_DA_DISPERSAO.eixoX}
             rotuloY={ROTULOS_DA_DISPERSAO.eixoY}
             rotuloDaDiagonal={ROTULOS_DA_DISPERSAO.diagonal}
+            resumo={ROTULOS_DA_DISPERSAO.resumo}
             pontos={dados.dispersao.map((ponto) => ({
               x: ponto.esperado,
               y: ponto.lancado,
               destaque: ponto.fora,
             }))}
           />
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="border-b border-linha-alta">
-                <th className="rotulo pb-2 text-left font-medium">{ROTULOS_DA_DISPERSAO.unidade}</th>
-                <th className="rotulo pb-2 text-right font-medium">{ROTULOS_DA_DISPERSAO.esperado}</th>
-                <th className="rotulo pb-2 text-right font-medium">{ROTULOS_DA_DISPERSAO.lancado}</th>
-              </tr>
-            </thead>
-            <tbody className="numero">
-              {dados.linhas_fora_da_regra.map((linha) => (
-                <tr key={`${linha.tipo}-${linha.distrito}`} className="border-b">
-                  <td className="py-2 text-texto">
-                    <span aria-hidden className="mr-2 inline-block size-2 rounded-full bg-acento" />
-                    {linha.tipo} · {linha.distrito}
-                  </td>
-                  <td className="py-2 text-right">{decimal(linha.esperado, 3)}</td>
-                  <td className="py-2 text-right text-texto">{decimal(linha.lancado, 3)}</td>
+          <div className="min-w-0">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-linha-alta">
+                  <th className="rotulo pb-2 text-left font-medium">
+                    {ROTULOS_DA_DISPERSAO.unidade}
+                  </th>
+                  <th className="rotulo pb-2 text-right font-medium">
+                    {ROTULOS_DA_DISPERSAO.esperado}
+                  </th>
+                  <th className="rotulo pb-2 text-right font-medium">
+                    {ROTULOS_DA_DISPERSAO.lancado}
+                  </th>
+                  <th className="rotulo pb-2 text-right font-medium">
+                    {ROTULOS_DA_DISPERSAO.pesoDoInd3}
+                  </th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="numero">
+                {dados.linhas_fora_da_regra.map((linha) => (
+                  <tr key={`${linha.tipo}-${linha.distrito}`} className="border-b">
+                    <td className="py-2 text-texto">
+                      <span
+                        aria-hidden
+                        className="mr-2 inline-block size-2 rounded-full bg-acento"
+                      />
+                      {linha.tipo} · {linha.distrito}
+                    </td>
+                    <td className="py-2 text-right">{decimal(linha.esperado, 3)}</td>
+                    <td className="py-2 text-right text-texto">{decimal(linha.lancado, 3)}</td>
+                    <td className="py-2 text-right">
+                      {Math.round(linha.peso_do_ind3_nos_pontos * 100)}%
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <p className="mt-4 text-sm text-texto">{ROTULOS_DA_DISPERSAO.divisor}</p>
+          </div>
         </div>
       </Quadro>
 
       {/* 15 · Os achados da exploração, cada um com o que mudou. */}
       <Quadro slide={insights}>
         <Titulo slide={insights} />
-        <ol className="cascata mt-7 grid sm:grid-cols-2 md:grid-cols-3">
+        <ol className="cascata mt-7 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
           {INSIGHTS_EDA.map((item, indice) => (
             <li key={item.achado} className="bloco-raso md:-ml-px">
               <span className="ordinal">0{indice + 1}</span>
@@ -589,33 +656,37 @@ export function SlidesML() {
       {/* 17 · A codificação, a padronização e as MAC por nível. */}
       <Quadro slide={codificacao}>
         <Titulo slide={codificacao} />
-        <div className="mt-7 grid gap-8 md:grid-cols-[minmax(0,1.3fr)_minmax(0,1fr)]">
-          <dl className="cascata grid">
+        <div className="mt-6 grid grid-cols-1 gap-8 md:grid-cols-[minmax(0,1.3fr)_minmax(0,1fr)]">
+          <dl className="cascata grid grid-cols-1">
             {CODIFICACOES.map((item) => (
               <div
                 key={item.coluna}
-                className="bloco-raso grid grid-cols-[11.5rem_minmax(0,1fr)] gap-x-4 !py-3"
+                className="bloco-raso grid grid-cols-1 gap-x-4 !py-3 md:grid-cols-[11.5rem_minmax(0,1fr)]"
               >
                 <dt>
                   <span className="block text-sm">{item.coluna}</span>
                   <span className="titulo-bloco block text-lg">{item.tecnica}</span>
                 </dt>
-                <dd className="self-center text-sm">{item.porque}</dd>
+                <dd className="mt-1 self-center text-sm md:mt-0">{item.porque}</dd>
               </div>
             ))}
-            <div className="bloco-raso grid grid-cols-[11.5rem_minmax(0,1fr)] gap-x-4 !py-3">
+            <div className="bloco-raso grid grid-cols-1 gap-x-4 !py-3 md:grid-cols-[11.5rem_minmax(0,1fr)]">
               <dt className="titulo-bloco self-center text-lg">{PADRONIZACAO.titulo}</dt>
-              <dd className="self-center text-sm">{PADRONIZACAO.texto}</dd>
+              <dd className="mt-1 self-center text-sm md:mt-0">{PADRONIZACAO.texto}</dd>
             </div>
           </dl>
           <div className="min-w-0">
-            <p className="rotulo mb-3">{ROTULOS_DA_CODIFICACAO.nivelMac}</p>
+            <p className="rotulo mb-1">{ROTULOS_DA_CODIFICACAO.nivelMac}</p>
             <Caixas
-              de={0.6}
-              ate={1.35}
+              alta
+              de={DOMINIOS.nivelMac.de}
+              ate={DOMINIOS.nivelMac.ate}
               marcas={[0.6, 0.8, 1, 1.2]}
               corte={0.9}
               rotuloDoCorte={ROTULOS_DOS_GRUPOS.corte}
+              rotuloDoN={ROTULOS_DOS_GRUPOS.n}
+              rotulosDaTabela={ROTULOS_DAS_CAIXAS}
+              formatar={formatarCaixa}
               linhas={dados.codificacao.nivel_mac.map((nivel) => ({
                 rotulo: `MAC ${nivel.nivel}`,
                 caixa: nivel,
@@ -654,12 +725,17 @@ export function SlidesML() {
               const eda = dados.features_novas.find((f) => f.coluna === feature.coluna)
               return (
                 <tr key={feature.coluna} className="border-b align-middle">
-                  <td className="numero break-all py-2 pr-4 text-texto">{feature.coluna}</td>
+                  <td className="numero py-2 pr-4 text-texto md:whitespace-nowrap">
+                    <NomeQuebravel nome={feature.coluna} />
+                  </td>
                   <td className="numero hidden py-2 pr-4 md:table-cell">{feature.como}</td>
                   <td className="py-2 pr-4">{feature.porque}</td>
                   <td className="hidden w-32 py-2 pr-4 md:table-cell">
                     {eda ? (
-                      <Histograma className="graf-eixo h-8 border-b" contagens={eda.histograma.contagens} />
+                      <Histograma
+                        className="graf-eixo h-8 border-b"
+                        contagens={eda.histograma.contagens}
+                      />
                     ) : null}
                   </td>
                   <td className="numero py-2 text-right text-texto">
@@ -672,12 +748,12 @@ export function SlidesML() {
         </table>
       </Quadro>
 
-      {/* 19 · A EDA das features: correlação com os dois alvos. */}
+      {/* 19 · A EDA das features: correlação com os dois alvos, nas 190. */}
       <Quadro slide={edaFeatures}>
         <Titulo slide={edaFeatures} />
-        <div className="mt-6 grid gap-8 md:grid-cols-[minmax(0,1.9fr)_minmax(0,1fr)]">
+        <div className="mt-6 grid grid-cols-1 gap-8 md:grid-cols-[minmax(0,1.9fr)_minmax(0,1fr)]">
           <div className="min-w-0 text-sm">
-            <div className="grid grid-cols-[minmax(0,1fr)_4.5rem_4.5rem] gap-x-3 border-b border-linha-alta pb-2 md:grid-cols-[15rem_minmax(0,1fr)_minmax(0,1fr)] md:gap-x-4">
+            <div className="grid grid-cols-[minmax(0,1fr)_5.5rem_5.5rem] gap-x-3 border-b border-linha-alta pb-2 md:grid-cols-[15rem_minmax(0,1fr)_minmax(0,1fr)] md:gap-x-4">
               <span />
               <span className="rotulo">{ROTULOS_DA_EDA_DAS_FEATURES.comGeral}</span>
               <span className="rotulo">{ROTULOS_DA_EDA_DAS_FEATURES.comAbaixo}</span>
@@ -686,37 +762,50 @@ export function SlidesML() {
               {dados.correlacao_features.map((linha) => (
                 <li
                   key={linha.coluna}
-                  className="grid grid-cols-[minmax(0,1fr)_4.5rem_4.5rem] items-center gap-x-3 border-b py-1.5 md:grid-cols-[15rem_minmax(0,1fr)_minmax(0,1fr)] md:gap-x-4"
+                  className="grid grid-cols-[minmax(0,1fr)_5.5rem_5.5rem] items-center gap-x-3 border-b py-1.5 md:grid-cols-[15rem_minmax(0,1fr)_minmax(0,1fr)] md:gap-x-4"
                 >
                   <span className="flex min-w-0 items-baseline gap-2">
                     <span className={cn('numero truncate', linha.nova && 'text-texto')}>
                       {linha.coluna}
                     </span>
                     {linha.nova ? (
-                      <span className="rotulo text-[0.6rem]">{ROTULOS_DA_EDA_DAS_FEATURES.nova}</span>
+                      <span className="rotulo text-xs">{ROTULOS_DA_EDA_DAS_FEATURES.nova}</span>
                     ) : null}
                   </span>
                   {/* No celular a barra sai e fica o número: 4,5rem não
                       desenham correlação nenhuma. */}
-                  <span className="grid items-center gap-2 md:grid-cols-[minmax(0,1fr)_3rem]">
-                    <BarraDivergente className="hidden md:block" valor={linha.com_geral} />
-                    <span className="numero text-right">{decimal(linha.com_geral)}</span>
+                  <span className="grid grid-cols-1 items-center gap-2 md:grid-cols-[minmax(0,1fr)_3rem]">
+                    <BarraDivergente
+                      className="hidden md:block"
+                      valor={linha.com_geral_exata}
+                      destaque={linha.coluna === DESTAQUES_DA_EDA_DAS_FEATURES.comGeral}
+                    />
+                    <span className="numero text-right">{decimal(linha.com_geral_exata)}</span>
                   </span>
-                  <span className="grid items-center gap-2 md:grid-cols-[minmax(0,1fr)_3rem]">
-                    <BarraDivergente className="hidden md:block" valor={linha.com_abaixo_de_90} />
-                    <span className="numero text-right">{decimal(linha.com_abaixo_de_90)}</span>
+                  <span className="grid grid-cols-1 items-center gap-2 md:grid-cols-[minmax(0,1fr)_3rem]">
+                    <BarraDivergente
+                      className="hidden md:block"
+                      valor={linha.com_abaixo_de_90_exata}
+                      destaque={linha.coluna === DESTAQUES_DA_EDA_DAS_FEATURES.comAbaixo}
+                    />
+                    <span className="numero text-right">
+                      {decimal(linha.com_abaixo_de_90_exata)}
+                    </span>
                   </span>
                 </li>
               ))}
             </ul>
           </div>
-          <div className="grid content-start gap-6 text-sm">
+          <div className="grid grid-cols-1 content-start gap-6 text-sm">
             <div>
               <p className="rotulo">{ROTULOS_DA_EDA_DAS_FEATURES.redundancia}</p>
-              <ul className="mt-2 grid gap-1">
+              <ul className="mt-2 grid grid-cols-1 gap-1">
                 {dados.redundantes.map((par) => (
-                  <li key={`${par.a}-${par.b}`} className="flex items-baseline justify-between gap-3">
-                    <span className="numero truncate">
+                  <li
+                    key={`${par.a}-${par.b}`}
+                    className="flex items-baseline justify-between gap-3"
+                  >
+                    <span className="numero min-w-0 truncate">
                       {par.a} · {par.b}
                     </span>
                     <span className="numero text-texto">{decimal(par.correlacao)}</span>
@@ -727,7 +816,7 @@ export function SlidesML() {
             </div>
             <div>
               <p className="rotulo">{ROTULOS_DA_EDA_DAS_FEATURES.descartadas}</p>
-              <ul className="mt-2 grid gap-2">
+              <ul className="mt-2 grid grid-cols-1 gap-2">
                 {DESCARTADAS.map((item) => (
                   <li key={item.nome}>
                     <span className="block text-texto">{item.nome}</span>
@@ -740,10 +829,12 @@ export function SlidesML() {
         </div>
       </Quadro>
 
-      {/* 20 · O fechamento: destaques, o que vem depois e onde ler. */}
+      {/* 20 · O fechamento: destaques, o que vem depois e onde ler. Sem a
+          faixa do Recife, ao contrário do Kick-off: este fechamento tem três
+          vezes mais texto, e o desenho passava por cima do endereço. */}
       <Quadro slide={fechamento} className="grao">
         <h2 className="slide-titulo">{fechamento.titulo}</h2>
-        <ol className="cascata mt-6 grid md:grid-cols-3">
+        <ol className="cascata mt-6 grid grid-cols-1 md:grid-cols-3">
           {DESTAQUES_ML.map((destaque, indice) => (
             <li key={destaque.titulo} className="bloco-raso md:-ml-px">
               <span className="ordinal">0{indice + 1}</span>
@@ -766,9 +857,6 @@ export function SlidesML() {
             </div>
           ))}
         </dl>
-        {/* Sem a faixa do Recife aqui, ao contrário do Kick-off: este
-            fechamento tem três vezes mais texto, e o desenho passava por cima
-            do endereço. A capa continua com ela. */}
         <div className="mt-8 flex flex-wrap items-baseline gap-x-10 gap-y-3">
           <a
             href={`${URL_SITE}/ml`}
@@ -785,9 +873,27 @@ export function SlidesML() {
 
 /* ------------------------------------------------------------------------- */
 
-/** 0,5 e 1,89 em vez de 0,500 e 1,890: até três casas, sem zero sobrando. */
-function enxuto(valor: number): string {
-  return decimal(valor, 3).replace(/,?0+$/, '')
+/**
+ * O nome de uma coluna com ponto de quebra depois de cada sublinhado. No
+ * celular o nome quebra ali, e não no meio de uma palavra; a partir de `md`
+ * a célula não quebra e o `<wbr>` é ignorado.
+ */
+function NomeQuebravel({ nome }: { nome: string }) {
+  const partes = nome.split('_')
+  return (
+    <>
+      {partes.map((parte, indice) => (
+        <Fragment key={`${parte}-${indice}`}>
+          {parte}
+          {indice < partes.length - 1 ? (
+            <>
+              _<wbr />
+            </>
+          ) : null}
+        </Fragment>
+      ))}
+    </>
+  )
 }
 
 function Quadro({
@@ -822,6 +928,16 @@ function Quadro({
             <li key={nota}>{nota}</li>
           ))}
         </ol>
+        {slide.perguntas?.length ? (
+          <div className="notas-perguntas">
+            <p className="rotulo">{ROTULO_SE_PERGUNTAREM}</p>
+            <ul>
+              {slide.perguntas.map((pergunta) => (
+                <li key={pergunta}>{pergunta}</li>
+              ))}
+            </ul>
+          </div>
+        ) : null}
       </details>
 
       <footer className="slide-rodape">

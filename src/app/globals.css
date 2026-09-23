@@ -759,6 +759,14 @@ html:fullscreen .ajuda-deck {
   display: none;
 }
 
+/* No toque não há teclado: a ajuda só ocupava espaço, e na capa da AV1, que
+   fica no alto, ela quebrava em quatro linhas por cima da pílula. */
+@media (max-width: 639px) {
+  .ajuda-deck {
+    display: none;
+  }
+}
+
 /* Modo deck: um slide por vez, ocupando exatamente o que sobra abaixo do
    cromo, para a página não rolar. As notas só aparecem com a tecla `n`, já
    abertas. O slide da demonstração rola por dentro, para a memória de
@@ -1272,11 +1280,60 @@ html:fullscreen .ajuda-deck {
   margin-top: 0.55rem;
   font-size: clamp(0.95rem, 1.3vw, 1.1rem);
   line-height: 1.5;
+  /* Sem palavra sozinha na última linha: "máquina", "linha dos 90%". */
+  text-wrap: balance;
 }
 
 [data-modo='deck'] .slide-ml {
   padding-top: 32px;
   padding-bottom: 60px;
+}
+
+/* CENTRALIZADO, COMO NO KICK-OFF, E É DECISÃO. A revisão sugeriu o título no
+   alto de todo slide, para ele não mudar de altura a cada troca. Testado, o
+   PDF saiu com metade de várias páginas vazia embaixo, e o slide com pouco
+   conteúdo parecia inacabado. A altura do título varia; a página cheia vale
+   mais. */
+
+/* O DECK CRESCE COM A TELA. Tudo aqui é medido em rem, então num projetor de
+   1080 linhas o slide virava uma faixa estreita no meio, com rótulo de 12px.
+   `zoom` (e não `scale`) porque participa do layout: a caixa cresce de verdade
+   e nada vaza. O slide mais alto mede ~570px em 720; 1,4 vezes isso cabe nos
+   ~930px de uma tela de 1080. A capa fica de fora porque a faixa do Recife é
+   absoluta e cresceria para fora da tela; o PDF, porque é `screen`. */
+@media screen and (min-width: 1500px) and (min-height: 880px) {
+  [data-modo='deck'] .slide-ml:not(.capa-ml) .slide-corpo {
+    zoom: 1.2;
+  }
+}
+
+@media screen and (min-width: 1800px) and (min-height: 1000px) {
+  [data-modo='deck'] .slide-ml:not(.capa-ml) .slide-corpo {
+    zoom: 1.4;
+  }
+}
+
+/* Os ordinais 01 a 06 com a cor da hairline davam 1,8:1 e sumiam projetados.
+   No deck da AV1 eles são o número da etapa que os outros slides citam. */
+.slide-ml .ordinal {
+  color: var(--color-apagado);
+}
+
+/* As respostas preparadas, dentro das notas: separadas da fala por uma
+   hairline, porque não entram no tempo. */
+.notas-perguntas {
+  padding: 0.75rem 0.75rem 0.75rem 2rem;
+  border-top: 1px solid var(--color-linha);
+  color: var(--color-apagado);
+}
+
+.notas-perguntas ul {
+  margin-top: 0.4rem;
+  list-style: disc;
+}
+
+.notas-perguntas li + li {
+  margin-top: 0.4rem;
 }
 
 /* A capa sobe: centralizada, a lista de nove nomes caía em cima da faixa do
@@ -1302,14 +1359,17 @@ html:fullscreen .ajuda-deck {
   background: color-mix(in srgb, var(--color-texto) 7%, transparent);
 }
 
+/* As linhas de referência a 50% do texto: com a hairline alta davam menos de
+   3:1, e a diagonal do slide 14, que é o argumento do slide, sumia no projetor. */
 .graf-zero,
 .graf-bigode {
-  background: var(--color-linha-alta);
+  background: color-mix(in srgb, var(--color-texto) 50%, transparent);
 }
 
+/* Caixa opaca: translúcida, o bigode atravessava o miolo dela. */
 .graf-caixa {
-  border: 1px solid var(--color-linha-alta);
-  background: color-mix(in srgb, var(--color-texto) 16%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-texto) 50%, transparent);
+  background: color-mix(in srgb, var(--color-texto) 16%, var(--color-fundo));
 }
 
 .graf-mediana {
@@ -1343,14 +1403,15 @@ html:fullscreen .ajuda-deck {
   border-left: 1px dashed var(--color-acento);
 }
 
-.graf-eixo {
-  border-color: var(--color-linha-alta);
+.graf-eixo,
+.graf-quadro {
+  border-color: color-mix(in srgb, var(--color-texto) 50%, transparent);
 }
 
 .graf-diagonal {
-  stroke: var(--color-linha-alta);
-  stroke-width: 1;
-  stroke-dasharray: 4 3;
+  stroke: color-mix(in srgb, var(--color-texto) 55%, transparent);
+  stroke-width: 1.5;
+  stroke-dasharray: 5 4;
 }
 
 .graf-celula {

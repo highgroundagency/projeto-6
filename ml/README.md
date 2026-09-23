@@ -5,10 +5,14 @@ Os modelos vivem aqui, fora do app. Treino é offline; o site lê o resultado.
 ## Rodar
 
 ```bash
-pip install pandas scikit-learn matplotlib seaborn xgboost lightgbm catboost jupyter
+pip install "pandas>=2,<3" scikit-learn matplotlib seaborn xgboost lightgbm catboost jupyter
 ```
 
 Abra `ml/notebooks/` e rode os cadernos **em ordem**. Todo o código está dentro deles.
+
+O pandas fica abaixo do 3 porque os cadernos 01 e 02 foram rodados nele: no 3, o texto passa a
+ser lido como `str` e não `object`, e o filtro de colunas misturadas do caderno 01 (célula 27)
+conta zero. O caderno 07 já aceita as duas versões.
 
 | Caderno | Faz | Escreve |
 | --- | --- | --- |
@@ -18,7 +22,7 @@ Abra `ml/notebooks/` e rode os cadernos **em ordem**. Todo o código está dentr
 | `04-regressao` | XGBoost com grid search para prever o resultado geral | `ml/saidas/regressao.json` |
 | `05-clustering` | K-Means sobre as unidades | `ml/saidas/clustering.json` |
 | `06-conclusoes` | Matriz de confusão, resultados finais e exportação para o app | `src/content/ml/resultados.json` |
-| `07-numeros-da-apresentacao` | Nenhuma análise nova: repete as contas de 01 e 02 e grava os números que os slides da AV1 desenham em `/ml` | `src/content/ml/apresentacao.json` |
+| `07-numeros-da-apresentacao` | Repete as contas de 01 e 02 e grava os números que os slides da AV1 desenham em `/ml`, mais algumas conferências que ele lista no começo (o que as seis linhas fora da regra têm em comum, a correlação sem elas) | `src/content/ml/apresentacao.json` |
 
 `ml/saidas/` é gerada e fica fora do Git. O que é versionado é o resultado final, porque é
 ele que a tela de analytics lê.

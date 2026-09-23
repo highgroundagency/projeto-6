@@ -4,17 +4,24 @@ import { describe, expect, it } from 'vitest'
 import {
   ARQUIVO_PDF_ML,
   COLUNAS_CRUAS_NO_SLIDE,
+  DIVISOR_DAS_SEIS,
+  DOMINIOS,
   DURACAO_ML_SEGUNDOS,
   ETAPAS,
   GRUPO_DA_DISCIPLINA,
+  LINHAS_FORA,
+  PALAVRAS_POR_SEGUNDO,
   SLIDES_ML,
   TETO_DE_PALAVRAS_ML,
   decimal,
+  enxuto,
   inicioDoSlideML,
   milhar,
+  palavrasFaladas,
   palavrasNaTela,
   rotuloDaColuna,
   textoNaTela,
+  type SlideML,
 } from './apresentacao-ml'
 import dados from './ml/apresentacao.json'
 
@@ -62,11 +69,24 @@ describe('a apresentação da AV1 de machine learning', () => {
     expect(Object.keys(ETAPAS)).toHaveLength(5)
   })
 
-  it('fecha no tempo declarado, abaixo de doze minutos', () => {
+  it('fecha no tempo declarado, abaixo de treze minutos', () => {
     const soma = SLIDES_ML.reduce((total, s) => total + s.segundos, 0)
     expect(soma).toBe(DURACAO_ML_SEGUNDOS)
-    expect(soma).toBeLessThanOrEqual(12 * 60)
+    expect(soma).toBeLessThanOrEqual(13 * 60)
     expect(inicioDoSlideML(SLIDES_ML.length)).toBe(DURACAO_ML_SEGUNDOS)
+  })
+
+  it('a fala de cada slide cabe no tempo dele, a um ritmo calmo', () => {
+    // A primeira versão prometia 11:05 e a fala somava uns 14 minutos. O tempo
+    // do slide agora é medido pela fala: se alguém acrescentar uma frase, o
+    // teste pede mais segundos, e o total acima diz se ainda cabe.
+    for (const slide of SLIDES_ML) {
+      const palavras = palavrasFaladas(slide.id)
+      expect(
+        palavras / slide.segundos,
+        `slide ${slide.numero} (${slide.titulo}): ${palavras} palavras em ${slide.segundos}s`,
+      ).toBeLessThanOrEqual(PALAVRAS_POR_SEGUNDO)
+    }
   })
 
   it('cabe no teto de palavras: a explicação mora na nota', () => {
@@ -79,7 +99,15 @@ describe('a apresentação da AV1 de machine learning', () => {
 
   it('não usa travessão em texto de tela nem de fala (regra 8 da casa)', () => {
     for (const slide of SLIDES_ML) {
-      const textos = [slide.titulo, slide.apoio, slide.visual, ...slide.notas, ...textoNaTela(slide.id)]
+      const perguntas = (slide as SlideML).perguntas ?? []
+      const textos = [
+        slide.titulo,
+        slide.apoio,
+        slide.visual,
+        ...slide.notas,
+        ...perguntas,
+        ...textoNaTela(slide.id),
+      ]
       for (const texto of textos) {
         expect(texto, `slide ${slide.numero}`).not.toMatch(/[—–]/)
         expect(texto.trim().length, `slide ${slide.numero}`).toBeGreaterThan(0)
@@ -107,6 +135,10 @@ describe('a apresentação da AV1 de machine learning', () => {
     expect(decimal(-0.629)).toBe('−0,63')
     expect(decimal(-0.0004, 3)).toBe('0,000')
     expect(milhar(63440)).toBe('63.440')
+    expect(enxuto(0.5)).toBe('0,5')
+    expect(enxuto(0.8974)).toBe('0,897')
+    expect(enxuto(1)).toBe('1')
+    expect(enxuto(311)).toBe('311')
   })
 
   it('todo texto de tela sai do conteúdo, e não do componente', () => {
@@ -135,12 +167,54 @@ describe('a apresentação da AV1 de machine learning', () => {
     expect(config).toContain('docs/ml-av1.pdf')
   })
 
-  it('o roteiro impresso traz o título e a fala de cada slide', () => {
+  it('o roteiro impresso traz o título, a fala e as respostas de cada slide', () => {
     const roteiro = ler('docs/ml-av1.md')
-    for (const slide of SLIDES_ML) {
+    for (const slide of SLIDES_ML as readonly SlideML[]) {
       expect(roteiro, `slide ${slide.numero}`).toContain(slide.titulo)
-      for (const nota of slide.notas) expect(roteiro, `slide ${slide.numero}`).toContain(nota)
+      for (const nota of [...slide.notas, ...(slide.perguntas ?? [])]) {
+        expect(roteiro, `slide ${slide.numero}`).toContain(nota)
+      }
     }
+  })
+
+  it('todo valor que os gráficos desenham cabe no eixo', () => {
+    // Os domínios são fixos; o dado vem do caderno. Se o caderno rodar com
+    // base nova e um ponto passar da ponta, ele sairia da caixa sem aviso.
+    const cabe = (valores: number[], dominio: { de: number; ate: number }, onde: string) => {
+      expect(Math.min(...valores), onde).toBeGreaterThanOrEqual(dominio.de)
+      expect(Math.max(...valores), onde).toBeLessThanOrEqual(dominio.ate)
+    }
+    const daCaixa = (c: { bigode_baixo: number; bigode_alto: number; fora: readonly number[] }) => [
+      c.bigode_baixo,
+      c.bigode_alto,
+      ...c.fora,
+    ]
+    cabe([...dados.por_familia, ...dados.por_distrito].flatMap(daCaixa), DOMINIOS.grupos, 'grupos')
+    cabe(dados.dispersao.flatMap((p) => [p.esperado, p.lancado]), DOMINIOS.dispersao, 'dispersão')
+    cabe(dados.codificacao.nivel_mac.flatMap(daCaixa), DOMINIOS.nivelMac, 'MAC por nível')
+  })
+
+  it('a fala sobre as MAC por nível é o que o gráfico mostra', () => {
+    // "MAC 1 e 2 ficam todas acima de 1; MAC 3 e 4, todas abaixo do corte."
+    // A primeira versão dizia 1,2 e 0,8 digitados à mão, e o gráfico desmentia.
+    const extremos = (niveis: number[]) =>
+      dados.codificacao.nivel_mac
+        .filter((n) => niveis.includes(n.nivel))
+        .flatMap((n) => [n.bigode_baixo, n.bigode_alto, ...n.fora])
+    expect(Math.min(...extremos([1, 2]))).toBeGreaterThan(1)
+    expect(Math.max(...extremos([3, 4]))).toBeLessThan(0.9)
+  })
+
+  it('as seis linhas seguem a mesma conta, e são todas as unidades dos seus tipos', () => {
+    // É o que a fala do slide 14 afirma. Se deixar de ser verdade, a frase de
+    // "padrão, não erro solto" vira invenção.
+    expect(LINHAS_FORA).toHaveLength(dados.base.fora_da_regra)
+    for (const linha of LINHAS_FORA) {
+      expect(linha.soma_dos_pontos_sobre_lancado, `${linha.tipo} ${linha.distrito}`).toBe(DIVISOR_DAS_SEIS)
+      expect(dados.base.familias_fora_da_regra).toContain(linha.tipo)
+    }
+    expect(DIVISOR_DAS_SEIS).toBe(1.7)
+    expect(dados.base.unidades_dessas_familias).toBe(dados.base.fora_da_regra)
   })
 })
 
@@ -163,7 +237,8 @@ describe('os números dos slides batem com as saídas dos cadernos 01 e 02', () 
     expect(eda).toContain(`registros: ${B.linhas} | atributos: ${B.colunas}`)
     expect(eda).toContain(`valores distintos: [${B.categoricas.map((c) => c.valores).join(', ')}]`)
     expect(eda).toContain(`numéricas: ${B.numericas}`)
-    expect(valorDaSerie(eda, 'object')).toBe(B.tipos_na_leitura.texto)
+    // O pandas 2 imprime `object`; o 3, `str`. Os dois contam como texto.
+    expect(valorDaSerie(eda, '(?:object|str)')).toBe(B.tipos_na_leitura.texto)
     expect(valorDaSerie(eda, 'int64')).toBe(B.tipos_na_leitura.inteiro)
     expect(valorDaSerie(eda, 'float64')).toBe(B.tipos_na_leitura.decimal)
     for (const papel of B.papeis) {
@@ -188,6 +263,12 @@ describe('os números dos slides batem com as saídas dos cadernos 01 e 02', () 
       const [, unidades, percentual] = (linha ?? '').trim().split(/\s+/)
       expect(Number(unidades)).toBe(outlier.unidades)
       expect(Number(percentual)).toBe(outlier.percentual)
+    }
+  })
+
+  it('os outliers do resultado geral, família por família', () => {
+    for (const [familia, n] of Object.entries(dados.outliers_geral_por_familia)) {
+      expect(pre, familia).toMatch(new RegExp(`^${familia}\\s+${n}$`, 'm'))
     }
   })
 
@@ -228,6 +309,24 @@ describe('os números dos slides batem com as saídas dos cadernos 01 e 02', () 
     expect(pre).toContain(`assimetria do ind4: ${d.assimetria_ind4} | do log(ind4): ${d.assimetria_log_ind4}`)
     expect(pre).toContain(`correlação do porte com o geral: ${d.correlacao_porte_geral}`)
     expect(pre).toContain(`(${dados.codificacao.linhas}, ${dados.codificacao.colunas_finais})`)
+  })
+
+  it('as classes nas 196 batem com a proporção que o caderno 01 imprime', () => {
+    const c = dados.classes_196
+    const total = c.abaixo_de_90 + c.noventa_ou_mais
+    expect(total).toBe(B.unidades)
+    expect(valorDaSerie(eda, '90% ou mais')).toBe(Number((c.noventa_ou_mais / total).toFixed(3)))
+    expect(valorDaSerie(eda, 'abaixo de 90%')).toBe(Number((c.abaixo_de_90 / total).toFixed(3)))
+  })
+
+  it('as correlações de quatro casas arredondam para as de três que o caderno 02 imprime', () => {
+    for (const linha of dados.correlacao_features) {
+      expect(Number(linha.com_geral_exata.toFixed(3)), linha.coluna).toBeCloseTo(linha.com_geral, 3)
+      expect(Number(linha.com_abaixo_de_90_exata.toFixed(3)), linha.coluna).toBeCloseTo(
+        linha.com_abaixo_de_90,
+        3,
+      )
+    }
   })
 
   it('as classes batem com o documento das etapas 1 e 2', () => {

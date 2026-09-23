@@ -21,8 +21,10 @@ async function medirSlide(page: Page, numero: number) {
     let baixo = 0
     let direita = 0
     for (const el of corpo.querySelectorAll<HTMLElement>('*')) {
-      // A faixa do Recife é de borda a borda de propósito, e fica atrás.
-      if (el.closest('.horizonte')) continue
+      // A faixa do Recife é de borda a borda de propósito, e fica atrás. E a
+      // tabela `sr-only` dos gráficos é recortada em 1px: as células dela
+      // informam o tamanho natural, que não aparece na tela.
+      if (el.closest('.horizonte') || el.closest('.sr-only')) continue
       const caixa = el.getBoundingClientRect()
       if (caixa.width === 0 && caixa.height === 0) continue
       baixo = Math.max(baixo, caixa.bottom)
@@ -63,9 +65,13 @@ test.describe('a AV1 de machine learning', () => {
     expect(larguras.documento).toBeLessThanOrEqual(larguras.janela)
   })
 
+  // 1440x900 e 1920x1080 são as telas em que o deck cresce (zoom de 1,2 e
+  // 1,4): é ali que um slide que cabia em 720 pode passar a não caber.
   for (const tamanho of [
     { width: 1280, height: 720 },
     { width: 1366, height: 768 },
+    { width: 1440, height: 900 },
+    { width: 1920, height: 1080 },
   ]) {
     test(`cada slide cabe inteiro em ${tamanho.width}x${tamanho.height}`, async ({ page }) => {
       await page.setViewportSize(tamanho)
@@ -91,6 +97,29 @@ test.describe('a AV1 de machine learning', () => {
       }
     })
   }
+
+  test('no celular, nenhum texto vaza da própria caixa', async ({ page }) => {
+    // A 360px a faixa dos pesos encavalava "20%20%20%40%" sem estourar a
+    // página, e o teste de largura passava com o slide ilegível. Aqui cada
+    // elemento do corpo é medido contra a própria caixa, fora os que cortam
+    // de propósito com reticências.
+    await page.setViewportSize({ width: 360, height: 740 })
+    await page.goto('/ml#slide-1')
+    await page.evaluate(() => document.fonts.ready)
+    for (let numero = 1; numero <= TOTAL; numero++) {
+      await expect(page.locator(`[data-slide="${numero}"][data-ativo]`)).toBeVisible()
+      const vazando = await page.evaluate((n) => {
+        const corpo = document.querySelector(`[data-slide="${n}"] .slide-corpo`) as HTMLElement
+        return [...corpo.querySelectorAll<HTMLElement>('*')]
+          .filter((el) => !el.closest('svg') && !el.closest('.sr-only'))
+          .filter((el) => getComputedStyle(el).textOverflow !== 'ellipsis')
+          .filter((el) => el.scrollWidth > el.clientWidth + 1 && el.clientWidth > 0)
+          .map((el) => `${el.tagName.toLowerCase()}.${el.className}`.slice(0, 80))
+      }, numero)
+      expect(vazando, `slide ${numero}`).toEqual([])
+      if (numero < TOTAL) await page.keyboard.press('ArrowRight')
+    }
+  })
 
   test('o deck oferece o PDF de reserva, e ele existe', async ({ page, request }) => {
     await page.goto('/ml')

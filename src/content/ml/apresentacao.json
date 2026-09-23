@@ -68,12 +68,25 @@
       "UCIS",
       "USF"
     ],
+    "familias_fora_da_regra": [
+      "NDI",
+      "SAE"
+    ],
+    "unidades_dessas_familias": 6,
+    "linhas_distrito_por_distrito": [
+      6
+    ],
     "colunas_correlacionadas": 161
   },
   "classes": {
     "abaixo_de_90": 89,
     "noventa_ou_mais": 101
   },
+  "classes_196": {
+    "abaixo_de_90": 90,
+    "noventa_ou_mais": 106
+  },
+  "assimetria_geral_modeladas": 1.94,
   "distribuicao": [
     {
       "coluna": "ind1",
@@ -524,36 +537,36 @@
     "matriz": [
       [
         1.0,
-        0.065,
+        0.0647,
         0.188,
-        0.161,
-        0.365
+        0.1613,
+        0.3647
       ],
       [
-        0.065,
+        0.0647,
         1.0,
-        0.11,
+        0.1103,
         -0.043,
-        0.163
+        0.1633
       ],
       [
         0.188,
-        0.11,
+        0.1103,
         1.0,
-        0.358,
-        0.791
+        0.3578,
+        0.7913
       ],
       [
-        0.161,
+        0.1613,
         -0.043,
-        0.358,
+        0.3578,
         1.0,
         0.357
       ],
       [
-        0.365,
-        0.163,
-        0.791,
+        0.3647,
+        0.1633,
+        0.7913,
         0.357,
         1.0
       ]
@@ -562,63 +575,78 @@
   "mais_correlatas": [
     {
       "coluna": "Desempenho consolidado — Indicador 3.1",
-      "r": 0.921
+      "r": 0.9211,
+      "r_modeladas": 0.9067
     },
     {
       "coluna": "Desempenho consolidado — Indicador 3",
-      "r": 0.791
+      "r": 0.7913,
+      "r_modeladas": 0.9064
     },
     {
       "coluna": "Desempenho consolidado — Subindicador 4.IX",
-      "r": -0.757
+      "r": -0.7572,
+      "r_modeladas": null
     },
     {
       "coluna": "Desempenho consolidado — Indicador 5",
-      "r": 0.661
+      "r": 0.6614,
+      "r_modeladas": -0.0214
     },
     {
       "coluna": "Desempenho — Subindicador 4.IX.3.I",
-      "r": -0.655
+      "r": -0.6552,
+      "r_modeladas": null
     },
     {
       "coluna": "Desempenho consolidado — Subindicador 4.IV",
-      "r": -0.573
+      "r": -0.573,
+      "r_modeladas": -0.104
     },
     {
       "coluna": "Desempenho — Subindicador 4.IV.1",
-      "r": -0.501
+      "r": -0.5008,
+      "r_modeladas": -0.1365
     },
     {
       "coluna": "Desempenho consolidado — Subindicador 4.II",
-      "r": 0.492
+      "r": 0.4923,
+      "r_modeladas": 0.071
     },
     {
       "coluna": "Desempenho — Subindicador 4.IV.2",
-      "r": -0.43
+      "r": -0.43,
+      "r_modeladas": -0.038
     },
     {
       "coluna": "Desempenho consolidado — Indicador 1.1",
-      "r": 0.365
+      "r": 0.3647,
+      "r_modeladas": 0.3694
     },
     {
       "coluna": "Desempenho consolidado — Indicador 1",
-      "r": 0.365
+      "r": 0.3647,
+      "r_modeladas": 0.3694
     },
     {
       "coluna": "Desempenho consolidado — Indicador 4",
-      "r": 0.357
+      "r": 0.357,
+      "r_modeladas": 0.4911
     },
     {
       "coluna": "Valor informado — Subindicador 4.I.12",
-      "r": 0.23
+      "r": 0.23,
+      "r_modeladas": 0.2317
     },
     {
       "coluna": "Total avaliado — Subindicador 2.2",
-      "r": 0.219
+      "r": 0.219,
+      "r_modeladas": 0.1706
     },
     {
       "coluna": "Quantidade atendida — Subindicador 2.2",
-      "r": 0.212
+      "r": 0.2123,
+      "r_modeladas": 0.1568
     }
   ],
   "faltantes": {
@@ -664,6 +692,8 @@
   "inconsistencias": {
     "colunas_constantes": 96,
     "colunas_fracao_e_percentual": 49,
+    "mistura_dentro_das_unidades": 6,
+    "colunas_numericas_como_texto": 199,
     "metas_escritas_de_dois_jeitos": [
       {
         "coluna": "Meta — Subindicador 4.II.2",
@@ -702,7 +732,8 @@
     "linhas_com_virgula_de_milhar": {
       "DS": 24
     },
-    "colunas_de_pontos": 4
+    "colunas_de_pontos": 4,
+    "pontos_com_nome_repetido": 3
   },
   "dispersao": [
     {
@@ -1692,42 +1723,48 @@
       "distrito": "I",
       "esperado": 1.3876,
       "lancado": 0.8161,
-      "peso_do_ind3_nos_pontos": 0.2
+      "peso_do_ind3_nos_pontos": 0.2,
+      "soma_dos_pontos_sobre_lancado": 1.7
     },
     {
       "tipo": "SAE",
       "distrito": "III",
       "esperado": 1.3732,
       "lancado": 1.9049,
-      "peso_do_ind3_nos_pontos": 0.8
+      "peso_do_ind3_nos_pontos": 0.8,
+      "soma_dos_pontos_sobre_lancado": 1.7
     },
     {
       "tipo": "SAE",
       "distrito": "IV",
       "esperado": 1.3291,
       "lancado": 1.879,
-      "peso_do_ind3_nos_pontos": 0.8
+      "peso_do_ind3_nos_pontos": 0.8,
+      "soma_dos_pontos_sobre_lancado": 1.7
     },
     {
       "tipo": "NDI",
       "distrito": "III",
       "esperado": 1.1816,
       "lancado": 1.7923,
-      "peso_do_ind3_nos_pontos": 0.8
+      "peso_do_ind3_nos_pontos": 0.8,
+      "soma_dos_pontos_sobre_lancado": 1.7
     },
     {
       "tipo": "NDI",
       "distrito": "VI",
       "esperado": 1.193,
       "lancado": 1.7989,
-      "peso_do_ind3_nos_pontos": 0.8
+      "peso_do_ind3_nos_pontos": 0.8,
+      "soma_dos_pontos_sobre_lancado": 1.7
     },
     {
       "tipo": "NDI",
       "distrito": "IV",
       "esperado": 1.1356,
       "lancado": 1.7652,
-      "peso_do_ind3_nos_pontos": 0.8
+      "peso_do_ind3_nos_pontos": 0.8,
+      "soma_dos_pontos_sobre_lancado": 1.7
     }
   ],
   "features_novas": [
@@ -2150,78 +2187,108 @@
       "coluna": "ind3_x_ind4",
       "nova": true,
       "com_geral": 0.933,
-      "com_abaixo_de_90": -0.338
+      "com_abaixo_de_90": -0.338,
+      "com_geral_exata": 0.9331,
+      "com_abaixo_de_90_exata": -0.3377
     },
     {
       "coluna": "ind3",
       "nova": false,
       "com_geral": 0.906,
-      "com_abaixo_de_90": -0.311
+      "com_abaixo_de_90": -0.311,
+      "com_geral_exata": 0.9064,
+      "com_abaixo_de_90_exata": -0.3106
     },
     {
       "coluna": "desvio_indicadores",
       "nova": true,
       "com_geral": 0.818,
-      "com_abaixo_de_90": -0.174
+      "com_abaixo_de_90": -0.174,
+      "com_geral_exata": 0.8177,
+      "com_abaixo_de_90_exata": -0.1742
     },
     {
       "coluna": "ind4",
       "nova": false,
       "com_geral": 0.491,
-      "com_abaixo_de_90": -0.235
+      "com_abaixo_de_90": -0.235,
+      "com_geral_exata": 0.4911,
+      "com_abaixo_de_90_exata": -0.2349
     },
     {
       "coluna": "indicadores_na_meta",
       "nova": true,
       "com_geral": 0.408,
-      "com_abaixo_de_90": -0.213
+      "com_abaixo_de_90": -0.213,
+      "com_geral_exata": 0.4077,
+      "com_abaixo_de_90_exata": -0.2132
     },
     {
       "coluna": "ind3_abaixo_meta",
       "nova": true,
       "com_geral": -0.373,
-      "com_abaixo_de_90": 0.208
+      "com_abaixo_de_90": 0.208,
+      "com_geral_exata": -0.373,
+      "com_abaixo_de_90_exata": 0.2083
     },
     {
       "coluna": "ind1",
       "nova": false,
       "com_geral": 0.369,
-      "com_abaixo_de_90": -0.701
+      "com_abaixo_de_90": -0.701,
+      "com_geral_exata": 0.3694,
+      "com_abaixo_de_90_exata": -0.7011
     },
     {
       "coluna": "taxa_ind1",
       "nova": true,
       "com_geral": 0.325,
-      "com_abaixo_de_90": -0.629
+      "com_abaixo_de_90": -0.629,
+      "com_geral_exata": 0.3247,
+      "com_abaixo_de_90_exata": -0.6289
     },
     {
       "coluna": "ind2",
       "nova": false,
       "com_geral": 0.265,
-      "com_abaixo_de_90": -0.175
+      "com_abaixo_de_90": -0.175,
+      "com_geral_exata": 0.2649,
+      "com_abaixo_de_90_exata": -0.1751
     },
     {
       "coluna": "media_blocos_ind4",
       "nova": true,
       "com_geral": 0.113,
-      "com_abaixo_de_90": -0.255
+      "com_abaixo_de_90": -0.255,
+      "com_geral_exata": 0.1125,
+      "com_abaixo_de_90_exata": -0.2548
     }
   ],
   "redundantes": [
     {
-      "a": "desvio_indicadores",
-      "b": "ind3",
+      "a": "ind3",
+      "b": "desvio_indicadores",
       "correlacao": 0.97
     },
     {
-      "a": "ind3_x_ind4",
-      "b": "ind3",
+      "a": "ind3",
+      "b": "ind3_x_ind4",
       "correlacao": 0.96
     },
     {
-      "a": "taxa_ind1",
-      "b": "ind1",
+      "a": "ind3_x_ind4",
+      "b": "desvio_indicadores",
+      "correlacao": 0.95
+    },
+    {
+      "a": "ind1",
+      "b": "taxa_ind1",
       "correlacao": 0.84
+    },
+    {
+      "a": "ind3_abaixo_meta",
+      "b": "indicadores_na_meta",
+      "correlacao": -0.8
     }
   ],
   "descartadas": {

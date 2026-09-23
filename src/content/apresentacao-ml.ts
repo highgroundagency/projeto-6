@@ -1,6 +1,9 @@
 import { formatarTempo } from '@/content/pitch'
 import dados from '@/content/ml/apresentacao.json'
+import resultados from '@/content/ml/resultados.json'
 import { MARCOS_PARALELOS } from '@/lib/cronograma'
+// Só o tipo: `lib/ml.ts` é server-only, e este arquivo também roda nos scripts.
+import type { ResultadosML } from '@/lib/ml'
 
 /**
  * A APRESENTAÇÃO DA AV1 DE MACHINE LEARNING, como dado.
@@ -15,15 +18,22 @@ import { MARCOS_PARALELOS } from '@/lib/cronograma'
  * com o número da etapa no alto de cada slide, para quem avalia conferir item a
  * item sem procurar.
  *
- * TODO NÚMERO SAI DE `ml/apresentacao.json`, que o caderno 07 grava repetindo
- * as contas dos cadernos 01 e 02. Nenhum número está digitado à mão aqui: se a
- * análise mudar e o caderno rodar de novo, a tela muda junto. O teste confere o
- * JSON contra as saídas impressas dos cadernos, então os dois não se separam.
+ * TODO NÚMERO SAI DE UM JSON: `ml/apresentacao.json`, que o caderno 07 grava
+ * repetindo as contas dos cadernos 01 e 02 (mais algumas conferências que ele
+ * declara), e `ml/resultados.json`, que o caderno 06 grava. Nenhum número da
+ * análise está digitado à mão aqui: se ela mudar e os cadernos rodarem de novo,
+ * a tela e a fala mudam junto.
  *
- * AS NOTAS SÃO PARA QUEM NÃO É DE DADOS. Quem apresenta pode não ter escrito os
- * cadernos, então cada nota explica o termo técnico na primeira vez que ele
- * aparece, em frase que se diz em voz alta. A tela pode ter o termo (a banca é
- * de machine learning e cobra o nome certo); a fala diz o que ele significa.
+ * DUAS BASES, DITAS EM VOZ ALTA. A exploração (slides 9 a 12) roda nas 196
+ * unidades, como o caderno 01; do slide 14 em diante saem as seis NDI e SAE, e
+ * a conta passa às 190 modeladas. O mesmo par de colunas dá números diferentes
+ * nas duas, e a fala sempre diz em qual está. A revisão de 23/09 achou isso
+ * escondido e é a razão de existirem os campos "sem as seis" no JSON.
+ *
+ * AS NOTAS SÃO PARA QUEM NÃO É DE DADOS, E CABEM NO TEMPO. `notas` é o que se
+ * diz, e o teste confere que cabe nos segundos do slide a uma fala calma.
+ * `perguntas` é o que se responde se a professora perguntar: não entra no
+ * tempo, aparece nas notas com a tecla `n` e no roteiro impresso.
  *
  * Nenhum dado de pessoa: a menor coisa que aparece aqui é a unidade de saúde,
  * pelo tipo e pelo distrito.
@@ -39,6 +49,11 @@ export function decimal(valor: number, casas = 2): string {
   return valor < 0 && Number(texto.replace(',', '.')) !== 0 ? `−${texto}` : texto
 }
 
+/** 0,5 e 1,89 em vez de 0,500 e 1,890: até três casas, sem zero sobrando. */
+export function enxuto(valor: number, casas = 3): string {
+  return decimal(valor, casas).replace(/(,\d*?)0+$/, '$1').replace(/,$/, '')
+}
+
 /** 63.440 em vez de 63440. */
 export function milhar(valor: number): string {
   return String(valor).replace(/\B(?=(\d{3})+(?!\d))/g, '.')
@@ -49,8 +64,13 @@ export function porcento(parte: number, todo: number, casas = 1): string {
   return `${decimal((parte / todo) * 100, casas)}%`
 }
 
+/** "NDI e SAE", "USF, UBT e UCIS". */
+function lista(itens: readonly string[]): string {
+  return itens.length <= 1 ? itens.join('') : `${itens.slice(0, -1).join(', ')} e ${itens.at(-1)}`
+}
+
 /* -------------------------------------------------------------------------
-   Os números que o texto cita, tirados do JSON uma vez só
+   Os números que o texto cita, tirados dos JSON uma vez só
 ------------------------------------------------------------------------- */
 
 const B = dados.base
@@ -70,37 +90,69 @@ function distribuicaoDe(coluna: string) {
   return achada
 }
 
-function outlierDe(coluna: string) {
-  const achado = dados.outliers.find((o) => o.coluna === coluna)
-  if (!achado) throw new Error(`Outlier ausente: ${coluna}`)
-  return achado
-}
-
 function correlacaoFeature(coluna: string) {
   const achada = dados.correlacao_features.find((c) => c.coluna === coluna)
   if (!achada) throw new Error(`Correlação ausente: ${coluna}`)
   return achada
 }
 
+function escalaDe(coluna: string) {
+  const achada = dados.codificacao.escala.find((e) => e.coluna === coluna)
+  if (!achada) throw new Error(`Escala ausente: ${coluna}`)
+  return achada
+}
+
+function modelo(id: string) {
+  const achado = (resultados as ResultadosML).modelos.find((m) => m.modelo === id)
+  if (!achado) throw new Error(`Modelo ausente em resultados.json: ${id}`)
+  return achado
+}
+
+const IND1 = distribuicaoDe('ind1')
 const IND2 = distribuicaoDe('ind2')
 const IND3 = distribuicaoDe('ind3')
 const IND4 = distribuicaoDe('ind4')
 const GERAL = distribuicaoDe('geral')
 const MATRIZ = dados.correlacao.matriz
-const CORR_IND3_GERAL = MATRIZ[2][4]
-const CORR_OUTRAS_GERAL = [MATRIZ[0][4], MATRIZ[1][4], MATRIZ[3][4]]
-const MAC_FORA_NO_GERAL =
-  (dados.outliers_geral_por_familia as Record<string, number>).MAC ?? 0
-const PESO_80 = dados.linhas_fora_da_regra.filter((l) => l.peso_do_ind3_nos_pontos === 0.8)
+const CORR_IND3_196 = MATRIZ[2][4]
+const CORR_OUTRAS_196 = [MATRIZ[0][4], MATRIZ[1][4], MATRIZ[3][4]]
+const CORR_IND3_190 = correlacaoFeature('ind3').com_geral_exata
+
+/** As seis linhas fora da regra e o que elas têm em comum. */
+export const LINHAS_FORA = dados.linhas_fora_da_regra
+/** A soma dos pontos dividida pelo lançado, igual nas seis (o teste confere). */
+export const DIVISOR_DAS_SEIS = LINHAS_FORA[0].soma_dos_pontos_sobre_lancado
+const PESO_80 = LINHAS_FORA.filter((l) => l.peso_do_ind3_nos_pontos === 0.8)
+const PESO_20 = LINHAS_FORA.filter((l) => l.peso_do_ind3_nos_pontos === 0.2)
+const FAMILIAS_FORA = lista(B.familias_fora_da_regra)
+
+const OUTLIERS_GERAL = dados.outliers.find((o) => o.coluna === 'geral')
+if (!OUTLIERS_GERAL) throw new Error('Outliers do geral ausentes')
+const FORA_POR_FAMILIA = dados.outliers_geral_por_familia as Record<string, number>
+const FORA_MAC = FORA_POR_FAMILIA.MAC ?? 0
+const FORA_DAS_SEIS = B.familias_fora_da_regra.reduce((soma, f) => soma + (FORA_POR_FAMILIA[f] ?? 0), 0)
+const FORA_OUTRAS = Object.keys(FORA_POR_FAMILIA).filter(
+  (f) => f !== 'MAC' && !B.familias_fora_da_regra.includes(f),
+)
+const FORA_OUTRAS_N = FORA_OUTRAS.reduce((soma, f) => soma + FORA_POR_FAMILIA[f], 0)
+
 const LINHAS_DS_COM_VIRGULA = (
   dados.inconsistencias.linhas_com_virgula_de_milhar as Record<string, number>
 ).DS
 const FAMILIA_MAC = dados.por_familia.find((f) => f.grupo === 'MAC')
 if (!FAMILIA_MAC) throw new Error('Família MAC ausente')
+const MEDIANAS_DISTRITO = dados.por_distrito.map((d) => d.mediana)
+const CONTAGENS = B.papeis
+  .filter((p) => p.papel === 'Quantidade atendida' || p.papel === 'Total avaliado')
+  .reduce((soma, p) => soma + p.colunas, 0)
+const NOTAS_NA_ORDEM = dados.correlacao_features.filter((c) => !c.nova).map((c) => c.coluna)
 const PRODUTO_34 = correlacaoFeature('ind3_x_ind4')
 const IND1_CLASSE = correlacaoFeature('ind1')
 const TAXA_CLASSE = correlacaoFeature('taxa_ind1')
-const [RED_DESVIO, RED_PRODUTO] = dados.redundantes
+
+const CLASSIFICACAO = modelo('classificacao')
+const REGRESSAO = modelo('regressao')
+const AGRUPAMENTO = modelo('clustering')
 
 /* -------------------------------------------------------------------------
    Os slides
@@ -123,7 +175,7 @@ export const ROTULO_DA_ETAPA = 'etapa'
 export interface SlideML {
   readonly id: string
   readonly numero: number
-  /** A etapa da avaliação que o slide cumpre. Capa e roteiro não têm. */
+  /** A etapa da avaliação que o slide cumpre. Capa, roteiro e fechamento não têm. */
   readonly etapa: NumeroDaEtapa | null
   /** Em minúsculas: a identidade baixa tudo. */
   readonly titulo: string
@@ -132,17 +184,26 @@ export interface SlideML {
   /** O que a tela mostra, em uma linha: serve a quem ensaia sem o site. */
   readonly visual: string
   readonly segundos: number
-  /** O que dizer, uma ideia por linha. Aparece com a tecla `n`. */
+  /** O que DIZER, uma ideia por linha. Cabe nos segundos do slide. */
   readonly notas: readonly string[]
+  /** O que RESPONDER se perguntarem. Fora do tempo; aparece junto das notas. */
+  readonly perguntas?: readonly string[]
 }
 
 /**
- * Onze minutos, sem margem de sobra embutida: a disciplina não fixou o tempo
- * da AV1, e o deck foi medido para caber em doze. Se a professora pedir menos,
- * os slides que saem primeiro são o roteiro, o de inconsistências e o de
- * insights, cujo conteúdo a fala dos vizinhos já cobre.
+ * Doze minutos e vinte e cinco segundos, medidos pela fala e não chutados.
+ *
+ * A primeira versão dizia 11:05 e a fala somava 2.084 palavras, uns 14 minutos
+ * a um ritmo calmo. Agora o teste confere, slide a slide, que as notas cabem
+ * nos segundos a 2,6 palavras por segundo (pouco mais de 150 por minuto), e o
+ * total é a soma. A disciplina não fixou o tempo da AV1. Se a professora pedir
+ * menos, saem primeiro o roteiro, o de inconsistências e o de insights: a fala
+ * dos vizinhos já cobre o que eles dizem.
  */
-export const DURACAO_ML_SEGUNDOS = 665
+export const DURACAO_ML_SEGUNDOS = 745
+
+/** Palavras por segundo de uma fala calma, que ninguém precisa acelerar. */
+export const PALAVRAS_POR_SEGUNDO = 2.6
 
 /** O PDF de reserva, gerado por `npm run pitch-pdf -- ml` a partir da rota. */
 export const ARQUIVO_PDF_ML = '/ml/pdf'
@@ -158,6 +219,9 @@ export const ARQUIVO_PDF_ML = '/ml/pdf'
  */
 export const TETO_DE_PALAVRAS_ML = 90
 
+const [PATAMAR_BAIXO, PATAMAR_ALTO] = GERAL.degraus
+const [IND1_MEIO, IND1_TRES_QUARTOS] = IND1.degraus
+
 export const SLIDES_ML = [
   {
     id: 'capa',
@@ -166,11 +230,11 @@ export const SLIDES_ML = [
     titulo: 'prumo',
     apoio: 'a planilha da gratificação da saúde do Recife, lida com aprendizado de máquina',
     visual: 'Wordmark, a pílula da AV1 e os nomes do grupo da disciplina.',
-    segundos: 20,
+    segundos: 25,
     notas: [
-      'Somos o grupo do Prumo, o projeto que refaz a conta da gratificação por desempenho da Secretaria de Saúde do Recife.',
-      'Nesta AV1 a gente mostra as cinco primeiras etapas do trabalho de machine learning, na ordem que a avaliação pede.',
-      'A base é a planilha real que a Secretaria usa hoje, cedida com autorização dela. Não tem nenhum dado de pessoa: a menor coisa que aparece é a unidade de saúde.',
+      'Somos o grupo da AV1. O trabalho parte do Prumo, o projeto que refaz a conta da gratificação por desempenho da Secretaria de Saúde do Recife.',
+      'Vamos mostrar as cinco primeiras etapas, na ordem que a avaliação pede.',
+      'A base é a planilha real da Secretaria, cedida com autorização e sem nenhum dado de pessoa: a menor coisa que aparece é a unidade de saúde.',
     ],
   },
   {
@@ -182,8 +246,11 @@ export const SLIDES_ML = [
     visual: 'As cinco etapas numeradas, lado a lado.',
     segundos: 10,
     notas: [
-      'São cinco paradas, na mesma ordem dos critérios da AV1: problema, dataset, exploração, tratamento e features novas.',
-      'Todo número que aparece nos slides sai dos cadernos 01 e 02. O caderno 07 só repete as contas para desenhar os gráficos.',
+      'São cinco paradas, na ordem dos critérios da AV1: problema, dataset, exploração, tratamento e features novas.',
+      'Feature é cada coluna que o modelo recebe como entrada.',
+    ],
+    perguntas: [
+      'Se perguntarem de onde vêm os números: das contas dos cadernos 01 e 02. O caderno 07 repete essas contas para desenhar os gráficos e acrescenta algumas conferências, como o que as seis linhas fora da regra têm em comum. O caderno 07 diz quais são.',
     ],
   },
   {
@@ -194,12 +261,11 @@ export const SLIDES_ML = [
     apoio:
       'cada unidade de saúde ganha nota em quatro indicadores, e o resultado geral é a soma com peso',
     visual: 'A faixa dos quatro pesos (20, 20, 20, 40), a conta escrita e a frase da Secretaria.',
-    segundos: 40,
+    segundos: 30,
     notas: [
-      'A Secretaria de Saúde do Recife paga uma gratificação às equipes das unidades de saúde conforme o desempenho. A regra está na Portaria Conjunta 001 de 2024.',
-      'Cada unidade recebe nota em quatro indicadores: medicamentos e material hospitalar, gestão do trabalho, satisfação do usuário e desempenho da unidade.',
-      'Os três primeiros pesam 20% cada, e o desempenho da unidade pesa 40%. O resultado geral é essa soma com peso.',
-      'Quando perguntamos como a conta é feita hoje, a resposta foi: é tudo manual, via PROCV. É uma planilha grande, montada à mão, que ninguém de fora consegue conferir.',
+      'A Secretaria paga uma gratificação às equipes das unidades de saúde conforme o desempenho. A regra está na Portaria Conjunta 001 de 2024.',
+      'Cada unidade recebe nota em quatro indicadores. Os três primeiros pesam 20% cada, e o desempenho da unidade pesa 40%. O resultado geral é essa soma com peso.',
+      'Quando perguntamos como a conta é feita hoje, a resposta foi: é tudo manual, via PROCV e afins.',
     ],
   },
   {
@@ -208,14 +274,16 @@ export const SLIDES_ML = [
     etapa: 1,
     titulo: 'o que o modelo responde',
     apoio:
-      'objetivo: descobrir quais indicadores mais pesam para uma unidade ficar abaixo de 90%, e quais unidades se parecem',
+      'objetivo: descobrir o que separa as unidades que ficam abaixo de 90%, e quais unidades se parecem',
     visual: 'Três cartões: classificar, prever o número e agrupar, cada um com o alvo.',
-    segundos: 40,
+    segundos: 35,
     notas: [
-      'O objetivo não é substituir a conta da portaria: essa conta o sistema já refaz. É mostrar onde a gestão deve olhar.',
-      'São três perguntas. Classificar é responder sim ou não: a unidade fica abaixo de 90% no resultado geral? O alvo é a coluna abaixo_90, que vale 1 quando fica.',
-      `Por que 90%: quase todas as USF param em dois patamares, ${decimal(GERAL.degraus[0].valor, 3)} e ${decimal(GERAL.degraus[1].valor, 3)}. O corte de 90% cai exatamente entre os dois.`,
-      'Regressão é prever o número em si, o resultado geral. E agrupar é juntar unidades parecidas sem uma resposta certa definida antes: por isso o agrupamento não tem alvo.',
+      'O objetivo não é substituir a conta da portaria. É mostrar o que separa as unidades que ficam abaixo de 90%, e quais se parecem.',
+      'Classificar é responder sim ou não: a unidade fica abaixo de 90%? O alvo é a coluna abaixo_90. Regressão é prever o número, o resultado geral. Agrupar é juntar parecidas sem resposta certa definida antes, por isso não tem alvo.',
+      `Por que 90%: quase todas as USF param em ${enxuto(PATAMAR_BAIXO.valor)} ou em ${enxuto(PATAMAR_ALTO.valor)}, e o corte de 90% separa os dois patamares.`,
+    ],
+    perguntas: [
+      `Se perguntarem o que separa os dois patamares: na USF as outras notas são quase iguais para todas. O que leva de ${enxuto(PATAMAR_BAIXO.valor)} a ${enxuto(PATAMAR_ALTO.valor)} é o ind1 subir de ${enxuto(IND1_MEIO.valor)} para ${enxuto(IND1_TRES_QUARTOS.valor)}, que vale 0,2 vezes a diferença. O corte fica logo acima do patamar de baixo.`,
     ],
   },
   {
@@ -225,13 +293,15 @@ export const SLIDES_ML = [
     titulo: 'para que serve a resposta',
     apoio: 'quatro usos para a gestão da Secretaria, e um limite que não se negocia',
     visual: 'Quatro cartões de uso e, embaixo, o limite.',
-    segundos: 30,
+    segundos: 35,
     notas: [
-      'Primeiro uso, prioridade: antes de fechar o mês, a gestão olha primeiro para as unidades com risco de ficar abaixo de 90%.',
-      'Segundo: a importância das features diz em qual indicador uma melhora rende mais.',
-      `Terceiro, e esse já aconteceu: comparar o resultado que a regra espera com o que foi lançado acha erro de planilha. A exploração achou ${B.fora_da_regra} linhas assim.`,
-      'Quarto: o agrupamento junta unidades de perfil parecido, e cada uma passa a ser comparada com as semelhantes.',
-      'E o limite: nada do modelo entra na conta da gratificação, e ele agrupa unidades, nunca pessoas. Quem decide o valor continua sendo a regra.',
+      'Primeiro, prioridade: a gestão vê primeiro quem fica abaixo de 90% e qual indicador deixa a unidade ali.',
+      'Segundo: o modelo mostra em que indicadores as unidades de fato se diferenciam. Quanto cada ponto rende, a portaria já diz.',
+      `Terceiro, e esse já aconteceu antes de qualquer modelo: refazer a conta da portaria e comparar com o lançado achou ${B.fora_da_regra} linhas que seguem outra conta.`,
+      'Quarto: o agrupamento compara cada unidade com as parecidas. E o limite: nada disso entra na conta da gratificação.',
+    ],
+    perguntas: [
+      'Se perguntarem como o modelo antecipa o risco antes de fechar o mês: nesta base, não antecipa. As notas usadas são as do mês já fechado e não há coluna de data. Antecipar pediria lançamentos parciais, que a base não tem.',
     ],
   },
   {
@@ -241,13 +311,13 @@ export const SLIDES_ML = [
     titulo: 'a planilha real, como chegou',
     apoio:
       'enviada pela Secretaria com autorização e sem nenhum dado de pessoa: uma linha por unidade de saúde, mais as dos distritos',
-    visual: 'O funil de linhas: 244, 196, 190, com o motivo de cada corte.',
+    visual: 'O funil de linhas: 244, 196, 190, com o motivo de cada corte, e a ficha do arquivo.',
     segundos: 35,
     notas: [
-      'A origem é a própria planilha de desempenho que a Secretaria usa, exportada em CSV. Ela entrou no projeto com autorização registrada, e foi varrida atrás de CPF, e-mail e telefone antes de qualquer análise: não tem nenhum.',
-      `São ${B.linhas} linhas e ${B.colunas} colunas.`,
-      `${B.linhas_distrito} linhas são do próprio distrito sanitário, marcadas como DS. O distrito é avaliado com outra versão dos indicadores, então sai da modelagem. Sobram ${B.unidades} unidades de saúde.`,
-      `${B.fora_da_regra} dessas unidades têm um resultado que não segue os pesos da portaria. Elas saem também, e sobram ${B.modeladas} para os modelos.`,
+      'A origem é a planilha de desempenho da Secretaria, exportada em CSV. Entrou com autorização registrada e foi varrida atrás de CPF, e-mail e telefone antes de qualquer análise: não tem nenhum.',
+      `São ${B.linhas} linhas e ${B.colunas} colunas, um retrato de um período só.`,
+      `${B.linhas_distrito} linhas são dos próprios distritos, ${B.linhas_distrito_por_distrito[0]} por distrito, avaliadas com outra versão dos indicadores: saem. Sobram ${B.unidades} unidades.`,
+      `As ${B.fora_da_regra} ${FAMILIAS_FORA} seguem outra conta, que o slide 14 mostra, e também saem. Ficam ${B.modeladas} para os modelos.`,
     ],
   },
   {
@@ -259,10 +329,12 @@ export const SLIDES_ML = [
     visual: 'Barras com as colunas de cada papel e, ao lado, os tipos antes e depois da conversão.',
     segundos: 35,
     notas: [
-      'Cada coluna tem um nome no padrão papel e indicador. O papel diz o que ela guarda: a meta, a nota, o numerador, o denominador, o valor lançado, a nota consolidada e o resultado geral.',
-      `Na leitura crua o pandas acha ${B.tipos_na_leitura.texto} colunas de texto. Não é texto de verdade: é número guardado com sinal de porcento e vírgula de milhar.`,
-      `Depois da conversão ficam ${B.categoricas.length} categóricas, o tipo de unidade com ${B.categoricas[0].valores} valores e o distrito com ${B.categoricas[1].valores}, e ${B.numericas} numéricas contínuas.`,
-      `Das ${B.colunas}, ${dados.inconsistencias.colunas_constantes} são constantes nas unidades, a maioria metas. Elas não ensinam nada ao modelo.`,
+      'Cada coluna tem nome no padrão papel e indicador. O papel diz o que ela guarda: meta, nota, numerador, denominador, valor lançado, nota consolidada e o resultado geral.',
+      `Na leitura crua o pandas acha ${B.tipos_na_leitura.texto} colunas de texto. Duas são texto de verdade, o tipo e o distrito; as outras ${dados.inconsistencias.colunas_numericas_como_texto} são número guardado com porcento e vírgula.`,
+      `Depois da conversão ficam ${B.categoricas.length} categóricas nominais e ${B.numericas} numéricas. Delas, ${CONTAGENS} são contagens, então discretas, e ${dados.inconsistencias.colunas_constantes} são constantes nas unidades.`,
+    ],
+    perguntas: [
+      'Se perguntarem pelo indicador 5: ele está na planilha, mas não entra na conta do resultado da unidade. A conta da portaria fecha só com os quatro primeiros.',
     ],
   },
   {
@@ -272,12 +344,16 @@ export const SLIDES_ML = [
     titulo: 'a tabela que o modelo lê',
     apoio: 'as notas dos quatro indicadores, três categóricas e dois alvos tirados do resultado geral',
     visual: 'A ficha das colunas modeladas, com o tipo de cada uma, e a barra das duas classes.',
-    segundos: 40,
+    segundos: 35,
     notas: [
-      'Das colunas da planilha, a tabela modelada fica com poucas: o tipo de unidade, a família, que é a primeira palavra do tipo, o distrito, as quatro notas e o resultado geral.',
-      'Tipo, família e distrito são categóricas nominais: não existe ordem entre os valores. As notas e o resultado são numéricos contínuos.',
-      'Os alvos: o resultado geral para a regressão, e abaixo_90 para a classificação.',
-      `As classes estão quase equilibradas: ${dados.classes.noventa_ou_mais} unidades com 90% ou mais e ${dados.classes.abaixo_de_90} abaixo. Mesmo assim, treino e teste são separados de forma estratificada, com peso de classe e F1 como métrica.`,
+      'A tabela modelada fica com poucas colunas: o tipo de unidade, a família, que é a primeira palavra do tipo, o distrito, as quatro notas e o resultado geral.',
+      'Tipo, família e distrito são categóricas nominais, sem ordem. O ind1 e o ind2 são discretos, andam por faixa; o ind3, o ind4 e o resultado são numéricos.',
+      `Os alvos: o resultado geral para a regressão, e abaixo_90 para a classificação. Nas ${B.modeladas}, são ${dados.classes.noventa_ou_mais} com 90% ou mais e ${dados.classes.abaixo_de_90} abaixo, quase equilibradas.`,
+    ],
+    perguntas: [
+      `Se perguntarem por que o caderno 01 mostra ${porcento(dados.classes_196.noventa_ou_mais, B.unidades, 0)} e ${porcento(dados.classes_196.abaixo_de_90, B.unidades, 0)}: ele conta as ${B.unidades} unidades, antes de tirar as seis ${FAMILIAS_FORA}.`,
+      `Se perguntarem por que ${B.tipos_nas_modeladas} tipos e não ${B.categoricas[0].valores}: saíram DS, NDI e SAE.`,
+      'Se perguntarem pela separação estratificada: treino e teste mantêm a mesma proporção das duas classes. O peso de classe dá mais importância à classe menor no treino; aqui quase não muda nada, porque as classes estão quase iguais.',
     ],
   },
   {
@@ -287,12 +363,14 @@ export const SLIDES_ML = [
     titulo: 'as notas andam em degraus',
     apoio: `cada indicador vira nota por faixa, então poucos valores se repetem muito nas ${B.unidades} unidades`,
     visual: 'Cinco histogramas, um por nota, com a assimetria e o valor mais comum.',
-    segundos: 35,
+    segundos: 40,
     notas: [
-      `Estes são os histogramas de cada nota nas ${B.unidades} unidades de saúde, com a assimetria embaixo. Assimetria perto de zero é uma curva equilibrada; longe de zero, a cauda puxa para um lado.`,
-      `Quase nada aqui é curva. O ind2 vale ${decimal(IND2.degraus[0].valor, 1)} em ${IND2.degraus[0].unidades} unidades; o ind3 vale ${decimal(IND3.degraus[0].valor)} em ${IND3.degraus[0].unidades}; o ind4 vale ${decimal(IND4.degraus[0].valor, 1)} em ${IND4.degraus[0].unidades}.`,
-      `O resultado geral se concentra em dois valores, ${decimal(GERAL.degraus[0].valor, 3)} e ${decimal(GERAL.degraus[1].valor, 3)}, e tem uma cauda longa à direita: assimetria de ${decimal(GERAL.assimetria)}.`,
-      'Essa cauda vem de poucos tipos de unidade: MAC 1 e 2, NDI e SAE. O próximo slide mostra de onde ela sai.',
+      `Estes são os histogramas das ${B.unidades} unidades, com a assimetria embaixo: perto de zero é curva equilibrada, longe de zero a cauda puxa para um lado.`,
+      `Quase nada é curva. O ind2 vale ${enxuto(IND2.degraus[0].valor)} em ${IND2.degraus[0].unidades} unidades, o ind3 vale ${enxuto(IND3.degraus[0].valor)} em ${IND3.degraus[0].unidades}, o ind4 vale ${enxuto(IND4.degraus[0].valor)} em ${IND4.degraus[0].unidades}.`,
+      `O resultado se concentra em ${enxuto(PATAMAR_BAIXO.valor)} e ${enxuto(PATAMAR_ALTO.valor)}, com cauda longa à direita: assimetria de ${decimal(GERAL.assimetria)}. A cauda vem das MAC 1 e 2 e das seis ${FAMILIAS_FORA} do slide 14; sem essas seis, a assimetria cai para ${decimal(dados.assimetria_geral_modeladas)}.`,
+    ],
+    perguntas: [
+      `Se perguntarem por que o ind3 passa de 1: é o valor que a planilha lança, ${enxuto(IND3.degraus[0].valor * 100)}% ou ${enxuto(IND3.degraus[1].valor * 100)}%. Os cadernos usam como vem, com a meta em 1.`,
     ],
   },
   {
@@ -302,12 +380,11 @@ export const SLIDES_ML = [
     titulo: 'o tipo separa, o distrito não',
     apoio: 'resultado geral por família de unidade e por distrito sanitário, com a linha dos 90%',
     visual: 'Dois conjuntos de caixas (boxplot), família e distrito, na mesma escala, com o corte de 90%.',
-    segundos: 30,
+    segundos: 45,
     notas: [
-      'Cada linha é um grupo. A caixa vai do primeiro ao terceiro quartil, o traço de dentro é a mediana e os pontos soltos são os que o IQR marca como fora. A linha laranja é o corte de 90%.',
-      `Por família, as caixas mudam muito de lugar: a MAC vai de ${decimal(Math.min(FAMILIA_MAC.bigode_baixo, ...FAMILIA_MAC.fora))} a ${decimal(Math.max(FAMILIA_MAC.bigode_alto, ...FAMILIA_MAC.fora))}, e NDI e SAE passam de 1,5.`,
-      'Por distrito, as caixas ficam todas em volta de 0,90 a 0,95.',
-      'Conclusão: o tipo de unidade explica muito mais o resultado do que o distrito. Por isso o tipo ganha duas colunas no tratamento: o código e o nível.',
+      'Cada linha é um grupo. A caixa vai do primeiro ao terceiro quartil e o traço é a mediana. O tamanho da caixa se chama IQR; os pontos soltos estão a mais de uma vez e meia esse tamanho para fora da caixa. A linha laranja é o corte de 90%.',
+      `Por família, as caixas mudam de lugar: a MAC vai de ${decimal(Math.min(FAMILIA_MAC.bigode_baixo, ...FAMILIA_MAC.fora))} a ${decimal(Math.max(FAMILIA_MAC.bigode_alto, ...FAMILIA_MAC.fora))}. ${FAMILIAS_FORA}, com asterisco, são as seis linhas do slide 14.`,
+      `Por distrito, as medianas ficam todas entre ${enxuto(Math.min(...MEDIANAS_DISTRITO))} e ${enxuto(Math.max(...MEDIANAS_DISTRITO))}. As caixas do I e do III se esticam para cima por causa das MAC. O tipo explica o resultado; o distrito, quase nada.`,
     ],
   },
   {
@@ -316,28 +393,34 @@ export const SLIDES_ML = [
     etapa: 3,
     titulo: 'o ind3 anda junto com o resultado',
     apoio: `correlação entre as notas nas ${B.unidades} unidades, e as colunas cruas mais ligadas ao resultado geral`,
-    visual: 'O mapa de calor 5 por 5 das notas e as barras das colunas cruas mais correlacionadas.',
-    segundos: 35,
+    visual: 'O mapa de calor 5 por 5 das notas e as barras das colunas cruas, com o valor sem as seis ao lado.',
+    segundos: 50,
     notas: [
-      'Correlação vai de menos 1 a 1. Perto de 1, as duas colunas sobem juntas; perto de menos 1, uma sobe quando a outra desce; perto de zero, não há relação em linha reta.',
-      `O ind3, satisfação do usuário, tem ${decimal(CORR_IND3_GERAL)} com o resultado geral. Os outros três ficam entre ${decimal(Math.min(...CORR_OUTRAS_GERAL))} e ${decimal(Math.max(...CORR_OUTRAS_GERAL))}. Entre si as notas quase não se correlacionam, então nenhuma repete a outra.`,
-      `À direita, as colunas cruas que mais se ligam ao resultado, entre as ${dados.base.colunas_correlacionadas} numéricas que variam nas unidades. A primeira são os pontos do próprio ind3, que entram na soma: por isso ela não pode ser feature, vazaria o alvo.`,
-      'Depois vêm blocos do indicador 4 e a nota do indicador 5, que está na planilha mas não entra na conta da unidade. É daqui que partem as features novas.',
+      'Correlação vai de menos 1 a 1: perto de 1 as duas sobem juntas, perto de menos 1 uma sobe quando a outra desce, perto de zero não há relação em linha reta.',
+      `O ind3, satisfação do usuário, tem ${decimal(CORR_IND3_196)} com o resultado; os outros três ficam entre ${decimal(Math.min(...CORR_OUTRAS_196))} e ${decimal(Math.max(...CORR_OUTRAS_196))}. Entre si as notas quase não se correlacionam: nenhuma repete a outra.`,
+      `À direita, as colunas cruas mais ligadas ao resultado, e na última coluna o mesmo número sem as seis ${FAMILIAS_FORA}. Os blocos do ind4 e o indicador 5 só aparecem por causa delas: sem elas, caem para perto de zero.`,
+      `As features novas partem das notas que lideram sem as seis: ${lista(NOTAS_NA_ORDEM.slice(0, 3))}.`,
+    ],
+    perguntas: [
+      'Se perguntarem pelos pontos do ind3 no topo: são a nota vezes 0,2, e repetem uma coluna que já está na tabela. Ficam acima da nota só por causa das cinco linhas com peso 80%.',
+      `Se perguntarem por que o ind3 pesa tanto se o ind4 tem 40%: é a nota que mais varia. Nas ${B.modeladas}, 0,2 vezes um desvio de ${decimal(escalaDe('ind3').desvio)} pesa mais que 0,4 vezes o desvio de ${decimal(escalaDe('ind4').desvio)} do ind4.`,
     ],
   },
   {
     id: 'faltantes',
     numero: 12,
     etapa: 3,
-    titulo: 'nada falta, e o outlier não é erro',
-    apoio: `zero ausentes nas ${milhar(B.celulas)} células; o IQR marca como outlier os tipos que pontuam diferente`,
-    visual: 'O mapa de ausentes inteiro limpo e as barras de outliers por nota.',
-    segundos: 35,
+    titulo: 'nada falta, e quase todo outlier é tipo',
+    apoio: `0% de ausentes nas ${milhar(B.celulas)} células; o IQR marca sobretudo os tipos que pontuam diferente`,
+    visual: 'O mapa de ausentes inteiro limpo e as barras de outliers por nota, com a divisão por família.',
+    segundos: 40,
     notas: [
-      `A planilha não tem nenhuma célula vazia: zero ausentes nas ${milhar(B.celulas)} células, antes e depois de converter texto em número. O mapa de ausentes sai inteiro limpo.`,
-      'Para outlier usamos a regra do IQR: fica fora quem passa de uma vez e meia a distância entre o primeiro e o terceiro quartil.',
-      `Como as notas andam em degraus, o IQR fica estreito e marca muita gente: ${outlierDe('geral').unidades} unidades no resultado geral, ${MAC_FORA_NO_GERAL} delas MAC.`,
-      'Esses pontos não são erro de medida: são tipos de unidade pontuados de outro jeito. Por isso ficam na base. Os modelos de árvore também não se incomodam com eles.',
+      `Nenhuma célula vazia: zero ausentes nas ${milhar(B.celulas)} células, 0% em cada coluna, antes e depois de converter texto em número.`,
+      'A regra do IQR, a do slide anterior, marca muita gente porque as notas andam em degraus. No ind2 e no ind3 quase todas têm o mesmo valor, o IQR dá zero, e qualquer valor diferente vira outlier.',
+      `No resultado geral são ${OUTLIERS_GERAL.unidades}: ${FORA_MAC} MAC, que pontuam de outro jeito e ficam; as ${FORA_DAS_SEIS} ${FAMILIAS_FORA} do slide 14, que saem; e ${FORA_OUTRAS_N} ${lista(FORA_OUTRAS)} com nota real, que ficam.`,
+    ],
+    perguntas: [
+      'Se perguntarem por que não tirar os outliers: são tipos de unidade reais, não erro de medida. Nas features a árvore não se incomoda com eles; no alvo da regressão, que usa erro ao quadrado, o erro das MAC vai ser olhado à parte.',
     ],
   },
   {
@@ -347,28 +430,27 @@ export const SLIDES_ML = [
     titulo: 'o que o olho não pega',
     apoio: 'problemas da planilha que a conversão precisou resolver antes de qualquer conta',
     visual: 'Seis cartões, cada um com o tamanho do problema em número grande.',
-    segundos: 30,
+    segundos: 40,
     notas: [
-      `A planilha foi feita para gente ler, não para máquina. ${B.tipos_na_leitura.texto} colunas chegam como texto porque o número vem com porcento ou vírgula.`,
-      `Pior: ${dados.inconsistencias.colunas_fracao_e_percentual} colunas misturam os dois jeitos, 0,8 numa linha e 80% na outra. E ${dados.inconsistencias.metas_escritas_de_dois_jeitos.length} metas estão escritas de dois jeitos, como 20 e 2000%, que depois da conversão dão o mesmo número.`,
-      `As linhas de distrito usam vírgula de milhar, como 1,821.4. E ${dados.inconsistencias.colunas_constantes} colunas são constantes nas unidades.`,
-      'Por fim, as quatro últimas colunas repetem o nome de outras: são os pontos, a nota vezes o peso. O indicador 4 só aparece assim, e precisa ser dividido por 0,4 para virar nota.',
+      `A planilha foi feita para gente ler. ${dados.inconsistencias.colunas_numericas_como_texto} colunas de número chegam como texto, por causa do porcento e da vírgula.`,
+      `Em ${dados.inconsistencias.colunas_fracao_e_percentual} delas o porcento aparece em umas linhas e não em outras. Na maioria é a linha de distrito escrevendo contagem como porcentagem; só em ${dados.inconsistencias.mistura_dentro_das_unidades} a mistura acontece dentro das unidades. Entre elas, ${dados.inconsistencias.metas_escritas_de_dois_jeitos.length} metas escritas de dois jeitos, como 20 e 2000%.`,
+      `As quatro últimas colunas são os pontos, a nota vezes o peso. ${dados.inconsistencias.pontos_com_nome_repetido} repetem o nome da nota; o ind4 só vem assim, e é dividido por 0,4 para virar nota.`,
     ],
   },
   {
     id: 'fora-da-regra',
     numero: 14,
     etapa: 3,
-    titulo: 'seis linhas não fecham a conta',
+    titulo: 'seis linhas seguem outra conta',
     apoio:
       'cada ponto é uma unidade: o resultado que os pesos da portaria dão, contra o que a planilha lançou',
-    visual: 'A dispersão esperado contra lançado, com a diagonal e as seis unidades fora dela.',
-    segundos: 45,
+    visual: 'A dispersão esperado contra lançado, com a diagonal, e a tabela das seis unidades fora dela.',
+    segundos: 50,
     notas: [
-      `Pela portaria, o resultado geral é 0,2 vezes cada um dos três primeiros indicadores mais 0,4 vezes o quarto. Refizemos essa conta para as ${B.unidades} unidades.`,
-      `${B.unidades - B.fora_da_regra} caem em cima da diagonal: a conta fecha. ${B.fora_da_regra} não: três NDI e três SAE, em laranja.`,
-      `Em ${PESO_80.length} delas, os pontos do indicador 3 saem com peso 80% em vez de 20%. Na sexta, o resultado nem bate com a soma dos próprios pontos.`,
-      'Essas seis saem da modelagem, porque o modelo aprenderia uma regra que não existe. E o achado vira argumento do produto: a planilha se contradiz sozinha.',
+      `Pela portaria, o resultado é 0,2 vezes cada um dos três primeiros indicadores mais 0,4 vezes o quarto. Refizemos a conta nas ${B.unidades} unidades.`,
+      `${B.modeladas} caem em cima da diagonal: a conta fecha. ${B.fora_da_regra} não, em laranja, e são todas as ${FAMILIAS_FORA} da base.`,
+      `Nas seis, o lançado é a soma dos pontos dividida por ${enxuto(DIVISOR_DAS_SEIS, 1)}, sempre. Em ${PESO_80.length} delas o ind3 entra nos pontos com peso 80% em vez de 20%; ${lista(PESO_20.map((l) => `na ${l.tipo} do distrito ${l.distrito}`))}, com 20%.`,
+      'É um padrão, não um erro solto: ou essas unidades têm regra própria que não achamos na portaria, ou é erro. Isso vai para a Secretaria. Até lá, saem da modelagem.',
     ],
   },
   {
@@ -378,12 +460,10 @@ export const SLIDES_ML = [
     titulo: 'o que a exploração ensinou',
     apoio: 'seis achados e o que cada um mudou depois',
     visual: 'Seis cartões numerados: o achado e a consequência.',
-    segundos: 25,
+    segundos: 15,
     notas: [
-      'Resumindo a exploração em seis achados.',
-      'O tipo de unidade explica o resultado, e o distrito quase nada. O ind3 é a nota que mais anda com o resultado. As notas andam em degraus, e por isso o IQR exagera.',
-      'Não falta nenhum valor, mas quase tudo chega como texto. Seis linhas não seguem a conta. E as classes estão quase equilibradas.',
-      'Cada achado virou uma decisão, e é isso que o tratamento mostra agora.',
+      'Em resumo, seis achados, e cada um virou uma decisão.',
+      'O mais forte é o quinto: a exploração achou sozinha seis linhas que seguem outra conta, e isso virou pergunta para a Secretaria.',
     ],
   },
   {
@@ -393,27 +473,34 @@ export const SLIDES_ML = [
     titulo: 'cada problema, uma decisão',
     apoio: 'o que a planilha recebeu antes de qualquer modelo, e por quê',
     visual: 'Uma tabela de três colunas: problema, decisão e justificativa.',
-    segundos: 40,
+    segundos: 30,
     notas: [
-      'Primeiro, o tipo: uma função converte texto em número, tirando o porcento e a vírgula de milhar e dividindo por 100 quando tinha porcento. As colunas viram número e nenhum ausente aparece.',
-      'Ausentes: não havia nenhum. O caderno deixa o preenchimento pela mediana do tipo de unidade como rede, para o dia em que uma planilha nova vier com buraco.',
-      'Duplicados: nenhuma linha repetida, o que faz sentido, porque cada linha é uma unidade. As colunas de nome repetido, que são os pontos, serviram para conferir o peso: pontos divididos pela nota dão 0,2 no indicador 1.',
-      `Outliers ficam, porque são tipos reais. O que sai são as ${B.linhas_distrito} linhas de distrito e as ${B.fora_da_regra} que não fecham a conta. Resultado: ${B.modeladas} unidades.`,
+      'Primeiro, o tipo de dado: uma função tira o porcento e a vírgula de milhar e divide por 100 quando tinha porcento. As colunas viram número e nenhum ausente aparece.',
+      'Ausentes: nenhum. O caderno deixa a mediana do tipo de unidade como rede, para uma planilha futura com buraco. Duplicados: nenhuma linha repetida.',
+      `Os outliers que são tipo real ficam. Saem as ${B.linhas_distrito} linhas de distrito e as ${B.fora_da_regra} ${FAMILIAS_FORA}. Resultado: ${B.modeladas} unidades.`,
+    ],
+    perguntas: [
+      'Se perguntarem pelas colunas de nome repetido: são os pontos, e serviram de conferência. Pontos divididos pela nota dão 0,2 no indicador 1, que é o peso da portaria.',
     ],
   },
   {
     id: 'codificacao',
     numero: 17,
     etapa: 4,
-    titulo: 'categoria vira número sem inventar ordem',
+    titulo: 'como a categoria vira número',
     apoio: 'one-hot onde não há ordem, código onde a árvore dá conta, número onde a ordem é real',
     visual: 'Três cartões de encoding, a padronização e as caixas das MAC por nível.',
-    segundos: 35,
+    segundos: 50,
     notas: [
-      `Família, com ${dados.codificacao.one_hot[0].valores} valores, e distrito, com ${dados.codificacao.one_hot[1].valores}, viram one-hot: uma coluna de 0 e 1 para cada valor. O distrito vem em algarismo romano, mas o distrito I não é menor que o II; label encoding inventaria essa ordem.`,
-      `O tipo de unidade tem ${dados.codificacao.label_encoding.valores} valores, vários com uma ou duas unidades. One-hot criaria ${dados.codificacao.label_encoding.valores} colunas quase vazias. Label encoding guarda tudo numa coluna, e serve porque os modelos são de árvore.`,
-      'O número no fim do tipo é ordinal de verdade, e vira coluna numérica. O gráfico mostra por quê: MAC 1 e 2 ficam acima de 1,2; MAC 3 e 4 ficam abaixo de 0,8.',
-      'Padronização só no K-Means, que mede distância. As árvores não dependem de escala, então a base salva fica na escala original. Num modelo supervisionado, a escala seria ajustada só no treino, para o teste não vazar.',
+      'Família e distrito viram one-hot: uma coluna de 0 e 1 para cada valor. O distrito vem em algarismo romano, mas o I não é menor que o II; label encoding inventaria essa ordem.',
+      `O tipo tem ${dados.codificacao.label_encoding.valores} valores nas ${B.modeladas} unidades. Label encoding guarda tudo numa coluna e serve porque os modelos são de árvore, que decidem por perguntas em sequência e não leem o código como distância.`,
+      'O número do tipo é ordinal dentro da família. O gráfico mostra: as MAC 1 e 2 ficam todas acima de 1; as MAC 3 e 4, todas abaixo do corte de 90%.',
+      'Padronização só no K-Means, que junta as unidades mais próximas e por isso mede distância.',
+    ],
+    perguntas: [
+      `Se perguntarem por que o tipo pode ter código e o distrito não: com ${dados.codificacao.one_hot[1].valores} valores o one-hot sai barato; com ${dados.codificacao.label_encoding.valores}, muitos com uma unidade só, ele gera colunas quase vazias. A árvore separa o código em faixas, então a ordem falsa custa alguns cortes a mais, não um erro.`,
+      'Se perguntarem pelo nível 0: é o marcador dos tipos sem número, como CAPS e UBT. O nível só tem ordem dentro da família, e a família em one-hot deixa a árvore separar esses casos.',
+      'Se perguntarem pela padronização num modelo supervisionado: a escala seria ajustada só no treino, para a média do teste não vazar.',
     ],
   },
   {
@@ -421,16 +508,19 @@ export const SLIDES_ML = [
     numero: 18,
     etapa: 5,
     titulo: 'seis features novas',
-    apoio:
-      'todas partem das notas mais ligadas ao resultado, e nenhuma usa o resultado geral: o alvo não vaza',
+    apoio: 'todas partem das notas mais ligadas ao resultado; nenhuma usa a coluna do resultado geral',
     visual: 'Ficha das seis features: como se calcula, por quê, a distribuição e a assimetria.',
-    segundos: 40,
+    segundos: 60,
     notas: [
-      'As features novas partem das colunas que a exploração mostrou mais ligadas ao resultado: as notas dos indicadores 3, 4 e 1, e os lançamentos por trás delas.',
-      'A taxa do ind1 é a versão contínua dele: a nota só vale 0, 0,5 ou 0,75, mas a taxa de atendimento mostra quão perto a unidade está de subir ou cair de degrau.',
-      'O produto do ind3 pelo ind4 marca quem vai bem nas duas ao mesmo tempo. O ind3 abaixo da meta é o que derruba as MAC 3 e 4.',
-      'Indicadores na meta conta quantas notas chegam a 100%. O desvio mede quão desigual a unidade é. E a média dos blocos do ind4 enxerga variação que a nota final esconde, já que o ind4 da USF é quase sempre 0,8.',
-      'Nenhuma usa o resultado geral. Se usasse, o modelo estaria colando a resposta.',
+      `As features novas partem das notas que lideram sem as seis linhas, ${lista(NOTAS_NA_ORDEM.slice(0, 3))}, e dos lançamentos por trás delas.`,
+      'A taxa do ind1 é a versão contínua dele: a nota só vale 0, 0,5 ou 0,75, e a taxa mostra quão perto a unidade está de mudar de degrau.',
+      'O produto do ind3 pelo ind4 marca quem vai bem nas duas. O ind3 abaixo da meta é o que derruba as MAC 3 e 4.',
+      'A feature indicadores na meta conta quantas notas chegam a 100%; o desvio mede quão desigual a unidade é; e a média dos blocos do ind4 enxerga variação que a nota final esconde, porque o ind4 da USF é sempre 0,8.',
+      'Nenhuma usa a coluna do resultado. Mas o resultado é a soma das notas, então o modelo vai reaprender a regra, e o último slide assume isso.',
+    ],
+    perguntas: [
+      'Se perguntarem se o ind3 abaixo da meta repete o tipo: sim, nesta base ela coincide com ser MAC 3 ou 4. Fica porque é barata para a árvore, e sai se atrapalhar.',
+      'Se perguntarem pelo desvio: o ind3 está em outra escala, então na prática o desvio repete o ind3. Para a entrega final, a ideia é calcular o desvio sobre as notas divididas pela meta.',
     ],
   },
   {
@@ -438,16 +528,14 @@ export const SLIDES_ML = [
     numero: 19,
     etapa: 5,
     titulo: 'o que as features novas acrescentam',
-    apoio:
-      'correlação de cada coluna com o resultado geral e com a classe abaixo de 90%, com as notas de origem ao lado',
+    apoio: `nas ${B.modeladas} modeladas, a correlação de cada coluna com o resultado geral e com a classe abaixo de 90%`,
     visual: 'Barras divergentes das dez colunas nos dois alvos, a redundância e as três descartadas.',
-    segundos: 40,
+    segundos: 50,
     notas: [
-      'Cada coluna aparece com a correlação com o resultado geral, à esquerda, e com a classe abaixo de 90%, à direita. As novas estão marcadas.',
-      `O produto ind3 por ind4 é a coluna mais ligada ao resultado geral de todas, ${decimal(PRODUTO_34.com_geral)}, acima do próprio ind3. Para a classe, a taxa do ind1 fica logo atrás do ind1: ${decimal(TAXA_CLASSE.com_abaixo_de_90)} contra ${decimal(IND1_CLASSE.com_abaixo_de_90)}.`,
-      'Correlação negativa com abaixo de 90% é boa notícia: quanto maior a feature, menor a chance de ficar abaixo.',
-      `Redundância: o desvio e o produto andam quase juntos com o ind3, ${decimal(RED_DESVIO.correlacao)} e ${decimal(RED_PRODUTO.correlacao)}. Para árvore isso não atrapalha; num modelo linear, ficaria só uma delas.`,
-      'E três candidatas foram testadas e descartadas: o log do ind4, que quase não muda a assimetria; o subindicador 2.3, do qual o ind2 é função direta; e o porte da unidade, que não tem relação com o resultado.',
+      `Agora nas ${B.modeladas} modeladas, sem as seis linhas. Por isso o ind3 aparece com ${decimal(CORR_IND3_190)}, e não ${decimal(CORR_IND3_196)} como no slide 11.`,
+      `O produto ind3 por ind4 é a coluna mais ligada ao resultado, ${decimal(PRODUTO_34.com_geral_exata)}. Para a classe, a taxa do ind1 fica logo atrás do ind1: ${decimal(TAXA_CLASSE.com_abaixo_de_90_exata)} contra ${decimal(IND1_CLASSE.com_abaixo_de_90_exata)}. Negativo aqui é bom: quanto maior, menor a chance de ficar abaixo.`,
+      'Redundância: desvio e produto andam quase juntos com o ind3. Para prever, a árvore aguenta; para ler a importância, ela se divide entre as parecidas.',
+      'Três candidatas saíram: o log do ind4, que quase não muda a assimetria; o subindicador 2.3, do qual o ind2 é função direta; e o porte, sem relação linear com o resultado.',
     ],
   },
   {
@@ -457,16 +545,18 @@ export const SLIDES_ML = [
     titulo: 'o que levar daqui',
     apoio: 'três destaques, o que vem depois e onde está cada entrega',
     visual: 'Três destaques, os próximos passos, onde ler cada entrega e perguntas.',
-    segundos: 25,
+    segundos: 35,
     notas: [
-      `Três coisas para levar. Primeira: a planilha se contradiz, e a exploração achou isso sozinha: ${B.fora_da_regra} linhas que não fecham a conta.`,
-      'Segunda: como o resultado é soma com peso das notas, qualquer modelo vai aprender a regra e ter métrica alta. A gente vai dizer isso, em vez de vender previsão.',
-      'Terceira: o ind3 puxa o resultado geral, e o ind1 é o que mais separa quem fica abaixo de 90%.',
-      'Os próximos passos já estão nos cadernos 3 a 6: classificação, regressão e agrupamento, cada um comparado com uma referência simples.',
-      'Se perguntarem por que F1 e não acurácia: o F1 olha a classe que importa, abaixo de 90%, e não se deixa enganar por um modelo que só chuta a classe maior.',
-      'Se perguntarem se tirar as seis linhas é esconder dado: não. Elas estão documentadas no caderno 02 e viraram achado; só não ensinam o modelo, porque seguem outra conta.',
-      'Se perguntarem por que não padronizou tudo: árvore não depende de escala. A padronização entra no K-Means, que mede distância.',
-      'Se perguntarem se a métrica alta é vazamento: nenhuma feature usa o resultado geral, mas o resultado é feito das notas. Por isso o objetivo é explicar o que pesa, não prever.',
+      'Três coisas para levar. Primeira: a exploração achou sozinha seis linhas que seguem outra conta, e isso virou pergunta para a Secretaria.',
+      'Segunda: como o resultado é soma das notas, qualquer modelo vai aprender a regra e ter métrica alta. A gente diz isso, em vez de vender previsão.',
+      'Terceira: o ind3 é o que mais varia no resultado geral, e o ind1 é o que mais separa quem fica abaixo de 90%. Os próximos passos já estão nos cadernos 3 a 6.',
+    ],
+    perguntas: [
+      `Se perguntarem pelos resultados: a classificação acerta as ${CLASSIFICACAO.metricas.amostras_teste} unidades do teste, F1 de ${enxuto(CLASSIFICACAO.metricas.f1 ?? 0, 2)}, contra ${porcento(CLASSIFICACAO.referencia.acuracia ?? 0, 1, 0)} de acerto de quem chuta sempre a classe maior. A regressão erra em média ${enxuto(REGRESSAO.metricas.mae ?? 0, 3)}, contra ${enxuto(REGRESSAO.referencia.mae ?? 0, 2)} de prever a média. O K-Means acha ${AGRUPAMENTO.metricas.k} grupos, com silhueta de ${enxuto(AGRUPAMENTO.metricas.silhueta ?? 0, 2)}.`,
+      `Se perguntarem o que o modelo diz que mais pesa: na classificação, o desvio entre os indicadores vem primeiro e o ind1 em segundo; nas USF o desvio só muda quando o ind1 muda, então contam a mesma história. Na regressão, o ind3 pesa ${porcento(REGRESSAO.metricas.importancias?.[0]?.peso ?? 0, 1, 0)}.`,
+      'Se perguntarem por que F1: o erro que importa é deixar passar uma unidade abaixo de 90%, e o F1 junta precisão e recall dessa classe. Com as classes quase equilibradas, acurácia e F1 contam a mesma história, e os cadernos mostram as duas.',
+      'Se perguntarem se tirar as seis é esconder dado: não. Elas estão documentadas e viraram achado; só não ensinam o modelo porque seguem outra conta.',
+      'Se perguntarem se a métrica alta é vazamento: nenhuma feature usa a coluna do resultado, mas o resultado é feito das notas. Por isso o objetivo é explicar o que separa as unidades, não prever.',
     ],
   },
 ] as const satisfies readonly SlideML[]
@@ -553,9 +643,9 @@ export const ROTULO_DO_ALVO = 'alvo (target)'
 
 /** Slide 5: os usos e o limite. */
 export const USOS_ML = [
-  { titulo: 'priorizar', texto: 'olhar primeiro para quem pode ficar abaixo de 90%' },
-  { titulo: 'mostrar o que move', texto: 'em qual indicador uma melhora rende mais' },
-  { titulo: 'achar erro na planilha', texto: 'o que a regra espera contra o que foi lançado' },
+  { titulo: 'priorizar', texto: 'ver primeiro quem fica abaixo de 90%, e por quê' },
+  { titulo: 'mostrar o que separa', texto: 'em que indicadores as unidades se diferenciam' },
+  { titulo: 'achar conta que não fecha', texto: 'o que a regra espera contra o que foi lançado' },
   { titulo: 'comparar parecidos', texto: 'cada unidade contra as do mesmo grupo' },
 ] as const
 
@@ -568,18 +658,19 @@ export const FUNIL_ML = [
   {
     numero: B.unidades,
     rotulo: 'unidades de saúde',
-    motivo: `saem ${B.linhas_distrito} linhas de distrito (DS), avaliadas de outro jeito`,
+    motivo: `saem ${B.linhas_distrito} linhas de distrito (DS), ${B.linhas_distrito_por_distrito[0]} por distrito`,
   },
   {
     numero: B.modeladas,
     rotulo: 'unidades modeladas',
-    motivo: `saem ${B.fora_da_regra} que não seguem os pesos da portaria`,
+    motivo: `saem as ${B.fora_da_regra} ${FAMILIAS_FORA}, que seguem outra conta`,
   },
 ] as const
 
 export const FICHA_DA_ORIGEM = [
   { rotulo: 'arquivo', valor: 'ml/data/base nova completa.csv' },
   { rotulo: 'codificação', valor: 'cp1252' },
+  { rotulo: 'período', valor: 'um retrato só, sem coluna de data' },
   { rotulo: 'autorização', valor: 'da Secretaria, registrada na ADR-044' },
   { rotulo: 'dado de pessoa', valor: 'nenhum: sem nome, CPF ou matrícula' },
 ] as const
@@ -588,8 +679,8 @@ export const FICHA_DA_ORIGEM = [
 export const PAPEIS_DAS_COLUNAS: Readonly<Record<string, string>> = {
   Meta: 'meta da portaria',
   Desempenho: 'nota do subindicador',
-  'Quantidade atendida': 'numerador',
-  'Total avaliado': 'denominador',
+  'Quantidade atendida': 'numerador, contagem',
+  'Total avaliado': 'denominador, contagem',
   'Valor informado': 'valor lançado',
   'Desempenho consolidado': 'nota do indicador ou bloco',
   'Desempenho geral': 'resultado final: o alvo',
@@ -602,21 +693,27 @@ export const ROTULOS_DOS_TIPOS = {
   inteiro: 'inteiro',
   decimal: 'decimal',
   categoricas: 'categóricas nominais',
-  numericas: 'numéricas contínuas',
+  numericas: 'numéricas',
+  contagens: `delas, ${CONTAGENS} contagens: discretas`,
 } as const
 
 /** Slide 8: a ficha das colunas modeladas. */
 export const COLUNAS_MODELADAS = [
-  { coluna: 'tipo', tipo: 'categórica nominal', papel: `${B.tipos_nas_modeladas} tipos de unidade` },
+  {
+    coluna: 'tipo',
+    tipo: 'categórica nominal',
+    papel: `${B.tipos_nas_modeladas} tipos nas ${B.modeladas} unidades`,
+  },
   { coluna: 'familia', tipo: 'categórica nominal', papel: B.familias_nas_modeladas.join(', ') },
   { coluna: 'distrito', tipo: 'categórica nominal', papel: 'de I a VIII' },
-  { coluna: 'ind1 a ind4', tipo: 'numérica contínua', papel: 'a nota de cada indicador' },
+  { coluna: 'ind1 e ind2', tipo: 'numérica discreta', papel: 'nota por faixa' },
+  { coluna: 'ind3 e ind4', tipo: 'numérica', papel: 'nota do indicador' },
   { coluna: 'geral', tipo: 'numérica contínua', papel: 'alvo da regressão', alvo: true },
   { coluna: 'abaixo_90', tipo: 'binária', papel: 'alvo da classificação', alvo: true },
 ] as const
 
 export const ROTULOS_DAS_CLASSES = {
-  titulo: 'distribuição das classes',
+  titulo: `classes nas ${B.modeladas} modeladas`,
   noventaOuMais: '90% ou mais',
   abaixo: 'abaixo de 90%',
   nota: 'quase equilibradas: mesmo assim, separação estratificada e F1',
@@ -637,25 +734,42 @@ export const ROTULOS_DA_DISTRIBUICAO = {
   unidades: 'unidades',
 } as const
 
-/** Slide 10. */
+/** Slides 10 e 17: as caixas. */
 export const ROTULOS_DOS_GRUPOS = {
   familia: 'por família de unidade',
   distrito: 'por distrito sanitário',
-  corte: '90%',
+  corte: '0,90',
+  n: 'n',
+  asterisco: `* só as ${B.fora_da_regra} linhas que seguem outra conta, slide 14`,
+} as const
+
+/** Cabeçalhos da tabela que o leitor de tela lê no lugar do desenho das caixas. */
+export const ROTULOS_DAS_CAIXAS = {
+  grupo: 'grupo',
+  n: 'unidades',
+  q1: 'primeiro quartil',
+  mediana: 'mediana',
+  q3: 'terceiro quartil',
+  baixo: 'menor sem outlier',
+  alto: 'maior sem outlier',
+  fora: 'outliers',
 } as const
 
 /** Slide 11. */
 export const ROTULOS_DA_CORRELACAO = {
-  matriz: 'entre as notas',
+  matriz: `entre as notas, nas ${B.unidades}`,
   colunas: 'colunas cruas mais ligadas ao resultado',
   escala: 'de −1 a 1',
+  todas: `nas ${B.unidades}`,
+  semAsSeis: 'sem as seis',
+  constante: 'constante',
 } as const
 
 /**
  * O nome de uma coluna crua da planilha, curto e sem o travessão do original
- * (regra 8 da casa: o dado tem, a tela não). As quatro últimas colunas repetem
- * o nome de outras e guardam PONTOS (nota vezes peso); `Indicador 4` só existe
- * nessa forma, por isso ele também é ponto.
+ * (regra 8 da casa: o dado tem, a tela não). As quatro últimas colunas guardam
+ * PONTOS (nota vezes peso): três repetem o nome da nota com `.1`, e
+ * `Indicador 4` só existe nessa forma, por isso ele também é ponto.
  */
 export function rotuloDaColuna(nome: string): string {
   const [papel, alvo = ''] = nome.split(' — ')
@@ -670,6 +784,17 @@ export function rotuloDaColuna(nome: string): string {
   return `${papel.toLowerCase()} ${sub}`
 }
 
+/**
+ * Onde cada eixo começa e termina. Moram aqui, e não no componente, para o
+ * teste conferir que todo valor do JSON cabe neles: se o caderno rodar com dado
+ * novo e um ponto passar de 2, ele sairia da caixa em silêncio.
+ */
+export const DOMINIOS = {
+  grupos: { de: 0.6, ate: 2 },
+  dispersao: { de: 0.6, ate: 2 },
+  nivelMac: { de: 0.6, ate: 1.35 },
+} as const
+
 /** Quantas colunas cruas o slide 11 mostra. */
 export const COLUNAS_CRUAS_NO_SLIDE = 8
 
@@ -678,20 +803,24 @@ export const ROTULOS_DOS_FALTANTES = {
   mapa: 'mapa de ausentes',
   dimensoes: `${B.colunas} colunas × ${B.linhas} linhas`,
   ausentes: 'células ausentes',
+  porColuna: `0% em cada uma das ${B.colunas} colunas`,
   outliers: 'fora do IQR, por nota',
-  macNoGeral: `no resultado geral, ${MAC_FORA_NO_GERAL} são MAC`,
+  divisao: `no resultado geral: ${FORA_MAC} MAC, ${FORA_DAS_SEIS} ${FAMILIAS_FORA}, ${FORA_OUTRAS_N} outras`,
 } as const
 
 /** Slide 13: os seis problemas, cada um com o tamanho em número. */
 export const INCONSISTENCIAS_ML = [
-  { numero: B.tipos_na_leitura.texto, texto: 'colunas lidas como texto: número com % e vírgula' },
+  {
+    numero: dados.inconsistencias.colunas_numericas_como_texto,
+    texto: 'colunas de número guardadas como texto, com % e vírgula',
+  },
   {
     numero: dados.inconsistencias.colunas_fracao_e_percentual,
-    texto: 'colunas que misturam 0,8 e 80%',
+    texto: `com % em umas linhas e não em outras; só ${dados.inconsistencias.mistura_dentro_das_unidades} dentro das unidades`,
   },
   {
     numero: dados.inconsistencias.metas_escritas_de_dois_jeitos.length,
-    texto: 'metas escritas de dois jeitos, como 20 e 2000%',
+    texto: 'delas são metas escritas de dois jeitos, como 20 e 2000%',
   },
   {
     numero: dados.inconsistencias.celulas_com_virgula_de_milhar,
@@ -703,7 +832,7 @@ export const INCONSISTENCIAS_ML = [
   },
   {
     numero: dados.inconsistencias.colunas_de_pontos,
-    texto: 'colunas de pontos com nome repetido; o ind4 só vem assim, vezes 0,4',
+    texto: `colunas de pontos no fim, nota vezes peso; ${dados.inconsistencias.pontos_com_nome_repetido} repetem o nome da nota`,
   },
 ] as const
 
@@ -715,15 +844,18 @@ export const ROTULOS_DA_DISPERSAO = {
   unidade: 'unidade',
   esperado: 'esperado',
   lancado: 'lançado',
+  pesoDoInd3: 'ind3 nos pontos',
+  divisor: `nas seis: soma dos pontos ÷ ${enxuto(DIVISOR_DAS_SEIS, 1)} = lançado`,
+  resumo: `${B.unidades} unidades: ${B.modeladas} na diagonal e ${B.fora_da_regra} fora dela, todas ${FAMILIAS_FORA}`,
 } as const
 
 /** Slide 15: os seis achados e o que cada um mudou. */
 export const INSIGHTS_EDA = [
   { achado: 'o tipo explica o resultado; o distrito, quase nada', efeito: 'tipo vira código e nível' },
-  { achado: 'o ind3 é a nota mais ligada ao resultado', efeito: 'as features novas partem dele' },
-  { achado: 'as notas andam em degraus', efeito: 'o IQR exagera; os outliers ficam' },
+  { achado: 'o ind3 é a nota mais ligada ao resultado', efeito: 'as features partem dele' },
+  { achado: 'as notas andam em degraus', efeito: 'o IQR exagera; tipo real fica' },
   { achado: 'nada ausente, mas quase tudo chega como texto', efeito: 'converter antes de tudo' },
-  { achado: 'seis linhas não seguem a conta', efeito: 'saem da modelagem' },
+  { achado: `${FAMILIAS_FORA} seguem outra conta`, efeito: 'saem, e viram pergunta à Secretaria' },
   { achado: 'classes quase equilibradas', efeito: 'estratificar e medir com F1' },
 ] as const
 
@@ -743,11 +875,11 @@ export const DECISOES_DO_TRATAMENTO = [
   },
   { problema: 'linhas duplicadas', decisao: 'procurar e remover', porque: 'nenhuma: uma linha por unidade' },
   { problema: 'ind4 vezes o peso', decisao: 'dividir por 0,4', porque: 'volta a ser nota' },
-  { problema: 'outliers do IQR', decisao: 'manter', porque: 'tipos reais; árvore não se incomoda' },
+  { problema: 'outliers do IQR', decisao: 'manter', porque: 'tipos e notas reais, não erro' },
   {
-    problema: 'distrito e fora da regra',
+    problema: `distrito, ${FAMILIAS_FORA}`,
     decisao: `remover ${B.linhas_distrito} + ${B.fora_da_regra}`,
-    porque: 'outra avaliação; conta que não fecha',
+    porque: 'outra avaliação; outra conta',
   },
 ] as const
 
@@ -763,7 +895,7 @@ export const CODIFICACOES = [
     tecnica: 'label encoding',
     porque: `${dados.codificacao.label_encoding.valores} valores numa coluna; árvore não lê código como distância`,
   },
-  { coluna: 'nível do tipo', tecnica: 'ordinal', porque: 'USF 1 a 8 e MAC 1 a 4 têm ordem real' },
+  { coluna: 'nível do tipo', tecnica: 'ordinal', porque: 'USF 1 a 8 e MAC 1 a 4: ordem dentro da família' },
 ] as const
 
 export const PADRONIZACAO = {
@@ -794,8 +926,14 @@ export const ROTULOS_DA_EDA_DAS_FEATURES = {
   comAbaixo: 'com abaixo de 90%',
   nova: 'nova',
   redundancia: 'redundância',
-  redundanciaNota: 'para árvore não atrapalha; num modelo linear, ficaria uma só',
+  redundanciaNota: 'para prever, a árvore aguenta; para ler a importância, ela se divide',
   descartadas: 'testadas e descartadas',
+} as const
+
+/** As duas barras que a fala do slide 19 aponta, e que por isso levam o acento. */
+export const DESTAQUES_DA_EDA_DAS_FEATURES = {
+  comGeral: 'ind3_x_ind4',
+  comAbaixo: 'taxa_ind1',
 } as const
 
 export const DESCARTADAS = [
@@ -806,15 +944,19 @@ export const DESCARTADAS = [
   { nome: 'subindicador 2.3', porque: 'o ind2 é função direta dele' },
   {
     nome: 'porte da unidade',
-    porque: `correlação de ${decimal(dados.descartadas.correlacao_porte_geral, 3)} com o resultado`,
+    porque: `quase nenhuma relação linear: ${decimal(dados.descartadas.correlacao_porte_geral, 3)}`,
   },
 ] as const
 
 /** Slide 20. */
 export const DESTAQUES_ML = [
-  { titulo: 'a planilha se contradiz', texto: 'seis linhas não fecham a conta da portaria' },
+  {
+    // Sem sigla no título: a identidade baixa tudo, e "ndi e sae" não se lê.
+    titulo: 'seis linhas seguem outra conta',
+    texto: `todas as ${FAMILIAS_FORA}, fora dos pesos da portaria`,
+  },
   { titulo: 'o modelo vai aprender a regra', texto: 'o resultado é soma das notas: métrica alta não é mérito' },
-  { titulo: 'ind3 e ind1 movem tudo', texto: 'um puxa o resultado, o outro decide quem fica abaixo' },
+  { titulo: 'ind3 e ind1 é que variam', texto: 'um explica o resultado, o outro separa quem fica abaixo' },
 ] as const
 
 export const PROXIMOS_PASSOS =
@@ -828,6 +970,9 @@ export const ONDE_ESTA_CADA_ENTREGA = [
 ] as const
 
 export const PERGUNTAS = 'perguntas?'
+
+/** O rótulo da lista de respostas preparadas, nas notas do apresentador. */
+export const ROTULO_SE_PERGUNTAREM = 'se perguntarem'
 
 /* -------------------------------------------------------------------------
    O que conta como texto de tela
@@ -892,7 +1037,13 @@ export function textoNaTela(id: SlideMLId): readonly string[] {
     case 'inconsistencias':
       return [...base, ...INCONSISTENCIAS_ML.map((i) => i.texto)]
     case 'fora-da-regra':
-      return [...base, ...Object.values(ROTULOS_DA_DISPERSAO)]
+      // O resumo vai para o leitor de tela, não para a tela: fica de fora.
+      return [
+        ...base,
+        ...Object.entries(ROTULOS_DA_DISPERSAO)
+          .filter(([chave]) => chave !== 'resumo')
+          .map(([, texto]) => texto),
+      ]
     case 'insights':
       return [...base, ...INSIGHTS_EDA.flatMap((i) => [i.achado, i.efeito])]
     case 'tratamento':
@@ -936,12 +1087,22 @@ export function textoNaTela(id: SlideMLId): readonly string[] {
   }
 }
 
-/** Quantas palavras aquele slide põe na tela. Número puro não conta. */
+/** Contagem de palavras: número puro não conta. */
+function contarPalavras(texto: string): number {
+  return texto.split(/\s+/).filter((palavra) => /[a-zA-Zà-úÀ-Ú]/.test(palavra)).length
+}
+
+/** Quantas palavras aquele slide põe na tela. */
 export function palavrasNaTela(id: SlideMLId): number {
-  return textoNaTela(id)
-    .join(' ')
-    .split(/\s+/)
-    .filter((palavra) => /[a-zA-Zà-úÀ-Ú]/.test(palavra)).length
+  return contarPalavras(textoNaTela(id).join(' '))
+}
+
+/** Quantas palavras a fala daquele slide tem (sem as respostas preparadas). */
+export function palavrasFaladas(id: SlideMLId): number {
+  const slide = SLIDES_ML.find((s) => s.id === id)
+  if (!slide) throw new Error(`Slide desconhecido: ${id}`)
+  // Número dito em voz alta também é fala: aqui ele conta.
+  return slide.notas.join(' ').split(/\s+/).filter(Boolean).length
 }
 
 /** Em que segundo da apresentação o slide de índice `indice` começa. */
