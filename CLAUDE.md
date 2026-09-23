@@ -16,8 +16,14 @@ Site do Projeto 6 da CESAR School (2026.2, Equipe 2). Duas camadas:
 
 ## Regras que não se negociam
 
-1. **Nenhum dado real** de pessoa ou da SESAU entra no repositório, no seed ou em prompt de
-   IA. Tudo sintético. Há teste que falha se um CPF, e-mail ou telefone aparecer na base.
+1. **Dado de pessoa nunca entra. Dado institucional da SESAU entra só com autorização
+   registrada.** CPF, nome, matrícula, e-mail e telefone estão proibidos no repositório, no
+   seed e em prompt de IA, sem exceção: isso não é permissão que o cliente possa dar, é o
+   art. 20 da LGPD. Já a base de desempenho por unidade, que é dado institucional e não
+   identifica ninguém, vive em `ml/data/` com autorização da Secretaria (ADR-044). O seed de
+   `src/lib/seed/` continua **100% sintético**, e a autorização não se estende a ele.
+   Dois testes seguram a fronteira: um varre a base sintética, outro varre `ml/data/` inteiro,
+   linha a linha, atrás de CPF, e-mail, telefone formatado e coluna que identifique pessoa.
 2. **Datas só mudam em `src/lib/cronograma.ts`.** É a fonte única de verdade; header,
    releases, registro e checklist derivam dela.
 3. **Arquivos de `src/content/ciclos/` nunca contêm `'use client'`.** Um componente cliente

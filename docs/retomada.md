@@ -141,7 +141,9 @@ Confusão que já apareceu e vai aparecer de novo:
 
 Estão todas no `CLAUDE.md` da raiz, mas estas três são as que mais custam quando esquecidas:
 
-1. **Nenhum dado real** de pessoa ou da SESAU entra no repositório, no seed ou em prompt de IA.
+1. **Dado de pessoa nunca entra.** Dado institucional da SESAU entra com autorização
+   registrada, que a Secretaria deu (ADR-044). O seed segue sintético, e há teste varrendo
+   `ml/data/` linha a linha.
 2. **Documento de entrega é TSX renderizado na página, nunca PDF.**
 3. **Se usou IA, some uma linha em `docs/uso-de-ia.md` e bata `CONTAGENS_PITCH.usosDeIa`.** Há
    teste que falha.

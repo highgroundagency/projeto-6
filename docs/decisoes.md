@@ -1209,3 +1209,31 @@ números que mostrou naquele dia, para não passar a contradizer a própria fras
 
 **O que se perdeu.** O vínculo com `src/lib/seed/`: o cálculo do app e a lente de ML agora
 falam de bases diferentes.
+
+## ADR-044 · Dado institucional da SESAU entra com autorização; dado de pessoa não entra nunca
+
+**Contexto.** A regra 1 da casa dizia "nenhum dado real de pessoa **ou da SESAU**", e foi
+escrita quando a equipe não tinha acesso a nada e precisava de uma linha simples de recusar.
+Depois a Secretaria enviou a planilha anonimizada, a lente de ML passou a trabalhar sobre a
+base de desempenho por unidade (ADR-043), e o arquivo foi para `ml/data/`. A regra e o
+repositório passaram a discordar, e uma regra que o próprio repositório desobedece deixa de
+ser regra: o próximo agente apagaria o arquivo achando que corrigia uma violação.
+
+**Decisão.** Separar as duas coisas que a regra tratava como uma. Dado que identifica pessoa
+(CPF, nome, matrícula, e-mail, telefone) continua proibido em qualquer lugar, e isso não é
+negociável com o cliente porque não depende dele: é o art. 20 da LGPD. Dado institucional
+(unidade, distrito, indicador, número) entra mediante autorização da Secretaria, que foi dada
+e está registrada aqui.
+
+**Consequência.** O seed de `src/lib/seed/` continua sintético, porque ele alimenta o site
+público e a autorização não se estende a ele. A fronteira nova ganhou teste próprio em
+`src/lib/dados-do-cliente.test.ts`, que varre `ml/data/` inteiro linha a linha: 825 mil linhas,
+cerca de cinco segundos no `npm test`. É caro para um teste e barato para a única coisa deste
+repositório que não pode falhar em silêncio.
+
+**O que se perdeu.** O `npm test` ficou cinco segundos mais lento, e a regra 1 deixou de caber
+em duas linhas. Em troca, ela passou a descrever o que o repositório realmente faz. A primeira
+versão do teste procurava telefone com um padrão frouxo e acusou 824.782 das 825.029 linhas,
+porque num CSV de números quase toda coluna decimal casa: padrão que acusa tudo não acusa nada.
+Os padrões ficaram estreitos, e o reforço veio do cabeçalho, que reprova o arquivo por uma
+coluna chamada "nome" mesmo que nenhuma linha case.
