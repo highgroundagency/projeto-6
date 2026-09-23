@@ -62,6 +62,251 @@ C4Container
   Rel(app, artefatos, "Lê na tela de analytics")
 ```
 
+## Visão de componentes (C4 nível 3)
+
+Abertura do contêiner com mais lógica de negócio, o **Next.js App Router**. O estilo é
+**monólito modularizado em camadas**, e o desenho existe para deixar isso visível: cada
+camada é uma fronteira, e nenhuma seta pula a camada do meio.
+
+A regra que o desenho tem de sustentar é a inversão de dependência para dentro: a camada de
+domínio não conhece tela, rota, banco nem relógio. Toda seta que a cruza aponta **para ela**,
+nunca a partir dela.
+
+```mermaid
+C4Component
+  UpdateLayoutConfig($c4ShapeInRow="2", $c4BoundaryInRow="2")
+  title Prumo — componentes do App Router
+
+  Person(usuario, "Usuário", "SEAB, administrador, gerente distrital, gerente de unidade ou professor")
+
+  Container_Boundary(portoes, "Camada de portões") {
+    Component(middleware, "middleware.ts", "Edge runtime", "Barra /admin antes de acordar a função")
+    Component(gates, "exigirFeature + exigirPerfil", "TypeScript", "Os dois portões, nessa ordem, antes de montar a tela. Quem não tem direito recebe 404")
+    Component(features, "lib/features.ts", "TypeScript", "Tela → ciclo que a libera e perfis que a enxergam")
+    Component(guard, "lib/admin/guard.ts", "TypeScript", "Sessão, senha e limite de tentativas")
+  }
+
+  Container_Boundary(apresentacao, "Camada de apresentação") {
+    Component(registro, "app/page.tsx + registro", "React Server Components", "As oito seções do briefing e o diário semanal")
+    Component(telas, "components/sistema/telas", "React Server Components", "As oito telas do MVP, sem portão por dentro")
+    Component(memoria, "components/sistema/memoria.tsx", "React Server Components", "A conta aberta, passo a passo. Só exibe: não recalcula")
+  }
+
+  Container_Boundary(aplicacao, "Camada de aplicação") {
+    Component(rotas, "app/api/**/route.ts", "Node runtime", "Onze rotas: login, config, lançamento, contestação, ciclo e exportação")
+    Component(visao, "lib/visao.ts", "TypeScript", "Resolve admin, data simulada e ciclos visíveis")
+    Component(store, "lib/config/store.ts", "TypeScript", "Estado de release, com driver trocável")
+  }
+
+  Container_Boundary(dominio, "Camada de domínio: puro, sem I/O e sem relógio") {
+    Component(motor, "lib/calculo/motor.ts", "TypeScript puro", "A nota, a faixa e a memória. Dois métodos: atingimento e notas")
+    Component(releases, "lib/releases.ts", "TypeScript puro", "O que está visível hoje, derivado do cronograma")
+    Component(cronograma, "lib/cronograma.ts", "TypeScript puro", "Fonte única de verdade das datas")
+    Component(datas, "lib/datas.ts", "TypeScript puro", "Aritmética civil em America/Recife")
+  }
+
+  Container_Boundary(acesso, "Camada de acesso a dados") {
+    Component(repo, "lib/dados/index.ts", "TypeScript", "Repositório com driver único. A tela nunca fala com o seed direto")
+    Component(mapeadores, "lib/dados/mapeadores.ts", "TypeScript", "Traduz a forma da origem para a do domínio")
+  }
+
+  ContainerDb(seed, "Seed em memória", "TypeScript", "Base sintética com semente fixa")
+  ContainerDb(config, "config-site.json", "JSON local", "Estado de release em desenvolvimento")
+  ContainerDb(ciclos, "content/ciclos", "TSX server-only", "Um arquivo por ciclo. Nunca contém 'use client'")
+
+  Rel(usuario, middleware, "Pede /admin")
+  Rel(usuario, registro, "Lê o registro do projeto")
+  Rel(usuario, telas, "Usa as telas do sistema")
+  Rel(usuario, rotas, "Envia formulário HTML")
+
+  Rel(middleware, guard, "Confere a sessão")
+  Rel(telas, gates, "Passa pelos dois portões")
+  Rel(gates, features, "Consulta ciclo e perfis")
+  Rel(gates, visao, "Pergunta release e perfil ativos")
+
+  Rel(registro, visao, "Pergunta o que este visitante vê")
+  Rel(registro, ciclos, "Renderiza só o que já abriu")
+  Rel(visao, releases, "Calcula os ciclos visíveis")
+  Rel(visao, store, "Lê trava, adiantamento e data simulada")
+  Rel(releases, cronograma, "Lê as dezoito datas")
+  Rel(releases, datas, "Compara datas civis")
+
+  Rel(telas, repo, "Pede unidades e lançamentos")
+  Rel(telas, motor, "Calcula e recebe a memória")
+  Rel(memoria, motor, "Exibe a memória gravada")
+  Rel(rotas, repo, "Grava lançamento e contestação")
+  Rel(rotas, store, "Grava configuração de release")
+  Rel(repo, mapeadores, "Converte a forma da origem")
+  Rel(mapeadores, seed, "Lê a base sintética")
+  Rel(store, config, "Lê e grava em desenvolvimento")
+```
+
+O que o desenho mostra e vale dizer em voz alta:
+
+- **Nenhuma seta sai do domínio.** `motor.ts`, `releases.ts`, `cronograma.ts` e `datas.ts` não
+  apontam para tela, rota, repositório nem arquivo. É o que permite testar o cálculo inteiro
+  sem subir nada, e é por isso que o mesmo mês fechado devolve sempre o mesmo número.
+- **O portão vem antes da tela, e são dois.** Release primeiro, perfil depois. Uma sanfona
+  fechada não esconde nada do HTML, então a ordem é a proteção, não o CSS.
+- **A tela nunca fala com o seed.** Ela fala com o repositório, e é isso que mantém a porta
+  aberta para uma fonte persistente sem reescrever tela nenhuma.
+
+## Visão de código (C4 nível 4)
+
+O nível 4 abre o componente de maior risco do sistema: o **motor de cálculo**. É a única parte
+em que um erro vira dinheiro errado no salário de alguém, e é a que a banca vai querer ver por
+dentro.
+
+O C4 não define notação própria para este nível, então vale o diagrama de classes, com as
+funções puras como operações e os tipos como estruturas.
+
+```mermaid
+classDiagram
+  direction LR
+
+  class RegraDePontuacao {
+    +string id
+    +number versao
+    +string vigenteDe
+    +string vigenteAte
+    +MetodoDeCalculo metodo
+    +Aplicabilidade[] aplicabilidades
+    +GraduacaoSubindicador[] graduacoes
+    +GraduacaoIndicador[] segundaGraduacao
+    +FaixaPontuacao[] faixas
+    +FaixaGratificacao[] faixasGratificacao
+    +TratamentoSemLancamento semLancamento
+    +number tetoAtingimento
+    +number pontuacaoMaxima
+  }
+
+  class Aplicabilidade {
+    +string tipoUnidadeId
+    +string indicadorId
+    +number meta
+    +number peso
+  }
+
+  class Degrau {
+    +number de
+    +number ate
+    +number nota
+  }
+
+  class GraduacaoSubindicador {
+    +string subindicadorId
+    +Degrau[] degraus
+  }
+
+  class GraduacaoIndicador {
+    +string indicadorId
+    +Degrau[] degraus
+  }
+
+  class Lancamento {
+    +string subindicadorId
+    +number valor
+    +number numerador
+    +number denominador
+    +string registradoEm
+  }
+
+  class Motor {
+    <<módulo puro>>
+    +calcularAvaliacao(EntradaCalculo) Avaliacao
+    +apurarSubindicador(sub, lanc, modo, rejeitarRazaoInvalida) PassoSubindicador
+    +notaDoDegrau(valor, degraus) number
+    +graduacaoDoSubindicador(regra, subId) GraduacaoSubindicador
+    +segundaGraduacaoDoIndicador(regra, indId) GraduacaoIndicador
+    +calcularAtingimento(valor, meta, direcao, teto) Atingimento
+    +faixaDoAtingimento(atingimento, regra) FaixaPontuacao
+    +faixaDoScore(score, regra) FaixaGratificacao
+    +aplicabilidadeDe(regra, tipoId, indId) Aplicabilidade
+    +regraVigente(competencia, regras) RegraDePontuacao
+    +calcularAvaliacaoDistrital(Entrada) AvaliacaoDistrital
+    +arredondar(valor, casas, modo) number
+  }
+
+  class PassoSubindicador {
+    +string subindicadorId
+    +number numerador
+    +number denominador
+    +number valor
+    +number nota
+    +string aviso
+  }
+
+  class PassoMemoria {
+    +string indicadorId
+    +PassoSubindicador[] subPassos
+    +number valor
+    +number meta
+    +number atingimento
+    +number mediaDasNotas
+    +number nota
+    +number pontos
+    +number peso
+    +number contribuicao
+  }
+
+  class MemoriaDeCalculo {
+    +string regraId
+    +number versaoRegra
+    +MetodoDeCalculo metodo
+    +PassoMemoria[] passos
+    +number somaPesos
+    +number somaContribuicoes
+    +number score
+    +string formula
+  }
+
+  class Avaliacao {
+    +string unidadeId
+    +string cicloId
+    +number score
+    +FaixaGratificacao faixa
+    +MemoriaDeCalculo memoria
+    +string[] avisos
+  }
+
+  RegraDePontuacao "1" *-- "muitos" Aplicabilidade : define meta e peso por tipo
+  RegraDePontuacao "1" *-- "muitos" GraduacaoSubindicador : define a régua de cada subindicador
+  RegraDePontuacao "1" *-- "0..muitos" GraduacaoIndicador : define a segunda gradação
+  GraduacaoSubindicador "1" *-- "muitos" Degrau : ordena os degraus
+  GraduacaoIndicador "1" *-- "muitos" Degrau : ordena os degraus
+
+  Motor ..> RegraDePontuacao : lê a regra vigente da competência
+  Motor ..> Lancamento : apura o último lançamento de cada subindicador
+  Motor ..> PassoSubindicador : produz um por subindicador
+  PassoMemoria "1" *-- "muitos" PassoSubindicador : agrega em um passo de indicador
+  MemoriaDeCalculo "1" *-- "muitos" PassoMemoria : registra a conta linha a linha
+  Avaliacao "1" *-- "1" MemoriaDeCalculo : carrega a conta junto do número
+  Motor ..> Avaliacao : devolve número e memória juntos
+```
+
+A cadeia de uma nota, na ordem em que o código a executa:
+
+1. `regraVigente(competencia, regras)` escolhe a versão da regra pela competência. Nunca por
+   "a mais nova": um mês de fevereiro recalculado em dezembro continua usando a regra de
+   fevereiro.
+2. `aplicabilidadeDe(regra, tipoUnidade, indicador)` decide se aquele indicador vale para
+   aquele tipo de unidade. Se não vale, ele não entra na conta nem na memória: para aquele
+   tipo, ele simplesmente não existe.
+3. `apurarSubindicador` transforma o lançamento em valor: valor direto, ou numerador ÷
+   denominador × 100. Denominador zero e numerador maior que denominador viram aviso, não
+   `#DIV/0!` nem nota cheia silenciosa.
+4. `notaDoDegrau` converte o valor em nota de 0 a 1 pela régua da regra, no método de notas.
+   A ordem dos degraus é que permite a faixa ideal, aquela em que passar do alvo também perde
+   ponto.
+5. A média das notas passa por `segundaGraduacaoDoIndicador`, quando a regra define uma.
+6. O peso de cada indicador multiplica a nota, e a soma é dividida pela **soma dos pesos que
+   entraram na conta**. É aí que mora a redistribuição do art. 8º: indicador sem lançamento
+   sai, e o peso dele sai junto.
+7. `faixaDoScore` traduz o número na classe: insatisfatório, regular, satisfatório, excelente.
+
+Cada passo escreve sua linha na `MemoriaDeCalculo`. Nenhuma tela refaz a conta: elas exibem o
+que o motor gravou, e é por isso que a tela não pode divergir do resultado.
+
 ## Fluxo de dados do cálculo
 
 ```mermaid
