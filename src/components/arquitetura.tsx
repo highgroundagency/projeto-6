@@ -164,7 +164,7 @@ unidade; score = soma de pontos x peso sobre o máximo possível, x 100);
 middleware Edge protegendo /admin; route handlers Node (login, ciclo,
 lançamento, contestação, CSV, tema, perfil, status); base sintética em
 memória com semente fixa 20262 (3 distritos, 7 tipos de unidade, 12
-unidades, 8 indicadores, 12 subindicadores, 15 gerentes, 6 meses, trilha
+unidades, 8 indicadores, 12 subindicadores, 15 gerentes, 7 meses, trilha
 imutável); motor de liberações por calendário (conteúdo futuro não vai
 ao navegador; tela não liberada responde 404); schema PostgreSQL
 versionado com RLS e 4 gatilhos, testado no CI e DESLIGADO (ainda no

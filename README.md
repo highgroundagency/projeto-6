@@ -72,16 +72,16 @@ conferência do dossiê. O end-to-end fica em `npm run e2e`.
 
 O que está coberto, contado em 25/09:
 
-- **602 testes de unidade** — aritmética de data no fuso do projeto, motor de releases,
+- **671 testes de unidade** — aritmética de data no fuso do projeto, motor de releases,
   config store, sessão do admin, completude do registro, motor de cálculo (55 casos), base
   sintética, a fronteira de `ml/data/` e os números ditos nos decks, conferidos contra os
   documentos de onde vêm.
 - **23 verificações que exigem um PostgreSQL real** — 21 das políticas de RLS por perfil e
   dos invariantes de gatilho, aplicando as migrações reais num banco descartável
   (`npm run testar-rls`), e 2 da semeadura. Puladas automaticamente sem `DATABASE_URL_TESTE`.
-- **164 verificações de vazamento** — nenhum conteúdo de release futuro no HTML, no payload
-  RSC ou no bundle do cliente; rota não liberada responde 404, inclusive `/pitch`.
-- **130 testes end-to-end** — jornadas críticas em desktop e em 360px, os decks incluídos.
+- **179 verificações de vazamento** — nenhum conteúdo de release futuro no HTML, no payload
+  RSC ou no bundle do cliente; rota não liberada responde 404, inclusive `/pitch` e `/sr1`.
+- **152 testes end-to-end** — jornadas críticas em desktop e em 360px, os decks incluídos.
 - **Tipagem como portão** — um ciclo publicado sem responsáveis, com lista vazia ou com
   integrante inexistente **não compila**.
 

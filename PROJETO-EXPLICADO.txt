@@ -724,18 +724,18 @@ desenhada para isso.
 Números contados em 25/09 (todos verificáveis rodando npm run
 verificar):
 
-- 602 testes de unidade (Vitest) rodando localmente, mais 23
+- 671 testes de unidade (Vitest) rodando localmente, mais 23
   que exigem um PostgreSQL real e rodam no CI. Só o motor de cálculo
   tem 55, com casos de borda (subindicadores, fronteiras de faixa,
   arredondamento) e o método de notas da v3. O resto cobre o motor de
   releases, datas, seed, admin, contraste de cores, e até coisas como
   "toda âncora de evidência tem destino", "nenhum CPF na base" e "o
   motor não lê relógio".
-- 130 testes de ponta a ponta (Playwright), rodados em tela grande E
+- 152 testes de ponta a ponta (Playwright), rodados em tela grande E
   em celular de 360px. Elas abrem o site de verdade num navegador e
   clicam: login do admin, os 4 perfis nas 8 telas, o tutorial guiado, a
   troca de tema, a memória de cálculo, a exportação.
-- 164 checagens de vazamento contra o build de produção: prova de
+- 179 checagens de vazamento contra o build de produção: prova de
   que conteúdo futuro não chega ao navegador.
 - Testes do banco guardado rodam no CI contra um PostgreSQL real.
 - O CI (GitHub Actions) roda tudo isso a cada push.

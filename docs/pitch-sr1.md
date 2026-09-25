@@ -44,14 +44,33 @@ usa para se preparar fica no repositório.
 
 ## 3. O caminho da demonstração
 
-Tudo com dados de teste. O que um visitante lança fica na sessão dele (ver a ADR sobre a escrita
-por visitante), então ensaiar não estraga a tela de ninguém.
+Tudo com dados de teste. O que um visitante lança ou pede fica numa cópia só dele, em memória
+(ADR-046): ensaiar não estraga a tela de ninguém, e o que a banca lançar sozinha não aparece na
+tela de quem apresenta. Junho já está fechado pela regra 3; julho é o mês aberto.
 
-1. `/sistema`, papel **gerente de unidade**: escolher uma unidade de exemplo e lançar os números
-   do mês aberto, com a origem de cada um.
-2. Papel **coordenação da SEAB**: o painel mostra quem mandou e quem falta; avançar o mês uma
-   etapa.
-3. **Meu resultado** da USF Canário: a nota de junho pela regra 3 e a conta inteira embaixo.
+1. **Antes de subir ao palco, fora da tela:** entrar em `/admin/entrar` com a senha de
+   produção. Fechar o mês exige essa sessão.
+2. `/sistema`, em "Estou usando como", escolher **Gerente de unidade**.
+3. Abrir **Lançamento da unidade**, escolher **USF Canário** e clicar em "Trocar unidade".
+4. Em "Famílias acompanhadas no mês", preencher **170** e **200**, origem "relatório mensal de
+   julho", e **Salvar**. Aparece "Lançamento registrado."
+5. Trocar para **Coordenação da SEAB** e abrir o **Painel da SEAB**.
+6. Marcar "Confirmo…" e clicar em **Avançar para Em validação**. Marcar de novo e clicar em
+   **Homologar ciclo**.
+7. Abrir **Meu resultado**: gerente **E. Ferraz: USF Canário**, mês **2026-07**. Atalho:
+   `/sistema?abrir=meu-resultado&res_gerente=ger-usf-canario&res_ciclo=ciclo-2026-07`.
+8. O resultado é **91,25, excelente**, pela regra 3. Vacinação ficou sem lançamento e saiu da
+   conta com o peso junto: (0,73) ÷ (0,8 × 1) × 100 = 91,25. É o art. 8º ao vivo. O número só dá
+   isso se o lançamento for exatamente 170 de 200.
+9. Opcional: a **Trilha de auditoria** mostra o lançamento, o avanço e a homologação.
+
+**Reserva.** Se a rede ou a sessão falharem, o slide 7 mostra junho da USF Canário, já fechado
+pela regra 3, com a conta aberta, calculado pelo motor na hora de montar o slide. O PDF tem a
+mesma tela. Junho também está no sistema para qualquer visitante:
+`/sistema?abrir=meu-resultado&res_gerente=ger-usf-canario&res_ciclo=ciclo-2026-06`.
+
+**Cuidado conhecido.** Na Vercel, a memória é de cada instância do servidor. Duas requisições
+em instâncias diferentes podem não enxergar a mesma cópia. Por isso a reserva existe.
 
 ## 4. Slide a slide
 
@@ -127,7 +146,7 @@ por visitante), então ensaiar não estraga a tela de ninguém.
 - **A fala:**
   1. A correção entrou como uma regra nova, a versão 3, guardada como dado. O motor aprendeu o jeito novo sem esquecer o antigo.
   1. Maio fechou pela versão 2 e continua dando 86,67. Pela regra nova, maio daria 85.
-  1. Mas mês fechado não muda quando a regra muda. Junho já usa a versão 3, e dá 70.
+  1. Mas mês fechado não muda quando a regra muda. Junho já usa a versão 3, e dá 75.
   1. Era para isso que a regra virou dado: a primeira mudança grande aconteceu sem tocar em resultado publicado.
 - **Se perguntarem** (fora do tempo):
   - A classe de cada nota (satisfatório, excelente) vem da planilha. O percentual pago em cada classe ainda é suposição nossa: ele está num decreto que a gente ainda não tem.
@@ -135,18 +154,18 @@ por visitante), então ensaiar não estraga a tela de ninguém.
 
 ### Slide 7: do número à nota, ao vivo
 
-- **Começa em** 2:55 · **dura** 1:45 · **quem fala:** João Pedro · **22 palavras na tela**
+- **Começa em** 2:55 · **dura** 1:45 · **quem fala:** João Pedro · **24 palavras na tela**
 - **na versão de 5 min:** 1:20, só as 6 primeiras falas
 - **Frase da tela:** o sistema rodando agora, com dados de teste.
-- **O que a tela mostra:** O sistema ao vivo. De reserva, a nota de junho com a conta aberta, calculada na hora.
+- **O que a tela mostra:** O sistema ao vivo, lançando julho. De reserva, a nota de junho com a conta aberta, calculada na hora.
 - **A fala:**
   1. Agora o sistema, ao vivo. Tudo o que aparece são dados de teste: nenhuma pessoa real.
-  1. Primeiro, a unidade. Escolho uma unidade de exemplo e lanço os números do mês. Cada número diz de onde veio.
-  1. Depois, a coordenação. O painel mostra quem já mandou e quem falta, e o mês avança uma etapa por vez.
-  1. Por fim, o resultado. A nota de junho da USF Canário é 70, e embaixo está a conta inteira.
-  1. Cada linha mostra o número que a unidade mandou, o alvo, a nota que ele ganhou e quanto pesa.
+  1. Primeiro, a unidade. Escolho a USF Canário e lanço um número de julho, dizendo de onde ele veio.
+  1. Depois, a coordenação. O painel mostra quem já mandou e quem falta, e o mês avança uma etapa por vez, até fechar.
+  1. Por fim, o resultado de julho, com a conta inteira embaixo. Cada linha mostra o número, o alvo, a nota e quanto pesa.
+  1. Repare na soma dos pesos. Um item ficou sem número e saiu da conta com o peso junto, como manda o artigo 8º.
   1. A última linha fecha a conta na frente de todo mundo. Qualquer pessoa refaz no papel.
-  1. Se a rede cair, esta tela é a mesma conta, parada. E o PDF de reserva tem ela também.
+  1. Se a rede cair, esta tela mostra junho, já fechado pela regra nova: 75, com a mesma conta aberta. E o PDF tem ela também.
 - **Se perguntarem** (fora do tempo):
   - Quem mexe na tela não é quem fala: assim a demonstração não depende de uma pessoa só.
   - O que um visitante lança fica na sessão dele. A demonstração de um não muda a tela de outro.
@@ -229,7 +248,7 @@ por visitante), então ensaiar não estraga a tela de ninguém.
 - **O que a tela mostra:** Os três compromissos do Kick-off, com quem puxou, o estado e o porquê.
 - **A fala:**
   1. No Kick-off prometemos três coisas até hoje, com data e nome. Vamos prestar contas.
-  1. As telas estão no ar: as 4.
+  1. As telas estão no ar: as 8.
   1. A regra oficial entrou em parte: o jeito de calcular da planilha está no sistema, mas os indicadores ainda são de teste.
   1. E a conferência com a Secretaria não aconteceu. As perguntas estão escritas, e a conferência da conta ficou para a Semana 11.
 

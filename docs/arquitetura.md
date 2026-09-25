@@ -217,8 +217,9 @@ Vercel, que são efêmeras e podem existir em mais de uma instância ao mesmo te
 do MVP vive **em memória**, a falácia que já nos morde não é de rede: é a suposição de estado
 compartilhado. Um lançamento gravado numa instância pode não ser visto por outra. Isso é uma
 limitação conhecida e declarada do MVP, não uma surpresa, e é a primeira coisa que o banco
-resolve. Enquanto não houver banco, uma demonstração com vários avaliadores navegando ao mesmo
-tempo precisa disso isolado antes.
+resolve. Desde 25/09 cada visitante escreve numa cópia própria (ADR-046), então dois
+avaliadores navegando ao mesmo tempo não se atropelam; o que continua valendo é que a cópia
+vive na memória de uma instância só.
 
 **Quais falácias apareceriam primeiro se distribuíssemos.** Se um dia o cálculo virar serviço
 próprio, as três que batem primeiro neste domínio são:

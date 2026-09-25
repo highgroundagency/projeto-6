@@ -277,9 +277,9 @@ export const REQUISITOS: readonly Requisito[] = [
     pedido: 'Evidências de testes; registros de testes e evolução do backlog.',
     estado: 'atendido',
     onde: [
-      '625 casos em Vitest, contados em 25/09 (602 rodam localmente; 23 exigem um PostgreSQL real e rodam no CI), 55 deles no motor de cálculo',
-      '130 testes em Playwright, contados em 25/09, em desktop e em 360px',
-      'scripts/verificar-vazamento.ts: 164 checagens contra o build de produção, contadas em 25/09',
+      '694 casos em Vitest, contados em 25/09 (671 rodam localmente; 23 exigem um PostgreSQL real e rodam no CI), 55 deles no motor de cálculo',
+      '152 testes em Playwright, contados em 25/09, em desktop e em 360px',
+      'scripts/verificar-vazamento.ts: 179 checagens contra o build de produção, contadas em 25/09',
     ],
   },
 

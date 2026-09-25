@@ -1274,3 +1274,48 @@ que não foi feito, e a correção de rota tem slide próprio.
 **O que se perdeu.** O slide da demonstração continua mostrando a interface do sistema com
 ponto decimal (70.00) enquanto o resto do deck escreve 70,00. É a tela real, e trocar a
 formatação dela é trabalho das telas, não do deck.
+
+## ADR-046 · Para o SR1: as oito telas no ar, cada visitante escreve na própria cópia, e junho fecha pela v3
+
+**Contexto.** A banca do SR1 pode navegar o sistema sozinha, e três coisas atrapalhavam. Quatro
+das oito telas (trilha, gestão, analytics e contestação) já existiam e estavam testadas, mas só
+abririam entre a Semana 7 e a 11. A escrita do protótipo morava em variáveis de módulo em
+`src/lib/sistema/estado.ts`: o lançamento de um avaliador aparecia na tela do outro, e um avanço
+de ciclo mudava o mês de todo mundo. E nenhuma nota pela regra v3 existia para quem visita: junho,
+o único mês da v3, estava em lançamento aberto, e a base só calcula nota de mês fechado.
+
+**Decisão.**
+
+1. **As telas, não os registros.** O `ciclo` das quatro telas passou para `s6` em
+   `src/lib/features.ts`. Os registros de s7 em diante continuam no calendário: abri-los por
+   trava ou vitrine publicaria semanas futuras escritas no passado. O teste de ponta a ponta do
+   portão passou a medir na véspera da última leva de telas, calculada do cronograma, porque
+   hoje nenhuma rota de tela está fechada.
+2. **Uma cópia por visitante.** O cookie `prumo_visitante` (um `crypto.randomUUID()`, httpOnly,
+   sem assinatura, porque não dá privilégio nenhum) identifica a cópia. `estadoDo(visitante)`
+   soma a base congelada à cópia dele, que guarda lançamentos, eventos, estados de ciclo,
+   avaliações e contestações. Só as três rotas de escrita criam o cookie; ler não cria cópia.
+   Tetos: 100 visitantes (sai a cópia usada há mais tempo) e 200 registros por cópia. O avanço
+   de ciclo continua exigindo sessão de admin e fica na cópia de quem avançou. O contrato de
+   `src/lib/dados/` não mudou. A tela diz, no topo do sistema, que o que se lança ali fica só
+   na sessão de teste.
+3. **Junho fechado, julho aberto.** Julho entrou no FIM da lista de meses do gerador, e a onda
+   sazonal ficou fixa em seis meses em vez de seguir o tamanho da lista: assim janeiro a maio
+   saem idênticos, lançamento a lançamento, e há teste que fixa maio das doze unidades. Junho
+   passou a ser gerado como mês fechado pela v3. O slide 14 do Kick-off, que contava os meses da
+   base, ficou congelado em seis (`MESES_NA_BASE_NO_KICKOFF`), como o modelo do mesmo slide.
+4. **A recusa entra no histórico.** A tela dizia que uma tentativa fora do prazo ficava
+   registrada, e não ficava. Agora existe o evento `lancamento_recusado`, com teste.
+
+**Consequência.** A banca vê as oito telas, uma nota pela v3 (junho da USF Canário) sem
+depender de ninguém, e a demonstração de quem apresenta não muda a tela de quem assiste. A
+descrição da v3 passou de "conferida contra a planilha" para "escrita a partir das fórmulas":
+nenhuma linha real foi recalculada pelo motor ainda, e dizer "conferida" seria antecipar o
+compromisso que o Kick-off prometeu e não cumpriu.
+
+**O que se perdeu.** A cópia vive na memória de uma instância. Na Vercel, duas requisições em
+instâncias diferentes podem não enxergar a mesma cópia: já era assim antes, só que agora a perda
+é de um visitante e não de todos. O enum `tipo_evento` do schema guardado em
+`supabase/migrations/` não tem `lancamento_recusado`, mais uma divergência declarada de um
+schema que continua desligado do app. E junho mudou de números: ele nunca tinha sido publicado,
+mas quem guardou o 70 da auditoria de 24/09 vai encontrar 75.

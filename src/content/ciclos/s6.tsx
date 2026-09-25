@@ -183,10 +183,11 @@ export const RISCOS: readonly Risco[] = [
     dono: 'joao-henrique',
   },
   {
-    risco: 'A escrita do protótipo fica em memória, compartilhada entre os visitantes.',
-    probabilidade: 'alta',
-    impacto: 'Médio: a banca navegando junto vê números que não lançou.',
-    mitigacao: 'Isolar a escrita por visitante. Tudo some no reinício, e isso está declarado.',
+    risco: 'A escrita do protótipo fica em memória: some no reinício e pode não valer entre duas instâncias do servidor.',
+    probabilidade: 'média',
+    impacto: 'Médio: um lançamento feito na demonstração pode não aparecer na tela seguinte.',
+    mitigacao:
+      'Desde 25/09 cada visitante escreve numa cópia própria, e a tela diz isso. Levar a reserva no próprio slide e o PDF.',
     dono: 'joao-henrique',
   },
   {

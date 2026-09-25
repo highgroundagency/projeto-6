@@ -878,6 +878,17 @@ html:fullscreen [data-modo='deck'] .slide-demo .demo {
   zoom: calc(var(--zoom-demo) * 1.08);
 }
 
+/* NO SR1 A CONTA É PELA REGRA V3, e ela é mais alta: a linha da conta final
+   descreve o método de notas e quebra em duas, e junho tem os cinco
+   indicadores. A mesma receita, um degrau abaixo. */
+[data-modo='deck'] .slide-sr1.slide-demo .demo {
+  zoom: calc(var(--zoom-demo) * 0.9);
+}
+
+html:fullscreen [data-modo='deck'] .slide-sr1.slide-demo .demo {
+  zoom: calc(var(--zoom-demo) * 0.97);
+}
+
 /* Embaixo, no centro: o rodapé do slide já ocupa os dois cantos. */
 .deck-controles {
   position: fixed;
@@ -1212,6 +1223,13 @@ html:fullscreen .ajuda-deck {
     max-height: none !important;
     overflow: visible !important;
     zoom: 0.92;
+  }
+
+  /* O seletor do deck vem junto: o PDF é impresso com o deck ligado, e a
+     regra da tela, mais específica, venceria a do papel. */
+  .slide-sr1.slide-demo .demo,
+  [data-modo='deck'] .slide-sr1.slide-demo .demo {
+    zoom: 0.86;
   }
 
   .slide-demo .como-ler,

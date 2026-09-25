@@ -99,9 +99,9 @@ para sempre. Está na ADR-041.
 
 ### Números atuais
 
-Recontados em 25/09: 602 testes de unidade passando e 23 pulados sem Postgres
-(625 ao todo), 55 deles no motor; 130 e2e; 164 verificações de vazamento; 61
-linhas em `docs/uso-de-ia.md` até 23/09 (e `CONTAGENS_PITCH.usosDeIa` tem de bater com esse
+Recontados em 25/09, depois de juntar o deck do SR1, os registros e o sistema: 671 testes de
+unidade passando e 23 pulados sem Postgres (694 ao todo), 55 deles no motor; 152 e2e; 179
+verificações de vazamento; 66 linhas em `docs/uso-de-ia.md` até 24/09 (e `CONTAGENS_PITCH.usosDeIa` tem de bater com esse
 número, há teste). Na nota de 23/09 eram 572 testes de unidade, 112 e2e e 123 verificações.
 
 ---

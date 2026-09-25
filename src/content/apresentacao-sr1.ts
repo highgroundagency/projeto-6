@@ -310,17 +310,17 @@ export const SLIDES_SR1 = [
     numero: 7,
     titulo: 'do número à nota, ao vivo',
     apoio: 'o sistema rodando agora, com dados de teste.',
-    visual: 'O sistema ao vivo. De reserva, a nota de junho com a conta aberta, calculada na hora.',
+    visual: 'O sistema ao vivo, lançando julho. De reserva, a nota de junho com a conta aberta, calculada na hora.',
     segundos: 105,
     quemFala: 'joao-pedro',
     notas: [
       'Agora o sistema, ao vivo. Tudo o que aparece são dados de teste: nenhuma pessoa real.',
-      'Primeiro, a unidade. Escolho uma unidade de exemplo e lanço os números do mês. Cada número diz de onde veio.',
-      'Depois, a coordenação. O painel mostra quem já mandou e quem falta, e o mês avança uma etapa por vez.',
-      `Por fim, o resultado. A nota de junho da USF Canário é ${notaFalada(JUNHO_V3)}, e embaixo está a conta inteira.`,
-      'Cada linha mostra o número que a unidade mandou, o alvo, a nota que ele ganhou e quanto pesa.',
+      'Primeiro, a unidade. Escolho a USF Canário e lanço um número de julho, dizendo de onde ele veio.',
+      'Depois, a coordenação. O painel mostra quem já mandou e quem falta, e o mês avança uma etapa por vez, até fechar.',
+      'Por fim, o resultado de julho, com a conta inteira embaixo. Cada linha mostra o número, o alvo, a nota e quanto pesa.',
+      'Repare na soma dos pesos. Um item ficou sem número e saiu da conta com o peso junto, como manda o artigo 8º.',
       'A última linha fecha a conta na frente de todo mundo. Qualquer pessoa refaz no papel.',
-      'Se a rede cair, esta tela é a mesma conta, parada. E o PDF de reserva tem ela também.',
+      `Se a rede cair, esta tela mostra junho, já fechado pela regra nova: ${notaFalada(JUNHO_V3)}, com a mesma conta aberta. E o PDF tem ela também.`,
     ],
     perguntas: [
       'Quem mexe na tela não é quem fala: assim a demonstração não depende de uma pessoa só.',
@@ -573,7 +573,7 @@ export const NOME_DA_UNIDADE_DO_DECK =
   BASE.unidades.find((u) => u.id === UNIDADE_DO_DECK)?.nome ?? UNIDADE_DO_DECK
 
 /** Slide 7: o rótulo da demonstração de reserva. */
-export const ROTULO_DA_DEMO_SR1 = 'junho · dados de teste, nenhuma pessoa real'
+export const ROTULO_DA_DEMO_SR1 = 'junho, já fechado · dados de teste, nenhuma pessoa real'
 export const ENDERECO_DA_DEMO = '/sistema'
 
 /** Slide 8: os quatro papéis, na ordem da equipe do sistema. */

@@ -466,7 +466,7 @@ export function DiagramaConteineres() {
         {...base}
         tipo="[em memória · semente fixa 20262]"
         nome="Base sintética"
-        desc="12 unidades em 3 distritos, 7 tipos, 8 indicadores, 12 subindicadores, 6 meses, trilha imutável; zera a cada deploy"
+        desc="12 unidades em 3 distritos, 7 tipos, 8 indicadores, 12 subindicadores, 7 meses, trilha imutável; zera a cada deploy"
       />
       <Cilindro
         {...schema}
