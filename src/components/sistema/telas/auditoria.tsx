@@ -23,6 +23,7 @@ const ROTULO_TIPO: Record<TipoEvento, string> = {
   regra_versionada: 'regra versionada',
   lancamento_registrado: 'lançamento',
   lancamento_alterado: 'lançamento corrigido',
+  lancamento_recusado: 'lançamento recusado',
   avaliacao_calculada: 'avaliação',
   contestacao_aberta: 'contestação aberta',
   contestacao_respondida: 'contestação respondida',
@@ -30,8 +31,32 @@ const ROTULO_TIPO: Record<TipoEvento, string> = {
 
 const LIMITE = 120
 
-function Diff({ antes, depois }: { antes: unknown; depois: unknown }) {
+/**
+ * Quantos registros a tela LÊ para contar. Bem acima do histórico inteiro (a
+ * base de teste tem pouco mais de 560, e cada sessão de teste soma no máximo
+ * 200): contar só os 500 primeiros fazia o total mentir quando julho entrou.
+ */
+const LIMITE_DE_LEITURA = 5000
+
+function Diff({
+  tipo,
+  antes,
+  depois,
+}: {
+  tipo: TipoEvento
+  antes: unknown
+  depois: unknown
+}) {
   if (antes === null && depois === null) return null
+  // Recusa não tem "antes" nem "depois": nada foi gravado. Mostrar "antes:
+  // nada, é o primeiro registro" diria que a tentativa virou lançamento.
+  if (tipo === 'lancamento_recusado') {
+    return (
+      <div className="numero mt-1 text-xs">
+        <span className="text-alerta">nada foi gravado. tentativa: {JSON.stringify(depois)}</span>
+      </div>
+    )
+  }
   return (
     <div className="numero mt-1 flex flex-wrap gap-x-3 text-xs">
       {antes !== null ? (
@@ -50,7 +75,7 @@ export async function TelaAuditoria({ ctx }: PropsTela) {
   const { aud_tipo: tipo, aud_ciclo: ciclo } = ctx.params
 
   const dados = await carregarDados()
-  const todos = await repositorio().eventos(500)
+  const todos = await repositorio().eventos(LIMITE_DE_LEITURA)
   const totalLancamentos = (await repositorio().lancamentos()).length
   const filtrados = todos.filter((evento) => {
     if (tipo && evento.tipo !== tipo) return false
@@ -72,7 +97,8 @@ export async function TelaAuditoria({ ctx }: PropsTela) {
         <Aviso>
           Este histórico só recebe registros novos: ninguém edita nem apaga o que já aconteceu,
           nem mesmo a SEAB. Correção entra como registro novo, com o valor antigo guardado
-          ao lado. É isso que faz o histórico servir de prova.
+          ao lado. É isso que faz o histórico servir de prova. O que aparece aqui é o histórico
+          do protótipo: o da base de teste, mais o que você fez nesta sessão de teste.
         </Aviso>
       </div>
 
@@ -149,7 +175,7 @@ export async function TelaAuditoria({ ctx }: PropsTela) {
                   {evento.entidade} · {evento.autor} ({evento.perfil})
                 </Num>
               </div>
-              <Diff antes={evento.antes} depois={evento.depois} />
+              <Diff tipo={evento.tipo} antes={evento.antes} depois={evento.depois} />
             </li>
           ))}
         </ol>

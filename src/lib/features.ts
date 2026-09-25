@@ -36,6 +36,13 @@ export type PerfilId = 'seab' | 'administrador' | 'gerente_distrital' | 'gerente
  */
 export const PERFIL_PADRAO: PerfilId = 'seab'
 
+/**
+ * As quatro últimas telas (trilha, gestão, analytics e contestação) estavam
+ * marcadas para s7 a s11, e já existiam e estavam testadas. Foram para a s6 em
+ * 25/09, antes do SR1, para a banca navegar o sistema inteiro. O que abriu
+ * foram as TELAS: os registros de s7 em diante continuam no calendário, e
+ * nenhuma trava ou vitrine foi usada para isso.
+ */
 export const FEATURES = [
   {
     id: 'painel-seab',
@@ -76,7 +83,7 @@ export const FEATURES = [
   },
   {
     id: 'auditoria',
-    ciclo: 's7',
+    ciclo: 's6',
     rota: '/sistema/auditoria',
     rotulo: 'Trilha de auditoria',
     descricao: 'O histórico de tudo: quem fez o quê, quando, e como estava antes.',
@@ -84,7 +91,7 @@ export const FEATURES = [
   },
   {
     id: 'painel-gestao',
-    ciclo: 's9',
+    ciclo: 's6',
     rota: '/sistema/gestao',
     rotulo: 'Painel da gestão',
     descricao:
@@ -93,7 +100,7 @@ export const FEATURES = [
   },
   {
     id: 'analytics',
-    ciclo: 's10',
+    ciclo: 's6',
     rota: '/sistema/analytics',
     rotulo: 'Analytics',
     descricao: 'Sinais que ajudam a SEAB a saber onde olhar. Nada aqui muda nota.',
@@ -101,7 +108,7 @@ export const FEATURES = [
   },
   {
     id: 'contestacao',
-    ciclo: 's11',
+    ciclo: 's6',
     rota: '/sistema/contestacao',
     rotulo: 'Contestação',
     descricao: 'Onde o gerente que discorda da nota pede revisão e acompanha a resposta.',
@@ -210,7 +217,7 @@ export const PERFIS: Record<PerfilId, Perfil> = {
     rotulo: 'Gerente de unidade',
     descricao: 'Preenche os subindicadores da unidade e recebe a nota dela.',
     quemE:
-      'É quem dirige uma unidade de saúde: USF, CAPS, UPA ou policlínica. Preenche os subindicadores do mês e responde pela nota da unidade, que depende do tipo dela.',
+      'É quem dirige uma unidade de saúde, de um dos sete tipos da portaria: USF, UBT, UBT Mista, CAPS, CECON, UCIS ou MAC. Preenche os subindicadores do mês e responde pela nota da unidade, que depende do tipo dela.',
     oQueFaz: [
       'Preenche cada subindicador da unidade, no prazo: valor direto, ou numerador e denominador.',
       'Diz de onde cada número veio: qual relatório, qual sistema.',

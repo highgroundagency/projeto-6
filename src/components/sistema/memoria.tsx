@@ -1,5 +1,6 @@
 import { Num } from '@/components/base/num'
 import { Etiqueta } from '@/components/base/selo'
+import { rotuloDaDirecao } from '@/components/sistema/base'
 import type { Avaliacao, PassoSubindicador } from '@/lib/calculo/tipos'
 import { cn } from '@/lib/utils'
 
@@ -150,11 +151,7 @@ export function MemoriaDeCalculo({
                     <span className="font-sans">{passo.indicador}</span>
                     {compacta ? null : (
                       <span className="mt-0.5 block text-[0.65rem] text-apagado">
-                        {passo.direcao === 'maior_melhor'
-                          ? 'maior é melhor'
-                          : passo.direcao === 'menor_melhor'
-                            ? 'menor é melhor'
-                            : 'há uma faixa ideal'}{' '}
+                        {rotuloDaDirecao(passo.direcao)}{' '}
                         · {passo.unidadeMedida}
                       </span>
                     )}

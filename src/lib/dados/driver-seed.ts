@@ -1,18 +1,7 @@
 import 'server-only'
 import { BASE } from '@/lib/seed'
-import {
-  avaliacoes as avaliacoesDoOverlay,
-  avaliacoesDistritais as avaliacoesDistritaisDoOverlay,
-  avancarCiclo as avancarNoOverlay,
-  ciclos as ciclosDoOverlay,
-  eventos as eventosDoOverlay,
-  lancamentos as lancamentosDoOverlay,
-  registrarLancamento as registrarNoOverlay,
-} from '@/lib/sistema/estado'
-import {
-  abrirContestacao,
-  contestacoes as contestacoesDoOverlay,
-} from '@/lib/sistema/contestacoes'
+import { estadoDo, type EstadoDoVisitante } from '@/lib/sistema/estado'
+import { visitanteAtual } from '@/lib/sistema/visitante'
 import type {
   EntradaContestacao,
   EntradaLancamento,
@@ -28,10 +17,20 @@ import type {
  *
  * É o que permite `git clone && npm run dev` funcionar sem nenhuma credencial,
  * o que importa num trabalho em equipe. Ver ADR-011 em docs/decisoes.md.
+ *
+ * CADA CHAMADA RESOLVE O VISITANTE. A base é a mesma para todos; o que foi
+ * escrito pela interface mora numa cópia por visitante (`sistema/estado.ts`).
+ * As telas não sabem disso: o contrato de `RepositorioDados` não mudou.
+ *
+ * `quemEsta` existe para o teste trocar de visitante sem simular cookie.
  */
-export function driverSeed(): RepositorioDados {
+export function driverSeed(
+  quemEsta: () => Promise<string | null> = visitanteAtual,
+): RepositorioDados {
+  const estado = async (): Promise<EstadoDoVisitante> => estadoDo(await quemEsta())
+
   return {
-    nome: 'seed em memória',
+    nome: 'seed em memória, uma cópia por visitante',
     persistente: false,
 
     async panorama(): Promise<Panorama> {
@@ -43,42 +42,46 @@ export function driverSeed(): RepositorioDados {
         indicadores: BASE.indicadores,
         subindicadores: BASE.subindicadores,
         regras: BASE.regras,
-        ciclos: ciclosDoOverlay(),
+        ciclos: (await estado()).ciclos(),
       }
     },
 
     async lancamentos(cicloId?: string) {
-      const todos = lancamentosDoOverlay()
+      const todos = (await estado()).lancamentos()
       return cicloId ? todos.filter((l) => l.cicloId === cicloId) : todos
     },
 
     async avaliacoes(filtro: FiltroAvaliacao = {}) {
-      return avaliacoesDoOverlay().filter(
-        (a) =>
-          (!filtro.unidadeId || a.unidadeId === filtro.unidadeId) &&
-          (!filtro.cicloId || a.cicloId === filtro.cicloId),
-      )
+      return (await estado())
+        .avaliacoes()
+        .filter(
+          (a) =>
+            (!filtro.unidadeId || a.unidadeId === filtro.unidadeId) &&
+            (!filtro.cicloId || a.cicloId === filtro.cicloId),
+        )
     },
 
     async avaliacoesDistritais(filtro: FiltroAvaliacaoDistrital = {}) {
-      return avaliacoesDistritaisDoOverlay().filter(
-        (a) =>
-          (!filtro.distritoId || a.distritoId === filtro.distritoId) &&
-          (!filtro.cicloId || a.cicloId === filtro.cicloId),
-      )
+      return (await estado())
+        .avaliacoesDistritais()
+        .filter(
+          (a) =>
+            (!filtro.distritoId || a.distritoId === filtro.distritoId) &&
+            (!filtro.cicloId || a.cicloId === filtro.cicloId),
+        )
     },
 
     async contestacoes(gerenteId?: string) {
-      const todas = contestacoesDoOverlay()
+      const todas = (await estado()).contestacoes()
       return gerenteId ? todas.filter((c) => c.gerenteId === gerenteId) : todas
     },
 
     async eventos(limite = 200) {
-      return eventosDoOverlay().slice(0, limite)
+      return (await estado()).eventos().slice(0, limite)
     },
 
     async registrarLancamento(entrada: EntradaLancamento, agora: string): Promise<Resultado> {
-      return registrarNoOverlay(
+      return (await estado()).registrarLancamento(
         {
           subindicadorId: entrada.subindicadorId,
           unidadeId: entrada.unidadeId,
@@ -97,16 +100,12 @@ export function driverSeed(): RepositorioDados {
     },
 
     async avancarCiclo(cicloId: string, autor: string, agora: string): Promise<Resultado> {
-      return avancarNoOverlay(cicloId, autor, agora)
+      return (await estado()).avancarCiclo(cicloId, autor, agora)
     },
 
     async abrirContestacao(entrada: EntradaContestacao, agora: string): Promise<Resultado> {
       const { perfil, ...dados } = entrada
-      abrirContestacao({ ...dados, abertaEm: agora }, perfil)
-      return {
-        ok: true,
-        mensagem: 'Contestação registrada. A SEAB responde dentro do prazo do ciclo.',
-      }
+      return (await estado()).abrirContestacao({ ...dados, abertaEm: agora }, perfil)
     },
   }
 }

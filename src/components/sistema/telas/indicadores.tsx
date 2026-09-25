@@ -1,7 +1,13 @@
 import { GitCompareArrows, Ruler, Scale, Table2 } from 'lucide-react'
 import { Num } from '@/components/base/num'
 import { Etiqueta } from '@/components/base/selo'
-import { AcoesDaTela, Aviso, Painel, SomenteLeitura } from '@/components/sistema/base'
+import {
+  AcoesDaTela,
+  Aviso,
+  Painel,
+  SomenteLeitura,
+  rotuloDaDirecao,
+} from '@/components/sistema/base'
 import type { FaixaPontuacao, RegraDePontuacao } from '@/lib/calculo/tipos'
 import { carregarDados } from '@/lib/dados/consultas'
 
@@ -123,7 +129,11 @@ function DiffDaRegua({
 export async function TelaIndicadores() {
   const dados = await carregarDados()
   const [v1, v2] = dados.regras
-  const reguaAtual = v2 ?? v1
+  // A régua mostrada é a da regra em vigor hoje, a que não tem fim de vigência.
+  // Até o SR1 esta tela mostrava a v2 fixa, e a v3 já valia para junho.
+  const reguaAtual =
+    dados.regras.find((regra) => regra.vigenteAte === null) ??
+    dados.regras[dados.regras.length - 1]
 
   const nomeDoTipo = (id: string) => dados.tipoUnidadePorId(id)?.nome ?? id
   const nomeDoIndicador = (id: string) => dados.indicadorPorId(id)?.nome ?? id
@@ -143,7 +153,9 @@ export async function TelaIndicadores() {
         <Aviso>
           Esta tela é só de leitura: é a régua da avaliação. Quando o documento oficial mudar,
           muda o cadastro aqui dentro, e as regras antigas ficam guardadas. Neste protótipo os
-          dados são de exemplo e a edição ainda não foi construída.
+          dados são de exemplo e a edição ainda não foi construída. Os{' '}
+          {dados.indicadores.length} indicadores abaixo são de teste. Os 5 indicadores da
+          portaria ainda vão entrar.
         </Aviso>
       </div>
 
@@ -161,8 +173,8 @@ export async function TelaIndicadores() {
                   <span className="text-sm font-medium">{indicador.nome}</span>
                   <Num className="text-xs text-apagado">
                     {indicador.unidadeMedida} ·{' '}
-                    {indicador.direcao === 'maior_melhor' ? 'maior é melhor' : 'menor é melhor'}{' '}
-                    · {indicador.periodicidade} · {indicador.fonte}
+                    {rotuloDaDirecao(indicador.direcao)} · {indicador.periodicidade} ·{' '}
+                    {indicador.fonte}
                   </Num>
                 </div>
                 <ul className="mt-2 space-y-1 border-l border-linha pl-3 text-sm">
@@ -186,7 +198,7 @@ export async function TelaIndicadores() {
       <Painel
         alvo="ind-regua"
         titulo="A régua por tipo de unidade" icone={Table2}
-        descricao={`O que a reunião com o cliente confirmou: a depender do tipo, só alguns indicadores valem, e meta e peso mudam. Régua da ${reguaAtual?.id ?? 'regra vigente'}.`}
+        descricao={`O que a reunião com o cliente confirmou: a depender do tipo, só alguns indicadores valem, e meta e peso mudam. Régua da ${reguaAtual?.id ?? 'regra vigente'}, a que vale hoje.${reguaAtual?.metodo === 'notas' ? ' Nela, quem dá a nota são os degraus de cada item; a meta fica só como referência.' : ''}`}
       >
         <div className="space-y-5">
           {dados.tiposUnidade.map((tipo) => {

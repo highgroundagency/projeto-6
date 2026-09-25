@@ -25,6 +25,7 @@ import {
   DEMO_PITCH,
   ETAPAS_DO_MES,
   FRASE_DO_MODELO,
+  MESES_NA_BASE_NO_KICKOFF,
   MODELO_NO_KICKOFF,
   LEGENDAS_DA_BASE,
   LEGENDAS_DE_RISCO,
@@ -367,7 +368,7 @@ export async function Slides() {
           <Contagem numero={dados.subindicadores.length} rotulo={ROTULOS_DA_BASE.subindicadores}>
             {LEGENDAS_DA_BASE.subindicadores}
           </Contagem>
-          <Contagem numero={dados.ciclos.length} rotulo={ROTULOS_DA_BASE.competencias}>
+          <Contagem numero={MESES_NA_BASE_NO_KICKOFF} rotulo={ROTULOS_DA_BASE.competencias}>
             {LEGENDAS_DA_BASE.competencias}
           </Contagem>
         </dl>

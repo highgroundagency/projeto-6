@@ -62,7 +62,28 @@ export interface BaseSintetica {
   readonly contestacoes: readonly Contestacao[]
 }
 
-const COMPETENCIAS = ['2026-01', '2026-02', '2026-03', '2026-04', '2026-05', '2026-06'] as const
+/**
+ * Os meses da base, e a etapa em que cada um está.
+ *
+ * Junho FECHOU pela regra v3 e julho é o mês aberto. Até o Kick-off o aberto
+ * era junho, e com isso nenhuma nota pela v3 existia para quem visita: a regra
+ * nova só aparecia se alguém com sessão de admin homologasse junho ao vivo.
+ *
+ * Julho entra NO FIM da lista, e a ordem importa: o gerador sorteia os números
+ * mês a mês, na ordem desta lista, então tudo o que vem antes de junho sai
+ * idêntico. Janeiro a maio continuam com os mesmos lançamentos e as mesmas
+ * notas (há teste que confere maio da USF Canário). Junho muda, porque passou
+ * a ser gerado como mês fechado, com tudo lançado; ele nunca teve nota antes.
+ */
+const COMPETENCIAS = [
+  '2026-01',
+  '2026-02',
+  '2026-03',
+  '2026-04',
+  '2026-05',
+  '2026-06',
+  '2026-07',
+] as const
 
 const ESTADOS: Record<string, EstadoCiclo> = {
   '2026-01': 'publicado',
@@ -70,8 +91,19 @@ const ESTADOS: Record<string, EstadoCiclo> = {
   '2026-03': 'publicado',
   '2026-04': 'publicado',
   '2026-05': 'homologado',
-  '2026-06': 'lancamento_aberto',
+  '2026-06': 'homologado',
+  '2026-07': 'lancamento_aberto',
 }
+
+/**
+ * O período da onda sazonal do gerador, em meses.
+ *
+ * Fica fixo em seis, e NÃO é `COMPETENCIAS.length`: a onda foi calibrada
+ * quando a base tinha seis meses. Derivar do tamanho da lista fez sentido até
+ * julho entrar; a partir daí, cada mês acrescentado mudaria os números de
+ * janeiro a maio, que já foram publicados e mostrados no Kick-off.
+ */
+const PERIODO_SAZONAL = 6
 
 const REGRAS: readonly RegraDePontuacao[] = [
   {
@@ -148,7 +180,10 @@ const REGRAS: readonly RegraDePontuacao[] = [
     id: 'regra-v3',
     versao: 3,
     descricao:
-      'Primeira regra conferida contra a planilha do cliente: nota por subindicador, média das notas, segunda gradação no prontuário e peso redistribuído quando falta lançamento.',
+      // "Escrita a partir das fórmulas", e não "conferida": nenhuma linha real
+      // da planilha foi recalculada pelo motor ainda, e a conferência com a
+      // Secretaria é compromisso aberto do Kick-off.
+      'Primeira regra escrita a partir das fórmulas da planilha do cliente: nota por subindicador, média das notas, segunda gradação no prontuário e peso redistribuído quando falta lançamento.',
     vigenteDe: '2026-06',
     vigenteAte: null,
     faixas: [],
@@ -242,7 +277,7 @@ export function gerarBase(semente: number = SEMENTE_PADRAO): BaseSintetica {
 
         const vies = vieses.get(unidade.id) ?? 0
         const tendencia = indiceCiclo * 0.008
-        const sazonalidade = Math.sin((indiceCiclo / COMPETENCIAS.length) * Math.PI * 2) * 0.03
+        const sazonalidade = Math.sin((indiceCiclo / PERIODO_SAZONAL) * Math.PI * 2) * 0.03
         const ruido = (aleatorio() - 0.5) * (comportamento?.volatilidade ?? 0.08) * 2
 
         const atingimento = Math.max(
