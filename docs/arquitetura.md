@@ -284,7 +284,7 @@ C4Container
   }
 
   Container_Boundary(offline, "Offline") {
-    Container(notebooks, "Notebooks", "Python, scikit-learn, pandas", "EDA, classificação, regressão e clustering")
+    Container(notebooks, "Notebooks", "Python, scikit-learn, pandas", "EDA, classificação, regressão e clustering sobre ml/data, a base por unidade da SESAU")
     ContainerDb(artefatos, "src/content/ml/resultados.json", "JSON versionado", "Resultados e métricas exportados")
   }
 
@@ -600,7 +600,9 @@ fonte.
 **Pipeline de ML offline.** Treinar modelo em requisição não faz sentido aqui: os dados
 mudam por ciclo, não por segundo. Os notebooks rodam offline, exportam JSON versionado e a
 aplicação apenas lê. Isso mantém o app rápido e torna cada número da tela de analytics
-rastreável até o notebook que o gerou.
+rastreável até o notebook que o gerou. Os notebooks leem a base de desempenho por unidade
+da SESAU, em `ml/data/`, com autorização da Secretaria (ADR-043 e ADR-044). O app não lê
+essa base, só os JSONs; o seed continua sintético.
 
 **Observabilidade.** `/status` e `/api/status` expõem versão, commit, modo de dados, driver
 de configuração, release público e latência de coleta. Logs estruturados ficam a cargo da

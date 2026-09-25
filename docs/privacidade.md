@@ -7,9 +7,17 @@ do que ele faz **hoje**, como MVP acadêmico. A diferença entre os dois é gran
 explicitada em cada seção.
 
 > **Estado atual do MVP:** o sistema roda com **dados 100% sintéticos**, gerados por script
-> com semente fixa (`src/lib/seed/`). Nenhum dado real de pessoa ou da SESAU entra no
-> repositório, no seed ou em prompt de IA. Há teste automatizado que recusa CPF, e-mail,
-> telefone ou matrícula na base (`src/lib/seed/seed.test.ts`).
+> com semente fixa (`src/lib/seed/`). Há teste que recusa CPF, e-mail, telefone ou matrícula
+> nessa base (`src/lib/seed/seed.test.ts`).
+>
+> **Dado de pessoa nunca entra:** nem no repositório, nem no seed, nem em prompt de IA.
+> **Dado institucional da SESAU entra com autorização registrada (ADR-044).** A base de
+> desempenho por unidade está em `ml/data/base nova completa.csv`, com autorização da
+> Secretaria, e só os cadernos da lente de ML a leem. O teste
+> `src/lib/dados-do-cliente.test.ts` varre `ml/data/` inteiro, linha a linha, atrás de CPF,
+> e-mail, telefone e coluna que identifique pessoa. A autorização não se estende ao seed.
+> O risco que esse teste não pega, a identificação indireta, está na seção
+> [Identificação indireta na base da SESAU](#identificação-indireta-na-base-da-sesau).
 
 ## Dados que o sistema trataria em produção
 
@@ -95,6 +103,56 @@ não há transferência internacional de dados pessoais hoje. **Em produção, i
 requisito de contratação**: hospedagem em região brasileira ou avaliação formal de
 transferência (arts. 33 a 36).
 
+Uma ressalva, que depende da seção seguinte: se alguma linha de `ml/data/` for tratada como
+dado pessoal, esta conclusão muda. O repositório é público e fica no GitHub, fora do Brasil.
+
+## Identificação indireta na base da SESAU
+
+**O que está no arquivo.** `ml/data/base nova completa.csv` tem 244 linhas e 260 colunas. São
+48 linhas de distrito (seis por distrito, oito distritos) e 196 de unidade. Não há nome de
+unidade nem de pessoa. Cada linha se identifica por duas colunas: o tipo de unidade, com o
+porte (USF 1 a USF 8, MAC 1 a MAC 4, CAPS II ou III, CAPS III 24h), e o distrito sanitário.
+
+**A conta.** Recontada em 25/09, só lendo o arquivo:
+
+| Recorte | Combinações tipo × distrito | Com uma linha só |
+| --- | --- | --- |
+| Base inteira | 90 | 39 |
+| Só as linhas de unidade | 82 | 39 |
+| Só unidade, sem o porte | 43 | 19 |
+
+As oito combinações de distrito têm seis linhas cada, então as 39 únicas são todas de
+unidade. Tirar o porte (USF, MAC e CAPS sem número) reduz o problema, mas não o resolve.
+
+**O risco.** Uma combinação única aponta uma unidade: na base, ela é a única daquele tipo
+naquele distrito. Cada unidade tem um gerente, e é ele quem recebe a gratificação pela nota dela.
+Quem conhece a rede chega à pessoa sem precisar do nome. Pelo art. 5º, I da LGPD, dado
+pessoal é o que se refere a pessoa identificada **ou identificável**. Então as 39 linhas
+podem ser dado pessoal por identificação indireta, mesmo sem CPF nem nome. As colunas de
+contagem ("total avaliado", "quantidade atendida") também podem ajudar a cruzar a linha com
+outra fonte.
+
+**O que o teste não pega.** `src/lib/dados-do-cliente.test.ts` procura identificador direto:
+CPF, e-mail, telefone e coluna com nome de pessoa. Identificação indireta não aparece em
+nenhuma linha isolada. Ela só aparece contando combinações, como aqui.
+
+**O que falta.** A ADR-044 registra que a Secretaria autorizou a base em `ml/data/`. Não há,
+no repositório, documento da Secretaria que cubra publicar essa base num repositório
+público e nos slides de `/ml`. Falta essa autorização por escrito, com a referência
+guardada junto da ADR.
+
+**As opções.** A decisão é da equipe com a Secretaria.
+
+1. **Generalizar.** Juntar as combinações raras antes de publicar: tirar o porte, agrupar
+   os tipos com poucas unidades, ou retirar o distrito dessas linhas. Recontar até nenhuma
+   combinação ficar com uma linha só. Custo: os cadernos rodam de novo, e os números de
+   `/ml` e dos JSONs em `src/content/ml/` mudam.
+2. **Justificar.** Manter a base como está, com a autorização por escrito dizendo que a
+   Secretaria sabe que o repositório é público e que a combinação tipo × distrito pode
+   apontar a unidade. A justificativa precisa dizer a base legal da publicação.
+
+Até a decisão, o risco fica declarado aqui.
+
 ## Pendências honestas
 
 1. Falta validar com a SESAU o prazo de retenção e o inventário de dados reais.
@@ -102,3 +160,6 @@ transferência (arts. 33 a 36).
    produção, ainda não construídos.
 3. Não há registro de operações de tratamento (art. 37) formalizado; a trilha de auditoria
    é a base sobre a qual ele seria montado.
+4. Falta a autorização por escrito da Secretaria para publicar `ml/data/` num repositório
+   público, e a decisão entre generalizar e justificar as 39 combinações únicas (seção
+   acima).

@@ -26,9 +26,13 @@ auditável** — qualquer número exibido responde "de onde veio?" em um clique.
 | Rota | O que é |
 | --- | --- |
 | `/` | A página: problema, equipe, marcos e o registro semanal em sanfona — o artefato avaliado |
-| `/sistema` | O MVP funcionando, com dados 100% sintéticos |
+| `/sistema` | O MVP funcionando, com a base 100% sintética do seed |
 | `/registro` | Redirecionamento para `/#registro`, para não quebrar link já compartilhado |
-| `/pitch` | Os nove slides do pitch do Kick-off, liberados com o ciclo `ko`: setas, notas com `n` e a memória de cálculo real no slide da demonstração |
+| `/pitch` | Os dezessete slides do Kick-off, liberados com o ciclo `ko`: setas, notas com `n` e a memória de cálculo real no slide da demonstração |
+| `/ml` | Os slides da AV1 de machine learning, com PDF de reserva em `/ml/pdf`. Os números vêm da base por unidade da SESAU, em `ml/data/` |
+| `/sr1` | O deck do SR1, no mesmo desenho do Kick-off, com PDF de reserva em `/sr1/pdf` |
+| `/arquitetura` | Os quatro níveis do C4, desenhados para caber num projetor |
+| `/transparencia-ia` | O registro de uso de IA, lido de `docs/uso-de-ia.md` |
 
 O site tem duas realidades: a **pública** (o recorte visível hoje) e a **completa** (tudo
 que a equipe já construiu). O recorte avança sozinho conforme o cronograma, uma semana à
@@ -63,27 +67,28 @@ Copie `.env.example` para `.env.local`. Nada é obrigatório para rodar localmen
 npm run verificar
 ```
 
-Roda, nesta ordem: `tsc --noEmit` → Vitest → `next build` → verificação de vazamento. O
-end-to-end fica em `npm run e2e`.
+Roda, nesta ordem: `tsc --noEmit` → Vitest → `next build` → verificação de vazamento →
+conferência do dossiê. O end-to-end fica em `npm run e2e`.
 
-O que está coberto:
+O que está coberto, contado em 25/09:
 
-- **505 testes de unidade** — aritmética de data no fuso do projeto, motor de releases,
-  config store, sessão do admin, completude do registro, motor de cálculo, base sintética e
-  os números ditos no pitch, conferidos contra os documentos de onde vêm.
-- **23 verificações do schema guardado** — políticas de RLS por perfil e invariantes de
-  gatilho, aplicando as migrações reais num PostgreSQL descartável (`npm run testar-rls`).
-  Puladas automaticamente sem `DATABASE_URL_TESTE`.
-- **127 verificações de vazamento** — nenhum conteúdo de release futuro no HTML, no payload
+- **602 testes de unidade** — aritmética de data no fuso do projeto, motor de releases,
+  config store, sessão do admin, completude do registro, motor de cálculo (55 casos), base
+  sintética, a fronteira de `ml/data/` e os números ditos nos decks, conferidos contra os
+  documentos de onde vêm.
+- **23 verificações que exigem um PostgreSQL real** — 21 das políticas de RLS por perfil e
+  dos invariantes de gatilho, aplicando as migrações reais num banco descartável
+  (`npm run testar-rls`), e 2 da semeadura. Puladas automaticamente sem `DATABASE_URL_TESTE`.
+- **164 verificações de vazamento** — nenhum conteúdo de release futuro no HTML, no payload
   RSC ou no bundle do cliente; rota não liberada responde 404, inclusive `/pitch`.
-- **108 testes end-to-end** — jornadas críticas em desktop e em 360px, o deck do pitch incluído.
+- **130 testes end-to-end** — jornadas críticas em desktop e em 360px, os decks incluídos.
 - **Tipagem como portão** — um ciclo publicado sem responsáveis, com lista vazia ou com
   integrante inexistente **não compila**.
 
 ## Stack
 
 Next.js 15 (App Router) · TypeScript · Tailwind v4 · zod · Vitest · Playwright · Deploy na
-Vercel. **Sem banco**: os dados são sintéticos e vivem em memória.
+Vercel. **Sem banco**: os dados do app são sintéticos e vivem em memória.
 
 Quase nenhum JavaScript de aplicação chega ao navegador: as telas são Server Components e
 os formulários são HTML puro.
@@ -95,7 +100,8 @@ os formulários são HTML puro.
 | [`docs/arquitetura.md`](docs/arquitetura.md) | Diagramas C4, fluxo de dados e decisões de infraestrutura |
 | [`docs/releases.md`](docs/releases.md) | Como operar o que o professor vê — manual da equipe |
 | [`docs/seguranca.md`](docs/seguranca.md) | STRIDE, OWASP Top 10 e análise do próprio painel admin |
-| [`docs/privacidade.md`](docs/privacidade.md) | LGPD, base legal, Privacy by Design e direitos dos titulares |
+| [`docs/nuvem.md`](docs/nuvem.md) | Onde cada componente executa, pipeline, doze fatores e limites de escala |
+| [`docs/privacidade.md`](docs/privacidade.md) | LGPD, base legal, Privacy by Design, direitos dos titulares e identificação indireta na base da SESAU |
 | [`docs/decisoes.md`](docs/decisoes.md) | ADRs — os porquês, em cinco linhas cada |
 | [`docs/banco.md`](docs/banco.md) | O schema PostgreSQL que existe mas não está ligado: por quê, o que contém e como usá-lo |
 | [`docs/validacao.md`](docs/validacao.md) | O que é testado e os instrumentos de validação com o cliente |
@@ -104,6 +110,18 @@ os formulários são HTML puro.
 
 ## Dados
 
-**Nenhum dado real de pessoa ou da SESAU está neste repositório.** Áreas, indicadores,
-metas, gestores e lançamentos são fictícios, gerados por script com semente fixa. Há teste
-automatizado que falha se qualquer identificador pessoal aparecer na base.
+**Dado de pessoa nunca entra neste repositório.** CPF, nome, matrícula, e-mail e telefone
+ficam de fora sem exceção. É lei (LGPD), não permissão que o cliente possa dar.
+
+**O site e o sistema rodam com base 100% sintética.** Unidades, indicadores, metas, gerentes
+e lançamentos do seed (`src/lib/seed/`) são fictícios, gerados por script com semente fixa.
+O teste `src/lib/seed/seed.test.ts` falha se um identificador pessoal aparecer nela.
+
+**A base de desempenho por unidade da SESAU está em `ml/data/`**, no arquivo
+`base nova completa.csv`, com autorização da Secretaria (ADR-044). É dado institucional:
+tipo de unidade, distrito, indicador e número, sem nome de ninguém. Só os cadernos da lente
+de ML leem o arquivo. O app lê apenas os JSONs que eles gravam (`src/content/ml/`), e a
+autorização não se estende ao seed. O teste
+`src/lib/dados-do-cliente.test.ts` varre `ml/data/` inteiro, linha a linha, atrás de CPF,
+e-mail, telefone e coluna que identifique pessoa. O risco de identificação indireta que
+sobra está analisado em [`docs/privacidade.md`](docs/privacidade.md).

@@ -163,15 +163,16 @@ dos subindicadores apurados; atingimento contra a meta do TIPO da
 unidade; score = soma de pontos x peso sobre o máximo possível, x 100);
 middleware Edge protegendo /admin; route handlers Node (login, ciclo,
 lançamento, contestação, CSV, tema, perfil, status); base sintética em
-memória com semente fixa 20262 (3 distritos, 4 tipos de unidade, 12
-unidades, 7 indicadores, 11 subindicadores, 15 gerentes, 6 meses, trilha
+memória com semente fixa 20262 (3 distritos, 7 tipos de unidade, 12
+unidades, 8 indicadores, 12 subindicadores, 15 gerentes, 6 meses, trilha
 imutável); motor de liberações por calendário (conteúdo futuro não vai
 ao navegador; tela não liberada responde 404); schema PostgreSQL
 versionado com RLS e 4 gatilhos, testado no CI e DESLIGADO (ainda no
 domínio anterior à remodelagem, com pendência declarada); pipeline de ML
 offline em Python que exporta src/content/ml/resultados.json.
 Classes do domínio (campos reais): Distrito (nome); Tipo de unidade
-(nome, sigla: USF, CAPS, UPA, POLI); Unidade (nome, distritoId, tipoId);
+(nome, sigla: USF, UBT, UBT MISTA, CAPS, CECON, UCIS, MAC); Unidade
+(nome, distritoId, tipoId);
 Gerente (nome, cargo, escopo unidade ou distrito; sem CPF nem matrícula,
 por desenho); Indicador (nome, unidade de medida, direção, fonte; SEM
 meta e peso próprios); Subindicador (nome, tipo índice ou razão; é o que
