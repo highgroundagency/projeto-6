@@ -366,9 +366,9 @@ export const AMEACAS_STRIDE = [
   ],
   [
     'Information disclosure: vazar dado pessoal',
-    'Toda a base',
-    'Dado de pessoa nunca entra. O sistema roda numa base inventada, e um teste recusa CPF, e-mail, telefone e matrícula nela. A base por unidade da SESAU é dado da instituição e entra em ml/data com autorização (ADR-044). Um segundo teste varre essa pasta linha a linha',
-    'Implementado',
+    'A base do sistema e ml/data',
+    'Dado de pessoa nunca entra. O sistema roda numa base inventada, e um teste recusa CPF, e-mail, telefone e matrícula nela. A base por unidade da SESAU é dado da instituição e entra em ml/data com autorização (ADR-044). Um segundo teste varre essa pasta linha a linha. Nenhum teste pega a identificação indireta: 39 combinações de tipo e distrito têm uma linha só, e a autorização por escrito para publicar ainda falta',
+    'Parcial',
   ],
   [
     'Denial of service: força bruta no login',
@@ -403,7 +403,7 @@ export const AMEACAS_STRIDE = [
   [
     'Tampering: adulterar a demonstração alheia',
     '/api/sistema/ciclo',
-    'O estado do ciclo vale para todos os visitantes, e a mudança não volta. Exige sessão de admin, e o controle nem aparece para quem não tem',
+    'A mudança de etapa não volta atrás pela tela. Exige sessão de admin, e o controle nem aparece para quem não tem',
     'Implementado',
   ],
 ] as const
@@ -459,10 +459,11 @@ export const ITENS_OWASP = [
 
 export const LIMITACOES_DE_SEGURANCA = [
   'O seletor de perfil não é autenticação. Num site público, qualquer pessoa troca entre os quatro perfis. A única credencial real é a sessão de admin.',
-  'A escrita do sistema vive em memória. O que se grava some no reinício, e pode não valer entre duas requisições. Lançamento e contestação ficam abertos a qualquer visitante, por decisão.',
+  'A escrita do sistema vive em memória. O que se grava some no reinício, e pode não valer entre duas requisições. Lançamento e contestação ficam abertos a qualquer visitante, por decisão, e desde a semana do SR1 cada visitante escreve numa cópia própria.',
   'Esconder o link do painel reduz tropeço, não é segurança. A proteção real é trocar a senha em produção.',
   'A CSP usa unsafe-inline para script e estilo. O próximo passo é um nonce por requisição.',
   'Não há proteção CSRF além do cookie sameSite=lax. Basta para formulário da mesma origem, não para uma API pública.',
+  'A base por unidade da SESAU em ml/data é pública, porque o repositório é. Dado de pessoa não entra, e um teste varre a pasta inteira. Mas 39 das 90 combinações de tipo e distrito têm uma linha só, o que pode apontar a unidade e, por ela, o gerente. A análise está no documento de Direito, logo abaixo.',
 ] as const
 
 /* ---------------------------------------------------------------------------
@@ -788,6 +789,7 @@ export const documentos = [
               'O método da v3 veio da planilha, e não só da portaria. Três suposições nossas estavam erradas.',
               'Os 5 indicadores da portaria e o porte ficaram para as sprints.',
               'A planilha trouxe perguntas novas para a Secretaria: NDI e SAE, porte e peso excepcional.',
+              'Entra nas sprints um teste que confere a conta do motor contra linhas reais da base por unidade. Hoje os testes do motor usam só casos inventados.',
             ]}
           />
         </Secao>

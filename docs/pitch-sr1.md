@@ -120,7 +120,7 @@ por visitante), então ensaiar não estraga a tela de ninguém.
 
 ### Slide 6: a regra mudou, e maio não
 
-- **Começa em** 2:15 · **dura** 0:40 · **quem fala:** João Henrique · **46 palavras na tela**
+- **Começa em** 2:15 · **dura** 0:40 · **quem fala:** João Henrique · **44 palavras na tela**
 - **na versão de 5 min:** 0:30, só as 3 primeiras falas
 - **Frase da tela:** a correção entrou como regra nova, com número de versão. mês fechado não muda.
 - **O que a tela mostra:** A mesma unidade de teste em três contas: maio pela versão 2, maio pela versão 3 e junho pela versão 3.
@@ -135,7 +135,7 @@ por visitante), então ensaiar não estraga a tela de ninguém.
 
 ### Slide 7: do número à nota, ao vivo
 
-- **Começa em** 2:55 · **dura** 1:45 · **quem fala:** João Pedro · **24 palavras na tela**
+- **Começa em** 2:55 · **dura** 1:45 · **quem fala:** João Pedro · **22 palavras na tela**
 - **na versão de 5 min:** 1:20, só as 6 primeiras falas
 - **Frase da tela:** o sistema rodando agora, com dados de teste.
 - **O que a tela mostra:** O sistema ao vivo. De reserva, a nota de junho com a conta aberta, calculada na hora.
@@ -168,7 +168,7 @@ por visitante), então ensaiar não estraga a tela de ninguém.
 
 - **Começa em** 5:00 · **dura** 0:30 · **quem fala:** João Henrique · **66 palavras na tela**
 - **fora da versão de 5 min**
-- **Frase da tela:** do contexto ao código, no padrão c4. o desenho inteiro está no site.
+- **Frase da tela:** do contexto ao código, no padrão C4. o desenho inteiro está no site.
 - **O que a tela mostra:** Os quatro níveis do C4, com o motor de cálculo em destaque e o endereço da página.
 - **A fala:**
   1. Desenhamos o sistema em quatro níveis de zoom, no padrão C4. O desenho inteiro está na página de arquitetura do site.
@@ -223,7 +223,7 @@ por visitante), então ensaiar não estraga a tela de ninguém.
 
 ### Slide 13: o que prometemos, e o que fizemos
 
-- **Começa em** 7:10 · **dura** 0:35 · **quem fala:** Gabriel · **68 palavras na tela**
+- **Começa em** 7:10 · **dura** 0:35 · **quem fala:** Gabriel · **67 palavras na tela**
 - **na versão de 5 min:** 0:15, só as 2 primeiras falas
 - **Frase da tela:** os três compromissos do kick-off, cada um com o estado de hoje.
 - **O que a tela mostra:** Os três compromissos do Kick-off, com quem puxou, o estado e o porquê.
@@ -231,30 +231,30 @@ por visitante), então ensaiar não estraga a tela de ninguém.
   1. No Kick-off prometemos três coisas até hoje, com data e nome. Vamos prestar contas.
   1. As telas estão no ar: as 4.
   1. A regra oficial entrou em parte: o jeito de calcular da planilha está no sistema, mas os indicadores ainda são de teste.
-  1. E a conferência com a Secretaria não aconteceu. As perguntas estão escritas, e a conversa entrou na correção de rota.
+  1. E a conferência com a Secretaria não aconteceu. As perguntas estão escritas, e a conferência da conta ficou para a Semana 11.
 
 ### Slide 14: a correção de rota
 
-- **Começa em** 7:45 · **dura** 0:30 · **quem fala:** Matheus · **49 palavras na tela**
+- **Começa em** 7:45 · **dura** 0:30 · **quem fala:** Matheus · **66 palavras na tela**
 - **fora da versão de 5 min**
-- **Frase da tela:** o que a planilha mudou nas quatro sprints.
+- **Frase da tela:** o que a planilha mudou nas quatro sprints, e o que continua fora.
 - **O que a tela mostra:** O que entra nas sprints por causa da planilha, e o que fica para depois.
 - **A fala:**
   1. A planilha mudou o plano. Entram os indicadores reais da portaria, o porte das unidades e o prazo de contestação.
   1. Entra também conferir a nossa conta contra linhas reais da planilha, com as perguntas que decidem a regra.
-  1. O estado de cada item do plano está no site.
+  1. Folha de pagamento, login da prefeitura e dado de pessoa continuam fora. O estado de cada história está no site.
 - **Se perguntarem** (fora do tempo):
   - O retorno desta banca entra por cima de tudo isso, na primeira sprint.
 
 ### Slide 15: até o sr2
 
-- **Começa em** 8:15 · **dura** 0:25 · **quem fala:** Kerry · **42 palavras na tela**
+- **Começa em** 8:15 · **dura** 0:25 · **quem fala:** Kerry · **46 palavras na tela**
 - **fora da versão de 5 min**
 - **Frase da tela:** quatro sprints, uma semana com o cliente e a entrega final.
 - **O que a tela mostra:** As sete paradas até o SR2, com a data de cada uma e a validação em destaque.
 - **A fala:**
   1. Daqui até o SR2 são quatro sprints, uma semana de validação com o cliente e a entrega final.
-  1. A semana que mais importa é a da validação: é quando a Secretaria usa o sistema e diz se a conta bate.
+  1. A semana que mais importa é a da validação: é quando a Secretaria confere se a nossa conta bate com a dela.
 
 ### Slide 16: prumo
 

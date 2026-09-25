@@ -432,7 +432,7 @@ export const SLIDES_SR1 = [
       'No Kick-off prometemos três coisas até hoje, com data e nome. Vamos prestar contas.',
       `As telas estão no ar: as ${TELAS_NO_SR1.length}.`,
       'A regra oficial entrou em parte: o jeito de calcular da planilha está no sistema, mas os indicadores ainda são de teste.',
-      'E a conferência com a Secretaria não aconteceu. As perguntas estão escritas, e a conversa entrou na correção de rota.',
+      'E a conferência com a Secretaria não aconteceu. As perguntas estão escritas, e a conferência da conta ficou para a Semana 11.',
     ],
     curto: { segundos: 15, notas: 2 },
   },
@@ -440,14 +440,14 @@ export const SLIDES_SR1 = [
     id: 'rota',
     numero: 14,
     titulo: 'a correção de rota',
-    apoio: 'o que a planilha mudou nas quatro sprints.',
+    apoio: 'o que a planilha mudou nas quatro sprints, e o que continua fora.',
     visual: 'O que entra nas sprints por causa da planilha, e o que fica para depois.',
     segundos: 30,
     quemFala: 'matheus',
     notas: [
       'A planilha mudou o plano. Entram os indicadores reais da portaria, o porte das unidades e o prazo de contestação.',
       'Entra também conferir a nossa conta contra linhas reais da planilha, com as perguntas que decidem a regra.',
-      'O estado de cada item do plano está no site.',
+      'Folha de pagamento, login da prefeitura e dado de pessoa continuam fora. O estado de cada história está no site.',
     ],
     perguntas: [
       'O retorno desta banca entra por cima de tudo isso, na primeira sprint.',
@@ -463,7 +463,7 @@ export const SLIDES_SR1 = [
     quemFala: 'kerry',
     notas: [
       'Daqui até o SR2 são quatro sprints, uma semana de validação com o cliente e a entrega final.',
-      'A semana que mais importa é a da validação: é quando a Secretaria usa o sistema e diz se a conta bate.',
+      'A semana que mais importa é a da validação: é quando a Secretaria confere se a nossa conta bate com a dela.',
     ],
   },
   {
@@ -676,7 +676,7 @@ export const ESTADO_DOS_COMPROMISSOS: Record<
   },
   sr1: {
     estado: 'não feito',
-    porque: 'as perguntas estão escritas; a conversa entrou na correção de rota',
+    porque: 'as perguntas estão escritas; a conferência ficou para a semana 11',
   },
 }
 
@@ -688,23 +688,24 @@ export const COMPROMISSOS_NO_SR1 = COMPROMISSOS_ATE_O_SR1.map((c) => ({
 /** Slide 14: o que entra e o que fica para depois. */
 export const CORRECAO_DE_ROTA = {
   entra: [
-    'os indicadores reais da portaria',
+    'os 5 indicadores da portaria',
     'o porte de cada unidade',
     'o prazo para contestar a nota',
-    'a conta conferida com linhas reais',
+    'os cortes das classes, quando a secretaria responder',
+    'a conta testada com linhas reais da base',
   ],
-  depois: ['o banco de dados ligado', 'o login de verdade'],
+  depois: ['a folha de pagamento', 'o login da prefeitura', 'dado de pessoa no sistema'],
 } as const
 
-export const COLUNAS_DA_ROTA = { entra: 'entra nas sprints', depois: 'fica para depois' } as const
+export const COLUNAS_DA_ROTA = { entra: 'entra nas sprints', depois: 'continua fora' } as const
 
 /** Slide 15: as paradas até o SR2, lidas do cronograma, e o que cada uma entrega. */
 export const PARADAS_ATE_O_SR2: readonly { ciclo: CicloId; entrega: string; destaque?: true }[] = [
   { ciclo: 's7', entrega: 'o retorno do sr1 aplicado' },
-  { ciclo: 's8', entrega: 'os indicadores reais' },
+  { ciclo: 's8', entrega: 'os indicadores da portaria' },
   { ciclo: 's9', entrega: 'porte e prazo de contestação' },
-  { ciclo: 's10', entrega: 'a conta conferida' },
-  { ciclo: 's11', entrega: 'a secretaria usa o sistema', destaque: true },
+  { ciclo: 's10', entrega: 'a conta testada com linhas reais' },
+  { ciclo: 's11', entrega: 'a secretaria confere a conta', destaque: true },
   { ciclo: 's12', entrega: 'o material do sr2' },
   { ciclo: 'sr2', entrega: 'a entrega final' },
 ]
