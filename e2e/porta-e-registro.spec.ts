@@ -5,9 +5,11 @@ import {
   CICLO_DA_SEMANA,
   CICLO_OCULTO,
   CICLO_PUBLICO,
-  DEVE_OFERECER_PITCH,
+  CICLOS_PUBLICOS,
+  DECK_EM_DESTAQUE,
   marcador,
 } from './cronograma'
+import { DECKS_DOS_MARCOS } from '@/lib/decks'
 
 test.describe('página inicial', () => {
   test('a chamada e o hero cabem acima da dobra', async ({ page }) => {
@@ -130,10 +132,17 @@ test.describe('registro do projeto', () => {
     expect(marco, 'nenhum marco à frente no cronograma').toBeTruthy()
     await expect(entrega.getByText(marco!.rotulo, { exact: false }).first()).toBeVisible()
 
-    if (DEVE_OFERECER_PITCH) {
-      await expect(entrega.getByRole('link', { name: /ver a apresentação/ })).toBeVisible()
+    if (DECK_EM_DESTAQUE) {
+      await expect(entrega.getByRole('link', { name: /ver a apresentação/ })).toHaveAttribute(
+        'href',
+        DECK_EM_DESTAQUE.rota,
+      )
       // E a palavra que o professor usa está no topo de toda página.
-      await expect(page.locator('header').getByRole('link', { name: 'kick-off' })).toBeVisible()
+      await expect(
+        page.locator('header').getByRole('link', { name: DECK_EM_DESTAQUE.rotulo, exact: true }),
+      ).toBeVisible()
+    }
+    if (CICLOS_PUBLICOS.includes('ko')) {
       // A rota curta não quebra: quem digita /kickoff cai nos slides.
       await page.goto('/kickoff')
       await expect(page).toHaveURL(/\/pitch$/)
@@ -145,19 +154,22 @@ test.describe('registro do projeto', () => {
   }) => {
     // Não só a inicial: a primeira versão do atalho ficou lá, e quem abrisse o
     // sistema ou a arquitetura não tinha caminho nenhum até os slides.
-    // O rótulo é "kick-off" e não "pitch": pitch é o nome interno da equipe, e
-    // quem avalia procura pela palavra que o professor usa.
+    // O rótulo é "kick-off" ou "sr1", e não "pitch": pitch é o nome interno
+    // da equipe, e quem avalia procura pela palavra que o professor usa.
     for (const rota of ['/', '/sistema', '/arquitetura', '/transparencia-ia', '/status']) {
       await page.goto(rota)
-      const link = page.getByRole('link', { name: 'kick-off', exact: true })
+      const cabecalho = page.locator('header').first()
 
-      if (DEVE_OFERECER_PITCH) {
-        await expect(link, rota).toBeVisible()
-        await expect(link, rota).toHaveAttribute('href', '/pitch')
-      } else {
-        // Fora da janela o botão some sozinho: destaque sem prazo vira
-        // entulho, e antes do release ele apontaria para um 404.
-        await expect(link, rota).toHaveCount(0)
+      for (const deck of DECKS_DOS_MARCOS) {
+        const link = cabecalho.getByRole('link', { name: deck.rotulo, exact: true })
+        if (DECK_EM_DESTAQUE?.ciclo === deck.ciclo) {
+          await expect(link, rota).toBeVisible()
+          await expect(link, rota).toHaveAttribute('href', deck.rota)
+        } else {
+          // Fora da janela o botão some sozinho: destaque sem prazo vira
+          // entulho, e antes do release ele apontaria para um 404.
+          await expect(link, rota).toHaveCount(0)
+        }
       }
     }
   })

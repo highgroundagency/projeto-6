@@ -1,9 +1,9 @@
 import { Chamada } from '@/components/base/botao'
 import { Num } from '@/components/base/num'
 import { AtalhosDeDocumento, type DocumentoNoSite } from '@/components/registro/biblioteca'
-import { ARQUIVO_PDF } from '@/content/pitch'
 import type { Ciclo } from '@/lib/cronograma'
 import { diferencaEmDias, formatarBR, type DataISO } from '@/lib/datas'
+import type { DeckDoMarco } from '@/lib/decks'
 
 /**
  * A ENTREGA DA VEZ: o marco mais próximo, com nome, data e caminho.
@@ -42,7 +42,7 @@ export function EntregaDaVez({
   hoje,
   objetivo,
   documentos,
-  slidesLiberados,
+  deck,
 }: {
   marco: Ciclo
   hoje: DataISO
@@ -50,8 +50,8 @@ export function EntregaDaVez({
   objetivo: string | null
   /** Os documentos daquele ciclo. Vazio enquanto o release não o abriu. */
   documentos: readonly DocumentoNoSite[]
-  /** A rota dos slides existe hoje? Ela é fechada pelo mesmo ciclo. */
-  slidesLiberados: boolean
+  /** O deck que o site oferece hoje, se algum. Fechado pelo ciclo do próprio marco. */
+  deck: DeckDoMarco | null
 }) {
   return (
     <section id="entrega" className="bloco revelar scroll-mt-20" aria-labelledby="titulo-entrega">
@@ -68,16 +68,17 @@ export function EntregaDaVez({
 
       {objetivo ? <p className="prosa mt-4 text-sm">{objetivo}</p> : null}
 
-      {slidesLiberados ? (
+      {deck ? (
         <div className="mt-7 flex flex-wrap items-center gap-x-6 gap-y-3">
-          {/* Nos dez dias seguintes ao Kick-off este bloco já mostra o SR1, e a
-              apresentação continua à mão. Sem o complemento, "ver a apresentação"
-              embaixo do título "SR1" prometeria slides que ainda não existem. */}
-          <Chamada href="/pitch">
-            ver a apresentação{marco.id === 'ko' ? '' : ' do kick-off'} →
+          {/* Nos dez dias seguintes a um marco este bloco já mostra o próximo, e
+              a apresentação do anterior continua à mão. Sem o complemento, "ver
+              a apresentação" embaixo do título "SR2" prometeria slides que
+              ainda não existem. */}
+          <Chamada href={deck.rota}>
+            ver a apresentação{marco.id === deck.ciclo ? '' : ` do ${deck.rotulo}`} →
           </Chamada>
           <a
-            href={ARQUIVO_PDF}
+            href={deck.pdf}
             download
             className="text-xs lowercase underline decoration-linha-alta underline-offset-4 transition-colors hover:text-acento"
           >

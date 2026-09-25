@@ -1,5 +1,6 @@
 /**
- * REGENERA A SEÇÃO SLIDE A SLIDE de `docs/pitch-kickoff.md` e de `docs/ml-av1.md`.
+ * REGENERA A SEÇÃO SLIDE A SLIDE de `docs/pitch-kickoff.md`, de `docs/ml-av1.md` e de
+ * `docs/pitch-sr1.md`.
  *
  * O documento é a versão para ler e ensaiar longe do navegador, e um teste em
  * `src/content/pitch.test.ts` exige que ele contenha o título e cada fala de
@@ -23,6 +24,13 @@ import {
   inicioDoSlideML,
   palavrasNaTela as palavrasNaTelaML,
 } from '../src/content/apresentacao-ml'
+import {
+  SLIDES_SR1,
+  type SlideSR1,
+  type SlideSR1Id,
+  inicioNaVersao,
+  palavrasNaTela as palavrasNaTelaSR1,
+} from '../src/content/apresentacao-sr1'
 
 const ARQUIVO = join(process.cwd(), 'docs', 'pitch-kickoff.md')
 const ABRE = '<!-- roteiro:inicio -->'
@@ -64,6 +72,29 @@ function corpoML(): string {
   }).join('\n\n')
 }
 
+/** O SR1: quem fala, e o que entra na versão de cinco minutos. */
+function corpoSR1(): string {
+  return (SLIDES_SR1 as readonly SlideSR1[]).map((slide, indice) => {
+    const falas = slide.notas.map((nota) => `  1. ${nota}`).join('\n')
+    const curta = slide.curto
+      ? `**na versão de 5 min:** ${formatarTempo(slide.curto.segundos)}, ${slide.curto.notas === slide.notas.length ? 'a fala inteira' : slide.curto.notas === 1 ? 'só a primeira fala' : `só as ${slide.curto.notas} primeiras falas`}`
+      : '**fora da versão de 5 min**'
+    return [
+      `### Slide ${slide.numero}: ${slide.titulo}`,
+      '',
+      `- **Começa em** ${formatarTempo(inicioNaVersao(indice, 'completa'))} · **dura** ${formatarTempo(slide.segundos)} · **quem fala:** ${nomeCurto(slide.quemFala)} · **${palavrasNaTelaSR1(slide.id as SlideSR1Id)} palavras na tela**`,
+      `- ${curta}`,
+      `- **Frase da tela:** ${slide.apoio}`,
+      `- **O que a tela mostra:** ${slide.visual}`,
+      '- **A fala:**',
+      falas,
+      ...(slide.perguntas?.length
+        ? ['- **Se perguntarem** (fora do tempo):', ...slide.perguntas.map((p) => `  - ${p}`)]
+        : []),
+    ].join('\n')
+  }).join('\n\n')
+}
+
 /** Troca só o miolo entre os dois marcadores; a prosa em volta é de gente. */
 function regenerar(arquivo: string, abre: string, fecha: string, miolo: string): void {
   const original = readFileSync(arquivo, 'utf8')
@@ -86,4 +117,14 @@ regenerar(
 )
 console.log(
   `Roteiro da AV1 de ML regenerado: ${SLIDES_ML.length} slides, ${formatarTempo(inicioDoSlideML(SLIDES_ML.length))}.`,
+)
+
+regenerar(
+  join(process.cwd(), 'docs', 'pitch-sr1.md'),
+  '<!-- roteiro-sr1:inicio -->',
+  '<!-- roteiro-sr1:fim -->',
+  corpoSR1(),
+)
+console.log(
+  `Roteiro do SR1 regenerado: ${SLIDES_SR1.length} slides, ${formatarTempo(inicioNaVersao(SLIDES_SR1.length, 'completa'))}.`,
 )

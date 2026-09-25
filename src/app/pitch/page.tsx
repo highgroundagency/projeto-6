@@ -14,7 +14,7 @@ import { obterVisao, podeVer } from '@/lib/visao'
 export const metadata: Metadata = {
   title: 'Pitch do Kick-off',
   description:
-    'Os nove slides do pitch de cinco minutos do Kick-off, apresentados direto do site.',
+    'Os dezessete slides do pitch do Kick-off, em nove minutos, apresentados direto do site.',
 }
 
 /**

@@ -11,13 +11,17 @@
  *     docs/ml-av1.pdf
  *     docs/ml-av1/slide-NN.png
  *
+ *   npm run pitch-pdf -- sr1   o SR1, de /sr1 (a versão completa)
+ *     docs/sr1.pdf
+ *     docs/sr1/slide-NN.png
+ *
  * NADA DISTO VAI PARA `public/`, e é decisão, não descuido. Arquivo estático
  * não passa por `obterVisao()`: enquanto as capturas moraram em `public/`,
  * elas entregavam o deck inteiro em imagem nos dias em que `/pitch` respondia
  * 404. O PDF é servido pela rota `/pitch/pdf`, que confere o release antes de
  * ler o arquivo daqui.
  *
- * Uso: npm run pitch-pdf [-- ml]    (exige `npm run build` antes)
+ * Uso: npm run pitch-pdf [-- ml | -- sr1]    (exige `npm run build` antes)
  *
  * Sobe o servidor de produção com a vitrine fechada e entra com sessão de
  * admin, para que o script funcione mesmo antes de o Kick-off virar público.
@@ -29,6 +33,7 @@ import { join } from 'node:path'
 import { chromium } from '@playwright/test'
 import { SLIDES } from '../src/content/pitch'
 import { SLIDES_ML } from '../src/content/apresentacao-ml'
+import { SLIDES_SR1 } from '../src/content/apresentacao-sr1'
 import { criarTokenSessao, NOME_COOKIE_SESSAO } from '../src/lib/admin/sessao'
 
 const PORTA = Number(process.env.PORTA_PITCH ?? 3213)
@@ -41,6 +46,7 @@ const RAIZ = process.cwd()
 const DECKS = {
   pitch: { rota: '/pitch', total: SLIDES.length, pdf: 'pitch-kickoff.pdf', capturas: 'pitch' },
   ml: { rota: '/ml', total: SLIDES_ML.length, pdf: 'ml-av1.pdf', capturas: 'ml-av1' },
+  sr1: { rota: '/sr1', total: SLIDES_SR1.length, pdf: 'sr1.pdf', capturas: 'sr1' },
 } as const
 
 const escolhido = (process.argv[2] ?? 'pitch') as keyof typeof DECKS

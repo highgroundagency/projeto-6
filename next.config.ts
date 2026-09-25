@@ -39,6 +39,7 @@ const nextConfig: NextConfig = {
     '/transparencia-ia': ['./docs/*.md'],
     '/pitch/pdf': ['./docs/pitch-kickoff.pdf'],
     '/ml/pdf': ['./docs/ml-av1.pdf'],
+    '/sr1/pdf': ['./docs/sr1.pdf'],
   },
   async headers() {
     return [

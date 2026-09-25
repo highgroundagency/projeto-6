@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { Presentation } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { pitchEmDestaque } from '@/lib/releases'
+import { deckEmDestaque } from '@/lib/decks'
 import { obterVisao, podeVer } from '@/lib/visao'
 
 /**
@@ -13,13 +13,17 @@ import { obterVisao, podeVer } from '@/lib/visao'
  * caminho nenhum até os slides, que é exatamente o problema que ele existe
  * para resolver.
  *
- * Ele decide sozinho se deve existir, e são duas condições:
+ * Ele decide sozinho se deve existir, e para QUAL deck, e são duas condições:
  *
- *  1. o Kick-off já foi liberado pelo release, senão o link apontaria para um
- *     404 (a rota `/pitch` é fechada por ciclo);
+ *  1. o marco já foi liberado pelo release, senão o link apontaria para um
+ *     404 (as rotas `/pitch` e `/sr1` são fechadas por ciclo);
  *  2. a data ainda está dentro da janela de destaque, que fecha dez dias
  *     depois do marco. Destaque sem prazo vira entulho de interface, e
  *     ninguém lembra de tirar.
+ *
+ * Até o SR1 ele só sabia do Kick-off, e dez dias depois dele sumia, na
+ * semana de preparar a apresentação seguinte. A escolha do deck mora em
+ * `lib/decks.ts`.
  *
  * É Server Component: chama `obterVisao()` por conta própria em vez de
  * receber a visão por prop, para uma página nova não precisar lembrar de
@@ -30,12 +34,13 @@ import { obterVisao, podeVer } from '@/lib/visao'
  */
 export async function AtalhoDoPitch({ className }: { className?: string }) {
   const visao = await obterVisao()
-  if (!podeVer(visao, 'ko') || !pitchEmDestaque(visao.hoje)) return null
+  const deck = deckEmDestaque(visao.hoje, (ciclo) => podeVer(visao, ciclo))
+  if (!deck) return null
 
   return (
     <Link
-      href="/pitch"
-      title="A apresentação do Kick-off"
+      href={deck.rota}
+      title={deck.titulo}
       className={cn(
         'inline-flex shrink-0 items-center gap-1.5 border border-linha-alta px-1.5 py-1 text-xs lowercase transition-colors hover:border-acento hover:text-acento sm:px-2',
         className,
@@ -45,7 +50,7 @@ export async function AtalhoDoPitch({ className }: { className?: string }) {
       {/* "kick-off" e não "pitch": pitch é o nome interno, e quem avalia
           procura pela palavra que o professor usa. No celular continua só o
           ícone, senão o cabeçalho estoura em 360px. */}
-      <span className="sr-only sm:not-sr-only">kick-off</span>
+      <span className="sr-only sm:not-sr-only">{deck.rotulo}</span>
     </Link>
   )
 }
