@@ -50,7 +50,8 @@ describe('base sintética', () => {
     expect(base.indicadores.length).toBe(INDICADORES.length)
     expect(base.subindicadores.length).toBe(SUBINDICADORES.length)
     expect(base.subindicadores.length).toBeGreaterThanOrEqual(10)
-    expect(base.ciclos.length).toBe(6)
+    // Seis meses no Kick-off; julho entrou para junho fechar pela v3.
+    expect(base.ciclos.length).toBe(7)
     // Um gerente por unidade e um por distrito.
     expect(base.gerentes.length).toBe(UNIDADES.length + DISTRITOS.length)
   })
@@ -161,6 +162,8 @@ describe('base sintética', () => {
   it('usa a regra vigente da competência de cada ciclo', () => {
     expect(base.ciclos.find((c) => c.competencia === '2026-02')?.regraId).toBe('regra-v1')
     expect(base.ciclos.find((c) => c.competencia === '2026-05')?.regraId).toBe('regra-v2')
+    expect(base.ciclos.find((c) => c.competencia === '2026-06')?.regraId).toBe('regra-v3')
+    expect(base.ciclos.find((c) => c.competencia === '2026-07')?.regraId).toBe('regra-v3')
   })
 
   it('a janela de revisão cabe dentro da janela de lançamento', () => {
@@ -289,5 +292,94 @@ describe('pareceErroDeDigitacao', () => {
 
   it('não divide por zero quando a meta é zero', () => {
     expect(pareceErroDeDigitacao(10, 0)).toBe(false)
+  })
+})
+
+/**
+ * Junho fechou pela v3 e julho abriu, sem mexer em mês publicado.
+ *
+ * Até o SR1 junho era o mês aberto, e nenhuma nota pela v3 existia para quem
+ * visita. Para a regra nova aparecer, julho entrou no fim da lista. O gerador
+ * sorteia mês a mês, na ordem, então janeiro a maio precisam sair iguais: é o
+ * que os números fixados abaixo conferem. Se um deles mudar, o deck do
+ * Kick-off e tudo o que já foi mostrado passam a mentir.
+ */
+describe('junho pela v3, julho aberto, e maio igual', () => {
+  const avaliacaoDe = (unidadeId: string, cicloId: string) =>
+    base.avaliacoes.find((a) => a.unidadeId === unidadeId && a.cicloId === cicloId)
+
+  it('maio continua com os números publicados, unidade por unidade', () => {
+    const maio = Object.fromEntries(
+      base.avaliacoes
+        .filter((a) => a.cicloId === 'ciclo-2026-05')
+        .map((a) => [a.unidadeId, a.score]),
+    )
+    expect(maio).toEqual({
+      'usf-sabia': 75,
+      'usf-bem-te-vi': 75.83,
+      'caps-colibri': 33.75,
+      'upa-andorinha': 68.57,
+      'usf-canario': 86.67,
+      'usf-juriti': 60,
+      'caps-rolinha': 81.25,
+      'poli-garca': 77.5,
+      'usf-curio': 55,
+      'usf-asa-branca': 54.17,
+      'upa-gaivota': 64.29,
+      'poli-tuim': 61.25,
+    })
+    // O número da demonstração do Kick-off: USF Canário, maio, pela v2.
+    const canario = avaliacaoDe('usf-canario', 'ciclo-2026-05')
+    expect(canario?.memoria.regraId).toBe('regra-v2')
+    expect(canario?.faixa?.rotulo).toBe('integral')
+    expect(canario?.avisos).toEqual([])
+  })
+
+  it('os lançamentos de janeiro a maio não mudaram de quantidade', () => {
+    expect(base.lancamentos.filter((l) => l.cicloId <= 'ciclo-2026-05')).toHaveLength(401)
+  })
+
+  it('junho está homologado, com nota pelo método de notas em todas as unidades', () => {
+    const junho = base.ciclos.find((c) => c.id === 'ciclo-2026-06')
+    expect(junho?.estado).toBe('homologado')
+
+    const doMes = base.avaliacoes.filter((a) => a.cicloId === 'ciclo-2026-06')
+    expect(doMes).toHaveLength(base.unidades.length)
+    for (const avaliacao of doMes) {
+      expect(avaliacao.memoria.regraId).toBe('regra-v3')
+      expect(avaliacao.memoria.metodo).toBe('notas')
+    }
+  })
+
+  it('junho da USF Canário pela v3: 75, satisfatório, sem aviso', () => {
+    const canario = avaliacaoDe('usf-canario', 'ciclo-2026-06')
+    expect(canario?.score).toBe(75)
+    expect(canario?.faixa?.rotulo).toBe('satisfatório')
+    expect(canario?.avisos).toEqual([])
+  })
+
+  it('junho é mês fechado de verdade: todo subindicador aplicável foi lançado', () => {
+    const regra = base.regras.find((r) => r.id === 'regra-v3')!
+    for (const unidade of base.unidades) {
+      const indicadores = regra.aplicabilidades
+        .filter((a) => a.tipoUnidadeId === unidade.tipoId)
+        .map((a) => a.indicadorId)
+      const esperados = base.subindicadores.filter((s) => indicadores.includes(s.indicadorId))
+      for (const sub of esperados) {
+        const lancado = base.lancamentos.some(
+          (l) =>
+            l.cicloId === 'ciclo-2026-06' &&
+            l.unidadeId === unidade.id &&
+            l.subindicadorId === sub.id,
+        )
+        expect(lancado, `${unidade.id} sem ${sub.id} em junho`).toBe(true)
+      }
+    }
+  })
+
+  it('julho é o único mês aberto, pela v3, e ainda não tem nota', () => {
+    const abertos = base.ciclos.filter((c) => c.estado === 'lancamento_aberto')
+    expect(abertos.map((c) => c.id)).toEqual(['ciclo-2026-07'])
+    expect(base.avaliacoes.some((a) => a.cicloId === 'ciclo-2026-07')).toBe(false)
   })
 })

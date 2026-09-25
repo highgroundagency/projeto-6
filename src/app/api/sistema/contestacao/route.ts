@@ -5,6 +5,7 @@ import { carregarDados } from '@/lib/dados/consultas'
 import { comParametros, redirecionar } from '@/lib/http'
 import { exigirPerfil, perfilAtual } from '@/lib/sistema'
 import { ancoraDaTela } from '@/lib/sistema/parametros'
+import { garantirVisitante } from '@/lib/sistema/visitante'
 
 /** Volta para a sanfona da contestação, já aberta e no gerente certo. */
 function deVolta(
@@ -68,6 +69,8 @@ export async function POST(requisicao: NextRequest) {
     return redirecionar(deVolta(dados.gerenteId, { erro: 'Indicador desconhecido.' }))
   }
 
+  // A contestação cai na cópia de quem a abriu, como o lançamento.
+  await garantirVisitante()
   const resultado = await repositorio().abrirContestacao(
     {
       gerenteId: dados.gerenteId,

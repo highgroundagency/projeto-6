@@ -70,7 +70,16 @@ export async function TelaGestao({ ctx }: PropsTela) {
         </a>
       </AcoesDaTela>
 
-      <Painel alvo="gest-ciclo" titulo="Recorte" icone={CalendarDays}>
+      <Painel
+        alvo="gest-ciclo"
+        titulo="Recorte"
+        icone={CalendarDays}
+        descricao={
+          recorteObrigatorio
+            ? 'Neste protótipo você escolhe um distrito de exemplo. Na versão final, cada gerência veria só o próprio distrito.'
+            : undefined
+        }
+      >
         <form
           method="get"
           action={`/sistema${ancoraDaTela('painel-gestao')}`}

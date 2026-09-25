@@ -1,5 +1,11 @@
 import { expect, test } from '@playwright/test'
-import { CICLO_OCULTO, ROTAS_ABERTAS, ROTAS_FECHADAS, marcador } from './cronograma'
+import {
+  CICLO_OCULTO,
+  ROTAS_ABERTAS,
+  ROTAS_FECHADAS,
+  VESPERA_DA_ULTIMA_TELA,
+  marcador,
+} from './cronograma'
 
 const SENHA = '0321'
 
@@ -103,11 +109,38 @@ test.describe('gate das funcionalidades', () => {
   test('rota não liberada devolve 404 para o visitante', async ({ page }) => {
     // As rotas saem do mapa de funcionalidades cruzado com o release de hoje,
     // e não de uma lista à mão: quando a s5 abriu, a lista à mão passou a
-    // exigir 404 de rota que já responde.
-    expect(ROTAS_FECHADAS.length, 'nenhuma rota fechada para exercitar').toBeGreaterThan(0)
+    // exigir 404 de rota que já responde. Desde a véspera do SR1 as oito
+    // telas estão no ar e a lista de hoje pode estar vazia; o teste abaixo
+    // continua provando o portão numa data em que ele fechava alguma coisa.
     for (const rota of ROTAS_FECHADAS) {
       const resposta = await page.request.get(rota)
       expect(resposta.status(), `${rota} deveria ser 404`).toBe(404)
+    }
+  })
+
+  test('na véspera da última leva, a prévia de visitante leva 404 no que faltava', async ({
+    page,
+  }) => {
+    const { data, fechadas, abertas } = VESPERA_DA_ULTIMA_TELA
+    expect(fechadas.length, `nenhuma rota fechada em ${data} para exercitar`).toBeGreaterThan(0)
+
+    await entrarNoPainel(page)
+    await page.getByLabel('Ver como visitante').check()
+    await page.getByLabel('Data simulada').fill(data)
+    await page.getByRole('button', { name: 'Aplicar', exact: true }).click()
+
+    const cabecalhos = await comSessao(page)
+    for (const rota of fechadas) {
+      const resposta = await page.request.get(rota, { headers: cabecalhos, maxRedirects: 0 })
+      expect(resposta.status(), `${rota} deveria ser 404 em ${data}`).toBe(404)
+    }
+    // E o portão não fecha tudo: o que já tinha saído naquela data responde.
+    for (const rota of abertas) {
+      const resposta = await page.request.get(rota, { headers: cabecalhos, maxRedirects: 0 })
+      expect(resposta.status(), `${rota} deveria redirecionar em ${data}`).toBeGreaterThanOrEqual(
+        300,
+      )
+      expect(resposta.status()).toBeLessThan(400)
     }
   })
 
@@ -147,15 +180,16 @@ test.describe('gate das funcionalidades', () => {
 /**
  * Avanço de estado do ciclo — a única escrita do sistema com credencial.
  *
- * O estado vive na memória do processo e vale para todos os visitantes daquela
- * instância, e a transição não tem volta pela interface. Ver ADR-015.
+ * O estado vive na memória do processo, numa cópia por visitante: o avanço
+ * que o admin faz fica na cópia dele. A transição não tem volta pela
+ * interface. Ver ADR-015 e `src/lib/sistema/estado.ts`.
  */
 test.describe('avanço de ciclo', () => {
   const CONTROLE = /^(Avançar para|Homologar ciclo)/
 
   test('sem sessão, a rota não existe', async ({ page }) => {
     const resposta = await page.request.post('/api/sistema/ciclo', {
-      form: { cicloId: 'ciclo-2026-06', confirmo: 'on' },
+      form: { cicloId: 'ciclo-2026-07', confirmo: 'on' },
       maxRedirects: 0,
     })
     // 404, não 401: não confirmamos o mecanismo a quem não deveria conhecê-lo.
@@ -282,6 +316,8 @@ test.describe('o sistema, visto pelo admin', () => {
   })
 
   test('a memória de cálculo explica de onde veio cada número', async ({ page }) => {
+    // O mês mais recente fechado é junho, e junho fechou pela v3: a memória
+    // abre pelo método de notas, com a coluna "Nota" no lugar do atingimento.
     await page.goto('/sistema?abrir=meu-resultado')
 
     await expect(page.getByText('Nota do mês', { exact: true })).toBeVisible()
@@ -290,9 +326,20 @@ test.describe('o sistema, visto pelo admin', () => {
     await expect(memoria).toBeVisible()
     await memoria.click()
 
-    await expect(page.getByRole('columnheader', { name: 'Atingimento' })).toBeVisible()
+    await expect(page.getByRole('columnheader', { name: 'Nota', exact: true })).toBeVisible()
     await expect(page.getByRole('columnheader', { name: 'Contribuição' })).toBeVisible()
     await expect(page.getByText('Soma das contribuições')).toBeVisible()
+    await expect(page.getByText(/score = \(Σ nota × peso\)/)).toBeVisible()
+  })
+
+  test('maio continua pela regra antiga, com a mesma conta de antes', async ({ page }) => {
+    await page.goto(
+      '/sistema?abrir=meu-resultado&res_gerente=ger-usf-canario&res_ciclo=ciclo-2026-05',
+    )
+    // O número do Kick-off: USF Canário, maio, pela v2.
+    await expect(page.locator('#alvo-res-score').getByText('86.67', { exact: true })).toBeVisible()
+    await page.getByText('Memória de cálculo', { exact: true }).click()
+    await expect(page.getByRole('columnheader', { name: 'Atingimento' })).toBeVisible()
     await expect(page.getByText(/score = \(Σ pontos × peso\)/)).toBeVisible()
   })
 
@@ -320,7 +367,7 @@ test.describe('o sistema, visto pelo admin', () => {
       form: {
         subindicadorId: 'absenteismo-taxa',
         unidadeId: 'usf-sabia',
-        cicloId: 'ciclo-2026-06',
+        cicloId: 'ciclo-2026-07',
         valor: '-5',
         evidencia: 'x',
       },
@@ -353,5 +400,117 @@ test.describe('o sistema, visto pelo admin', () => {
     expect(corpo.produto).toBe('Prumo')
     expect(corpo.ciclosNoCronograma).toBe(18)
     expect(corpo.ok).toBe(true)
+  })
+})
+
+/** Preenche e envia o subindicador de famílias acompanhadas da unidade aberta na tela. */
+async function lancarFamilias(page: import('@playwright/test').Page, numerador: string) {
+  await page.locator('#numerador-acompanhamento-familias').fill(numerador)
+  await page.locator('#denominador-acompanhamento-familias').fill('200')
+  await page.locator('#evidencia-acompanhamento-familias').fill('relatório mensal do teste')
+  await page
+    .locator('form', { has: page.locator('#numerador-acompanhamento-familias') })
+    .getByRole('button', { name: 'Salvar' })
+    .click()
+  await expect(page.getByText('Lançamento registrado.')).toBeVisible()
+}
+
+/**
+ * A escrita é de quem escreve (auditoria do SR1, lacuna 10).
+ *
+ * Dois navegadores, duas cópias: o lançamento de um não aparece para o outro,
+ * e o avanço de etapa que o admin faz na demonstração não muda a tela de
+ * nenhum avaliador que esteja navegando ao mesmo tempo.
+ */
+test.describe('cada visitante escreve na própria cópia', () => {
+  const TELA_DE_LANCAMENTO = '/sistema?abrir=lancamento&lanc_unidade=usf-canario'
+
+  test('o que um visitante lança, o outro não vê', async ({ page, browser, baseURL }) => {
+    await page.goto('/sistema')
+    await page.getByLabel('Estou usando como').selectOption('gerente_unidade')
+    await expect(page.getByText('Tutorial guiado para Gerente de unidade')).toBeVisible()
+
+    await page.goto(TELA_DE_LANCAMENTO)
+    await lancarFamilias(page, '170')
+    await expect(page.locator('#numerador-acompanhamento-familias')).toHaveValue('170')
+
+    const outro = await browser.newContext({ baseURL })
+    try {
+      const outraPagina = await outro.newPage()
+      await outraPagina.goto(TELA_DE_LANCAMENTO)
+      await expect(outraPagina.locator('#numerador-acompanhamento-familias')).toHaveValue('')
+    } finally {
+      await outro.close()
+    }
+  })
+
+  test('a demonstração: lançar julho, homologar e abrir a nota pela v3', async ({
+    page,
+    browser,
+    baseURL,
+  }) => {
+    await entrarNoPainel(page)
+
+    // 1. A unidade (aqui a SEAB, lançando por ela) informa um número de julho.
+    await page.goto(TELA_DE_LANCAMENTO)
+    await lancarFamilias(page, '170')
+
+    // 2. A SEAB fecha o prazo e homologa: dois avanços, cada um confirmado.
+    await page.goto('/sistema?abrir=painel-seab')
+    await page.getByLabel(/Confirmo o avanço/).check()
+    await page.getByRole('button', { name: 'Avançar para Em validação' }).click()
+    await expect(page.getByText('Ciclo avançado para Em validação.')).toBeVisible()
+    await page.getByLabel(/Confirmo o avanço/).check()
+    await page.getByRole('button', { name: 'Homologar ciclo' }).click()
+    await expect(page.getByText('Ciclo avançado para Homologado.')).toBeVisible()
+
+    // 3. Julho tem nota, pelo método de notas, e o indicador sem lançamento
+    //    (a vacinação da Canário, que ninguém lançou) sai da conta com o peso
+    //    junto (art. 8º): a USF soma 1,0 de peso, e a conta divide por 0,8.
+    await page.goto(
+      '/sistema?abrir=meu-resultado&res_gerente=ger-usf-canario&res_ciclo=ciclo-2026-07',
+    )
+    await expect(page.getByText('Nota do mês', { exact: true })).toBeVisible()
+    await page.getByText('Memória de cálculo', { exact: true }).click()
+    await expect(page.getByRole('columnheader', { name: 'Nota', exact: true })).toBeVisible()
+    const memoria = page.locator('#alvo-res-memoria')
+    await expect(memoria.getByText('regra-v3 v3')).toBeVisible()
+    await expect(memoria.getByText(/÷ \(0\.8 × 1\) × 100 =/)).toBeVisible()
+    await expect(memoria.getByText('Vacinação infantil em dia')).toHaveCount(0)
+
+    // 4. Fora do prazo, a tentativa não entra, mas fica no histórico.
+    const tentativa = await page.request.post('/api/sistema/lancamento', {
+      headers: await comSessao(page),
+      form: {
+        subindicadorId: 'vacinacao-polio',
+        unidadeId: 'usf-canario',
+        cicloId: 'ciclo-2026-07',
+        numerador: '10',
+        denominador: '20',
+        evidencia: 'depois do prazo',
+      },
+      maxRedirects: 0,
+    })
+    expect(tentativa.headers()['location']).toContain('erro=')
+    await page.goto('/sistema?abrir=auditoria&aud_tipo=lancamento_recusado')
+    await expect(page.getByText(/Tentativa de lançamento de vacinacao-polio/)).toBeVisible()
+
+    // 5. E ninguém mais viu nada disso: para outro navegador, julho segue aberto.
+    const outro = await browser.newContext({ baseURL })
+    try {
+      const outraPagina = await outro.newPage()
+      await outraPagina.goto('/sistema?abrir=painel-seab')
+      await expect(outraPagina.getByText('mês em andamento: 2026-07')).toBeVisible()
+      await expect(
+        outraPagina.locator('#tela-painel-seab').getByText('Lançamento aberto').first(),
+      ).toBeVisible()
+      await outraPagina.goto(
+        '/sistema?abrir=meu-resultado&res_gerente=ger-usf-canario&res_ciclo=ciclo-2026-07',
+      )
+      // Sem nota de julho: o seletor cai no último mês fechado, junho.
+      await expect(outraPagina.locator('#res_ciclo')).toHaveValue('ciclo-2026-06')
+    } finally {
+      await outro.close()
+    }
   })
 })

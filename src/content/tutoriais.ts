@@ -44,7 +44,7 @@ export const TUTORIAIS: Record<PerfilId, Tutorial> = {
       {
         titulo: 'Veja a régua de cada tipo de unidade',
         oQueFazer:
-          'Esta tela mostra o que conta ponto: cada indicador, os subindicadores que o compõem, e a meta e o peso que valem para cada tipo de unidade, USF, CAPS, UPA ou policlínica.',
+          'Esta tela mostra o que conta ponto: cada indicador, os subindicadores que o compõem, e a meta e o peso que valem para cada um dos sete tipos de unidade da portaria.',
         porque:
           'Foi o que a reunião com o cliente deixou claro: a régua depende do tipo da unidade. Régua que muda no meio do caminho é o que faz as pessoas desconfiarem do resultado.',
         tela: 'indicadores',
@@ -71,7 +71,7 @@ export const TUTORIAIS: Record<PerfilId, Tutorial> = {
       {
         titulo: 'Avance a etapa do mês',
         oQueFazer:
-          'O trilho no topo mostra em que etapa o mês está, e o quadro logo abaixo explica cada uma. Quando o prazo acabar, marque a confirmação e clique no botão laranja.',
+          'O trilho no topo mostra em que etapa o mês está, e o quadro logo abaixo explica cada uma. Quando o prazo acaba, a SEAB avança o mês uma etapa. Neste protótipo, o avanço fica com a equipe, na demonstração ao vivo.',
         porque:
           'O mês anda uma etapa por vez, e cada avanço fica anotado no histórico. Assim ninguém tem dúvida se um número ainda pode mudar.',
         tela: 'painel-seab',
@@ -213,7 +213,7 @@ export const TUTORIAIS: Record<PerfilId, Tutorial> = {
         oQueFazer:
           'Abra uma contestação, diga qual indicador (ou a nota toda) e escreva o motivo.',
         porque:
-          'Discordar deixa de ser telefonema e vira pedido registrado, com prazo e resposta escrita.',
+          'Discordar deixa de ser telefonema e vira pedido registrado, com data. O prazo da portaria e a resposta por escrito ainda vão entrar no sistema.',
         tela: 'contestacao',
         alvo: 'cont-abrir',
       },
@@ -227,7 +227,7 @@ export const TUTORIAIS: Record<PerfilId, Tutorial> = {
       {
         titulo: 'Escolha a sua unidade',
         oQueFazer:
-          'Use a caixa de seleção. A lista abaixo muda e mostra só o que o TIPO da sua unidade preenche: um CAPS não vê os indicadores de pré-natal de uma USF.',
+          'Use a caixa de seleção. Neste protótipo você escolhe uma unidade de exemplo; na versão final, o login já abriria a sua. A lista abaixo muda e mostra só o que o TIPO da unidade preenche: um CAPS não vê os indicadores de pré-natal de uma USF.',
         porque:
           'Cada unidade responde pelos próprios números, e a régua dela depende do tipo. Foi o que o cliente explicou na reunião.',
         tela: 'lancamento',
@@ -273,7 +273,7 @@ export const TUTORIAIS: Record<PerfilId, Tutorial> = {
         oQueFazer:
           'Clique em "abrir contestação", diga qual indicador (ou a nota toda) e escreva o motivo.',
         porque:
-          'Discordar deixa de ser telefonema e vira pedido registrado, com prazo e resposta escrita. É um direito seu.',
+          'Discordar deixa de ser telefonema e vira pedido registrado, com data. É um direito seu. O prazo da portaria e a resposta por escrito ainda vão entrar no sistema.',
         tela: 'contestacao',
         alvo: 'cont-abrir',
       },

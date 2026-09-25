@@ -22,10 +22,12 @@ import type { Direcao, Lancamento, Subindicador } from '@/lib/calculo/tipos'
  *    mostra método, métrica E a linha de base, porque acurácia sem referência
  *    engana: num alvo desbalanceado, chutar a classe majoritária já acerta a
  *    maioria. Um modelo que não supera a referência é publicado dizendo isso.
- *    O treino é sobre a planilha de desempenho por unidade (ADR-043).
+ *    O treino é sobre a planilha de desempenho por unidade da Secretaria
+ *    (ADR-043), dado institucional usado com autorização (ADR-044).
+ *    NÃO é a base de teste do app: desde a ADR-043 as duas são bases diferentes.
  *
- * 2. HEURÍSTICAS EXPLICÁVEIS sobre a base atual, que respondem "onde olhar
- *    agora" com o dado que está na tela, sem depender do treino.
+ * 2. HEURÍSTICAS EXPLICÁVEIS sobre a base de teste do protótipo, que
+ *    respondem "onde olhar agora" com o dado que está na tela, sem treino.
  *
  * O contrato vale para as duas: método sempre ao lado do número, e nenhuma
  * saída daqui entra no cálculo da gratificação.
@@ -122,12 +124,20 @@ export async function TelaAnalytics() {
 
   return (
     <>
+      {/* DUAS BASES NA MESMA TELA, e a tela diz qual é qual (ADR-043 e ADR-044).
+          Os modelos vêm da planilha por unidade da Secretaria, lida nos
+          cadernos; os quadros de baixo são contas sobre a base de teste do
+          protótipo. Chamar as duas de "base sintética", ou deixar a pessoa
+          supor que os modelos falam das 12 unidades de exemplo, seria errado. */}
       <div className="mb-5 space-y-3">
         <Aviso>
-          {ML.aviso} Base <strong>{ML.base}</strong>. Treino de <Num>{ML.gerado_em}</Num>,
-          semente <Num>{ML.semente}</Num>, scikit-learn <Num>{ML.versao_sklearn}</Num>, commit{' '}
-          <Num>{ML.commit}</Num>. Rodar os seis cadernos de <Num>ml/notebooks</Num> em ordem
-          reproduz cada número desta tela.
+          {ML.aviso} Os três modelos foram treinados nos cadernos de{' '}
+          <Num>ml/notebooks</Num>, sobre a base de desempenho por unidade da Secretaria, usada
+          com autorização dela. Ela não traz dado de pessoa. Por isso os modelos falam das
+          unidades dessa planilha, e não das {dados.unidades.length} unidades de teste deste
+          protótipo. Treino de <Num>{ML.gerado_em}</Num>, semente <Num>{ML.semente}</Num>,
+          scikit-learn <Num>{ML.versao_sklearn}</Num>, commit <Num>{ML.commit}</Num>. Rodar os
+          seis cadernos em ordem reproduz os números dos modelos.
         </Aviso>
       </div>
 
@@ -226,6 +236,13 @@ export async function TelaAnalytics() {
             </Painel>
           )
         })}
+      </div>
+
+      <div className="mt-6">
+        <Aviso>
+          Os três quadros abaixo não usam modelo nenhum. São contas simples sobre a base de
+          teste deste protótipo, com as {dados.unidades.length} unidades de exemplo.
+        </Aviso>
       </div>
 
       <Painel

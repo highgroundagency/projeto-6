@@ -5,6 +5,7 @@ import { repositorio } from '@/lib/dados'
 import { comParametros, redirecionar } from '@/lib/http'
 import { exigirPerfil, perfilAtual } from '@/lib/sistema'
 import { ancoraDaTela } from '@/lib/sistema/parametros'
+import { garantirVisitante } from '@/lib/sistema/visitante'
 
 /** Volta para a sanfona da SEAB, já aberta e com a faixa endereçada a ela. */
 function deVolta(resultado: { ok?: string; erro?: string }): string {
@@ -23,11 +24,14 @@ const corpoSchema = z.object({
 /**
  * Avanço de estado do ciclo.
  *
- * ÚNICA ESCRITA DO SISTEMA QUE EXIGE CREDENCIAL (ADR-015). O estado do ciclo é
- * compartilhado por todos os visitantes da instância, e a transição não tem
- * volta pela interface: um clique alheio deixaria a janela de lançamento
- * fechada para todo mundo. `exigirAdmin` responde 404 em vez de 403 pela mesma
- * razão de `/admin` — não confirmar o mecanismo a quem não deveria conhecê-lo.
+ * ÚNICA ESCRITA DO SISTEMA QUE EXIGE CREDENCIAL (ADR-015). Até o SR1 o estado
+ * do ciclo era um só para todos os visitantes, e um clique alheio fechava a
+ * janela de lançamento para todo mundo. Hoje o avanço cai na cópia de quem
+ * clicou (ver `sistema/estado.ts`), então a demonstração do admin não muda a
+ * tela de ninguém. A credencial continua: avançar etapa é da SEAB, e a
+ * transição não tem volta pela interface. `exigirAdmin` responde 404 em vez de
+ * 403 pela mesma razão de `/admin` — não confirmar o mecanismo a quem não
+ * deveria conhecê-lo.
  *
  * A checagem de perfil, essa sim, é conveniência de interface: o seletor de
  * perfil é simulado. A validação da transição vive na camada de escrita — e, no
@@ -51,6 +55,7 @@ export async function POST(requisicao: NextRequest) {
     return redirecionar(deVolta({ erro: 'Confirme a transição antes de avançar.' }))
   }
 
+  await garantirVisitante()
   const resultado = await repositorio().avancarCiclo(
     analisado.data.cicloId,
     'seab',

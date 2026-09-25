@@ -391,6 +391,11 @@ export type TipoEvento =
   | 'regra_versionada'
   | 'lancamento_registrado'
   | 'lancamento_alterado'
+  /**
+   * Tentativa de lançar fora do prazo. A escrita não entra, a tentativa entra.
+   * Só existe no app: o enum de `supabase/migrations/` ainda não a tem.
+   */
+  | 'lancamento_recusado'
   | 'avaliacao_calculada'
   | 'contestacao_aberta'
   | 'contestacao_respondida'

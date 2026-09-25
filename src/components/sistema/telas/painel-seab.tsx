@@ -40,10 +40,11 @@ export async function TelaPainelSeab({ ctx }: PropsTela) {
   /**
    * O controle de transição só existe para quem tem sessão de admin (ADR-015).
    *
-   * Ver em que fase o ciclo está é informação do MVP; movê-lo não é — o estado
-   * vive na memória do processo e é compartilhado por todos os visitantes, então
-   * um clique de qualquer pessoa mudaria a demonstração para as outras. Quem não
-   * é admin não vê o formulário nem qualquer menção a ele.
+   * Ver em que fase o ciclo está é informação do MVP; movê-lo não é. Até o SR1
+   * o estado era um só para todos os visitantes, e um clique mudava a
+   * demonstração dos outros. Hoje o avanço cai na cópia de quem clicou
+   * (`sistema/estado.ts`), mas a credencial ficou: avançar etapa é da SEAB, e
+   * quem não é admin não vê o formulário nem qualquer menção a ele.
    */
   const podeAgir = ctx.perfil === 'seab'
 
@@ -70,7 +71,7 @@ export async function TelaPainelSeab({ ctx }: PropsTela) {
       <Painel
         alvo="seab-estado"
         titulo={`Mês ${emAndamento.competencia}`} icone={CalendarClock}
-        descricao={`Regra em uso: ${emAndamento.regraId}. Prazo para informar os números: até ${emAndamento.janelaLancamentoFim.slice(0, 10)}; revisão a partir de ${emAndamento.revisaoInicio}.`}
+        descricao={`Regra em uso: ${emAndamento.regraId}. Prazo para informar os números: até ${emAndamento.janelaLancamentoFim.slice(0, 10)}; revisão a partir de ${emAndamento.revisaoInicio}. Os meses deste protótipo são de exemplo, e o prazo não acompanha a data de hoje.`}
       >
         <TrilhoEstados estado={emAndamento.estado} />
 
@@ -120,7 +121,8 @@ export async function TelaPainelSeab({ ctx }: PropsTela) {
               />
               <span>
                 Confirmo o avanço. Ele fica gravado no histórico, com a etapa anterior e a nova,
-                e não tem botão de desfazer.
+                e não tem botão de desfazer. Vale só para esta sessão de teste: a tela dos
+                outros não muda.
               </span>
             </label>
             <Botao type="submit" variante="primario" className="mt-3" disabled={!podeAgir}>

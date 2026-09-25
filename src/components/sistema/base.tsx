@@ -2,7 +2,12 @@ import type { ReactNode } from 'react'
 import { Check, ChevronRight, CircleCheck, Info, TriangleAlert, type LucideIcon } from 'lucide-react'
 import { Num } from '@/components/base/num'
 import { Etiqueta } from '@/components/base/selo'
-import { ORDEM_ESTADOS, ROTULO_ESTADO, type EstadoCiclo } from '@/lib/calculo/tipos'
+import {
+  ORDEM_ESTADOS,
+  ROTULO_ESTADO,
+  type Direcao,
+  type EstadoCiclo,
+} from '@/lib/calculo/tipos'
 import {
   idDoAlvo,
   PARAMETROS_EFEMEROS,
@@ -172,4 +177,17 @@ export function Aviso({
 
 export function SomenteLeitura() {
   return <Etiqueta>somente leitura</Etiqueta>
+}
+
+/**
+ * Como o indicador é lido, em três casos e não dois.
+ *
+ * O ternário antigo dizia "menor é melhor" para tudo o que não era "maior é
+ * melhor", e a faixa ideal (passar do alvo também perde ponto, ADR-041) saía
+ * na tela como o contrário do que é.
+ */
+export function rotuloDaDirecao(direcao: Direcao): string {
+  if (direcao === 'maior_melhor') return 'maior é melhor'
+  if (direcao === 'menor_melhor') return 'menor é melhor'
+  return 'há uma faixa ideal'
 }

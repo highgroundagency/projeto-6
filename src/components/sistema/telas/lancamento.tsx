@@ -2,7 +2,13 @@ import { Building2, PencilLine } from 'lucide-react'
 import { Botao } from '@/components/base/botao'
 import { Num } from '@/components/base/num'
 import { Etiqueta } from '@/components/base/selo'
-import { AcoesDaTela, Aviso, Painel, Preservar } from '@/components/sistema/base'
+import {
+  AcoesDaTela,
+  Aviso,
+  Painel,
+  Preservar,
+  rotuloDaDirecao,
+} from '@/components/sistema/base'
 import { mensagemDe, type PropsTela } from '@/components/sistema/telas/tipos'
 import { ROTULO_ESTADO, type Lancamento, type Subindicador } from '@/lib/calculo/tipos'
 import {
@@ -72,7 +78,7 @@ export async function TelaLancamento({ ctx }: PropsTela) {
       <Painel
         alvo="lanc-unidade"
         titulo="Unidade" icone={Building2}
-        descricao="Escolha a unidade. Cada unidade informa apenas os próprios números, e o tipo dela decide o que aparece para preencher."
+        descricao="Neste protótipo você escolhe uma unidade de exemplo. Na versão final, cada gerente entraria com login e lançaria só pela própria unidade. O tipo da unidade decide o que aparece para preencher."
       >
         <form
           method="get"
@@ -120,6 +126,14 @@ export async function TelaLancamento({ ctx }: PropsTela) {
         </div>
       ) : null}
 
+      <div className="mt-6">
+        <Aviso>
+          Os {dados.indicadores.length} indicadores daqui são de teste. Os 5 da portaria
+          ainda vão entrar. O que você lança fica só na sua sessão de teste: ninguém mais vê,
+          e some quando o servidor reinicia.
+        </Aviso>
+      </div>
+
       <Painel
         alvo="lanc-formularios"
         titulo={`O que ${unidade.nome} preenche`} icone={PencilLine}
@@ -135,8 +149,7 @@ export async function TelaLancamento({ ctx }: PropsTela) {
                   <h4 className="text-sm font-medium">{indicador.nome}</h4>
                   <Num className="text-xs text-apagado">
                     meta {aplicabilidade.meta} {indicador.unidadeMedida} ·{' '}
-                    {indicador.direcao === 'maior_melhor' ? 'maior é melhor' : 'menor é melhor'}{' '}
-                    · peso {aplicabilidade.peso}
+                    {rotuloDaDirecao(indicador.direcao)} · peso {aplicabilidade.peso}
                   </Num>
                 </div>
 

@@ -637,6 +637,13 @@ export const FRASE_DO_MODELO =
  */
 export const MODELO_NO_KICKOFF = { acuracia: 0.667, referencia: 0.833 } as const
 
+/**
+ * Quantos meses a base de teste tinha no dia do Kick-off, congelado pelo mesmo
+ * motivo. Julho entrou depois, para junho fechar pela regra v3 e haver uma nota
+ * nova visível no sistema; o slide continua mostrando o que mostrou naquele dia.
+ */
+export const MESES_NA_BASE_NO_KICKOFF = 6
+
 /** Quantas palavras aquele slide põe na tela. */
 export function palavrasNaTela(id: SlideId): number {
   return textoNaTela(id)
