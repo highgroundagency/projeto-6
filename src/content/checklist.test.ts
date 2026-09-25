@@ -1,7 +1,8 @@
 import { describe, expect, it } from 'vitest'
 import { CHECKLIST, montarChecklist } from './checklist'
 import { EQUIPE } from './equipe'
-import { CRONOGRAMA } from '@/lib/cronograma'
+import { carregarCiclos } from './ciclos/registro'
+import { CRONOGRAMA, IDS_CICLOS } from '@/lib/cronograma'
 
 const IDS_INTEGRANTES = new Set<string>(EQUIPE.map((i) => i.id))
 
@@ -38,6 +39,25 @@ describe('checklist da matriz', () => {
     const totalEvidencias = CRONOGRAMA.reduce((soma, c) => soma + c.evidencias.length, 0)
     expect(linhas).toHaveLength(totalEvidencias)
     expect(linhas.filter((l) => l.status === 'a_fazer').length).toBeGreaterThan(0)
+  })
+
+  it('só aponta para documento que existe', async () => {
+    // O link do checklist vira atalho no painel. Âncora de documento que não
+    // existe é o mesmo defeito do bloco de evidências: clica e nada acontece.
+    const carregados = await carregarCiclos(IDS_CICLOS)
+    const existentes = new Set(
+      carregados.flatMap((c) =>
+        (c.modulo.documentos ?? []).map((d) => `/#doc-${c.id}-${d.id}`),
+      ),
+    )
+    for (const item of CHECKLIST) {
+      if (item.link?.startsWith('/#doc-')) {
+        expect(
+          existentes.has(item.link),
+          `${item.ciclo}: ${item.evidencia} → ${item.link}`,
+        ).toBe(true)
+      }
+    }
   })
 
   it('reflete o status declarado', () => {

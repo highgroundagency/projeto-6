@@ -1,4 +1,5 @@
 import type { IntegranteId } from '@/content/equipe'
+import { URL_REPOSITORIO } from '@/content/produto'
 import { CRONOGRAMA, type CicloId } from '@/lib/cronograma'
 
 /**
@@ -158,17 +159,21 @@ export const CHECKLIST: readonly ItemChecklist[] = [
     link: '/#cronograma',
   },
 
+  // O Kick-off passou (12/09). Os dois itens ficaram "em andamento" depois da
+  // apresentação, e o cronograma público mostrava um marco vencido como se
+  // ainda estivesse acontecendo. Os dezessete slides e a fala dividida entre
+  // os seis estão em /pitch e no registro validado do ciclo.
   {
     ciclo: 'ko',
     evidencia: 'Pitch: problema, objetivos, análises, ideação, solução e cronograma',
-    status: 'em_andamento',
+    status: 'feito',
     responsavel: 'gabriel',
     link: '/pitch',
   },
   {
     ciclo: 'ko',
     evidencia: 'Fala distribuída entre quem apresenta',
-    status: 'em_andamento',
+    status: 'feito',
     responsavel: 'joao-pedro',
     link: '/pitch',
   },
@@ -194,14 +199,134 @@ export const CHECKLIST: readonly ItemChecklist[] = [
     link: '/#doc-ko-wireframes',
   },
 
-  // A lente de aprendizado de máquina anda em paralelo desde a Semana 2, e o
-  // checklist não registrava nenhuma responsabilidade dela. O gerador
-  // sintético que alimenta todas as telas é entrega da Semana 5.
+  // SEMANA 5 EM DIANTE: status pelo que existe no repositório em 25/09, não
+  // pelo que foi prometido. O responsável segue a frente de cada um em
+  // `equipe.ts`; a equipe confirma os donos. Sem estas linhas o cronograma
+  // público mostrava s5, s6 e SR1 inteiros "a fazer", com o trabalho no ar.
   {
     ciclo: 's5',
+    evidencia: 'Diagrama de arquitetura',
+    status: 'feito',
+    responsavel: 'joao-henrique',
+    link: '/arquitetura',
+  },
+  {
+    // Era "em andamento" com o gerador sintético da lente de ML, que saiu na
+    // ADR-043. O fluxo de dados do sistema, do teclado da unidade ao painel,
+    // está no documento de nuvem desta semana.
+    ciclo: 's5',
     evidencia: 'Fluxo de dados',
+    status: 'feito',
+    responsavel: 'joao-henrique',
+    link: '/#doc-s5-nuvem',
+  },
+  {
+    ciclo: 's5',
+    evidencia: 'Primeiras telas',
+    status: 'feito',
+    responsavel: 'joao-pedro',
+    link: '/sistema',
+  },
+  {
+    // O CI roda typecheck, testes com Postgres, build, vazamento e e2e a cada
+    // envio ao GitHub.
+    ciclo: 's5',
+    evidencia: 'Pipeline',
+    status: 'feito',
+    responsavel: 'fernando',
+    link: `${URL_REPOSITORIO}/blob/main/.github/workflows/ci.yml`,
+  },
+  {
+    ciclo: 's5',
+    evidencia: 'Backlog técnico',
+    status: 'feito',
+    responsavel: 'joao-henrique',
+    link: '/#doc-s6-backlog',
+  },
+
+  {
+    // Em andamento, e não feito: o mapa existe, mas a apresentação e o ensaio
+    // são desta semana.
+    ciclo: 's6',
+    evidencia: 'Pacote SR1',
     status: 'em_andamento',
-    responsavel: 'rafael',
+    responsavel: 'gabriel',
+    link: '/#doc-sr1-pacote',
+  },
+  {
+    ciclo: 's6',
+    evidencia: 'Protótipo atualizado',
+    status: 'feito',
+    responsavel: 'joao-pedro',
+    link: '/sistema',
+  },
+  {
+    ciclo: 's6',
+    evidencia: 'Escopo revisado',
+    status: 'feito',
+    responsavel: 'gabriel',
+    link: '/#doc-s6-escopo-revisado',
+  },
+  {
+    ciclo: 's6',
+    evidencia: 'Cronograma e backlog',
+    status: 'feito',
+    responsavel: 'gabriel',
+    link: '/#doc-s6-backlog',
+  },
+  {
+    ciclo: 's6',
+    evidencia: 'Riscos',
+    status: 'feito',
+    responsavel: 'fernando',
+    link: '/#doc-s6-riscos',
+  },
+
+  {
+    ciclo: 'sr1',
+    evidencia: 'Pesquisa consolidada',
+    status: 'feito',
+    responsavel: 'matheus',
+    link: '/#doc-sr1-sintese-da-pesquisa',
+  },
+  {
+    // Em andamento: o escopo ainda depende de respostas da Secretaria
+    // (cortes das classes, porte, Indicador 3).
+    ciclo: 'sr1',
+    evidencia: 'Escopo maduro',
+    status: 'em_andamento',
+    responsavel: 'gabriel',
+    link: '/#doc-s6-escopo-revisado',
+  },
+  {
+    ciclo: 'sr1',
+    evidencia: 'Protótipo de baixa/média fidelidade',
+    status: 'feito',
+    responsavel: 'joao-pedro',
+    link: '/sistema',
+  },
+  {
+    ciclo: 'sr1',
+    evidencia: 'Desenvolvimento iniciado',
+    status: 'feito',
+    responsavel: 'joao-henrique',
+    link: URL_REPOSITORIO,
+  },
+  {
+    ciclo: 'sr1',
+    evidencia: 'Evidências técnicas',
+    status: 'feito',
+    responsavel: 'fernando',
+    link: '/#doc-sr1-seguranca',
+  },
+  {
+    // Em andamento: o planejado contra realizado está escrito, e o retorno da
+    // banca entra no dia.
+    ciclo: 'sr1',
+    evidencia: 'Plano de correção de rota',
+    status: 'em_andamento',
+    responsavel: 'gabriel',
+    link: '/#doc-sr1-correcao-de-rota',
   },
 ]
 

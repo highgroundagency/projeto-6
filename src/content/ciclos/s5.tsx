@@ -3,15 +3,20 @@ import { URL_REPOSITORIO } from '@/content/produto'
 import type { Documento, RegistroSemana } from '@/lib/registro/tipos'
 
 /**
- * Semana 5 — Arquitetura. PLANEJAMENTO, não relato.
+ * Semana 5: Arquitetura, de 19 a 25/09.
  *
- * Esta semana ainda não aconteceu. Todos os blocos estão com selo `rascunho`,
- * que a interface exibe como pílula: é o contrato do projeto para "escrito e
- * ainda não validado". `feedback` fica em `nenhum` — inventar fala de professor
- * ou de cliente seria fabricar evidência, não planejar.
+ * O TEXTO CONTA O QUE ACONTECEU, com data e fonte: a planilha da Secretaria em
+ * 22/09 (ADR-041), a regra v3 e os sete tipos em 23/09 (ADR-041 e ADR-042), o
+ * C4 em quatro níveis e a base por unidade na lente de ML (ADR-043 e ADR-044).
+ * Até 24/09 este arquivo dizia que a semana "ainda não aconteceu", com a semana
+ * já pública e em curso.
  *
- * Quando a semana chegar, o texto é revisto contra o que de fato ocorreu e o
- * selo vira `validado` com o nome de quem revisou.
+ * Os blocos seguem em `rascunho` porque ninguém da equipe conferiu e assinou
+ * ainda. O selo não aparece para o visitante (ADR-026): ele lê isto como fato,
+ * e é por isso que só entra o que tem fonte no repositório.
+ *
+ * O feedback do cliente tem fonte: a resposta da Secretaria de 22/09 está em
+ * docs/retomada.md e em docs/perguntas-para-a-sesau.md (pergunta 5).
  */
 export const registro = {
   ciclo: 's5',
@@ -28,10 +33,14 @@ export const registro = {
     selo: 'rascunho',
     validadoPor: null,
     conteudo: [
-      'Fechamos o desenho das tabelas do sistema, seguindo o que o cliente contou na reunião. Ele guarda os distritos, as unidades de saúde e o tipo de cada uma. Guarda os indicadores e os itens medidos que formam cada um. Guarda a regra da nota, com número de versão e metas e pesos por tipo de unidade. Guarda os ciclos, que são os meses avaliados, e os números informados. Por fim, guarda o histórico de quem mudou o quê.',
-      'Escrevemos o motor de cálculo, a parte do sistema que faz a conta da nota. É uma conta que não depende de nada de fora. O passo a passo que a tela mostra (a memória de cálculo) sai dessa mesma conta.',
-      'Publicamos os desenhos da arquitetura em docs/arquitetura.md. São dois, no padrão C4: o de contexto e o de contêiner. C4 é um jeito conhecido de desenhar sistemas em níveis de zoom.',
-      'Montamos a base de teste, gerada por programa e sempre igual. Ela cria os 3 distritos e as 12 unidades, de 4 tipos. Cria também os 7 indicadores e os 11 itens medidos que os formam.',
+      'Em 19/09, a tela meu resultado entrou no ar. Com ela, quatro telas ficaram abertas: painel da SEAB, indicadores, lançamento e meu resultado.',
+      'Em 22/09, a Secretaria enviou a planilha que usa hoje, sem os nomes. Lemos as fórmulas uma a uma.',
+      'Em 23/09, a regra v3 entrou no motor. Ela segue o método da planilha: média das notas, peso redistribuído e nota de 0 a 1. As regras v1 e v2 continuam de pé, e nenhum mês fechado mudou.',
+      'Em 23/09, os tipos de unidade passaram a ser os sete da portaria: USF, UBT, UBT Mista, CAPS, CECON, UCIS e MAC.',
+      'A base de teste, gerada por programa, agora tem 7 tipos de unidade. Ela segue com 3 distritos, 12 unidades, 8 indicadores e 12 itens medidos.',
+      'Publicamos os quatro níveis do C4 em /arquitetura. C4 é um jeito de desenhar sistemas em níveis de zoom. Os níveis 3 e 4 são de 23/09.',
+      'Em 23/09, a base de desempenho por unidade da Secretaria entrou em ml/data, com autorização. É dado da instituição, sem nenhuma pessoa.',
+      'Em 23/09, os cadernos de ML passaram a ler essa base, na entrega parcial de ML. Os slides da AV1 de ML ficaram em /ml.',
     ],
   },
 
@@ -41,15 +50,24 @@ export const registro = {
     conteudo: [
       {
         decisao:
-          'A regra da nota fica guardada como dado, com número de versão, e não como código.',
+          'A regra v3 vale daqui para a frente. Os meses fechados seguem nas regras v1 e v2.',
         porque:
-          'A portaria muda. Se a regra estivesse escrita dentro do programa, toda mudança exigiria mexer no código e publicar versão nova. E o ciclo antigo deixaria de reproduzir a própria nota.',
+          'Nota publicada tem prazo de recurso. Se ela mudasse depois, o prazo do art. 9º perderia o sentido (ADR-041).',
+      },
+      {
+        decisao: 'Os tipos antigos viram os novos sem apagar as regras antigas.',
+        porque: 'Assim nenhuma unidade perde nota em mês já publicado (ADR-042).',
       },
       {
         decisao:
-          'O motor de cálculo não lê nem grava nada fora dele, não olha o relógio e não sorteia nada.',
+          'A base por unidade da Secretaria entra no repositório. Dado de pessoa, nunca.',
         porque:
-          'Assim testamos as bordas de cada faixa e o arredondamento sem ligar servidor nenhum. E o mesmo dado de entrada dá sempre o mesmo número.',
+          'A Secretaria autorizou o dado da instituição. Dado de pessoa não depende dela: é o art. 20 da LGPD (ADR-044).',
+      },
+      {
+        decisao: 'O motor não olha relógio nem rede, e desde 23/09 um teste segura isso.',
+        porque:
+          'Assim o mesmo dado dá sempre o mesmo número. O teste falha se alguém ligar o motor ao mundo de fora.',
       },
     ],
   },
@@ -58,38 +76,68 @@ export const registro = {
     selo: 'rascunho',
     validadoPor: null,
     conteudo: [
-      'Ainda não temos a planilha real prometida na reunião. Por isso a equipe definiu sozinha as metas e os pesos por tipo de unidade. O cliente precisa conferir esses valores.',
+      'Os cortes das classes foram digitados à mão na planilha. Não dá para tirá-los das fórmulas, e a v3 usa 0,80 como suposição.',
+      'Os percentuais de cada classe estão no Decreto 36.482/2023, que ainda não temos.',
+      'O Indicador 3 é bimestral, e o ciclo é mensal. O motor ainda não trata essa exceção.',
     ],
   },
 
-  feedback: { selo: 'rascunho', validadoPor: null, conteudo: 'nenhum' },
+  feedback: {
+    selo: 'rascunho',
+    validadoPor: null,
+    conteudo: [
+      {
+        origem: 'cliente',
+        texto:
+          'Em 22/09, ao enviar a planilha, a Secretaria respondeu como a conta é feita hoje: “é tudo manual, via procv e afins”.',
+      },
+    ],
+  },
 
   proximosPassos: {
     selo: 'rascunho',
     validadoPor: null,
     conteudo: [
-      'Ligar as telas de lançamento e de resultado ao motor de cálculo.',
-      'Escrever testes para os casos extremos da conta antes do Pré-SR1.',
-      'Listar as perguntas sobre arquitetura que a banca deve fazer.',
+      'Levar à Secretaria as perguntas abertas: cortes das classes, decreto e Indicador 3.',
+      'Liberar as quatro telas que faltam no sistema.',
+      'Fechar o pacote do SR1, com riscos, escopo revisado e backlog com estado.',
     ],
   },
 
+  /* Os responsáveis seguem a frente de cada um (src/content/equipe.ts). A
+     equipe confere e assina junto com os outros blocos. */
   responsaveis: {
     selo: 'rascunho',
     validadoPor: null,
     conteudo: [
       {
         integrante: 'joao-henrique',
-        contribuicao: 'Modelo de dados (o desenho das tabelas) e motor de cálculo.',
+        contribuicao: 'Regra v3 no motor, os sete tipos da portaria e o C4 em quatro níveis.',
       },
-      { integrante: 'rafael', contribuicao: 'Gerador da base de teste, sempre igual.' },
+      {
+        integrante: 'rafael',
+        contribuicao: 'Lente de ML: os cadernos sobre a base por unidade e a entrega parcial.',
+      },
+      {
+        integrante: 'joao-pedro',
+        contribuicao:
+          'Subiu a base por unidade e os cadernos para o repositório (commit 84faccd).',
+      },
+      {
+        integrante: 'matheus',
+        contribuicao: 'Leitura da planilha e as perguntas que ficaram para a Secretaria.',
+      },
       {
         integrante: 'fernando',
-        contribuicao: 'Testes dos casos extremos e documentação técnica.',
+        contribuicao: 'A fronteira da regra 1 e o teste que varre ml/data.',
+      },
+      {
+        integrante: 'gabriel',
+        contribuicao: 'Revisou e assinou as linhas de uso de IA da semana.',
       },
       {
         integrante: 'kerry',
-        contribuicao: 'Acompanha o desenho da arquitetura e anota dúvidas.',
+        contribuicao: 'Apoia a leitura da planilha e anota as dúvidas.',
       },
     ],
   },
@@ -98,6 +146,8 @@ export const registro = {
     selo: 'rascunho',
     validadoPor: null,
     conteudo: [
+      { tipo: 'prototipo', rotulo: 'As telas no ar', url: '/sistema' },
+      { tipo: 'documento', rotulo: 'Arquitetura em quatro níveis', url: '/arquitetura' },
       { tipo: 'codigo', rotulo: 'Motor de cálculo no repositório', url: URL_REPOSITORIO },
     ],
   },
@@ -367,9 +417,11 @@ export const documentos = [
     Conteudo: () => (
       <>
         <Nota>
-          A Secretaria enviou uma versão anonimizada da planilha que usa hoje. Ela não entra no
-          repositório: o que entra é a regra que a gente aprendeu lendo as fórmulas dela. Não há
-          nome, CPF, e-mail nem telefone de ninguém neste documento, e não havia no arquivo.
+          Em 22/09 a Secretaria enviou, sem os nomes, a planilha que usa hoje. A planilha com as
+          fórmulas não entra no repositório: entra a regra que aprendemos lendo as fórmulas. A
+          base de desempenho por unidade, só com números, entrou em ml/data com autorização da
+          Secretaria (ADR-044). Não há nome, CPF, e-mail nem telefone de ninguém neste
+          documento, e não havia no arquivo.
         </Nota>
 
         <Secao
@@ -397,9 +449,10 @@ export const documentos = [
             ]}
           />
           <Nota>
-            Nenhuma das três custou uma linha do motor. Todas as três eram dado: entraram como a
-            regra v3, e as regras v1 e v2 continuam publicadas, devolvendo os mesmos números dos
-            meses que já fecharam. Era exatamente para isto que a regra virou dado.
+            As três entraram como a regra v3. As regras v1 e v2 continuam publicadas e devolvem
+            os mesmos números dos meses que já fecharam. O motor ganhou um segundo caminho de
+            conta, e é a regra que escolhe qual usar (ADR-041). Era para isto que a regra virou
+            dado.
           </Nota>
         </Secao>
 
@@ -431,8 +484,8 @@ export const documentos = [
               ],
               [
                 '6',
-                'Usam pesos 0,2 / 0,2 / 0,8 / 0,5, que somam 1,1',
-                'Quem cai nessas linhas é avaliado numa régua diferente de todo mundo. São dois tipos de unidade que a portaria não nomeia',
+                'Seguem outra conta: a planilha divide a soma dos pontos por 1,7, a soma dos pesos 0,2 / 0,2 / 0,8 / 0,5',
+                'Quem cai nessas linhas é avaliado numa régua diferente de todo mundo. São as NDI e SAE, dois tipos de unidade que a portaria não nomeia',
               ],
               [
                 '32',
@@ -447,6 +500,14 @@ export const documentos = [
             não fecha. Uma régua diferente para seis linhas deixa de ser possível, em vez de
             deixar de ser notada.
           </Nota>
+          <div className="mt-3">
+            <Nota>
+              De onde vêm estes números: da planilha com fórmulas, recebida em 22/09, que não
+              está no repositório. A base por unidade de ml/data tem 244 linhas: as mesmas 196
+              unidades (190 e 6) e 48 linhas de distrito, seis por distrito. A diferença está só
+              nas linhas de distrito, 32 contra 48, e ainda não conferimos de onde ela vem.
+            </Nota>
+          </div>
         </Secao>
       </>
     ),

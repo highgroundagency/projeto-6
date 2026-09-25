@@ -1,7 +1,9 @@
+import { createElement } from 'react'
+import { renderToStaticMarkup } from 'react-dom/server'
 import { describe, expect, it } from 'vitest'
 import { CARREGADORES, carregarCiclos } from '@/content/ciclos/registro'
 import { EQUIPE, type IntegranteId } from '@/content/equipe'
-import { CRONOGRAMA, IDS_CICLOS, type CicloId } from '@/lib/cronograma'
+import { CRONOGRAMA, IDS_CICLOS, indiceDoCiclo, type CicloId } from '@/lib/cronograma'
 import { hojeEmRecife } from '@/lib/datas'
 import type { Bloco, RegistroSemana } from './tipos'
 
@@ -15,6 +17,19 @@ function blocos(registro: RegistroSemana): [string, Bloco<unknown>][] {
   return Object.entries(registro).filter(
     (par): par is [string, Bloco<unknown>] =>
       typeof par[1] === 'object' && par[1] !== null && 'selo' in par[1],
+  )
+}
+
+/**
+ * As âncoras `#doc-<ciclo>-<id>` de todos os documentos publicados até este
+ * ciclo, inclusive. É o que existe na página quando este ciclo aparece.
+ */
+function ancorasAte(ate: CicloId): Set<string> {
+  const limite = indiceDoCiclo(ate)
+  return new Set(
+    carregados
+      .filter((c) => indiceDoCiclo(c.id) <= limite)
+      .flatMap((c) => (c.modulo.documentos ?? []).map((d) => `#doc-${c.id}-${d.id}`)),
   )
 }
 
@@ -124,15 +139,37 @@ describe('conteúdo dos ciclos', () => {
       it('não aponta para documento que não existe', () => {
         // Âncora de documento é link interno: se o id mudar e a evidência não
         // acompanhar, o professor clica e não acontece nada. O CI acusa antes.
-        const existentes = new Set((modulo.documentos ?? []).map((d) => `#doc-${id}-${d.id}`))
+        //
+        // Vale para documento de OUTRA semana também (o SR1 aponta para os
+        // riscos da Semana 6), desde que a semana de destino não venha depois
+        // desta: semana futura ainda não está na página, e o link cairia no
+        // vazio no dia em que esta fosse publicada sozinha.
+        const existentes = ancorasAte(id)
         const ancoras = registro.evidencias.conteudo
           .map((e) => e.url)
-          .filter((url) => url.startsWith('#doc-'))
+          .filter((url) => /^\/?#doc-/.test(url))
 
         for (const ancora of ancoras) {
-          expect(existentes.has(ancora), `âncora sem documento correspondente: ${ancora}`).toBe(
-            true,
-          )
+          expect(
+            existentes.has(ancora.replace(/^\//, '')),
+            `âncora sem documento correspondente: ${ancora}`,
+          ).toBe(true)
+        }
+      })
+
+      it('não tem link para âncora sem destino dentro dos documentos', () => {
+        // O pacote do SR1 e a correção de rota são feitos de links. Renderizar
+        // o documento é o único jeito de ver o que ele aponta de verdade.
+        const existentes = ancorasAte(id)
+        for (const doc of modulo.documentos ?? []) {
+          const html = renderToStaticMarkup(createElement(doc.Conteudo))
+          const ancoras = [...html.matchAll(/href="\/?(#doc-[^"]+)"/g)].map((m) => m[1])
+          for (const ancora of ancoras) {
+            expect(
+              existentes.has(ancora),
+              `documento "${doc.titulo}" aponta para âncora sem destino: ${ancora}`,
+            ).toBe(true)
+          }
         }
       })
 

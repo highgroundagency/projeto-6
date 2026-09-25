@@ -63,7 +63,7 @@ export const registro = {
       {
         origem: 'equipe',
         texto:
-          'A lista de tarefas nasceu grande demais para um semestre. Cortamos na revisão: ficaram 25 histórias, com os "Must" cabendo até o SR1.',
+          'A lista de tarefas nasceu grande demais para um semestre. Cortamos na revisão: ficaram 26 histórias, com os "Must" cabendo até o SR1.',
       },
     ],
   },
