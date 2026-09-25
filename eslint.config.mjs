@@ -18,6 +18,8 @@ const eslintConfig = [
       "out/**",
       "build/**",
       "next-env.d.ts",
+      // Worktrees dos agentes: cópias do repositório, cada uma com o próprio lint.
+      ".claude/**",
     ],
   },
 ];

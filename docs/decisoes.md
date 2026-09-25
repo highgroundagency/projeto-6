@@ -1237,3 +1237,40 @@ versão do teste procurava telefone com um padrão frouxo e acusou 824.782 das 8
 porque num CSV de números quase toda coluna decimal casa: padrão que acusa tudo não acusa nada.
 Os padrões ficaram estreitos, e o reforço veio do cabeçalho, que reprova o arquivo por uma
 coluna chamada "nome" mesmo que nenhuma linha case.
+
+## ADR-045 · O SR1 ganhou deck próprio, e o site passou a escolher a apresentação do marco
+
+**Contexto.** O único deck do projeto era o do Kick-off, em `/pitch`, e tudo em volta sabia
+disso: o atalho do topo, o bloco "a entrega da vez" e o script do PDF. Dez dias depois do
+Kick-off o atalho sumia, como planejado, e o site passava a não oferecer apresentação nenhuma
+justamente na semana de preparar a próxima. O roteiro do SR1 existia só como tabela num
+documento da Semana 6, o que a ADR-040 já tinha tirado do site para o Kick-off (material de
+preparação não é entrega). E o tempo do SR1 não está confirmado: a diretriz escrita do
+Kick-off dizia cinco minutos, e o professor liberou dez.
+
+**Decisão.** O SR1 tem o mesmo desenho do Kick-off e da AV1 de ML: o texto mora em
+`src/content/apresentacao-sr1.ts`, os slides em `src/components/sr1/slides.tsx`, a rota `/sr1`
+e o PDF `/sr1/pdf` são fechados pelo ciclo `sr1`, e `npm run roteiro` gera
+`docs/pitch-sr1.md`. Três coisas são novas:
+
+1. **Duas versões no mesmo deck.** `/sr1` fecha em 9:00; `/sr1?versao=curta` fecha em 4:55 com
+   os slides marcados com `curto`, e cada um diz só as primeiras linhas da fala. Não é outro
+   arquivo: trocar de versão na hora não pode depender de alguém lembrar de atualizar dois.
+2. **Nenhum número digitado.** A nota de maio pela v2, a de maio pela v3 e a de junho pela v3
+   saem do motor de cálculo na hora de montar o slide, inclusive dentro da fala. O funil da
+   planilha vem do JSON do caderno 07, os modelos do caderno 06, as contagens de segurança de
+   `CONTAGENS_PITCH`, conferidas contra `docs/seguranca.md`.
+3. **Os sete falam.** No Kick-off a fala era só de quem estava desde agosto. Agora o teste
+   exige a equipe inteira, entre 30 e 130 segundos por pessoa, nas duas versões, e que a fala
+   de cada slide caiba no tempo dele a 2,6 palavras por segundo.
+
+O atalho do topo e a entrega da vez passam a perguntar a `src/lib/decks.ts` qual deck
+oferecer: o do marco mais recente que o visitante já vê, dentro da mesma janela de dez dias.
+
+**Consequência.** Em dezembro, o SR2 entra com uma linha em `DECKS_DOS_MARCOS` e um arquivo de
+conteúdo. O deck presta contas dos três compromissos do Kick-off com o estado real, inclusive o
+que não foi feito, e a correção de rota tem slide próprio.
+
+**O que se perdeu.** O slide da demonstração continua mostrando a interface do sistema com
+ponto decimal (70.00) enquanto o resto do deck escreve 70,00. É a tela real, e trocar a
+formatação dela é trabalho das telas, não do deck.

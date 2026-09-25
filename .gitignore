@@ -56,3 +56,6 @@ next-env.d.ts
 ml/saidas/
 .ipynb_checkpoints/
 __pycache__/
+
+# Worktrees dos agentes do Claude Code: cópias locais, nunca versionadas.
+/.claude/worktrees/
