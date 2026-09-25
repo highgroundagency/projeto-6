@@ -14,9 +14,16 @@ já em `main` por fast-forward. **Último commit:** `6fd6841`.
 Em 22/09 a Secretaria enviou a planilha anonimizada que usa hoje, e a resposta à pergunta
 "como a conta é feita" foi: **"é tudo manual, via procv e afins"**.
 
-O arquivo **não está no repositório e não deve entrar**. Foi varrido por CPF, e-mail e telefone
-antes de qualquer análise e não tinha nenhum, mas continua sendo dado do cliente. O que entrou
-foi a regra extraída das fórmulas.
+O arquivo foi varrido por CPF, e-mail e telefone antes de qualquer análise, e não tinha
+nenhum. Naquele dia, ele ficou fora do repositório e entrou só a regra extraída das fórmulas.
+
+Em 23/09, a base de desempenho por unidade da Secretaria entrou em
+`ml/data/base nova completa.csv`, com autorização registrada na ADR-044. É dado
+institucional, sem pessoa, e só os cadernos da lente de ML a leem. **Dado de pessoa não entra
+nunca**, e o teste `src/lib/dados-do-cliente.test.ts` varre `ml/data/` inteiro, linha a linha.
+O seed do site continua 100% sintético. O que falta nessa fronteira (autorização por escrito
+para publicar, e 39 combinações tipo × distrito com uma linha só) está em
+`docs/privacidade.md`.
 
 ### O que ela corrigiu
 
@@ -42,9 +49,16 @@ A planilha se contradiz sozinha, e isso é o argumento do produto com evidência
 retórica. Das 228 linhas:
 
 - **190** seguem a régua certa (pesos 0,2 / 0,2 / 0,2 / 0,4, somando 1,0).
-- **6** usam pesos que somam **1,1**, e são de dois tipos que a portaria não nomeia.
+- **6**, todas de NDI e SAE, seguem outra conta: o resultado lançado é a soma dos pontos
+  dividida por **1,7**. Esta nota dizia que os pesos somavam 1,1, e estava errado. São dois
+  tipos que a portaria não nomeia.
 - **32**, as dos oito distritos, usam uma função que só existe no Google Planilhas: aberta no
   Excel ela **não recalcula**, mostra o último número gravado.
+
+A base em `ml/data/base nova completa.csv`, que os cadernos leem, tem **244** linhas: 48 de
+distrito (seis por distrito, oito distritos) e 196 de unidade, das quais 190 seguem a régua e
+6 são as NDI e SAE. A contagem de 228 e 32, acima, veio da leitura de 22/09. Falta a equipe
+confirmar se eram arquivos diferentes; no slide, use uma fonte só e diga qual.
 
 E há uma quarta coisa, na aba de pesos: **duas colunas**, a "da portaria" e a "atual,
 excepcional", que não são iguais. Um subindicador está com **peso zero** onde a norma manda
@@ -85,8 +99,10 @@ para sempre. Está na ADR-041.
 
 ### Números atuais
 
-572 testes de unidade, 112 e2e, 123 verificações de vazamento, 56 linhas em `docs/uso-de-ia.md`
-(e `CONTAGENS_PITCH.usosDeIa` tem de bater com esse número, há teste).
+Recontados em 25/09: 602 testes de unidade passando e 23 pulados sem Postgres
+(625 ao todo), 55 deles no motor; 130 e2e; 164 verificações de vazamento; 61
+linhas em `docs/uso-de-ia.md` até 23/09 (e `CONTAGENS_PITCH.usosDeIa` tem de bater com esse
+número, há teste). Na nota de 23/09 eram 572 testes de unidade, 112 e2e e 123 verificações.
 
 ---
 

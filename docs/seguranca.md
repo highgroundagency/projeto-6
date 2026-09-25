@@ -15,13 +15,13 @@ usada para o resto — esconder isso seria pior do que ter o risco.
 | **T**ampering — alterar resultado já homologado | Motor de cálculo | Regra versionada: alterar cria nova versão e não toca na vigente; recálculo do ciclo antigo reproduz o mesmo número | Implementado |
 | **R**epudiation — negar que informou um valor | Lançamentos | Trilha append-only com autor, timestamp, antes e depois; correção entra como novo evento. Em memória, depende de a camada de escrita ser o único caminho; no schema guardado, um gatilho garante o mesmo até para a service role | Parcial |
 | **I**nformation disclosure — vazar conteúdo de release futuro | Registro e telas | Gate no servidor; carregadores preguiçosos; `import 'server-only'`; rota não liberada devolve 404; verificação automatizada em CI | Implementado e testado |
-| **I**nformation disclosure — vazar dado pessoal | Toda a base | Nenhum dado real entra no repositório; seed sintético com semente fixa; teste que recusa CPF, e-mail, telefone e matrícula na base | Implementado |
+| **I**nformation disclosure — vazar dado pessoal | O seed do site e `ml/data/` | Dado de pessoa nunca entra. O seed é sintético, com semente fixa, e `seed.test.ts` recusa CPF, e-mail, telefone e matrícula. A base por unidade da SESAU entra em `ml/data/` com autorização da Secretaria (ADR-044), e `dados-do-cliente.test.ts` a varre inteira, linha a linha. O teste não pega identificação indireta: 39 combinações tipo × distrito têm uma linha só, e a autorização por escrito para publicar ainda falta (ver `privacidade.md`) | Parcial |
 | **D**enial of service — força bruta no login | `/api/admin/entrar` | 5 tentativas por 10 minutos por IP, com erro genérico | Parcial — ver limitação abaixo |
 | **D**enial of service — sobrecarga da aplicação | Toda a aplicação | Limites da plataforma (Vercel); páginas leves e sem consulta pesada | Delegado à plataforma |
 | **E**levation of privilege — acessar `/admin` sem sessão | `/admin/*`, `/api/admin/*` | Middleware **e** revalidação da sessão dentro de cada page e route handler | Implementado |
 | **E**levation of privilege — agir fora do próprio perfil | APIs do sistema | Cada route handler confere o perfil antes de agir e recusa com motivo | Implementado (sobre login simulado) |
 | **E**levation of privilege — abrir tela de outro perfil pela URL | As 8 telas do sistema | `exigirPerfil` roda antes de qualquer renderização e devolve 404, não 403. Vale também para as rotas antigas, que só redirecionam depois do gate. Teste percorre 8 telas × 4 perfis (ADR-023) | Implementado (sobre login simulado) |
-| **T**ampering — adulterar a demonstração alheia | `/api/sistema/ciclo` | O estado do ciclo é compartilhado por todos os visitantes da instância e a transição não volta. Exige sessão de admin (`exigirAdmin`), e o controle não é renderizado para quem não a tem | Implementado |
+| **T**ampering — adulterar a demonstração alheia | `/api/sistema/ciclo` | A transição do ciclo não volta atrás. Exige sessão de admin (`exigirAdmin`), e o controle não é renderizado para quem não a tem | Implementado |
 
 ## OWASP Top 10 (2021) — estado
 
@@ -103,18 +103,22 @@ A consequência prática precisa ser dita com precisão, porque a formulação �
 **Num deploy público, qualquer visitante troca de perfil** — e isso é quase inofensivo: o
 perfil é cookie do próprio visitante, ninguém afeta ninguém, e não há dado real para ver.
 
-O que importava era a **escrita em estado compartilhado**. `src/lib/sistema/estado.ts` guarda
-as alterações em variáveis de módulo, na memória do processo: elas valem para todos os
-visitantes daquela instância. Três ações escrevem ali, e elas não são equivalentes:
+O que importava era a **escrita em estado compartilhado**. Até a semana do SR1,
+`src/lib/sistema/estado.ts` guardava as alterações em variáveis de módulo, na memória do
+processo, e elas valiam para todos os visitantes daquela instância: o lançamento de um
+avaliador aparecia na tela do outro. **Antes do SR1, a escrita do protótipo passou a ser
+isolada por visitante:** cada visitante escreve numa cópia própria, em memória.
 
-| Ação | Efeito em terceiros | Decisão |
+Três ações escrevem, e elas não são equivalentes:
+
+| Ação | Quem pode | Por quê |
 | --- | --- | --- |
-| Avançar o estado do ciclo | Irreversível pela interface. Sair de `lancamento_aberto` fecha a janela para todo mundo | **Exige sessão de admin** (ADR-015); o controle nem aparece para os demais |
-| Registrar lançamento | Aditivo; entra na trilha com autor e timestamp | Aberto — é o fluxo que a banca precisa experimentar |
-| Abrir contestação | Aditivo; entra na lista do ciclo | Aberto, mesma razão |
+| Avançar o estado do ciclo | **Só com sessão de admin** (ADR-015); o controle nem aparece para os demais | Não volta atrás pela interface: sair de `lancamento_aberto` fecha a janela de lançamento |
+| Registrar lançamento | Qualquer visitante | É o fluxo que a banca precisa experimentar; entra na trilha com autor e timestamp |
+| Abrir contestação | Qualquer visitante | Mesma razão; entra na lista do ciclo |
 
-O risco residual é o de qualquer protótipo com escrita aberta: alguém polui a base sintética
-com lançamentos. Reseta no redeploy, aparece na auditoria e não expõe ninguém.
+O risco residual é o de qualquer protótipo com escrita aberta: alguém enche de lançamentos
+a própria cópia. Some no reinício, aparece na trilha e não expõe ninguém.
 
 ## O link da vitrine pessoal como superfície de ataque
 
@@ -122,7 +126,7 @@ A ADR-030 criou uma URL-capacidade: `/vitrine/<chave>` concede, a quem tem a cha
 do site inteiro com data simulada. Régua igual à do resto:
 
 - **O que a chave protege.** Só leitura antecipada de conteúdo acadêmico que será público ao
-  longo do semestre. Nenhum dado real, nenhuma escrita: o link não dá painel, não avança
+  longo do semestre. Nenhum dado de pessoa, nenhuma escrita: o link não dá painel, não avança
   ciclo, não edita nada. O pior cenário de vazamento do link é alguém ver as entregas antes
   da data, que é exatamente o que a janela da vitrine já faz de propósito quando aberta.
 - **Formato e conferência.** A chave vem de `CHAVE_VITRINE` (mínimo 16 caracteres; ausente ou
@@ -154,10 +158,15 @@ do site inteiro com data simulada. Régua igual à do resto:
    do projeto é a sessão de admin, e ela não vem do seletor.
 2. A camada de escrita do sistema vive em memória: alterações se perdem no reinício e podem
    não valer entre requisições em serverless. Lançamento e contestação seguem abertos a
-   qualquer visitante, por decisão — ver a tabela acima.
+   qualquer visitante, por decisão, e desde a semana do SR1 caem numa cópia por visitante:
+   ver a tabela acima.
 3. Esconder o link do painel é redução de tropeço, não segurança. O repositório é público e
    este documento descreve o mecanismo; a proteção efetiva é `ADMIN_SENHA` trocada em produção.
 4. A CSP usa `'unsafe-inline'` em `script-src` e `style-src`. O próximo passo é nonce por
    requisição.
 5. Não há proteção CSRF explícita além de `sameSite=lax` — suficiente para formulários
    `POST` de mesma origem, insuficiente se algum dia houver API pública.
+6. A base por unidade da SESAU em `ml/data/` é pública, porque o repositório é. Dado de
+   pessoa não entra, e há teste que varre o diretório inteiro. Mas 39 das 90 combinações
+   tipo × distrito têm uma linha só, o que pode apontar a unidade e, por ela, o gerente. A
+   análise e as opções estão em `privacidade.md`.

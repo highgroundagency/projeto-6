@@ -27,6 +27,23 @@ gerado automaticamente a partir do código e traz o conteúdo literal de
 tudo (cada semana, cada documento, cada tela). Este aqui explica; aquele
 lá transcreve.
 
+ATUALIZADO EM 25/09/2026, NA SEMANA DO SR1. A primeira versão era de
+25/08. O que mudou desde então, em ordem:
+
+- 05/09: a Secretaria mandou a portaria (Portaria Conjunta nº 001/2024)
+  e uma planilha anonimizada de um ciclo real.
+- 12/09: Kick-off, com 17 slides em /pitch. Kerry Muniz entrou na
+  equipe nesse dia.
+- 22/09: a Secretaria mandou a planilha que usa hoje e disse: "é tudo
+  manual, via procv e afins".
+- 23/09: a regra v3 entrou no motor (seção 12); os tipos de unidade
+  passaram a ser os sete da portaria (seção 13); os quatro níveis do
+  C4 foram para /arquitetura; e a lente de ML passou a usar a base por
+  unidade da SESAU, em ml/data, com autorização (seções 13 e 15).
+- Na semana do SR1: as oito telas do sistema ficam no ar, a escrita do
+  protótipo passa a ser isolada por visitante, e o deck do SR1 fica em
+  /sr1.
+
 ------------------------------------------------------------
 1. O PROJETO EM UM PARÁGRAFO
 ------------------------------------------------------------
@@ -50,7 +67,7 @@ A pergunta que guia tudo (está no topo do site):
 ------------------------------------------------------------
 
 Imagine a cena. Todo mês, dezenas de números chegam de várias unidades
-da rede (USFs, CAPS, UPAs...). Uma equipe da secretaria (a
+da rede (USFs, UBTs, CAPS, MACs...). Uma equipe da secretaria (a
 coordenação da SEAB, ligada à SECOGE) copia esses números para uma
 planilha gigante, aplica fórmulas e chega numa nota para cada gerente.
 Essa nota decide quanto de gratificação a pessoa recebe.
@@ -69,6 +86,9 @@ pesquisa da Semana 2):
   refazer o caminho de um número.
 - DIVULGAÇÃO: o resultado vai para o gestor. Se ele discorda, vira uma
   troca de e-mails sem fim.
+
+Em 22/09 a própria Secretaria resumiu o processo numa frase: "é tudo
+manual, via procv e afins".
 
 E tem o problema humano: o processo inteiro mora na cabeça de poucas
 pessoas. Uma frase da nossa persona principal resume: "Se mexer numa
@@ -199,9 +219,9 @@ pagamento, login corporativo da prefeitura, migração de dados históricos
 reais, aplicativo mobile. O sistema calcula o percentual devido; pagar é
 trabalho de outro sistema.
 
-O backlog nasceu com 25 histórias em 5 épicos (Ciclo, Régua,
-Lançamento, Resultado, Governança), priorizadas por MoSCoW, com os
-"Must" cabendo até o SR1.
+O backlog nasceu com 26 histórias em 5 épicos (Ciclo, Régua,
+Lançamento, Resultado, Governança), priorizadas por MoSCoW: 16 "Must",
+7 "Should" e 3 "Could". Os 16 "Must" eram para caber até o SR1.
 
 A REUNIÃO COM O CLIENTE (22/08) MUDOU O DESENHO. Na primeira conversa
 real com o órgão (SECOGE/SESAU), o entendimento cresceu em quatro
@@ -211,8 +231,9 @@ pontos, e o sistema foi remodelado na mesma semana:
    valor direto ("índice"); outros pedem numerador e denominador
    ("razão"): gestantes com consulta em dia SOBRE gestantes
    cadastradas. O indicador é CALCULADO a partir deles.
-2. O TIPO da unidade decide a régua. Uma USF, um CAPS, uma UPA e uma
-   policlínica não medem as mesmas coisas, e os pesos mudam por tipo.
+2. O TIPO da unidade decide a régua. Uma USF e um CAPS não medem as
+   mesmas coisas, e os pesos mudam por tipo. (Os tipos certos, os sete
+   da portaria, só entraram em 23/09: seção 13.)
    Essa tabela (tipo x indicador, com meta e peso) mora na regra
    versionada, porque é o que muda de ano em ano.
 3. A rede tem degraus: secretaria -> distrito sanitário -> unidade. O
@@ -223,10 +244,12 @@ pontos, e o sistema foi remodelado na mesma semana:
 Veio também um pedido novo: JANELA DE REVISÃO de cinco dias no fim do
 mês, para corrigir números com o valor antigo guardado no histórico.
 
-Duas fórmulas seguem como SUPOSIÇÃO declarada, esperando a planilha
-real prometida: a composição (média simples dos subindicadores) e a
-agregação distrital (média simples das unidades). Se a planilha disser
-diferente, vira versão nova da regra, não reescrita do sistema. A ata
+Duas fórmulas ficaram como SUPOSIÇÃO declarada, esperando a planilha
+real: a composição (média simples dos subindicadores) e a agregação
+distrital (média simples das unidades). A planilha chegou em 22/09 e
+corrigiu a primeira: a média é das NOTAS dos subindicadores. Virou
+versão nova da regra, a v3, e não reescrita do sistema (seção 12). A
+agregação distrital continua suposição. A ata
 sintetizada está na Semana 3 do registro, sem nomes de pessoa.
 
 ------------------------------------------------------------
@@ -333,10 +356,10 @@ GERENTE DISTRITAL: responde por um distrito sanitário. Acompanha as
   unidades do distrito. Não pode: ver o recorte de outro distrito,
   mudar meta ou peso, alterar número fora da janela. Vê 4 telas.
 
-GERENTE DE UNIDADE: dirige uma unidade de saúde (USF, CAPS, UPA,
-  policlínica). Preenche os subindicadores do mês, diz de onde cada
-  número veio, corrige na janela de revisão e recebe a nota da unidade
-  com a conta aberta. Não pode: lançar por outra unidade, mudar meta ou
+GERENTE DE UNIDADE: dirige uma unidade de saúde (USF, UBT, CAPS, MAC
+  e os outros tipos da portaria). Preenche os subindicadores do mês,
+  diz de onde cada número veio, corrige na janela de revisão e recebe
+  a nota da unidade com a conta aberta. Não pode: lançar por outra unidade, mudar meta ou
   peso ("quem informa o resultado não escolhe a régua"), ter a nota
   decidida por robô. Vê 3 telas.
 
@@ -370,14 +393,22 @@ explica o que fazer ali. É literalmente pegar na mão.
    das unidades com tipo e distrito, botão de esconder os nomes (para
    projetar numa reunião sem constranger ninguém) e exportação em CSV.
 7. ANALYTICS: os sinais dos modelos de machine learning. A tela avisa:
-   nada aqui muda nota, e os modelos ainda foram treinados no recorte
-   anterior à remodelagem (o re-treino tem marco próprio no
-   cronograma).
+   nada aqui muda nota. Desde 23/09 os modelos treinam sobre a base
+   por unidade da SESAU (seção 15).
 8. CONTESTAÇÃO: onde o gerente que discorda pede revisão e acompanha a
    resposta.
 
 Tudo abre numa página só: você clica no título e a tela abre ali
 embaixo, sem sair do lugar. O índice com ícones fica grudado no topo.
+
+As oito estão no ar. Três abriram na véspera do Kick-off (painel da
+SEAB, indicadores e lançamento), o meu resultado em 19/09, e as outras
+quatro passaram a abrir com a Semana 6, antes do SR1.
+
+Quem lança um número escreve numa cópia própria, na memória do
+servidor: a escrita do protótipo passou a ser isolada por visitante
+antes do SR1. Um avaliador não vê o lançamento do outro, e um reinício
+do servidor apaga tudo.
 
 A VIDA DE UM MÊS (os 5 estados do ciclo)
 
@@ -402,7 +433,11 @@ gravado na trilha com quem fez e quando.
 12. A CONTA DA NOTA, COM EXEMPLO
 ------------------------------------------------------------
 
-A fórmula que o sistema grava em cada memória de cálculo:
+Existem duas formas de conta, conforme a versão da regra do mês. Primeiro
+a das regras v1 e v2 (janeiro a maio). Depois, a da v3 (junho em diante),
+que veio da planilha do cliente.
+
+A fórmula que o sistema grava na memória de cálculo das regras v1 e v2:
 
   score = (soma de pontos x peso) / (soma de pesos x pontuação máxima) x 100
 
@@ -437,6 +472,29 @@ Exemplo com dois indicadores:
    70 a 89: integral (80%)   <- o exemplo acima cai aqui
    90 ou mais: integral plena (100%)
 
+A REGRA V3 (JUNHO EM DIANTE, NO MOTOR DESDE 23/09). Veio da planilha
+do cliente, lida fórmula a fórmula em 22/09. Ela corrige três coisas
+que a equipe tinha assumido errado:
+
+1. Cada subindicador vira NOTA de 0 a 1 antes de qualquer média, por
+   uma régua de degraus. A nota do indicador é a média dessas notas;
+   em alguns indicadores, ela ainda passa por uma segunda régua.
+2. Indicador sem lançamento SAI da conta e leva o peso junto, em vez
+   de zerar. É a redistribuição do art. 8º da portaria.
+3. A nota é de 0 a 1, não de 0 a 10. A conta final vira:
+
+  score = (soma de nota x peso) / (soma dos pesos de quem tem nota) x 100
+
+   Então a tela continua mostrando a nota do mês de 0 a 100.
+
+As faixas da v3 usam os nomes da planilha: insatisfatório, regular,
+satisfatório e excelente. Os cortes das faixas e os percentuais do
+bônus são suposição nossa, até termos o Decreto nº 36.482/2023.
+
+Exemplo real do seed: a USF Canário fechou maio pela v2 com 86,67
+(integral). Se maio fosse calculado pela v3, daria 85 (excelente).
+Maio continua 86,67, porque mês fechado não troca de regra.
+
 Duas coisas que fazem essa conta ser confiável:
 
 O MOTOR É UMA FUNÇÃO PURA. Associação: uma calculadora que não tem
@@ -447,9 +505,10 @@ anos e chegar no MESMO número.
 
 A REGRA TEM VERSÃO, NUNCA É EDITADA. Associação: não se rabisca uma lei
 publicada; publica-se uma lei nova, e a antiga continua valendo para os
-fatos da época dela. No seed existem a regra-v1 (janeiro a março) e a
-regra-v2 (de abril em diante, com o patamar de entrada subindo de 70%
-para 75%). Um mês fechado com a v1 recalcula com a v1 para sempre.
+fatos da época dela. No seed existem três: a regra-v1 (janeiro a
+março), a regra-v2 (abril e maio, com o patamar de entrada subindo de
+70% para 75%) e a regra-v3 (de junho em diante). Um mês fechado com a
+v1 recalcula com a v1 para sempre.
 
 A MEMÓRIA DE CÁLCULO é o extrato disso tudo. Associação: o extrato do
 banco, ou a conta da padaria feita no papel na sua frente: item por
@@ -457,31 +516,52 @@ item, cada valor, cada peso, cada faixa aplicada, até chegar no total.
 É a resposta permanente à pergunta "de onde veio esse número?".
 
 ------------------------------------------------------------
-13. OS DADOS SÃO TODOS INVENTADOS (E ISSO É REGRA, NÃO ACASO)
+13. OS DADOS: O SISTEMA É INVENTADO, A LENTE DE ML É DA SESAU
 ------------------------------------------------------------
 
-REGRA NÚMERO 1 DO PROJETO: nenhum dado real de pessoa ou da SESAU entra
-no repositório, nem em prompt de IA. Existe um teste automático que
-QUEBRA O BUILD se um CPF, e-mail ou telefone aparecer na base.
+REGRA NÚMERO 1 DO PROJETO, em duas partes (ADR-044, de 23/09):
+
+- Dado de PESSOA nunca entra: nem CPF, nem nome, nem matrícula, nem
+  e-mail, nem telefone. Nem no repositório, nem no seed, nem em prompt
+  de IA. Isso não é permissão que o cliente possa dar: é lei.
+- Dado INSTITUCIONAL da SESAU (unidade, distrito, indicador, número)
+  entra só com autorização registrada. A base de desempenho por unidade
+  está em ml/data/base nova completa.csv, com autorização da
+  Secretaria, e só os cadernos de ML leem o arquivo.
+
+O sistema e o site continuam com a base inventada: a autorização não
+se estende a ela. Dois testes seguram a fronteira. Um QUEBRA O BUILD se
+um CPF, e-mail, telefone ou matrícula aparecer na base inventada. O
+outro varre ml/data inteiro, linha a linha, atrás de CPF, e-mail,
+telefone e coluna com nome de pessoa.
+
+O que esses testes não pegam: identificação indireta. Na base da
+SESAU, 39 das 90 combinações de tipo de unidade e distrito têm uma
+linha só. Essa linha aponta uma unidade e, por ela, o gerente que
+recebe a gratificação. A análise, e o que falta (a autorização por
+escrito para publicar), estão em docs/privacidade.md.
 
 Associação: boneco de crash test. Para testar o carro não se usa gente
 de verdade; para testar o sistema não se usa servidor de verdade.
 
 O que a base sintética simula (remodelada com a reunião de 22/08):
-- 3 distritos sanitários (Leste, Norte, Oeste) e 4 tipos de unidade
-  (USF, CAPS, UPA, Policlínica).
+- 3 distritos sanitários (Leste, Norte, Oeste) e 7 tipos de unidade,
+  os da portaria desde 23/09: USF, UBT, UBT Mista, CAPS, CECON, UCIS e
+  MAC. Antes eram 4, e dois deles (UPA e Policlínica) não existem na
+  portaria. O porte (USF 1 a 8, MAC 1 a 4) ficou de fora.
 - 12 unidades com nomes de aves, de propósito inventados ("USF Sabiá",
-  "CAPS Colibri", "UPA Andorinha"...).
+  "CAPS Colibri", "UBT Andorinha"...).
 - 15 gerentes fictícios (12 de unidade, 3 distritais), só com iniciais
   ("A. Moraes"). A entidade Gerente nem TEM campo de CPF, matrícula ou
   endereço: o que não existe não vaza.
-- 7 indicadores calculados e 11 subindicadores preenchíveis, com nomes
+- 8 indicadores calculados e 12 subindicadores preenchíveis, com nomes
   reais de saúde pública ("Esquema de pólio completo", "Dias até a
-  consulta agendada"). A régua (meta e peso) varia por tipo: o CAPS tem
-  recorte menor, como o cliente descreveu.
-- 6 meses de dados (janeiro a junho de 2026), em estados diferentes:
-  quatro publicados, um homologado, um com lançamento aberto (para o
-  funil da SEAB ter pendência de verdade para mostrar).
+  consulta agendada"). São de teste: a portaria tem cinco indicadores,
+  e eles ainda não entraram. A régua (meta e peso) varia por tipo: o
+  CAPS tem recorte menor, como o cliente descreveu.
+- Meses de 2026 desde janeiro, em estados diferentes: os mais antigos
+  publicados, depois homologados, e o último com lançamento aberto
+  (para o funil da SEAB ter pendência de verdade para mostrar).
 - 3 contestações de exemplo (uma em análise, uma acatada, uma recusada).
 - Uma correção DENTRO da janela de revisão, com antes e depois (uma
   "vírgula deslocada": valor 10x maior, corrigido), para a trilha ter
@@ -502,8 +582,9 @@ Arquitetura Nativa na Nuvem. A equipe acrescentou uma quarta por conta
 própria: Direito (LGPD). Cada uma tem um documento em docs/.
 
 SEGURANÇA (docs/seguranca.md)
-  O sistema foi analisado com dois checklists de mercado: STRIDE (13
-  ameaças mapeadas, cada uma com mitigação e estado) e OWASP Top 10.
+  O sistema foi analisado com dois checklists de mercado: STRIDE (14
+  ameaças mapeadas, cada uma com mitigação e estado) e OWASP Top 10
+  (10 itens, 5 parciais).
   O mais honesto do documento: o próprio painel de admin é analisado
   como superfície de ataque que a equipe criou para si mesma, com a
   mesma régua do resto. Proteções reais implementadas: cookie de sessão
@@ -540,7 +621,9 @@ DIREITO / LGPD (docs/privacidade.md)
   NUNCA decidem, e a decisão continua humana e contestável. Os direitos
   do art. 18 têm endereço no produto: ver a própria nota (acesso),
   contestar (correção), ranking sem nomes (anonimização), exportar CSV
-  (portabilidade).
+  (portabilidade). O documento também analisa a base da SESAU em
+  ml/data: sem dado de pessoa direto, mas com 39 combinações de tipo e
+  distrito que podem apontar o gerente (art. 5º, I).
 
 ------------------------------------------------------------
 15. MACHINE LEARNING, SEM MISTÉRIO
@@ -556,29 +639,31 @@ site apenas LÊ esse arquivo. Associação: o laboratório faz o exame e
 manda o laudo; o consultório só lê o laudo. O site não carrega nenhuma
 biblioteca de ML.
 
-São 4 modelos publicados, e aqui vem a parte que faz a gente parecer
-gente grande na banca:
+A BASE MUDOU EM 23/09 (ADR-043). Até o Kick-off, os modelos rodavam
+sobre a base inventada, e um deles perdia para o chute: o slide 14 do
+Kick-off guarda os números daquele dia, de propósito. Desde 23/09 os
+cadernos leem a base de desempenho por unidade da SESAU, em ml/data,
+com autorização da Secretaria (ADR-044). A base tem 244 linhas: 48 de
+distrito e 196 de unidade. Saem as 48 de distrito, que seguem outra
+régua, e as 6 de NDI e SAE, que seguem outra conta. Sobram 190
+unidades para os modelos.
 
-1. CLASSIFICAÇÃO "vai bater a meta?": FRACASSOU, e está publicado
-   assim mesmo. O modelo acerta 66,7%, mas chutar sempre "não vai
-   bater" acertaria 83,3%. Por quê? No mês de teste só 5 de 30
-   indicadores batem a meta; a pergunta é ruim para essa base, não o
-   modelo. Manter o fracasso publicado foi decisão: "esconder a que
-   falhou e mostrar só a que deu certo seria escolher a métrica depois
-   de ver o resultado."
-2. CLASSIFICAÇÃO "vai melhorar em relação ao mês passado?": funcionou.
-   76,7% de acerto contra 53,3% do chute. Serve para a SEAB saber onde
-   olhar antes que piore.
-3. REGRESSÃO "qual atingimento esperar?": erra em média 0,105, um pouco
-   menos que chutar a média (0,118). Melhor que o chute, mas pouco, e o
-   arquivo diz isso.
-4. CLUSTERING "quais áreas se comportam parecido?": agrupa as 10 áreas
-   do recorte ANTERIOR à remodelagem (o re-treino no domínio novo tem
-   marco próprio no cronograma)
-   em 3 grupos de comportamento ("mais alto e estável", "intermediário
-   e oscilante", "mais baixo e oscilante"). Agrupa ÁREAS, nunca
-   pessoas: clusterizar servidor seria outra conversa jurídica, e não é
-   esta.
+São 3 modelos publicados, cada um ao lado de um chute:
+
+1. CLASSIFICAÇÃO "a unidade fica abaixo de 90% no resultado geral?":
+   CatBoost, escolhido entre XGBoost, LightGBM, CatBoost e o stacking
+   dos três. Acerta 100%, contra 54,2% do chute.
+2. REGRESSÃO "qual resultado geral esperar?": XGBoost. Erra em média
+   0,0044, contra 0,0701 do chute, com R² de 0,984.
+3. CLUSTERING "quais unidades têm desempenho parecido?": K-Means com
+   4 grupos (silhueta 0,71). Os grupos refletem sobretudo o tipo de
+   unidade. Agrupa UNIDADES, nunca pessoas.
+
+O ponto que a banca vai cutucar: 100% de acerto é bom demais. E é, e
+os cadernos dizem isso. O resultado geral é uma soma ponderada das
+mesmas notas que o modelo recebe, então ele aprende a conta da
+portaria. Os modelos servem para mostrar quais indicadores mais pesam,
+não para prever nem para substituir o cálculo.
 
 Todo modelo é publicado ao lado de uma LINHA DE BASE: um "palpite bobo"
 (chutar sempre a resposta mais comum, ou chutar a média). Um modelo que
@@ -586,14 +671,15 @@ não supera o palpite bobo não aprendeu nada, e é honesto publicar a
 comparação. O JSON de resultados carrega data, semente, commit e este
 aviso: "Nenhum resultado desta lista entra no cálculo da gratificação."
 
-Existem 6 notebooks na pasta ml/notebooks/ (análise exploratória,
-pré-processamento, classificação, regressão, clustering, conclusões),
-que são os cadernos da disciplina de ML.
+Existem 7 cadernos na pasta ml/notebooks/ (análise exploratória,
+pré-processamento, classificação, regressão, clustering, conclusões e
+os números da apresentação), com todo o código dentro deles. O 06
+escreve src/content/ml/resultados.json, que a tela de analytics lê. O
+07 escreve os números dos slides da AV1 de ML, em /ml.
 
-Detalhe fino que pode cair em pergunta: a separação treino/teste é
-TEMPORAL (treina nos 5 primeiros meses, testa no sexto). Sortear linhas
-misturaria passado e futuro, e o modelo "veria a resposta" antes da
-prova. Isso se chama vazamento temporal, e a gente evitou.
+Detalhe fino que pode cair em pergunta: não há separação temporal. A
+base é o retrato de um ciclo, não uma série de meses, então a pergunta
+"o que vem no mês que vem" saiu junto com a base inventada.
 
 ------------------------------------------------------------
 16. O BANCO DE DADOS QUE EXISTE, MAS ESTÁ DESLIGADO
@@ -635,20 +721,22 @@ desenhada para isso.
 17. COMO A GENTE SABE QUE FUNCIONA (QUALIDADE)
 ------------------------------------------------------------
 
-Números atuais (todos verificáveis rodando npm run verificar):
+Números contados em 25/09 (todos verificáveis rodando npm run
+verificar):
 
-- 480 testes de unidade (Vitest) rodando localmente, mais 23 que
-  exigem um PostgreSQL real e rodam no CI. Cobrem o motor de cálculo
-  com casos de borda (subindicadores, fronteiras de faixa,
-  arredondamento), o motor de releases, datas, seed, admin, contraste
-  de cores, e até coisas como "toda âncora de evidência tem destino" e
-  "nenhum CPF na base".
-- 92 jornadas de ponta a ponta (Playwright), rodadas em tela grande E
+- 602 testes de unidade (Vitest) rodando localmente, mais 23
+  que exigem um PostgreSQL real e rodam no CI. Só o motor de cálculo
+  tem 55, com casos de borda (subindicadores, fronteiras de faixa,
+  arredondamento) e o método de notas da v3. O resto cobre o motor de
+  releases, datas, seed, admin, contraste de cores, e até coisas como
+  "toda âncora de evidência tem destino", "nenhum CPF na base" e "o
+  motor não lê relógio".
+- 130 testes de ponta a ponta (Playwright), rodados em tela grande E
   em celular de 360px. Elas abrem o site de verdade num navegador e
   clicam: login do admin, os 4 perfis nas 8 telas, o tutorial guiado, a
   troca de tema, a memória de cálculo, a exportação.
-- 122 checagens de vazamento contra o build de produção: prova de que
-  conteúdo futuro não chega ao navegador.
+- 164 checagens de vazamento contra o build de produção: prova de
+  que conteúdo futuro não chega ao navegador.
 - Testes do banco guardado rodam no CI contra um PostgreSQL real.
 - O CI (GitHub Actions) roda tudo isso a cada push.
 
@@ -694,13 +782,13 @@ fundo claro, e isso foi medido, não chutado.
 
   s1   08/08  Semana 1: Partida       peso 3
   s2   15/08  Semana 2: Imersão       peso 7
-  s3   22/08  Semana 3: Ideação       peso 5   <- estamos aqui (25/08)
+  s3   22/08  Semana 3: Ideação       peso 5
   s4   29/08  Semana 4: Proposta      peso 5
   i1   05/09  Imprensado              peso 0   (pausa, sem registro)
-  ko   12/09  Kick-off                peso 0   (pitch de 5 min, fala
+  ko   12/09  Kick-off                peso 0   (pitch em /pitch, fala
                                       dividida entre os 6)
   s5   19/09  Semana 5: Arquitetura   peso 10
-  s6   26/09  Semana 6: Pré-SR1       peso 5
+  s6   26/09  Semana 6: Pré-SR1       peso 5   <- estamos aqui (25/09)
   sr1  03/10  SR1                     peso 15  <- primeiro grande marco
   i2   10/10  Imprensado              peso 0
   s7   17/10  Semana 7: Sprint 1      peso 8
@@ -727,16 +815,17 @@ registro e checklist derivam todos desse arquivo.
 
 Existe uma auditoria versionada no código (src/content/auditoria.ts)
 que cruza cada exigência do professor com o lugar do repositório que a
-atende. Placar atual: 24 requisitos rastreados, 18 atendidos, 5
+atende. Placar em 25/09: 33 requisitos rastreados, 24 atendidos, 8
 parciais, 1 fora de escopo. Os parciais, com a ressalva honesta:
 
 - PERFIS DE ACESSO: o recorte por papel é real e roda no servidor, mas
   quem escolhe o papel é o visitante (login simulado). O controle de
   acesso de verdade está escrito e testado no schema do banco, que está
   desligado.
-- REGRAS DA PORTARIA: a equipe não teve acesso à portaria vigente. Os
-  pesos e faixas da base são arbitrados e precisam de conferência com o
-  cliente. Isso está declarado como bloqueio no registro.
+- REGRAS DA PORTARIA: a portaria chegou em 05/09, e o método dela está
+  no motor desde 23/09 (regra v3). Faltam os cinco indicadores reais, o
+  porte, o Indicador 3 bimestral, o prazo de recurso do art. 9º, e os
+  cortes e percentuais, que são suposição até o Decreto nº 36.482/2023.
 - VALIDAÇÃO COM O CLIENTE: os instrumentos (roteiro de entrevista,
   questionário) estão prontos; o resultado não existe porque a Semana
   11 não chegou. Inventar fala de cliente seria fabricar evidência.
@@ -745,6 +834,12 @@ parciais, 1 fora de escopo. Os parciais, com a ressalva honesta:
 - ACESSIBILIDADE: contraste, foco e semântica estão conferidos por
   teste, mas não houve teste com leitor de tela real nem com pessoas
   com deficiência. O que temos é um piso, não uma validação de uso.
+- IDEAÇÃO: está publicado o roteiro das três dinâmicas, não o registro
+  do que aconteceu. Não há foto nem artefato da sessão.
+- ANÁLISES DO KICK-OFF: a matriz CSD foi montada na semana do
+  Kick-off, e o benchmarking compara categorias, sem nomear produto.
+- DOCUMENTAÇÃO DO KICK-OFF: falta o link da pasta do Drive, porque a
+  variável NEXT_PUBLIC_DRIVE_URL está vazia.
 
 E o 1 fora de escopo: integração com folha de pagamento, declarada
 desde a Semana 4.
@@ -770,26 +865,31 @@ LGPD de qualquer jeito.
   João Pedro Mamede: Front-end e design system. Telas, tokens,
     acessibilidade e a memória de cálculo na interface. (O nome Prumo
     foi proposta dele.)
-  Rafael Serpa: Dados e machine learning. Gerador sintético, notebooks,
-    modelos e a tela de analytics.
+  Rafael Serpa: Dados e machine learning. Os cadernos sobre a base da
+    SESAU, os modelos e a tela de analytics.
   Fernando Cavalcanti: Qualidade, documentação e governança. Testes,
     documentação técnica, LGPD e registro de uso de IA.
+  Kerry Muniz: Apoio em pesquisa e validação, desde o Kick-off
+    (12/09). Aparece no registro da Semana 5 em diante.
 
 Sobre IA: o projeto usa IA no desenvolvimento e DECLARA isso numa
 página pública (/transparencia-ia) e num registro (docs/uso-de-ia.md)
 onde cada uso tem uma linha com o que foi gerado e QUEM VALIDOU. O lema
 é "gerado não é entregue": nada entra sem um humano da equipe revisar e
-assinar. Várias linhas estão com validação pendente; assinar essas
-linhas é tarefa de todos nós.
+assinar. Até 23/09 eram 61 linhas, todas assinadas, e todas pelo
+Gabriel. A posição da equipe é que cada frente passe a assinar a
+própria linha.
 
 ------------------------------------------------------------
 22. PERGUNTAS QUE PODEM CAIR (E RESPOSTAS CURTAS)
 ------------------------------------------------------------
 
 "Os dados são reais?"
-  Não, e isso é regra com teste automático. Tudo sintético, com semente
-  fixa: os mesmos números aparecem para qualquer pessoa. A entidade
-  Gestor nem tem campo de CPF.
+  Os do sistema, não: são inventados, com semente fixa, e os mesmos
+  números aparecem para qualquer pessoa. A entidade Gerente nem tem
+  campo de CPF. Os da lente de ML, sim: a base de desempenho por
+  unidade da SESAU, em ml/data, com autorização da Secretaria. Dado de
+  pessoa não entra em nenhum dos dois, e há teste para cada um.
 
 "Por que construir em vez de usar uma ferramenta pronta?"
   Porque nenhuma ferramenta cobre a combinação regra versionada +
@@ -807,9 +907,10 @@ linhas é tarefa de todos nós.
   nos deixa em linha com o art. 20 da LGPD.
 
 "Um dos modelos de vocês fracassou?"
-  Sim, e está publicado com o fracasso explicado. O modelo de "vai
-  bater a meta" perde para o chute; o de "vai melhorar" ganha. Esconder
-  o que falhou seria escolher a métrica depois de ver o resultado.
+  No Kick-off, sim: sobre a base inventada, o modelo de "vai bater a
+  meta" perdia para o chute, e o slide 14 guarda isso. Na base da
+  SESAU, os três ganham do chute, e ganham fácil porque aprendem a
+  própria conta da portaria. Os cadernos dizem isso.
 
 "Cadê o banco de dados?"
   Escrito, testado contra PostgreSQL real, e desligado por decisão de
@@ -817,8 +918,10 @@ linhas é tarefa de todos nós.
   driver, a camada de dados já espera por ele.
 
 "Vocês tiveram acesso à portaria?"
-  Não, e está declarado como bloqueio. Os indicadores são verossímeis e
-  fictícios; a conferência com o cliente está no plano da validação.
+  Sim, desde 05/09, e ela está transcrita em docs/portaria-001-2024.md.
+  O método dela entrou no motor como regra v3. Os indicadores do
+  sistema continuam de teste: a portaria tem cinco, e eles ainda não
+  entraram.
 
 "Por que tela sem permissão dá 404 e não 'acesso negado'?"
   Porque 'acesso negado' confirma que a coisa existe. Da porta para
@@ -846,6 +949,9 @@ O repositório: github.com/highgroundagency/projeto-6
 Rotas do site:
   /                  a página com tudo (registro, equipe, marcos)
   /sistema           o MVP com as 8 telas e os 4 papéis
+  /pitch             os 17 slides do Kick-off
+  /sr1               o deck do SR1
+  /ml                os slides da AV1 de machine learning
   /transparencia-ia  a declaração de uso de IA
   /arquitetura       os desenhos do sistema (C4) explicados do zero
   /status            health check
@@ -865,11 +971,13 @@ Comandos úteis:
 Documentos para ler depois deste:
   DOSSIE.txt            o conteúdo literal de tudo, gerado do código
   CLAUDE.md             as regras da casa (as 11 inegociáveis)
-  docs/decisoes.md      os porquês, decisão por decisão (34 ADRs)
+  docs/decisoes.md      os porquês, decisão por decisão (44 ADRs)
   docs/releases.md      como operar o que o professor vê
   docs/seguranca.md     a lente de Segurança
   docs/nuvem.md         a lente de Nuvem
   docs/privacidade.md   a lente de Direito/LGPD
+  docs/perguntas-da-banca.md   as perguntas prováveis, com a resposta
+                               curta
   docs/banco.md         o schema guardado e como religar
   ml/                   a lente de Machine Learning
 
@@ -880,7 +988,9 @@ Documentos para ler depois deste:
 Se você for mexer no repositório, o CLAUDE.md tem as regras completas.
 As onze, em uma linha cada:
 
-1.  Nenhum dado real. Tudo sintético, com teste que garante.
+1.  Dado de pessoa nunca entra. Dado institucional da SESAU só com
+    autorização (a base de ml/data). O seed é 100% sintético. Dois
+    testes garantem.
 2.  Data só muda em src/lib/cronograma.ts. Fonte única de verdade.
 3.  Conteúdo de ciclo nunca leva código de navegador ('use client'),
     para conteúdo futuro não vazar no bundle.
@@ -898,7 +1008,7 @@ As onze, em uma linha cada:
 FIM
 ------------------------------------------------------------
 
-Última atualização: 25/08/2026. Este arquivo é escrito à mão e revisado
+Última atualização: 25/09/2026. Este arquivo é escrito à mão e revisado
 pela equipe; quando o projeto mudar de forma relevante, atualize aqui
 também. Em caso de conflito entre este texto e o código, o código vence
 (e provavelmente este arquivo está desatualizado: avise no grupo).

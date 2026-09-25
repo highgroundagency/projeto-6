@@ -31,14 +31,18 @@ a demonstração, ela vai inteira para a regra da portaria e os testes do motor.
 isolar a escrita antes do dia. Hoje ela vive na memória do servidor e é compartilhada, então
 um lançamento de um pode sumir ou aparecer para outro.
 
+**Atualização em 25/09.** As oito telas passam a abrir com a Semana 6, antes do SR1, e a
+escrita do protótipo passa a ser isolada por visitante. O calendário deixou de ser a dúvida.
+Continua valendo perguntar o que a nota olha: o site no dia ou a demonstração.
+
 ### 2. Para a evidência técnica de segurança e nuvem, vale o que está funcionando ou o que está desenhado e testado?
 
 O login é simulado e a tela diz isso. O controle de acesso de verdade está escrito como
 políticas no banco, passa em 23 verificações contra um Postgres real, e está desligado do
 site.
 
-**Nossa posição.** Chegar ao SR1 assim, apresentando as 14 ameaças mapeadas, as 10 resolvidas
-e as limitações escritas. Autenticação institucional entra na lista do que falta para virar
+**Nossa posição.** Chegar ao SR1 assim, apresentando as 14 ameaças mapeadas, o estado de cada
+uma e as limitações escritas. Autenticação institucional entra na lista do que falta para virar
 produção, não como entrega do semestre.
 
 **O que muda.** Se a lente exige controle funcionando, as duas semanas viram semana de ligar
@@ -108,6 +112,12 @@ não entra no repositório em hipótese nenhuma.
 SR1. É a única parte da validação que não depende da agenda da comissão, porque a planilha já
 está com a gente.
 
+**Atualização em 25/09.** A premissa mudou. A ADR-044, de 23/09, registra a autorização da
+Secretaria para a base de desempenho por unidade, que está em `ml/data/`. É dado
+institucional, sem pessoa, e há teste que varre o diretório inteiro. Dado de pessoa continua
+fora em hipótese nenhuma. O que falta é a autorização por escrito para publicar, e decidir o
+que fazer com as 39 combinações tipo × distrito que têm uma linha só (`docs/privacidade.md`).
+
 ---
 
 ## Uma que vence antes do SR1
@@ -122,6 +132,10 @@ simples, inclusive o que perde.
 
 **O que muda.** Se a AV1 exige dado real ou aberto, as duas semanas até 30 de setembro viram
 buscar uma base pública de saúde e refazer a análise. É a data mais curta da lista.
+
+**Atualização em 25/09.** Esta pergunta perdeu o objeto. Desde 23/09, a lente de ML trabalha
+sobre a base por unidade da Secretaria, em `ml/data/`, com autorização (ADR-043 e ADR-044).
+O sistema continua com a base gerada.
 
 ---
 
@@ -148,7 +162,7 @@ para nomear, publicamos três com fonte e data de acesso.
 **Nossa posição.** Publicar antes, com planejado contra realizado, e deixar o bloco do retorno
 da banca para preencher no dia.
 
-### 13. Nosso registro de uso de IA tem 48 linhas com o mesmo validador. Isso pesa na avaliação individual?
+### 13. Nosso registro de uso de IA tem 61 linhas, de 08/08 a 23/09, com o mesmo validador. Isso pesa na avaliação individual?
 
 **Nossa posição.** Não reescrever o histórico. A partir daqui, cada frente valida e assina a
 própria linha. **Muda:** se pesa, entra revisão cruzada por frente antes de 3 de outubro.

@@ -17,14 +17,14 @@ declarada de produto.
 | Páginas e telas | Função serverless, por requisição | O recorte de release depende do dia **e** da sessão, então não há como pré-renderizar: `force-dynamic` é consequência da regra |
 | Porta do painel | Middleware na borda, antes da função | Barrar antes de acordar a função é mais barato e mais seguro |
 | Assets, fontes e chunks | CDN, com hash imutável no nome | Cache eterno, e a invalidação vira consequência do build |
-| Modelos de ML | Fora do runtime: treinam offline, viram JSON versionado | Partida a frio com scikit-learn custaria segundos (ADR-022) |
+| Modelos de ML | Fora do runtime: os cadernos treinam offline, sobre a base por unidade da SESAU em `ml/data/` (ADR-043 e ADR-044), e viram JSON versionado | Partida a frio com scikit-learn custaria segundos (ADR-022) |
 | Dados do protótipo | Memória do processo, semente fixa | `git clone && npm run dev` sobe sem nenhuma credencial |
 | Persistência prevista | Postgres gerenciado, com RLS | Autorização no banco vale para qualquer caminho de escrita |
 
 ## O pipeline de dados, ponta a ponta
 
-1. A área técnica envia valor e evidência num POST de formulário. `zod` valida na entrada e
-   recusa com motivo, antes de qualquer escrita.
+1. A unidade envia o valor de cada subindicador e a evidência num POST de formulário. `zod`
+   valida na entrada e recusa com motivo, antes de qualquer escrita.
 2. A camada de dados grava o lançamento **e escreve o evento na trilha no mesmo passo**. Não
    existe caminho de escrita que não registre.
 3. A SEAB fecha a janela; o estado do ciclo avança um passo e a transição também vira evento.
@@ -67,12 +67,12 @@ pelo volume que se sonha ter é como comprar caminhão para carregar feira.
 
 | Dimensão | Hoje no protótipo | Em produção |
 | --- | --- | --- |
-| Áreas técnicas | 10 sintéticas | Dezenas, custo linear e trivial |
-| Indicadores | 30 sintéticos | Centenas, sem mudança de arquitetura |
-| Gestores avaliados | Dezenas | Milhares: o cálculo é por gestor e paraleliza sozinho |
+| Unidades | 12 sintéticas, em 3 distritos | A base por unidade da SESAU tem 196, em 8 distritos: custo linear e trivial |
+| Indicadores | 8 sintéticos, com 12 subindicadores | A portaria tem 5, com subindicadores próprios: sem mudança de arquitetura |
+| Gerentes avaliados | 15 sintéticos | Centenas: o cálculo é por unidade e paraleliza sozinho |
 | Trilha de auditoria | Centenas de eventos | Cresce para sempre por desenho; pede índice por ciclo e arquivamento de competência antiga |
 
-**O gargalo real não é técnico, é de calendário.** Todas as áreas lançam nos mesmos dois dias
+**O gargalo real não é técnico, é de calendário.** Todas as unidades lançam nos mesmos dois dias
 do mês. Serverless resolve exatamente esse formato de carga (pico curto, vale longo), e é a
 razão principal da escolha.
 

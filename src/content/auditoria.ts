@@ -95,10 +95,12 @@ export const REQUISITOS: readonly Requisito[] = [
     estado: 'parcial',
     onde: [
       'src/lib/calculo/motor.ts: a regra é aplicada automaticamente sobre os lançamentos',
+      'src/lib/seed/gerar.ts: a regra v3, no motor desde 23/09, com o método de notas lido da planilha do cliente (ADR-041)',
       'src/components/sistema/telas/indicadores.tsx: a regra é dado versionado, com diff entre versões',
+      'docs/portaria-001-2024.md: a portaria transcrita, com artigo e data',
     ],
     ressalva:
-      'A equipe não teve acesso à portaria vigente. Os pesos e as faixas da base são arbitrados e precisam de conferência com a CAM: está declarado como bloqueio no registro da Semana 5.',
+      'A portaria chegou em 05/09 e a planilha do cliente em 22/09. O método entrou como regra v3: média das notas, peso redistribuído pelo art. 8º e nota de 0 a 1. Continua faltando: os oito indicadores do seed são de teste, e a portaria tem cinco; o porte fica de fora; o Indicador 3 é bimestral e o motor só conhece o mês; o prazo de recurso do art. 9º não está implementado; e os cortes das classes e os percentuais são suposição até o Decreto nº 36.482/2023. As perguntas abertas estão em docs/perguntas-para-a-sesau.md.',
   },
   {
     id: 'rastreabilidade',
@@ -161,10 +163,12 @@ export const REQUISITOS: readonly Requisito[] = [
       'Disciplina-alvo: Aprendizado de Máquina. Possibilidades de aplicação de ML, funcionalidades inteligentes, evolução dos modelos.',
     estado: 'atendido',
     onde: [
-      'ml/: gerador, modelos e exportador; separação treino/teste temporal, nunca aleatória',
+      'ml/notebooks/: os cadernos, com todo o código, sobre a base por unidade da SESAU em ml/data/, autorizada pela Secretaria (ADR-043 e ADR-044)',
       'src/components/sistema/telas/analytics.tsx: cada modelo com método, métrica E linha de base',
-      'Um modelo publicado como resultado NEGATIVO, porque não supera a referência',
+      '/ml: os slides da AV1 de machine learning, com os números lidos do caderno 07',
     ],
+    ressalva:
+      'A classificação e a regressão têm métrica alta porque o resultado geral é soma ponderada das mesmas notas: os modelos mostram o que mais pesa e não substituem o cálculo, e os cadernos dizem isso. A base é o retrato de um ciclo, então não há separação temporal. E 39 das 90 combinações tipo × distrito da base têm uma linha só, o que pode apontar a unidade e o gerente dela: a análise está em docs/privacidade.md.',
   },
   {
     id: 'lente-nuvem',
@@ -228,7 +232,8 @@ export const REQUISITOS: readonly Requisito[] = [
     pedido: 'Semana 5: diagrama da arquitetura, fluxo de dados, primeiras telas, pipeline.',
     estado: 'atendido',
     onde: [
-      'docs/arquitetura.md: diagramas C4 de contexto e de contêiner',
+      'docs/arquitetura.md: os quatro níveis do C4, as características priorizadas e o estilo escolhido',
+      'src/app/arquitetura/page.tsx: os quatro níveis do C4 desenhados no site',
       'src/content/ciclos/s5.tsx: arquitetura, modelo de dados e a lente de nuvem',
     ],
   },
@@ -243,7 +248,7 @@ export const REQUISITOS: readonly Requisito[] = [
       'src/content/ciclos/s11.tsx: roteiro da entrevista e tarefas do teste de usabilidade, cronometrado',
     ],
     ressalva:
-      'A validação formal da Semana 11 ainda não aconteceu; o que existe é a reunião de levantamento de 22/08, que já mudou o domínio (ADR-034). Fala de cliente só entra registrada, nunca inventada (ADR-020).',
+      'A validação formal da Semana 11 ainda não aconteceu. O que existe é a reunião de levantamento de 22/08, que já mudou o domínio (ADR-034), e a planilha enviada em 22/09, que mudou a regra (ADR-041). Fala de cliente só entra registrada, nunca inventada (ADR-020).',
   },
   {
     id: 'planejado-realizado',
@@ -272,9 +277,54 @@ export const REQUISITOS: readonly Requisito[] = [
     pedido: 'Evidências de testes; registros de testes e evolução do backlog.',
     estado: 'atendido',
     onde: [
-      '503 casos em Vitest (480 rodam localmente; 23 exigem um PostgreSQL real e rodam no CI), 92 jornadas em Playwright',
-      'scripts/verificar-vazamento.ts: 122 checagens contra o build de produção',
+      '625 casos em Vitest, contados em 25/09 (602 rodam localmente; 23 exigem um PostgreSQL real e rodam no CI), 55 deles no motor de cálculo',
+      '130 testes em Playwright, contados em 25/09, em desktop e em 360px',
+      'scripts/verificar-vazamento.ts: 164 checagens contra o build de produção, contadas em 25/09',
     ],
+  },
+
+  // ---- Matriz: o SR1 -----------------------------------------------------
+  // Os outros critérios do SR1 (pesquisa consolidada, escopo maduro, plano de
+  // correção de rota) apontam para documentos do registro, e entram aqui com a
+  // âncora do documento quando ele existir. Caminho, não promessa.
+  {
+    id: 'sr1-prototipo',
+    fonte: 'matriz',
+    pedido: 'SR1: protótipo de baixa/média fidelidade.',
+    estado: 'atendido',
+    onde: [
+      'src/components/wireframe.tsx e src/content/ciclos/ko.tsx: os quatro wireframes de baixa fidelidade',
+      '/sistema: o protótipo navegável, com as oito telas e os quatro perfis',
+    ],
+    ressalva:
+      'Os wireframes foram desenhados depois das telas, na semana do Kick-off, e o documento diz isso. Não há etapa de média fidelidade: o protótipo navegável ocupa esse lugar.',
+  },
+  {
+    id: 'sr1-desenvolvimento',
+    fonte: 'matriz',
+    pedido: 'SR1: desenvolvimento iniciado.',
+    estado: 'atendido',
+    onde: [
+      'src/lib/calculo/motor.ts: o motor puro, com as regras v1, v2 e v3',
+      'src/lib/features.ts: as oito telas, liberadas com a Semana 6',
+      '.github/workflows/ci.yml: typecheck, testes, build, verificação de vazamento e e2e a cada push',
+    ],
+    ressalva:
+      'Os oito indicadores do seed são de teste, não os cinco da portaria. A escrita do protótipo vive em memória, numa cópia por visitante, e some no reinício.',
+  },
+  {
+    id: 'sr1-evidencias-tecnicas',
+    fonte: 'matriz',
+    pedido: 'SR1: evidências técnicas.',
+    estado: 'atendido',
+    onde: [
+      'docs/seguranca.md: STRIDE com 14 ameaças e OWASP Top 10 com 5 itens parciais',
+      'docs/nuvem.md e /arquitetura: onde cada peça roda, e os quatro níveis do C4',
+      'docs/privacidade.md: a LGPD aplicada e a identificação indireta na base da SESAU',
+      'src/lib/dados-do-cliente.test.ts: a fronteira da ADR-044 como teste, sobre ml/data/ inteiro',
+    ],
+    ressalva:
+      'O banco com RLS está escrito e testado, mas desligado, e o login é simulado. Nenhuma métrica de desempenho foi medida: os números de escala são raciocínio de capacidade.',
   },
 
   {

@@ -17,10 +17,17 @@ duas sozinha.
 ### 1. Dá para receber a planilha de um mês já fechado, mesmo anonimizada?
 
 **Respondido: sim.** Chegou em 22/09, anonimizada. Sem nome, CPF, e-mail ou telefone, o que a
-equipe conferiu antes de abrir o resto. O arquivo **não entra no repositório**; o que entra é
-a regra extraída dele.
+equipe conferiu antes de abrir o resto. Naquele dia, o arquivo ficou fora do repositório e
+entrou só a regra extraída dele.
 
 O que ela respondeu sozinha está no documento da Semana 5, `#doc-s5-planilha`.
+
+Em 23/09, a base de desempenho por unidade da Secretaria entrou em
+`ml/data/base nova completa.csv`, com autorização registrada na ADR-044. É dado
+institucional, sem pessoa, e só os cadernos da lente de ML a leem. O teste
+`src/lib/dados-do-cliente.test.ts` varre `ml/data/` inteiro, linha a linha. O seed do site
+continua sintético. Falta a autorização por escrito para publicar a base num repositório
+público: ver a pergunta 13, abaixo.
 
 ### 2. Quando o indicador tem vários subindicadores, a média é dos valores ou das notas?
 
@@ -84,8 +91,17 @@ O art. 6º diz que a CAM divulga. Não diz onde.
 
 ### 12. O sistema pode um dia receber dado real? Com que base legal, e quem responde?
 
-Hoje é tudo sintético por decisão da equipe, porque decidir remuneração cai no art. 20 da
-LGPD. Também falta o prazo de retenção e quem é o controlador.
+O sistema roda com base sintética por decisão da equipe, porque decidir remuneração cai no
+art. 20 da LGPD. A base por unidade em `ml/data/` só alimenta a lente de ML, não o sistema.
+Também falta o prazo de retenção e quem é o controlador.
+
+### 13. A autorização para a base em `ml/data/` cobre publicar num repositório público?
+
+A ADR-044 registra que a Secretaria autorizou a base por unidade. Não temos isso por escrito,
+e o repositório é público, assim como os slides de `/ml`. E 39 das 90 combinações de tipo de
+unidade e distrito têm uma linha só: a linha aponta a unidade e, por ela, o gerente que
+recebe a gratificação. Precisamos da autorização por escrito, e de saber se a Secretaria
+prefere que essas linhas sejam generalizadas. A análise está em `docs/privacidade.md`.
 
 ---
 
@@ -93,8 +109,10 @@ LGPD. Também falta o prazo de retenção e quem é o controlador.
 
 Perguntas que não existiam antes de abrir o arquivo.
 
-1. **Seis linhas usam pesos que somam 1,1**, e são de dois tipos de unidade que a portaria não
-   nomeia. É régua provisória para tipo novo, ou é erro?
+1. **Seis linhas seguem outra conta**, todas de NDI e SAE, dois tipos que a portaria não
+   nomeia. Nelas, o resultado lançado é a soma dos pontos dividida por 1,7 (esta nota dizia
+   que os pesos somavam 1,1, e estava errado). Em cinco delas, o Indicador 3 entra com peso
+   80% em vez de 20%. É régua provisória para tipo novo, ou é erro?
 2. **As linhas dos distritos usam uma função que só existe no Google Planilhas.** Aberto no
    Excel, o resultado não recalcula. A conta dos distritos depende do arquivo ficar no Google?
 3. **Os tipos têm porte** (USF 1 a 8, MAC 1 a 4, CAPS II/III e CAPS III 24h). O porte muda a

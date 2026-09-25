@@ -466,7 +466,7 @@ export function DiagramaConteineres() {
         {...base}
         tipo="[em memória · semente fixa 20262]"
         nome="Base sintética"
-        desc="12 unidades em 3 distritos, 7 indicadores, 11 subindicadores, 6 meses, trilha imutável; zera a cada deploy"
+        desc="12 unidades em 3 distritos, 7 tipos, 8 indicadores, 12 subindicadores, 6 meses, trilha imutável; zera a cada deploy"
       />
       <Cilindro
         {...schema}
@@ -590,7 +590,7 @@ export function DiagramaComponentes() {
       <Caixa x={COL_X[1]} y={LIN_Y[3]} w={COL_W} h={84} tipo="componente" nome="lib/admin/guard.ts" desc="sessão, senha e tentativas" />
 
       {/* aplicação */}
-      <Caixa x={COL_X[2]} y={LIN_Y[0]} w={COL_W} h={84} tipo="rotas" nome="app/api/**/route.ts" desc="onze rotas de escrita" />
+      <Caixa x={COL_X[2]} y={LIN_Y[0]} w={COL_W} h={84} tipo="rotas" nome="app/api/**/route.ts" desc="oito rotas de escrita" />
       <Caixa x={COL_X[2]} y={LIN_Y[1]} w={COL_W} h={84} tipo="componente" nome="lib/visao.ts" desc="resolve admin, data simulada e ciclos" />
       <Caixa x={COL_X[2]} y={LIN_Y[2]} w={COL_W} h={84} tipo="componente" nome="lib/config/store.ts" desc="estado de release, driver trocável" />
 
