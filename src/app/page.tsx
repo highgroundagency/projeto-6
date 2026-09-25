@@ -22,7 +22,7 @@ import { TimelineCiclos, TrilhaMarcos } from '@/components/registro/trilhas'
 import { ExplicacaoDosPerfis } from '@/components/sistema/perfis'
 import { carregarCiclos, temRegistro } from '@/content/ciclos/registro'
 import { EQUIPE, SELO_PAPEIS } from '@/content/equipe'
-import { INSTITUICAO, O_QUE_E, PERGUNTA_DO_PROJETO, PROBLEMA } from '@/content/produto'
+import { CLIENTE, INSTITUICAO, O_QUE_E, PERGUNTA_DO_PROJETO, PROBLEMA } from '@/content/produto'
 import { cicloPorId } from '@/lib/cronograma'
 import { cicloCorrente, pitchEmDestaque, proximoMarco } from '@/lib/releases'
 import { formatarBR } from '@/lib/datas'
@@ -224,6 +224,15 @@ export default async function Pagina() {
               <p key={paragrafo}>{paragrafo}</p>
             ))}
           </div>
+          {/* O cliente com nome. O checklist do SR1 pede "problema e pergunta
+              publicados, com o nome do cliente", e a página só dizia "a
+              prefeitura do Recife". Hairline e rótulo, sem cor nova. */}
+          <dl className="prosa mt-5 grid gap-x-4 gap-y-1.5 border-t border-linha pt-4 text-sm sm:grid-cols-[auto_1fr]">
+            <dt className="rotulo pt-0.5">cliente</dt>
+            <dd>{CLIENTE.orgao}</dd>
+            <dt className="rotulo pt-0.5">área</dt>
+            <dd>{CLIENTE.area}</dd>
+          </dl>
           <AtalhosDeDocumento
             documentos={escolher(documentos, [
               's2-processo-hoje',

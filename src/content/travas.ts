@@ -25,10 +25,30 @@ export const TRAVAS_VERSIONADAS: Travas = {
    * Ela abriria sozinha em 12/09 (a data dela, 19/09, menos o adiantamento de
    * sete dias), e com ela as três primeiras telas do sistema. A trava antecipa
    * isso em um dia, para quem for conferir o site na véspera da apresentação
-   * encontrar o sistema no ar em vez de uma página vazia. O registro da semana
-   * aparece com o selo de rascunho que ele realmente tem.
+   * encontrar o sistema no ar em vez de uma página vazia.
+   *
+   * O selo de rascunho do registro NÃO aparece para ninguém desde a ADR-026.
+   * Este comentário dizia o contrário, e foi com essa crença que a semana
+   * ficou pública escrita no futuro. Quem abre o site lê tudo como fato.
    *
    * PODE SAIR depois do Kick-off: a partir de 12/09 ela é redundante.
    */
   s5: 'sempre_visivel',
+
+  /**
+   * O SR1 uma semana antes da banca.
+   *
+   * Ele abriria sozinho às 00:00 de 26/09, horário do Recife (03/10 menos o
+   * adiantamento de sete dias). A equipe pediu tudo liberado já em 24/09 para
+   * conferir o pacote inteiro, no site de verdade, antes do acompanhamento
+   * Pré-SR1. A trava antecipa em cerca de um dia o que o calendário faria.
+   *
+   * O REGISTRO ESTÁ ESCRITO COMO PLANO. Avanços e responsáveis estão no
+   * futuro, as evidências dizem só o que já existe, e o feedback fica
+   * 'nenhum' até a banca falar. Os documentos (pacote, síntese, correção de
+   * rota, segurança e Direito) descrevem o que já está no repositório.
+   *
+   * PODE SAIR a partir de 26/09: dali em diante ela é redundante.
+   */
+  sr1: 'sempre_visivel',
 }
