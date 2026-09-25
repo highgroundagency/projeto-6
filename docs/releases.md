@@ -92,7 +92,10 @@ Altere as variáveis de ambiente na Vercel e faça o redeploy:
 | `RELEASE_TRAVAS` | `{"s9":"sempre_visivel"}` | Libera o s9 fora de ordem |
 
 Valor inválido é ignorado e o padrão assume — o site não cai por causa de env var digitada
-errada.
+errada. **Variável em branco conta como ausente**: até 25/09, `RELEASE_ADIANTAMENTO_DIAS`
+vazia (como vem do `.env.example`) era lida como zero, e a produção mostrava uma semana a menos
+do que o calendário prometia. Para zerar o adiantamento, escreva `0`. Para conferir o que a
+produção está usando, abra `/api/status` e veja `releasePublico`.
 
 ## Receitas
 

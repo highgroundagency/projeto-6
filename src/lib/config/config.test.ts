@@ -40,6 +40,11 @@ describe('configPadrao', () => {
 
   it('recusa adiantamento fora da faixa aceita', () => {
     expect(configPadrao({ RELEASE_ADIANTAMENTO_DIAS: '-5' }).adiantamentoDias).toBe(7)
+    // A variável em branco, como vem do .env.example, é ausência, não zero.
+    expect(configPadrao({ RELEASE_ADIANTAMENTO_DIAS: '' }).adiantamentoDias).toBe(7)
+    expect(configPadrao({ RELEASE_ADIANTAMENTO_DIAS: '   ' }).adiantamentoDias).toBe(7)
+    // Zero continua possível, quando alguém escreve zero.
+    expect(configPadrao({ RELEASE_ADIANTAMENTO_DIAS: '0' }).adiantamentoDias).toBe(0)
     expect(configPadrao({ RELEASE_ADIANTAMENTO_DIAS: '9999' }).adiantamentoDias).toBe(7)
   })
 

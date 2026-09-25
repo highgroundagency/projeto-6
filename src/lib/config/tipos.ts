@@ -73,7 +73,12 @@ function lerTravasDaEnv(bruto: string | undefined): Travas {
  * var + redeploy). Ver docs/releases.md.
  */
 export function configPadrao(env: Ambiente = process.env): ConfigSite {
-  const adiantamentoBruto = Number(env.RELEASE_ADIANTAMENTO_DIAS)
+  // VAZIO É AUSENTE, e não zero. `Number('')` dá 0, e o `.env.example` traz a
+  // variável em branco, documentada como "padrão: 7". Importada assim para a
+  // Vercel, ela zerava o adiantamento em produção sem ninguém ter pedido: o
+  // site passou semanas mostrando uma semana a menos do que prometia.
+  const textoDoAdiantamento = env.RELEASE_ADIANTAMENTO_DIAS?.trim()
+  const adiantamentoBruto = textoDoAdiantamento ? Number(textoDoAdiantamento) : Number.NaN
   const adiantamentoDias =
     Number.isFinite(adiantamentoBruto) && adiantamentoBruto >= 0 && adiantamentoBruto <= 120
       ? Math.trunc(adiantamentoBruto)
