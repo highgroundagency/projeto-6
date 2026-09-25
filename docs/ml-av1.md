@@ -26,9 +26,10 @@ saúde, por tipo e distrito.
 
 ## 2. Como apresentar
 
-- **Tempo:** 11:05 somando os slides. A disciplina não fixou o tempo da AV1. Se a professora
-  pedir menos, os primeiros a sair são o 2 (roteiro), o 13 (inconsistências) e o 15 (insights),
-  cujo conteúdo a fala dos vizinhos já cobre: o deck cai para cerca de 10 minutos.
+- **Tempo:** 12:25 somando os slides, medidos pela fala (o teste confere que cada fala cabe no
+  tempo do slide a 2,6 palavras por segundo). A disciplina não fixou o tempo da AV1. Se a
+  professora pedir menos, os primeiros a sair são o 2 (roteiro), o 13 (inconsistências) e o 15
+  (insights), cujo conteúdo a fala dos vizinhos já cobre: o deck cai para 11:20.
 - **A ordem é a da avaliação.** Cada slide traz, no alto, a etapa que ele cumpre: 1 problema,
   2 dataset, 3 EDA, 4 tratamento, 5 feature engineering. Se a professora perguntar por um
   critério, o número da etapa diz onde ele está.
