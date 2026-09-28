@@ -1351,6 +1351,7 @@ html:fullscreen .ajuda-deck {
 .slide-sr1 .slide-titulo {
   max-width: 40ch;
   font-size: clamp(1.45rem, 2.9vw, 2.2rem);
+  text-wrap: balance;
 }
 
 .slide-sr1 .slide-apoio {
@@ -1405,6 +1406,20 @@ html:fullscreen .ajuda-deck {
 .slide-sr1 .bloco-raso.border-acento {
   border-color: var(--color-acento);
   z-index: 10;
+}
+
+/* A capa do SR1 tem uma linha a mais que a do Kick-off (a disciplina e o
+   curso), e o bloco centralizado descia até a paisagem do Recife: o cacto
+   cortava os nomes. O respiro embaixo, do tamanho da paisagem, sobe o bloco;
+   a frase de apoio cabe numa linha. */
+@media (min-width: 768px) {
+  .slide-sr1.grao {
+    padding-bottom: calc(64px + 10rem);
+  }
+
+  .slide-sr1.grao .slide-apoio {
+    max-width: 90ch;
+  }
 }
 
 /* O wireframe desenha com a hairline, que no escuro some numa tela

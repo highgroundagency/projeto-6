@@ -505,10 +505,10 @@ const BALANCO_DOS_COMPROMISSOS: Record<CicloDoCompromisso, Balanco> = {
 /** Os objetivos específicos com prazo até o SR1, com o balanço de cada um. */
 const BALANCO_DOS_OBJETIVOS: Readonly<Record<string, Balanco>> = {
   'a regra como dado': {
-    estado: 'feito',
+    estado: 'em parte',
     motivo:
-      'A regra tem versão: v1, v2 e v3. A v3 entrou em 23/09, e nenhum mês publicado mudou de nota.',
-    ajuste: 'Nenhum.',
+      'A regra tem versão: v1, v2 e v3. A v3 entrou em 23/09, e nenhum mês publicado mudou de nota. Mas a v3 pediu código novo no motor: a regra ainda muda por código.',
+    ajuste: 'Cadastrar a regra pela tela, que está no backlog.',
   },
   'a conta sempre aberta': {
     estado: 'em parte',

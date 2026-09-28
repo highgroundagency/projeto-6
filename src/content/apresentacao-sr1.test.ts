@@ -264,7 +264,11 @@ describe('o deck do SR1', () => {
       0,
     )
     expect(semestre.conta).toContain(`de ${doSemestre}`)
-    expect(semestre.conta).toContain(`semana ${SEMANA_DO_SR1} de ${SEMANAS_NO_SEMESTRE}`)
+    // "na metade do calendário" só vale se o SR1 cair mesmo no meio. A
+    // "semana 9" do calendário não é a Semana 9 do cronograma (a Sprint 3), e
+    // por isso a tela não diz o número.
+    expect(semestre.conta).toContain('na metade do calendário')
+    expect(SEMANA_DO_SR1 * 2).toBe(SEMANAS_NO_SEMESTRE)
 
     const noAr = BACKLOG.filter((h) => h.estado === 'no_ar').length
     expect(historias.numero).toBe(`${Math.round((noAr / BACKLOG.length) * 100)}%`)
@@ -275,13 +279,13 @@ describe('o deck do SR1', () => {
       OBJETIVOS_ESPECIFICOS.map((o) => o.resumo),
     )
     const contar = (estado: string) => OBJETIVOS_NO_SR1.filter((o) => o.estado === estado).length
-    // A fala do slide 8 diz "dois já foram alcançados e um está em parte. Os
-    // outros dois têm prazo pela frente". Se o estado mudar, a fala muda junto.
-    expect(contar('alcançado')).toBe(2)
-    expect(contar('em parte')).toBe(1)
+    // A fala do slide 8 diz "um foi alcançado e dois estão em parte. Os outros
+    // dois vencem em...". Se o estado mudar, a fala muda junto.
+    expect(contar('alcançado')).toBe(1)
+    expect(contar('em parte')).toBe(2)
     expect(contar('no prazo')).toBe(2)
     const fala = LISTA.find((s) => s.id === 'objetivos')!.notas.join(' ')
-    expect(fala).toContain('dois já foram alcançados e um está em parte')
+    expect(fala).toContain('um foi alcançado e dois estão em parte')
     // "no prazo" só vale para objetivo cuja data ainda não passou.
     const depoisDoSR1 = ['Semana 9', 'Semana 10', 'Semana 11', 'Semana 12', 'SR2']
     for (const objetivo of OBJETIVOS_ESPECIFICOS) {
@@ -298,9 +302,21 @@ describe('o deck do SR1', () => {
       expect(['feito', 'em parte', 'não feito']).toContain(item.estado)
       expect(item.porque.length).toBeGreaterThan(10)
     }
-    // A fala do slide 20 diz "um foi feito, um saiu em parte e um não foi feito".
+    // A fala do slide 20 diz "um foi feito e um saiu em parte", e dá a data
+    // nova dos outros dois.
     for (const estado of ['feito', 'em parte', 'não feito']) {
       expect(COMPROMISSOS_NO_SR1.filter((c) => c.estado === estado), estado).toHaveLength(1)
+    }
+    // O cronograma atualizado: quem não foi feito diz para quando foi, e a
+    // data é uma data do cronograma, depois do SR1.
+    const datasDepois = CRONOGRAMA.filter((c) => indiceDoCiclo(c.id) > indiceDoCiclo('sr1')).map(
+      (c) => c.data.slice(8, 10) + '/' + c.data.slice(5, 7),
+    )
+    for (const item of COMPROMISSOS_NO_SR1.filter((c) => c.estado !== 'feito')) {
+      expect(datasDepois.some((d) => item.agora.includes(d)), item.compromisso).toBe(true)
+    }
+    for (const item of COMPROMISSOS_NO_SR1) {
+      expect(item.dono.length, item.compromisso).toBeGreaterThan(2)
     }
   })
 

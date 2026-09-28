@@ -227,7 +227,7 @@ export const RISCOS: readonly Risco[] = [
     probabilidade: 'média',
     impacto: 'Alto: o que vem depois do corte não é avaliado.',
     mitigacao:
-      'O deck fecha em 11:35 de fala, com 3:25 de margem. Ensaiar os sete, com cronômetro e a demonstração inteira.',
+      'O deck fecha em 11:50 de fala, com 3:10 de margem. Ensaiar os sete, com cronômetro e a demonstração inteira.',
     dono: 'gabriel',
   },
   {

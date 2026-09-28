@@ -838,8 +838,6 @@ feedback de professor ou de cliente seria fabricar evidência.
 
        Certezas | De onde vem
 
-       A Secretaria confirmou: o cálculo é feito à mão, com PROCV e fórmulas arrastadas célula a célula. A planilha que ela enviou mostra o resultado disso, com três réguas diferentes convivendo no mesmo arquivo. | resposta da Secretaria e a planilha enviada em 22/09
-       Cada subindicador vira nota antes de qualquer média, e a média é dessas notas. Em alguns indicadores a média ainda passa por uma segunda régua. Assumimos o contrário até ver a planilha, e corrigimos na regra v3. | planilha do cliente, conferida fórmula a fórmula
        A Portaria Conjunta nº 001/2024 saiu no Diário Oficial do Recife nº 131, de 21/09/2024. Ela detalha os cinco indicadores e os itens medidos dentro de cada um. Diz também o peso de cada indicador por função. | docs/portaria-001-2024.md
        Todo mês, o fechamento é feito numa planilha. A conferência é linha a linha, e poucas pessoas fazem esse trabalho. | enunciado do case e reunião de 22/08
        O art. 7º manda a SEGTES pedir que o resultado entre na folha de pagamento. O prazo é o 6º dia útil do segundo mês. Não é um número de vitrine: é dinheiro no salário. | Portaria, art. 7º
@@ -852,20 +850,22 @@ feedback de professor ou de cliente seria fabricar evidência.
        Suposições | De onde vem
 
        A nota do distrito é a média simples das notas das unidades. Unidade grande e unidade pequena pesam igual. A conta real pode ser outra. Se for, ela vira um campo na regra guardada, sem reescrever o sistema. | src/lib/calculo/motor.ts
+       Desenhamos o cálculo a partir do case e da conversa com o cliente. A Secretaria prometeu mandar a planilha real. É ela que vai dizer se acertamos. | Semana 3, nota das suposições declaradas
        Cada ciclo é um mês inteiro. As unidades enviam os números até o dia 20. Se o ciclo tivesse outro período, a tela de fechamento quebraria. A conta em si continuaria certa. | Portaria, art. 7º, lido como regra geral
+       Hoje o número sai da unidade em planilha ou e-mail. Se existir um sistema de origem, a coleta muda de forma. Aí, digitar o número à mão vira exceção. | reunião de 22/08, não confirmado
        O sistema registra o resultado. A comissão continua decidindo em reunião, fora do sistema. Se ela quiser decidir por dentro, entra uma tela nova. | leitura do art. 6º pela equipe
 
       Dúvidas
 
        Dúvidas | De onde vem
 
-       A planilha tem duas colunas de peso: a da portaria e a "atual, excepcional". Elas não são iguais, e um subindicador está hoje com peso zero. Falta saber quem decidiu isso, quando, e até quando vale. | planilha do cliente, aba de pesos
+       O art. 8º diz o que fazer quando um indicador fica sem número informado. Ele sai da conta, e o peso dele é dividido entre os outros, na proporção de cada um. Falta saber se essa divisão é entre os pesos do grupo ou entre o total. | a perguntar à Secretaria, entra na regra v3
        A portaria diz que a comissão divulga o resultado. Não sabemos onde ela publica. Também não sabemos se cada gestor recebe um aviso. | a perguntar à Secretaria
        O prazo para recorrer existe. Mas não sabemos como o recurso é feito hoje: em papel, por e-mail ou num formulário. A resposta define como a tela de contestação vai se encaixar no que já existe. | a perguntar à Secretaria
        Hoje todos os dados são inventados por um programa gerador. Falta saber se o sistema pode um dia receber dado de verdade. E, se puder, com que base legal e quem responde por ele. | lente de Direito, docs/privacidade.md
        A validação com o cliente está marcada para a Semana 11. Se a agenda da comissão não abrir, o teste do sistema contra a planilha atrasa para o SR2. | risco declarado na SWOT da Semana 2
 
-      Toda linha da primeira coluna tem uma origem que dá para conferir. É isso que separa uma matriz CSD de uma lista de opiniões: certeza sem fonte é chute com voz firme. As suposições também estão declaradas dentro do código, onde elas agem.
+      Toda linha da primeira coluna tem uma origem que dá para conferir. É isso que separa uma matriz CSD de uma lista de opiniões: certeza sem fonte é chute com voz firme. As suposições também estão declaradas dentro do código, onde elas agem. A versão de 25/09, depois da planilha da Secretaria, está na síntese da pesquisa do SR1.
 
   >>> WIREFRAMES DE BAIXA FIDELIDADE
       âncora no site: #doc-ko-wireframes
@@ -1230,7 +1230,7 @@ feedback de professor ou de cliente seria fabricar evidência.
        A agenda da SEAB e da CAM pode não abrir a tempo. | média | Alto: a conferência da conta com a Secretaria atrasa. | Mandar as perguntas por escrito antes do SR1. Pedir a data da Semana 11 já agora. | Gabriel
        O schema guardado em supabase/migrations/ ainda tem 'cam' como perfil. O app diz 'seab'. | já acontece | Baixo: o schema não está ligado ao app. | Alinhar o schema antes de ligar qualquer banco. A diferença está na ADR-042. | João Henrique
        A base por unidade da SESAU está num repositório público. Em 39 das 90 combinações de tipo e distrito há uma unidade só. | já acontece | Alto: a unidade única pode apontar o gerente, que recebe a gratificação. | Pedir à Secretaria a autorização por escrito para publicar. Decidir entre generalizar e justificar. Dado de pessoa segue barrado por teste. | Fernando
-       A apresentação passar dos 15 minutos. As orientações de 28/09 dizem que a banca interrompe no limite. | média | Alto: o que vem depois do corte não é avaliado. | O deck fecha em 11:35 de fala, com 3:25 de margem. Ensaiar os sete, com cronômetro e a demonstração inteira. | Gabriel
+       A apresentação passar dos 15 minutos. As orientações de 28/09 dizem que a banca interrompe no limite. | média | Alto: o que vem depois do corte não é avaliado. | O deck fecha em 11:50 de fala, com 3:10 de margem. Ensaiar os sete, com cronômetro e a demonstração inteira. | Gabriel
        A pesquisa não tem entrevista com quem opera o processo. As personas vieram do caso. | já acontece | Médio: a banca pode não aceitar como pesquisa consolidada. | Perguntar à banca se a pesquisa precisa ser primária. Entrevistar na Semana 11, com o roteiro de validação. | Matheus
        O sistema roda na base de teste, e a lente de ML roda na base da SESAU. | já acontece | Médio: os números de /sistema e de /ml não se comparam. | Dizer qual base cada tela usa. Não misturar os números na apresentação. | Rafael
 
@@ -1546,7 +1546,7 @@ feedback de professor ou de cliente seria fabricar evidência.
 
        Objetivo | Prazo | Estado | Por quê | Ajuste
 
-       a regra como dado | Semana 5 | feito | A regra tem versão: v1, v2 e v3. A v3 entrou em 23/09, e nenhum mês publicado mudou de nota. | Nenhum.
+       a regra como dado | Semana 5 | em parte | A regra tem versão: v1, v2 e v3. A v3 entrou em 23/09, e nenhum mês publicado mudou de nota. Mas a v3 pediu código novo no motor: a regra ainda muda por código. | Cadastrar a regra pela tela, que está no backlog.
        a conta sempre aberta | SR1 | em parte | A memória de cálculo abre na tela meu resultado. O ranking do painel da gestão mostra a nota sem a conta. | Levar a memória de cálculo a toda tela que mostra nota.
        cada um vê o que é seu | SR1 | feito | Cada tela confere o perfil no servidor e devolve 404 a quem não pode. O perfil ainda vem de um seletor, sem login. | O login da prefeitura segue fora do escopo, como na Semana 4.
 

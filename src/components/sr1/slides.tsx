@@ -30,12 +30,14 @@ import {
   EQUIPE_SR1,
   ESCOPO_SR1,
   FASES_DO_SEMESTRE,
+  EM_ANDAMENTO_SR1,
+  AINDA_NAO_SR1,
   FERRAMENTAS_SR1,
   FLUXO_DO_MES,
   FONTES_SR1,
   FUNIL_DA_IDEACAO,
   LEGENDA_DA_MATRIZ,
-  LEGENDAS_DO_WIREFRAME,
+  LEGENDAS_DO_WIREFRAME_SR1,
   MAPA_NO_SR1,
   NOME_DA_UNIDADE_DO_DECK,
   NOME_DO_PAPEL,
@@ -43,13 +45,14 @@ import {
   ORDEM_DOS_PAPEIS,
   PARADAS_ATE_O_SR2,
   PERGUNTA_FINAL,
-  PESSOAS,
+  PESSOAS_SR1,
+  PERCENTUAL_A_CONFIRMAR,
   PILULA_DA_CAPA_SR1,
   PLANEJADO_X_REALIZADO,
   PROBLEMA_SR1,
   QUADRANTES_SR1,
   REFERENCIAS_SR1,
-  REGRA_DA_PORTA,
+  ROTULO_DO_CONTRA,
   ROTEIRO_SR1,
   ROTINA_DA_SEMANA,
   ROTULO_DA_DEMO_SR1,
@@ -113,9 +116,12 @@ export function SlidesSR1() {
     /* 1 · Capa: equipe, projeto, disciplina, data e cliente. */
     capa: (slide) => (
       <>
-        <span className="pilula self-start">
-          {PILULA_DA_CAPA_SR1} · {formatarBR(DATA_DO_SR1)}
-        </span>
+        <div className="flex flex-wrap items-center justify-between gap-4">
+          <span className="pilula">
+            {PILULA_DA_CAPA_SR1} · {formatarBR(DATA_DO_SR1)}
+          </span>
+          <MarcaCesar className="h-14" />
+        </div>
         <h1 className="hero mt-6">
           {PRODUTO.nome.toLowerCase()}
           <span aria-hidden className="text-acento pisca">
@@ -133,7 +139,6 @@ export function SlidesSR1() {
             <li key={integrante.id}>{integrante.nome}</li>
           ))}
         </ul>
-        <MarcaCesar className="mt-8 h-8 self-start" />
         <HorizonteDoRecife className="horizonte" />
       </>
     ),
@@ -249,7 +254,7 @@ export function SlidesSR1() {
         <Titulo slide={slide} />
         <p className="rotulo mt-6">{ROTULO_DAS_PERSONAS}</p>
         <ul className="cascata mt-2 grid grid-cols-1 md:grid-cols-3">
-          {PESSOAS.map((pessoa) => (
+          {PESSOAS_SR1.map((pessoa) => (
             <li key={pessoa.quem} className="bloco-raso md:-ml-px">
               <p className="titulo-bloco text-lg">{pessoa.quem}</p>
               <p className="mt-1 text-base">{pessoa.dor}</p>
@@ -377,7 +382,7 @@ export function SlidesSR1() {
         <div className="mt-6" role="table" aria-label={slide.titulo}>
           <div
             role="row"
-            className="hidden grid-cols-[1fr_6rem_6rem_6rem_9rem] gap-3 px-4 pb-2 md:grid"
+            className="hidden grid-cols-[1fr_6rem_6rem_6rem_11rem] gap-3 px-4 pb-2 md:grid"
           >
             <span role="columnheader" className="rotulo">
               {COLUNAS_DA_MATRIZ.alternativa}
@@ -391,7 +396,7 @@ export function SlidesSR1() {
             <span role="columnheader" className="rotulo text-right">
               {COLUNAS_DA_MATRIZ.aderencia}
             </span>
-            <span role="columnheader" className="rotulo">
+            <span role="columnheader" className="rotulo md:pl-8">
               {COLUNAS_DA_MATRIZ.destino}
             </span>
           </div>
@@ -400,7 +405,7 @@ export function SlidesSR1() {
               key={alternativa.nome}
               role="row"
               className={cn(
-                'bloco-raso linha-sr1 grid grid-cols-[1fr_auto] gap-x-3 gap-y-1 md:grid-cols-[1fr_6rem_6rem_6rem_9rem]',
+                'bloco-raso linha-sr1 grid grid-cols-[1fr_auto] gap-x-3 gap-y-1 md:grid-cols-[1fr_6rem_6rem_6rem_11rem]',
                 alternativa.escolhida && 'border-acento',
               )}
             >
@@ -415,14 +420,17 @@ export function SlidesSR1() {
               <Nota rotulo={COLUNAS_DA_MATRIZ.aderencia} valor={alternativa.aderencia} />
               <span
                 role="cell"
-                className={cn('rotulo self-center', alternativa.escolhida && 'text-texto')}
+                className={cn('rotulo self-center md:pl-8', alternativa.escolhida && 'text-texto')}
               >
                 {alternativa.destino}
               </span>
             </div>
           ))}
         </div>
-        <p className="rotulo mt-3">{LEGENDA_DA_MATRIZ}</p>
+        <p className="mt-4 text-base">
+          <span className="rotulo mr-3">{LEGENDA_DA_MATRIZ.rotulo}</span>
+          <span className="text-texto">{LEGENDA_DA_MATRIZ.texto}</span>
+        </p>
       </>
     ),
 
@@ -471,6 +479,10 @@ export function SlidesSR1() {
           <Numero numero={Object.keys(PERFIS).length} rotulo={CONTAGENS_DA_SOLUCAO.papeis} />
           <Numero numero={BASE.regras.length} rotulo={CONTAGENS_DA_SOLUCAO.regras} />
         </dl>
+        <p className="mt-5 text-base">
+          <span className="rotulo mr-3">{AINDA_NAO_SR1.rotulo}</span>
+          <span className="text-texto">{AINDA_NAO_SR1.texto}</span>
+        </p>
       </>
     ),
 
@@ -482,7 +494,7 @@ export function SlidesSR1() {
           {WIREFRAMES.map(({ id, Desenho }, indice) => (
             <li key={id} className="wireframe-sr1">
               <Desenho className="w-full" />
-              <p className="mt-2 text-base text-texto">{LEGENDAS_DO_WIREFRAME[indice]}</p>
+              <p className="mt-2 text-base text-texto">{LEGENDAS_DO_WIREFRAME_SR1[indice]}</p>
             </li>
           ))}
         </ul>
@@ -500,10 +512,14 @@ export function SlidesSR1() {
             <span className="numero">{ENDERECO_DA_DEMO}</span>
           </p>
           <div className="mt-3">
-            <CartaoScore avaliacao={DEMO_SR1.avaliacao} />
+            <CartaoScore
+              avaliacao={DEMO_SR1.avaliacao}
+              percentualAConfirmar={PERCENTUAL_A_CONFIRMAR}
+              enxuto
+            />
           </div>
           <div className="mt-3">
-            <MemoriaDeCalculo avaliacao={DEMO_SR1.avaliacao} aberta compacta />
+            <MemoriaDeCalculo avaliacao={DEMO_SR1.avaliacao} aberta compacta enxuta />
           </div>
         </div>
       </>
@@ -519,18 +535,28 @@ export function SlidesSR1() {
               <span className="ordinal">0{indice + 1}</span>
               <p className="titulo-bloco mt-2 text-xl">{diferencial.titulo}</p>
               <p className="mt-2 text-base text-texto">{diferencial.texto}</p>
+              {'contra' in diferencial ? (
+                <p className="mt-3 text-base">
+                  <span className="rotulo mr-2">{ROTULO_DO_CONTRA}:</span>
+                  {diferencial.contra}
+                </p>
+              ) : null}
               {'numero' in diferencial ? (
                 <>
                   <p className="numero fonte-display mt-4 text-5xl leading-none text-acento">
                     {diferencial.numero}
                   </p>
-                  <p className="rotulo mt-2">{diferencial.legenda}</p>
+                  <p className="mt-2 text-base text-texto">{diferencial.legenda}</p>
                 </>
+              ) : null}
+              {'prova' in diferencial ? (
+                <p className="mt-3 border-l border-linha-alta pl-3 text-base">
+                  {diferencial.prova}
+                </p>
               ) : null}
             </li>
           ))}
         </ol>
-        <p className="mt-6 border-l border-linha-alta pl-3 text-base">{REGRA_DA_PORTA}</p>
       </>
     ),
 
@@ -549,7 +575,8 @@ export function SlidesSR1() {
               )}
             >
               <p className="numero text-sm text-texto">{datasDaFase(fase.ciclos)}</p>
-              <p className="mt-1 text-base leading-snug">{fase.nome}</p>
+              <p className="mt-1 text-base leading-snug text-texto">{fase.nome}</p>
+              <p className="mt-1 text-sm leading-snug">{fase.faz}</p>
             </li>
           ))}
         </ol>
@@ -716,13 +743,15 @@ export function SlidesSR1() {
             )
           })}
         </div>
-        <p className="mt-4 text-base">
+        <p className="mt-4 text-base text-balance">
           <Etiqueta className="mr-3 uppercase">{ROTULO_EM_ANDAMENTO}</Etiqueta>
-          <span className="text-texto">
-            {PLANEJADO_X_REALIZADO.flatMap((l) => l.emAndamento)
-              .map((e) => e.toLowerCase())
-              .join(' · ')}
-          </span>
+          {EM_ANDAMENTO_SR1.map((grupo, indice) => (
+            <span key={grupo.dono ?? 'sem-dono'}>
+              {indice > 0 ? ' · ' : null}
+              <span className="text-texto">{listaNaTela(grupo.itens)}</span>
+              {grupo.dono ? ` (${nomeCurto(grupo.dono)})` : null}
+            </span>
+          ))}
         </p>
       </>
     ),
@@ -739,7 +768,7 @@ export function SlidesSR1() {
                 {item.numero}
               </dd>
               <dt className="mt-3 text-base text-texto">{item.rotulo}</dt>
-              <dd className="rotulo mt-1">{item.conta}</dd>
+              <dd className="mt-1 text-base">{item.conta}</dd>
             </div>
           ))}
         </dl>
@@ -751,6 +780,9 @@ export function SlidesSR1() {
               <Etiqueta tom={tomDoCompromisso(item.estado)} className="mt-2 uppercase">
                 {item.estado}
               </Etiqueta>
+              <p className="mt-2 text-base">
+                {item.dono}: {item.agora}
+              </p>
             </li>
           ))}
         </ul>
@@ -979,6 +1011,11 @@ function Numero({ numero, rotulo }: { numero: number; rotulo: string }) {
 }
 
 /** As datas de uma fase: um dia, "08 a 15/08" no mesmo mês, "17/10 a 14/11" entre dois. */
+/** "a, b e c": os itens de um mesmo dono, numa linha. */
+function listaNaTela(itens: readonly string[]): string {
+  return itens.length < 2 ? itens.join('') : `${itens.slice(0, -1).join(', ')} e ${itens.at(-1)}`
+}
+
 function datasDaFase(ciclos: readonly Parameters<typeof cicloPorId>[0][]): string {
   const primeira = formatarBR(cicloPorId(ciclos[0]).data).slice(0, 5)
   const ultima = formatarBR(cicloPorId(ciclos[ciclos.length - 1]).data).slice(0, 5)
