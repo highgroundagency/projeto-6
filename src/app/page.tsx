@@ -22,7 +22,14 @@ import { TimelineCiclos, TrilhaMarcos } from '@/components/registro/trilhas'
 import { ExplicacaoDosPerfis } from '@/components/sistema/perfis'
 import { carregarCiclos, temRegistro } from '@/content/ciclos/registro'
 import { EQUIPE, SELO_PAPEIS } from '@/content/equipe'
-import { CLIENTE, INSTITUICAO, O_QUE_E, PERGUNTA_DO_PROJETO, PROBLEMA } from '@/content/produto'
+import {
+  CLIENTE,
+  INSTITUICAO,
+  O_QUE_E,
+  PERGUNTA_DO_PROJETO,
+  PROBLEMA,
+  URL_DRIVE,
+} from '@/content/produto'
 import { cicloPorId } from '@/lib/cronograma'
 import { deckEmDestaque } from '@/lib/decks'
 import { cicloCorrente, proximoMarco } from '@/lib/releases'
@@ -465,6 +472,20 @@ export default async function Pagina() {
             tudo que já foi entregue, semana por semana. clique no título e o documento abre
             aqui mesmo.
           </p>
+          {/* A pasta do Drive é espelho: os PDFs das apresentações e o que a
+              disciplina pede salvo lá. O documento continua sendo o daqui. */}
+          {URL_DRIVE ? (
+            <p className="mt-2 text-sm lowercase">
+              <a
+                href={URL_DRIVE}
+                target="_blank"
+                rel="noreferrer noopener"
+                className="underline decoration-linha-alta underline-offset-4 hover:text-acento hover:decoration-acento"
+              >
+                a pasta da equipe no drive ↗
+              </a>
+            </p>
+          ) : null}
           <Biblioteca documentos={documentos} />
         </section>
 

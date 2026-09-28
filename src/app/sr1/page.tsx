@@ -9,9 +9,7 @@ import {
   ARQUIVO_PDF_SR1,
   DATA_DO_SR1,
   PILULA_DA_CAPA_SR1,
-  ROTA_CURTA_SR1,
-  slidesDaVersao,
-  type Versao,
+  SLIDES_SR1,
 } from '@/content/apresentacao-sr1'
 import { formatarBR } from '@/lib/datas'
 import { temaAtual } from '@/lib/tema'
@@ -20,7 +18,7 @@ import { obterVisao, podeVer } from '@/lib/visao'
 export const metadata: Metadata = {
   title: 'Apresentação do SR1',
   description:
-    'Os slides do SR1: a planilha do cliente, a regra corrigida, o sistema rodando e o que foi e o que não foi cumprido desde o Kick-off.',
+    'Os slides do SR1, na ordem da rubrica: imersão, ideação, solução, processo, planejado x realizado e o balanço da equipe.',
 }
 
 /**
@@ -31,24 +29,18 @@ export const metadata: Metadata = {
  * visitante" e a vitrine pessoal funcionam de graça porque tudo passa por
  * `obterVisao()`.
  *
- * `?versao=curta` monta a versão de cinco minutos com os mesmos slides: o
- * tempo do SR1 não foi confirmado, e trocar de versão na hora não pode depender
- * de outro arquivo. Qualquer outro valor cai na completa.
+ * Uma versão só. A de cinco minutos (`?versao=curta`) existiu enquanto o
+ * tempo do SR1 não estava confirmado; as orientações oficiais deram quinze
+ * minutos, e ela saiu (ADR-047). O parâmetro antigo cai no deck inteiro.
  *
  * Dinâmica por construção: o portão lê cookie e calendário.
  */
 export const dynamic = 'force-dynamic'
 
-export default async function PaginaSR1({
-  searchParams,
-}: {
-  searchParams: Promise<Record<string, string | string[] | undefined>>
-}) {
+export default async function PaginaSR1() {
   const visao = await obterVisao()
   if (!podeVer(visao, 'sr1')) notFound()
 
-  const { versao: pedida } = await searchParams
-  const versao: Versao = pedida === 'curta' ? 'curta' : 'completa'
   const tema = await temaAtual()
 
   return (
@@ -61,14 +53,6 @@ export default async function PaginaSR1({
           <span className="pilula hidden sm:inline-flex">
             {PILULA_DA_CAPA_SR1} · {formatarBR(DATA_DO_SR1)}
           </span>
-          {/* A troca de versão é um link comum: funciona sem JavaScript, e o
-              deck recomeça do primeiro slide, que é o que se quer ao trocar. */}
-          <a
-            href={versao === 'curta' ? '/sr1' : ROTA_CURTA_SR1}
-            className="underline decoration-linha-alta underline-offset-4 transition-colors hover:text-acento hover:decoration-acento"
-          >
-            {versao === 'curta' ? 'versão completa' : 'versão de 5 min'}
-          </a>
           <a
             href={ARQUIVO_PDF_SR1}
             download
@@ -76,13 +60,13 @@ export default async function PaginaSR1({
           >
             baixar pdf
           </a>
-          <BotaoTema tema={tema} voltarPara={versao === 'curta' ? ROTA_CURTA_SR1 : '/sr1'} />
+          <BotaoTema tema={tema} voltarPara="/sr1" />
         </span>
       </header>
 
       <main id="conteudo">
-        <Deck total={slidesDaVersao(versao).length}>
-          <SlidesSR1 versao={versao} />
+        <Deck total={SLIDES_SR1.length}>
+          <SlidesSR1 />
         </Deck>
       </main>
     </>

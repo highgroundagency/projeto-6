@@ -12,6 +12,8 @@ export const PRODUTO = {
 } as const
 
 export const INSTITUICAO = {
+  /** A disciplina. A capa de cada apresentação precisa dizer qual é. */
+  disciplina: 'Projeto 6',
   escola: 'CESAR School',
   curso: 'Sistemas de Informação',
   periodo: '2026.2',
@@ -71,6 +73,10 @@ export const PERGUNTA_DO_PROJETO =
  */
 export const OBJETIVO_GERAL =
   'Tirar o cálculo da gratificação da planilha e entregar um sistema em que a conta de cada nota fica aberta: qualquer pessoa refaz o número e vê de onde ele veio.'
+
+/** O mesmo objetivo geral em quinze palavras, para caber no slide do SR1. */
+export const OBJETIVO_GERAL_CURTO =
+  'tirar a conta da planilha e deixar cada nota aberta para qualquer um conferir.'
 
 export interface ObjetivoEspecifico {
   /** Três a cinco palavras: é o que cabe no slide. */

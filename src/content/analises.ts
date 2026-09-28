@@ -141,6 +141,54 @@ export const CSD = [
 ] as const
 
 /* -------------------------------------------------------------------------
+   A MATRIZ CSD DE 25/09
+
+   A matriz de cima é a do Kick-off. Esta é a de 25/09, depois da planilha e
+   da base da Secretaria. Nasceu como tabela dentro do documento do SR1 e
+   virou dado quando o deck do SR1 passou a contar os itens dela: o slide e o
+   documento dizem o mesmo número, e duas cópias divergem na primeira
+   correção.
+------------------------------------------------------------------------- */
+
+export interface LinhaDaMatriz {
+  readonly item: string
+  /** De onde vem a certeza ou a suposição; a quem perguntar a dúvida. */
+  readonly origem: string
+}
+
+export const CSD_EM_25_09 = {
+  certezas: [
+    { item: 'A conta hoje é manual, “via procv e afins”', origem: 'Resposta da Secretaria, 22/09' },
+    { item: 'Cada item medido vira nota antes, e a média é das notas', origem: 'Planilha de 22/09' },
+    { item: 'Indicador sem número sai da conta e leva o peso junto', origem: 'Fórmula do resultado geral na planilha; art. 8º' },
+    { item: 'A nota vai de 0 a 1, por degraus', origem: 'Planilha de 22/09' },
+    { item: 'Os tipos de unidade são sete: USF, UBT, UBT Mista, CAPS, CECON, UCIS e MAC', origem: 'Portaria e planilha (ADR-042)' },
+    { item: 'Há item em que passar do alvo também perde ponto', origem: 'Planilha de 22/09' },
+    { item: 'Numerador maior que denominador é erro', origem: 'Planilha de 22/09' },
+    { item: 'As seis linhas de NDI e SAE seguem outra conta: os pontos divididos por 1,7', origem: 'Base por unidade, caderno 07 de ML' },
+    { item: 'A Secretaria autorizou a base por unidade, sem pessoa, na lente de ML', origem: 'ADR-044' },
+    { item: 'Existe prazo para recorrer: 10 dias corridos, resposta em 5 dias úteis', origem: 'Portaria, art. 9º' },
+    { item: 'Quem decide é a CAM, com pelo menos quatro membros presentes', origem: 'Portaria, arts. 5º e 6º' },
+  ],
+  suposicoes: [
+    { item: 'O corte entre satisfatório e excelente é 0,80', origem: 'Na planilha a classe foi digitada à mão. Pelos valores, o corte fica entre 0,79 e 0,82' },
+    { item: 'A nota do distrito é a média simples das unidades', origem: 'src/lib/calculo/motor.ts' },
+    { item: 'O ciclo é mensal', origem: 'Portaria, art. 7º' },
+    { item: 'A CAM decide fora do sistema', origem: 'Art. 6º. A planilha se versiona como “CAM 1.2”' },
+  ],
+  duvidas: [
+    { item: 'Os cortes exatos das quatro classes', origem: 'SEAB, pergunta 6' },
+    { item: 'Os percentuais de cada classe, no Decreto 36.482/2023', origem: 'SEAB, pergunta 7' },
+    { item: 'Como fechar o mês do Indicador 3, que é bimestral', origem: 'SEAB, pergunta 4' },
+    { item: 'Por que NDI e SAE seguem outra conta', origem: 'SEAB, pergunta nova' },
+    { item: 'O que o porte muda: a meta, o peso ou os dois', origem: 'SEAB, pergunta nova' },
+    { item: 'Quem decidiu a coluna de peso “atual, excepcional”, e até quando vale', origem: 'SEAB, pergunta nova' },
+    { item: 'Como o gestor contesta hoje, e onde a CAM publica', origem: 'SEAB, perguntas 10 e 11' },
+    { item: 'O sistema pode receber dado de pessoa um dia, e com que base', origem: 'SEAB, pergunta 12' },
+  ],
+} as const satisfies Record<'certezas' | 'suposicoes' | 'duvidas', readonly LinhaDaMatriz[]>
+
+/* -------------------------------------------------------------------------
    AS ANÁLISES DA SEMANA 2 E DA SEMANA 3, COMO DADO
 
    Elas nasceram dentro dos arquivos de ciclo, em JSX. Viraram dado aqui
@@ -156,6 +204,8 @@ export interface Referencia {
   readonly curto: string
   readonly serve: string
   readonly naoServe: string
+  /** O que falta, em até cinco palavras: é o que cabe no slide do SR1. */
+  readonly lacuna: string
 }
 
 export const BENCHMARKING: readonly Referencia[] = [
@@ -166,6 +216,7 @@ export const BENCHMARKING: readonly Referencia[] = [
       'Publicam os dados por conta própria (transparência ativa). Cada indicador tem ficha técnica e histórico ao longo do tempo.',
     naoServe:
       'São vitrines de divulgação. Não calculam quanto dinheiro sai disso, nem guardam o histórico de quem decidiu o quê.',
+    lacuna: 'mostram, mas não calculam',
   },
   {
     referencia: 'Sistemas de monitoramento de metas do SUS',
@@ -174,6 +225,7 @@ export const BENCHMARKING: readonly Referencia[] = [
       'Cada indicador tem fonte, frequência de medição e meta combinada. É o vocabulário que a SESAU já usa.',
     naoServe:
       'A regra de cálculo é fixa dentro do sistema. A nossa portaria muda, então a regra precisa ser ajustável.',
+    lacuna: 'regra fixa dentro do sistema',
   },
   {
     referencia: 'Ferramenta de OKR (acompanhamento de objetivos)',
@@ -182,6 +234,7 @@ export const BENCHMARKING: readonly Referencia[] = [
       'Reuniões de acompanhamento em ritmo fixo, um responsável por cada resultado e o progresso visível.',
     naoServe:
       'Não guarda a regra da portaria com número de versão. Também não mostra a conta de um jeito que dê para conferir.',
+    lacuna: 'sem regra com versão',
   },
   {
     referencia: 'Ferramenta de OKR (gestão por resultados corporativa)',
@@ -190,6 +243,7 @@ export const BENCHMARKING: readonly Referencia[] = [
       'Cada objetivo tem um peso, e as notas se juntam numa nota final. A conta é parecida com a nossa.',
     naoServe:
       'A nota ali é só para gestão. Não é um ato administrativo que mexe na folha de pagamento. E o modelo de licença por usuário não cabe no órgão.',
+    lacuna: 'nota sem efeito no salário',
   },
   {
     referencia: 'Planilha atual da comissão',
@@ -197,6 +251,7 @@ export const BENCHMARKING: readonly Referencia[] = [
     serve: 'Faz o que quiserem e não custa nada para começar a usar.',
     naoServe:
       'Não guarda quem mudou o quê. Não tem versão nem controle de quem pode acessar. E só quem escreveu a planilha entende como ela funciona.',
+    lacuna: 'sem registro de quem mudou',
   },
 ]
 
@@ -295,6 +350,8 @@ export type SituacaoAlternativa =
 
 export interface Alternativa {
   readonly nome: string
+  /** O nome em até cinco palavras, para a tabela do slide do SR1. */
+  readonly curto: string
   readonly impacto: number
   readonly esforco: number
   readonly aderencia: number
@@ -304,6 +361,7 @@ export interface Alternativa {
 export const ALTERNATIVAS: readonly Alternativa[] = [
   {
     nome: 'Planilha padronizada com validação e trava de fórmula',
+    curto: 'planilha com fórmula travada',
     impacto: 2,
     esforco: 1,
     aderencia: 4,
@@ -311,6 +369,7 @@ export const ALTERNATIVAS: readonly Alternativa[] = [
   },
   {
     nome: 'Formulário de coleta mais planilha de junção',
+    curto: 'formulário e planilha',
     impacto: 2,
     esforco: 2,
     aderencia: 4,
@@ -318,6 +377,7 @@ export const ALTERNATIVAS: readonly Alternativa[] = [
   },
   {
     nome: 'Sistema web com regra ajustável e a conta aberta',
+    curto: 'sistema web com a conta aberta',
     impacto: 5,
     esforco: 4,
     aderencia: 5,
@@ -325,6 +385,7 @@ export const ALTERNATIVAS: readonly Alternativa[] = [
   },
   {
     nome: 'Painel de indicadores sem cálculo de gratificação',
+    curto: 'painel sem o cálculo',
     impacto: 2,
     esforco: 3,
     aderencia: 3,
@@ -332,6 +393,7 @@ export const ALTERNATIVAS: readonly Alternativa[] = [
   },
   {
     nome: 'Robô que lê as planilhas e junta tudo sozinho',
+    curto: 'robô que lê planilhas',
     impacto: 3,
     esforco: 4,
     aderencia: 2,
@@ -339,6 +401,7 @@ export const ALTERNATIVAS: readonly Alternativa[] = [
   },
   {
     nome: 'Módulo dentro de um sistema público já existente',
+    curto: 'módulo num sistema público',
     impacto: 4,
     esforco: 5,
     aderencia: 2,
@@ -346,6 +409,7 @@ export const ALTERNATIVAS: readonly Alternativa[] = [
   },
   {
     nome: 'Aplicativo de celular para o gestor avaliado',
+    curto: 'aplicativo para o gestor',
     impacto: 2,
     esforco: 3,
     aderencia: 2,
@@ -353,6 +417,7 @@ export const ALTERNATIVAS: readonly Alternativa[] = [
   },
   {
     nome: 'Modelo que prevê risco de não bater a meta',
+    curto: 'modelo que prevê risco',
     impacto: 3,
     esforco: 3,
     aderencia: 4,
@@ -402,33 +467,44 @@ export const PONTO_DE_COMPARACAO = 'a planilha melhorada fica como ponto de comp
 export const NOTA_DA_ESCOLHA =
   'A ideia de melhorar a planilha continua na matriz de propósito. Ela é o ponto de comparação. Na validação da Semana 11, o ganho do sistema será medido contra ela.'
 
-/** O mapa de empatia da analista, a pessoa que carrega o processo hoje. */
+/**
+ * O mapa de empatia da analista, a pessoa que carrega o processo hoje.
+ *
+ * `curto` é o mesmo quadrante em poucas palavras, para o slide do SR1. O
+ * documento da Semana 2 mostra a frase inteira.
+ */
 export const MAPA_DE_EMPATIA = [
   {
     termo: 'Diz',
+    curto: '“se mexer numa fórmula, confiro tudo de novo”',
     definicao: '“Se mexer numa fórmula, tenho que conferir a planilha inteira de novo.”',
   },
   {
     termo: 'Pensa',
+    curto: 'a culpa de qualquer erro cai nela',
     definicao:
       'Que a culpa de qualquer erro vai cair nela. Mesmo quando o dado já chegou errado de quem enviou.',
   },
   {
     termo: 'Faz',
+    curto: 'confere linha a linha e guarda cópia',
     definicao:
       'Confere linha a linha. Guarda uma cópia de segurança de cada versão. Guarda também os e-mails, como prova.',
   },
   {
     termo: 'Sente',
+    curto: 'insegurança no fechamento',
     definicao: 'Insegurança na hora do fechamento. Alívio quando o ciclo passa sem contestação.',
   },
   {
     termo: 'Dores',
+    curto: 'refazer tudo a cada mudança de regra',
     definicao:
       'Refazer tudo a cada mudança de regra. Não ter registro de quem mudou o quê. E o processo só andar quando ela está presente.',
   },
   {
     termo: 'Ganhos',
+    curto: 'uma conta que se explica sozinha',
     definicao:
       'Fechar o ciclo com um cálculo que se explica sozinho. E conseguir tirar férias sem travar a comissão.',
   },

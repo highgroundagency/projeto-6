@@ -355,7 +355,7 @@ async function main() {
     // vem do cronograma e das travas, então o bloco não apodrece no dia em
     // que o SR1 virar público.
     const sr1Visivel = visiveis.includes('sr1')
-    for (const rota of ['/sr1', '/sr1?versao=curta', '/sr1/pdf']) {
+    for (const rota of ['/sr1', '/sr1/pdf']) {
       const visitante = await fetch(`${BASE}${rota}`, { redirect: 'manual' })
       conferir(
         visitante.status === (sr1Visivel ? 200 : 404),

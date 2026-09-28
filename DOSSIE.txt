@@ -1152,7 +1152,8 @@ feedback de professor ou de cliente seria fabricar evidência.
     nenhum dos três estava no site.
   - Vamos fechar o pacote do SR1, conferindo cada link do mapa no site publicado.
   - Vamos montar e ensaiar a apresentação com os sete, de cronômetro na mão.
-  - Vamos confirmar com o professor o tempo e os critérios do SR1.
+  - As orientações do SR1 chegaram em 28/09: até 15 minutos, com seis critérios de conteúdo
+    e a apresentação avaliada à parte. O deck foi refeito na ordem delas (ADR-047).
 
   Decisões  [rascunho]
   ~~~~~~~~~~~~~~~~~~~~
@@ -1168,7 +1169,6 @@ feedback de professor ou de cliente seria fabricar evidência.
 
   Bloqueios  [rascunho]
   ~~~~~~~~~~~~~~~~~~~~~
-  - O tempo do SR1 ainda não foi confirmado com o professor.
   - As perguntas 4 e 6 a 12 para a Secretaria continuam abertas. Sem elas, os cortes das
     classes seguem como suposição.
 
@@ -1185,7 +1185,6 @@ feedback de professor ou de cliente seria fabricar evidência.
   Responsáveis  [rascunho]
   ~~~~~~~~~~~~~~~~~~~~~~~~
   - Gabriel Tenório de Lima Teixeira: Fecha o pacote do SR1 e o backlog com estado.
-    Confirma o tempo com o professor.
   - João Pedro Mamede: Prepara a demonstração ao vivo e o caminho de reserva.
   - João Henrique Micucci: Confere o escopo revisado contra o código.
   - Fernando Cavalcanti: Confere o registro de riscos e a segurança publicada no site.
@@ -1231,7 +1230,7 @@ feedback de professor ou de cliente seria fabricar evidência.
        A agenda da SEAB e da CAM pode não abrir a tempo. | média | Alto: a conferência da conta com a Secretaria atrasa. | Mandar as perguntas por escrito antes do SR1. Pedir a data da Semana 11 já agora. | Gabriel
        O schema guardado em supabase/migrations/ ainda tem 'cam' como perfil. O app diz 'seab'. | já acontece | Baixo: o schema não está ligado ao app. | Alinhar o schema antes de ligar qualquer banco. A diferença está na ADR-042. | João Henrique
        A base por unidade da SESAU está num repositório público. Em 39 das 90 combinações de tipo e distrito há uma unidade só. | já acontece | Alto: a unidade única pode apontar o gerente, que recebe a gratificação. | Pedir à Secretaria a autorização por escrito para publicar. Decidir entre generalizar e justificar. Dado de pessoa segue barrado por teste. | Fernando
-       O tempo e os critérios do SR1 não foram confirmados. | média | Médio: a apresentação pode não caber no tempo. | Perguntar ao professor antes do SR1. Deixar um corte curto pronto nas notas. | Gabriel
+       A apresentação passar dos 15 minutos. As orientações de 28/09 dizem que a banca interrompe no limite. | média | Alto: o que vem depois do corte não é avaliado. | O deck fecha em 11:35 de fala, com 3:25 de margem. Ensaiar os sete, com cronômetro e a demonstração inteira. | Gabriel
        A pesquisa não tem entrevista com quem opera o processo. As personas vieram do caso. | já acontece | Médio: a banca pode não aceitar como pesquisa consolidada. | Perguntar à banca se a pesquisa precisa ser primária. Entrevistar na Semana 11, com o roteiro de validação. | Matheus
        O sistema roda na base de teste, e a lente de ML roda na base da SESAU. | já acontece | Médio: os números de /sistema e de /ml não se comparam. | Dizer qual base cada tela usa. Não misturar os números na apresentação. | Rafael
 
@@ -1355,7 +1354,6 @@ feedback de professor ou de cliente seria fabricar evidência.
 
   Bloqueios  [rascunho]
   ~~~~~~~~~~~~~~~~~~~~~
-  - O tempo da apresentação ainda não foi confirmado com o professor.
   - As perguntas 4 e 6 a 12 para a Secretaria continuam abertas. Sem elas, a regra não fica
     conferida até o SR1.
 
@@ -1373,16 +1371,20 @@ feedback de professor ou de cliente seria fabricar evidência.
 
   Responsáveis  [rascunho]
   ~~~~~~~~~~~~~~~~~~~~~~~~
-  - Gabriel Tenório de Lima Teixeira: Abre e fecha a apresentação. Fala do problema e do
-    que prometemos no Kick-off.
-  - Fernando Cavalcanti: Vai apresentar o roteiro do dia e como sabemos que a conta está
-    certa.
-  - Matheus Lustosa: Vai mostrar a planilha da Secretaria por dentro e a correção de rota.
-  - Kerry Muniz: Vai mostrar o que a planilha corrigiu no nosso modelo e o plano até o SR2.
-  - João Henrique Micucci: Vai mostrar a regra nova, que não mudou os meses fechados, e a
-    arquitetura.
-  - João Pedro Mamede: Vai demonstrar o sistema ao vivo e o que cada perfil vê.
-  - Rafael Serpa: Vai mostrar a base da Secretaria na lente de ML, e os riscos.
+  - Gabriel Tenório de Lima Teixeira: Vai abrir a apresentação, mostrar o problema e o
+    planejado contra o realizado, com o avanço.
+  - Matheus Lustosa: Vai mostrar a pesquisa, a matriz CSD e as personas com o mapa de
+    empatia.
+  - Kerry Muniz: Vai mostrar o benchmarking, a SWOT e os objetivos, e fechar com a
+    conclusão e os próximos passos.
+  - João Pedro Mamede: Vai mostrar as técnicas de ideação e explicar a demonstração ao
+    vivo.
+  - Rafael Serpa: Vai mostrar os critérios da escolha, o que cada disciplina pôs no produto
+    e o balanço.
+  - João Henrique Micucci: Vai mostrar a solução, os protótipos e os diferenciais, e operar
+    o sistema na demonstração.
+  - Fernando Cavalcanti: Vai mostrar o ciclo de vida, os papéis e as ferramentas, com o
+    site e o Drive.
 
   Evidências  [rascunho]
   ~~~~~~~~~~~~~~~~~~~~~~
@@ -3369,6 +3371,7 @@ Os porquês completos estão em `docs/decisoes.md`. Os títulos, aqui:
   - ADR-045 · O SR1 ganhou deck próprio, e o site passou a escolher a apresentação do marco
   - ADR-046 · Para o SR1: as oito telas no ar, cada visitante escreve na própria cópia, e
     junho fecha pela v3
+  - ADR-047 · As orientações do SR1 chegaram, e o deck passou a seguir a rubrica
 
 ============================================================================================
 13.  COMO RODAR E COMO CONFERIR

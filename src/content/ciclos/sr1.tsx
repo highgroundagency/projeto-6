@@ -1,4 +1,5 @@
 import { Lista, Nota, Secao, Tabela } from '@/components/conteudo'
+import { CSD_EM_25_09 } from '@/content/analises'
 import { nomeCurto } from '@/content/equipe'
 import { COMPROMISSOS_ATE_O_SR1 } from '@/content/pitch'
 import { OBJETIVOS_ESPECIFICOS, URL_REPOSITORIO } from '@/content/produto'
@@ -65,7 +66,6 @@ export const registro = {
     selo: 'rascunho',
     validadoPor: null,
     conteudo: [
-      'O tempo da apresentação ainda não foi confirmado com o professor.',
       'As perguntas 4 e 6 a 12 para a Secretaria continuam abertas. Sem elas, a regra não fica conferida até o SR1.',
     ],
   },
@@ -83,8 +83,9 @@ export const registro = {
     ],
   },
 
-  /* A fala segue os blocos do deck do SR1, e os sete falam. No Kick-off a
-     fala foi dividida entre seis, porque Kerry chegou no dia (ver ko.tsx). */
+  /* A fala segue as partes da rubrica no deck do SR1 (ADR-047), e os sete
+     falam. No Kick-off a fala foi dividida entre seis, porque Kerry chegou no
+     dia (ver ko.tsx). */
   responsaveis: {
     selo: 'rascunho',
     validadoPor: null,
@@ -92,33 +93,34 @@ export const registro = {
       {
         integrante: 'gabriel',
         contribuicao:
-          'Abre e fecha a apresentação. Fala do problema e do que prometemos no Kick-off.',
-      },
-      {
-        integrante: 'fernando',
-        contribuicao: 'Vai apresentar o roteiro do dia e como sabemos que a conta está certa.',
+          'Vai abrir a apresentação, mostrar o problema e o planejado contra o realizado, com o avanço.',
       },
       {
         integrante: 'matheus',
-        contribuicao: 'Vai mostrar a planilha da Secretaria por dentro e a correção de rota.',
+        contribuicao: 'Vai mostrar a pesquisa, a matriz CSD e as personas com o mapa de empatia.',
       },
       {
         integrante: 'kerry',
         contribuicao:
-          'Vai mostrar o que a planilha corrigiu no nosso modelo e o plano até o SR2.',
+          'Vai mostrar o benchmarking, a SWOT e os objetivos, e fechar com a conclusão e os próximos passos.',
+      },
+      {
+        integrante: 'joao-pedro',
+        contribuicao: 'Vai mostrar as técnicas de ideação e explicar a demonstração ao vivo.',
+      },
+      {
+        integrante: 'rafael',
+        contribuicao:
+          'Vai mostrar os critérios da escolha, o que cada disciplina pôs no produto e o balanço.',
       },
       {
         integrante: 'joao-henrique',
         contribuicao:
-          'Vai mostrar a regra nova, que não mudou os meses fechados, e a arquitetura.',
+          'Vai mostrar a solução, os protótipos e os diferenciais, e operar o sistema na demonstração.',
       },
       {
-        integrante: 'joao-pedro',
-        contribuicao: 'Vai demonstrar o sistema ao vivo e o que cada perfil vê.',
-      },
-      {
-        integrante: 'rafael',
-        contribuicao: 'Vai mostrar a base da Secretaria na lente de ML, e os riscos.',
+        integrante: 'fernando',
+        contribuicao: 'Vai mostrar o ciclo de vida, os papéis e as ferramentas, com o site e o Drive.',
       },
     ],
   },
@@ -621,80 +623,18 @@ export const documentos = [
         >
           <Tabela
             colunas={['Certeza', 'De onde vem']}
-            linhas={[
-              ['A conta hoje é manual, “via procv e afins”', 'Resposta da Secretaria, 22/09'],
-              ['Cada item medido vira nota antes, e a média é das notas', 'Planilha de 22/09'],
-              [
-                'Indicador sem número sai da conta e leva o peso junto',
-                'Fórmula do resultado geral na planilha; art. 8º',
-              ],
-              ['A nota vai de 0 a 1, por degraus', 'Planilha de 22/09'],
-              [
-                'Os tipos de unidade são sete: USF, UBT, UBT Mista, CAPS, CECON, UCIS e MAC',
-                'Portaria e planilha (ADR-042)',
-              ],
-              ['Há item em que passar do alvo também perde ponto', 'Planilha de 22/09'],
-              ['Numerador maior que denominador é erro', 'Planilha de 22/09'],
-              [
-                'As seis linhas de NDI e SAE seguem outra conta: os pontos divididos por 1,7',
-                'Base por unidade, caderno 07 de ML',
-              ],
-              [
-                'A Secretaria autorizou a base por unidade, sem pessoa, na lente de ML',
-                'ADR-044',
-              ],
-              [
-                'Existe prazo para recorrer: 10 dias corridos, resposta em 5 dias úteis',
-                'Portaria, art. 9º',
-              ],
-              [
-                'Quem decide é a CAM, com pelo menos quatro membros presentes',
-                'Portaria, arts. 5º e 6º',
-              ],
-            ]}
+            linhas={CSD_EM_25_09.certezas.map((l) => [l.item, l.origem])}
           />
           <div className="mt-4">
             <Tabela
               colunas={['Suposição', 'De onde vem']}
-              linhas={[
-                [
-                  'O corte entre satisfatório e excelente é 0,80',
-                  'Na planilha a classe foi digitada à mão. Pelos valores, o corte fica entre 0,79 e 0,82',
-                ],
-                [
-                  'A nota do distrito é a média simples das unidades',
-                  'src/lib/calculo/motor.ts',
-                ],
-                ['O ciclo é mensal', 'Portaria, art. 7º'],
-                [
-                  'A CAM decide fora do sistema',
-                  'Art. 6º. A planilha se versiona como “CAM 1.2”',
-                ],
-              ]}
+              linhas={CSD_EM_25_09.suposicoes.map((l) => [l.item, l.origem])}
             />
           </div>
           <div className="mt-4">
             <Tabela
               colunas={['Dúvida', 'A quem perguntar']}
-              linhas={[
-                ['Os cortes exatos das quatro classes', 'SEAB, pergunta 6'],
-                ['Os percentuais de cada classe, no Decreto 36.482/2023', 'SEAB, pergunta 7'],
-                ['Como fechar o mês do Indicador 3, que é bimestral', 'SEAB, pergunta 4'],
-                ['Por que NDI e SAE seguem outra conta', 'SEAB, pergunta nova'],
-                ['O que o porte muda: a meta, o peso ou os dois', 'SEAB, pergunta nova'],
-                [
-                  'Quem decidiu a coluna de peso “atual, excepcional”, e até quando vale',
-                  'SEAB, pergunta nova',
-                ],
-                [
-                  'Como o gestor contesta hoje, e onde a CAM publica',
-                  'SEAB, perguntas 10 e 11',
-                ],
-                [
-                  'O sistema pode receber dado de pessoa um dia, e com que base',
-                  'SEAB, pergunta 12',
-                ],
-              ]}
+              linhas={CSD_EM_25_09.duvidas.map((l) => [l.item, l.origem])}
             />
           </div>
           <div className="mt-3">
