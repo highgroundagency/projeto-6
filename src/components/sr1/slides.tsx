@@ -1,64 +1,86 @@
 import type { ReactNode } from 'react'
 import { MarcaCesar } from '@/components/base/marca'
+import { SECOES } from '@/components/base/indice'
 import { Etiqueta } from '@/components/base/selo'
 import { HorizonteDoRecife } from '@/components/pitch/horizonte'
 import { CartaoScore, MemoriaDeCalculo } from '@/components/sistema/memoria'
+import { WIREFRAMES } from '@/components/wireframe'
 import {
-  ACHADOS_DA_PLANILHA,
-  CITACAO_DA_SECRETARIA,
-  COLUNAS_DA_ROTA,
-  COLUNAS_DOS_ERROS,
+  ALTERNATIVAS_SR1,
+  APRENDIZADOS_SR1,
+  AVANCO,
+  BACKLOG_SR1,
+  BALANCO_SR1,
+  COLUNAS_DA_EQUIPE,
+  COLUNAS_DA_MATRIZ,
+  CONCLUSAO_SR1,
+  CSD_RESPONDIDO,
+  CSD_SR1,
+  DRIVE_SR1,
+  COLUNAS_DAS_FONTES,
+  COLUNAS_DO_PLANEJADO,
+  COLUNAS_DOS_EXISTENTES,
   COMPROMISSOS_NO_SR1,
-  CORRECAO_DE_ROTA,
+  CONTAGENS_DA_SOLUCAO,
   DATA_DO_SR1,
   DEMO_SR1,
-  DESTAQUE_DO_MOTOR,
-  ENDERECO_DA_ARQUITETURA,
+  DIFERENCIAIS_SR1,
+  DISCIPLINAS_SR1,
   ENDERECO_DA_DEMO,
-  ENDERECO_DO_ML,
-  ETAPAS_DO_MES,
-  FALTA_NA_CONFIANCA,
-  FUNIL_SR1,
-  LIMITE_DOS_MODELOS,
-  MODELOS_SR1,
+  EQUIPE_SR1,
+  ESCOPO_SR1,
+  FASES_DO_SEMESTRE,
+  EM_ANDAMENTO_SR1,
+  AINDA_NAO_SR1,
+  FERRAMENTAS_SR1,
+  FLUXO_DO_MES,
+  FONTES_SR1,
+  FUNIL_DA_IDEACAO,
+  LEGENDA_DA_MATRIZ,
+  LEGENDAS_DO_WIREFRAME_SR1,
+  MAPA_NO_SR1,
   NOME_DA_UNIDADE_DO_DECK,
-  NIVEIS_C4,
   NOME_DO_PAPEL,
+  OBJETIVOS_NO_SR1,
   ORDEM_DOS_PAPEIS,
   PARADAS_ATE_O_SR2,
+  PERGUNTA_FINAL,
+  PESSOAS_SR1,
+  PERCENTUAL_A_CONFIRMAR,
   PILULA_DA_CAPA_SR1,
-  REGRA_DA_PORTA,
-  RISCOS_SR1,
+  PLANEJADO_X_REALIZADO,
+  PROBLEMA_SR1,
+  QUADRANTES_SR1,
+  REFERENCIAS_SR1,
+  ROTULO_DO_CONTRA,
   ROTEIRO_SR1,
-  ROTULO_DA_BASE,
+  ROTINA_DA_SEMANA,
   ROTULO_DA_DEMO_SR1,
-  ROTULO_DA_UNIDADE_DO_DECK,
-  ROTULO_DAS_TELAS,
+  ROTULO_DAS_FERRAMENTAS,
+  ROTULO_DAS_PERSONAS,
+  ROTULO_DO_MAPA_SR1,
+  ROTULO_DOS_COMPROMISSOS,
+  ROTULO_DOS_MINUTOS,
+  ROTULO_DOS_PAPEIS,
+  ROTULO_EM_ANDAMENTO,
   ROTULO_SE_PERGUNTAREM_SR1,
-  ROTULOS_DA_CONFIANCA,
-  ROTULOS_DA_SEGURANCA,
+  SITE_SR1,
+  SLIDES_SR1,
+  TECNICAS_SR1,
   TELAS_NO_SR1,
-  TESTES_DO_MOTOR,
-  TIPOS_DE_UNIDADE,
-  TRES_CONTAS,
-  TRES_ERROS,
-  classe,
   formatarTempo,
-  inicioNaVersao,
-  nota,
-  notasNaVersao,
-  segundosNaVersao,
-  slidesDaVersao,
-  telasDoPapel,
+  inicioDoSlide,
+  rotuloDaParte,
+  type EstadoDoCompromisso,
+  type EstadoDoObjetivo,
   type SlideSR1,
   type SlideSR1Id,
-  type Versao,
 } from '@/content/apresentacao-sr1'
 import { EQUIPE, nomeCurto } from '@/content/equipe'
-import { CONTAGENS_PITCH } from '@/content/pitch'
 import { CLIENTE, ENDERECO_SITE, INSTITUICAO, PRODUTO, URL_SITE } from '@/content/produto'
 import { cicloPorId } from '@/lib/cronograma'
 import { formatarBR } from '@/lib/datas'
+import { PERFIS } from '@/lib/features'
 import { BASE } from '@/lib/seed'
 import { cn } from '@/lib/utils'
 
@@ -72,30 +94,34 @@ import { cn } from '@/lib/utils'
  *
  * NENHUM LITERAL DE CONTEÚDO AQUI: as palavras vêm de
  * `src/content/apresentacao-sr1.ts`, onde o teste conta o teto por slide. Os
- * números vêm do motor de cálculo, dos JSON dos cadernos e do cronograma.
+ * números vêm do motor de cálculo, dos JSON dos cadernos, do cronograma, do
+ * checklist e do backlog.
  *
- * DUAS VERSÕES. A completa tem os dezesseis slides; a curta, só os que têm
- * `curto`, renumerados de 1 em diante, com a fala cortada nas primeiras linhas.
- * O corpo de cada slide é o mesmo nas duas: só muda quem entra.
+ * NA ORDEM DA RUBRICA (ADR-047). O rodapé de cada slide diz a parte da
+ * rubrica a que ele responde, com o número do critério, e o `atual/total`
+ * em tamanho de ler numa chamada de vídeo.
+ *
+ * SEM TABELA DE VERDADE. As matrizes do slide 9 e do slide 17 são grades de
+ * linhas: numa `<table>`, 360px de largura pediam rolagem lateral, e o teste
+ * do celular reprova qualquer caixa que vaze. Na tela larga, a grade alinha
+ * as colunas do mesmo jeito.
  *
  * O ACENTO, SLIDE A SLIDE. O cursor do rodapé já é um uso; cada slide gasta no
  * máximo mais dois, sempre no ponto que a fala aponta.
  */
-export function SlidesSR1({ versao }: { versao: Versao }) {
-  const lista = slidesDaVersao(versao)
-  const sr1 = cicloPorId('sr1')
-  const mesesFechados = BASE.ciclos.filter(
-    (c) => c.estado === 'homologado' || c.estado === 'publicado',
-  ).length
+export function SlidesSR1() {
+  const lista = SLIDES_SR1 as readonly SlideSR1[]
 
   const corpo: Record<SlideSR1Id, (slide: SlideSR1) => ReactNode> = {
-    /* 1 · Capa. A equipe inteira, não só quem fala. */
+    /* 1 · Capa: equipe, projeto, disciplina, data e cliente. */
     capa: (slide) => (
       <>
-        <span className="pilula self-start">
-          {PILULA_DA_CAPA_SR1} · {formatarBR(DATA_DO_SR1)} · {INSTITUICAO.equipe} ·{' '}
-          {INSTITUICAO.escola}
-        </span>
+        <div className="flex flex-wrap items-center justify-between gap-4">
+          <span className="pilula">
+            {PILULA_DA_CAPA_SR1} · {formatarBR(DATA_DO_SR1)}
+          </span>
+          <MarcaCesar className="h-14" />
+        </div>
         <h1 className="hero mt-6">
           {PRODUTO.nome.toLowerCase()}
           <span aria-hidden className="text-acento pisca">
@@ -103,170 +129,379 @@ export function SlidesSR1({ versao }: { versao: Versao }) {
           </span>
         </h1>
         <p className="slide-apoio text-texto">{slide.apoio}</p>
-        <p className="mt-6 text-sm">{CLIENTE.orgao}</p>
-        <ul className="mt-5 flex flex-wrap gap-x-5 gap-y-1 text-sm">
+        <p className="mt-6 text-base text-texto">
+          {INSTITUICAO.disciplina} · {INSTITUICAO.escola} · {INSTITUICAO.curso} ·{' '}
+          {INSTITUICAO.periodo} · {INSTITUICAO.equipe}
+        </p>
+        <p className="mt-1 text-base">{CLIENTE.orgao}</p>
+        <ul className="mt-5 flex flex-wrap gap-x-5 gap-y-1 text-base">
           {EQUIPE.map((integrante) => (
             <li key={integrante.id}>{integrante.nome}</li>
           ))}
         </ul>
-        <MarcaCesar className="mt-8 h-8 self-start" />
         <HorizonteDoRecife className="horizonte" />
       </>
     ),
 
-    /* 2 · O roteiro: onde a fala vai parar. */
+    /* 2 · O roteiro é a rubrica: cada parte com os slides dela. */
     roteiro: (slide) => (
       <>
         <Titulo slide={slide} />
         <ol className="cascata mt-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
-          {ROTEIRO_SR1.map((parada, indice) => (
-            <li key={parada} className="bloco-raso md:-ml-px">
-              <span className="ordinal">0{indice + 1}</span>
-              <p className="titulo-bloco mt-2 text-xl">{parada}</p>
+          {ROTEIRO_SR1.map((parte) => (
+            <li key={parte.id} className="bloco-raso md:-ml-px">
+              <span className="ordinal">{parte.criterio}</span>
+              <p className="titulo-bloco mt-2 text-xl">{parte.nome}</p>
+              <p className="rotulo mt-2">{parte.slides}</p>
             </li>
           ))}
         </ol>
       </>
     ),
 
-    /* 3 · O problema: o caminho do Kick-off, e agora a frase do cliente. */
+    /* 3 · O problema: onde, causas e consequências. */
     problema: (slide) => (
       <>
         <Titulo slide={slide} />
-        <ol className="cascata relative mt-8 grid grid-cols-1 md:grid-cols-5">
-          <span aria-hidden className="viajante hidden md:block" />
-          {ETAPAS_DO_MES.map((etapa, indice) => (
-            <li
-              key={etapa.quem}
-              className={cn('bloco-raso md:-ml-px', etapa.quebra && 'border-acento md:z-10')}
-            >
-              <span className="ordinal">0{indice + 1}</span>
-              <p className="mt-2 text-lg text-texto">{etapa.quem}</p>
-              <p className="mt-1 text-base">{etapa.oQue}</p>
-              {etapa.quebra ? (
-                <Etiqueta tom="acento" className="mt-3">
-                  aqui quebra
-                </Etiqueta>
-              ) : null}
-            </li>
-          ))}
-        </ol>
-        <figure className="mt-8 border-l border-linha-alta pl-4">
-          <blockquote className="fonte-display text-2xl text-texto sm:text-3xl">
-            “{CITACAO_DA_SECRETARIA.frase}”
-          </blockquote>
-          <figcaption className="rotulo mt-2">{CITACAO_DA_SECRETARIA.fonte}</figcaption>
-        </figure>
+        <div className="cascata mt-8 grid grid-cols-1 md:grid-cols-3">
+          <div className="bloco-raso md:-ml-px">
+            <p className="rotulo">{PROBLEMA_SR1.onde.rotulo}</p>
+            <p className="mt-3 text-lg text-texto">{PROBLEMA_SR1.onde.texto}</p>
+          </div>
+          <Coluna rotulo={PROBLEMA_SR1.causas.rotulo} itens={PROBLEMA_SR1.causas.itens} />
+          <Coluna
+            rotulo={PROBLEMA_SR1.consequencias.rotulo}
+            itens={PROBLEMA_SR1.consequencias.itens}
+          />
+        </div>
       </>
     ),
 
-    /* 4 · A planilha por dentro: o funil e três achados. */
-    planilha: (slide) => (
+    /* 4 · A pesquisa: as fontes com data e o que a planilha corrigiu. O
+       acento vai na planilha, que é a fonte que a fala aponta. */
+    pesquisa: (slide) => (
       <>
         <Titulo slide={slide} />
-        <div className="mt-8 grid grid-cols-1 gap-8 md:grid-cols-2">
-          <ol className="cascata grid grid-cols-1">
-            {FUNIL_SR1.map((passo, indice) => (
-              <li key={passo.rotulo} className="bloco-raso flex items-baseline gap-4">
-                <span
+        <div className="mt-7 grid grid-cols-1 gap-8 md:grid-cols-2">
+          <div>
+            <p className="rotulo">{COLUNAS_DAS_FONTES.fontes}</p>
+            <ol className="cascata mt-3 grid grid-cols-1">
+              {FONTES_SR1.map((fonte) => (
+                <li
+                  key={fonte.quando}
                   className={cn(
-                    'numero fonte-display w-24 shrink-0 text-4xl leading-none',
-                    indice === FUNIL_SR1.length - 1 ? 'text-acento' : 'text-texto',
+                    'bloco-raso linha-sr1 flex items-baseline gap-4',
+                    fonte.quando === '22/09' && 'border-acento',
                   )}
                 >
-                  {passo.numero}
-                </span>
-                <span>
-                  <span className="block text-base text-texto">{passo.rotulo}</span>
-                  {'motivo' in passo ? (
-                    <span className="rotulo mt-1 block">{passo.motivo}</span>
-                  ) : null}
-                </span>
-              </li>
-            ))}
-          </ol>
-          <ul className="cascata grid grid-cols-1">
-            {ACHADOS_DA_PLANILHA.map((achado) => (
-              <li key={achado.texto} className="bloco-raso flex items-baseline gap-4">
-                <span className="numero fonte-display w-16 shrink-0 text-3xl leading-none text-texto">
-                  {achado.numero}
-                </span>
-                <span className="text-base">{achado.texto}</span>
-              </li>
-            ))}
-          </ul>
+                  <span className="numero w-24 shrink-0 text-base text-texto">{fonte.quando}</span>
+                  <span className="text-base">{fonte.fonte}</span>
+                </li>
+              ))}
+            </ol>
+          </div>
+          <div>
+            <p className="rotulo">{COLUNAS_DAS_FONTES.aprendizados}</p>
+            <ul className="cascata mt-3 grid grid-cols-1">
+              {APRENDIZADOS_SR1.itens.map((item) => (
+                <li key={item.antes} className="bloco-raso linha-sr1 text-base">
+                  <span className="line-through decoration-linha-alta">{item.antes}</span>
+                  <span aria-hidden className="mx-2">
+                    →
+                  </span>
+                  <span className="text-texto">{item.depois}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
-        <p className="rotulo mt-6">{ROTULO_DA_BASE}</p>
       </>
     ),
 
-    /* 5 · Três coisas que a gente tinha errado. */
-    erros: (slide) => (
+    /* 5 · A matriz CSD de 25/09: a contagem e dois exemplos de cada coluna. */
+    csd: (slide) => (
       <>
         <Titulo slide={slide} />
-        <table className="mt-8 w-full border-collapse text-left">
-          <thead>
-            <tr>
-              <th scope="col" className="rotulo pb-2 font-normal">
-                {COLUNAS_DOS_ERROS.antes}
-              </th>
-              <th scope="col" className="rotulo pb-2 font-normal">
-                {COLUNAS_DOS_ERROS.depois}
-              </th>
-            </tr>
-          </thead>
-          <tbody className="cascata">
-            {TRES_ERROS.map((erro) => (
-              <tr key={erro.antes} className="border-t border-linha">
-                <td className="py-3 pr-6 text-lg line-through decoration-linha-alta">
-                  {erro.antes}
-                </td>
-                <td className="py-3 text-lg text-texto">{erro.depois}</td>
-              </tr>
-            ))}
-            <tr className="border-t border-linha">
-              <td className="py-3 pr-6 text-lg line-through decoration-linha-alta">
-                {TIPOS_DE_UNIDADE.antes}
-              </td>
-              <td className="py-3 text-lg text-texto">{TIPOS_DE_UNIDADE.depois}</td>
-            </tr>
-          </tbody>
-        </table>
-      </>
-    ),
-
-    /* 6 · A regra mudou, e maio não: a mesma unidade em três contas. O
-       acento vai no número que NÃO mudou, que é o que o título afirma. */
-    regra: (slide) => (
-      <>
-        <Titulo slide={slide} />
-        <p className="rotulo mt-6">
-          {NOME_DA_UNIDADE_DO_DECK} · {ROTULO_DA_UNIDADE_DO_DECK}
-        </p>
-        <ol className="cascata mt-3 grid grid-cols-1 md:grid-cols-3">
-          {TRES_CONTAS.map((conta, indice) => (
-            <li
-              key={conta.id}
-              className={cn('bloco-raso md:-ml-px', indice === 0 && 'border-acento md:z-10')}
-            >
-              <p className="rotulo">{conta.rotulo}</p>
-              <p
-                className={cn(
-                  'numero fonte-display mt-3 text-5xl leading-none sm:text-6xl',
-                  indice === 0 ? 'text-acento' : 'text-texto',
-                )}
-              >
-                {nota(conta.avaliacao)}
+        <div className="cascata mt-7 grid grid-cols-1 md:grid-cols-3">
+          {CSD_SR1.map((coluna) => (
+            <div key={coluna.rotulo} className="bloco-raso md:-ml-px">
+              <p className="flex items-baseline gap-3">
+                <span className="numero fonte-display text-5xl leading-none text-texto">
+                  {coluna.total}
+                </span>
+                <span className="titulo-bloco text-lg">{coluna.rotulo}</span>
               </p>
-              <p className="mt-3 text-base">{classe(conta.avaliacao)}</p>
-              <p className="rotulo mt-2">{conta.versao}</p>
+              <ul className="mt-4 space-y-2">
+                {coluna.exemplos.map((exemplo) => (
+                  <li key={exemplo} className="text-base">
+                    {exemplo}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+        <p className="mt-6 border-l border-linha-alta pl-3 text-base">
+          <span className="rotulo mr-3">{CSD_RESPONDIDO.rotulo}</span>
+          <span className="text-texto">{CSD_RESPONDIDO.texto}</span>
+        </p>
+      </>
+    ),
+
+    /* 6 · Quem usa: as personas, o mapa de empatia e os papéis que viraram. */
+    usuarios: (slide) => (
+      <>
+        <Titulo slide={slide} />
+        <p className="rotulo mt-6">{ROTULO_DAS_PERSONAS}</p>
+        <ul className="cascata mt-2 grid grid-cols-1 md:grid-cols-3">
+          {PESSOAS_SR1.map((pessoa) => (
+            <li key={pessoa.quem} className="bloco-raso md:-ml-px">
+              <p className="titulo-bloco text-lg">{pessoa.quem}</p>
+              <p className="mt-1 text-base">{pessoa.dor}</p>
+            </li>
+          ))}
+        </ul>
+        <p className="rotulo mt-5">{ROTULO_DO_MAPA_SR1}</p>
+        <dl className="mt-2 grid grid-cols-1 md:grid-cols-3">
+          {MAPA_NO_SR1.map((quadrante) => (
+            <div key={quadrante.termo} className="bloco-raso md:-ml-px">
+              <dt className="rotulo">{quadrante.termo}</dt>
+              <dd className="mt-1 text-base text-texto">{quadrante.curto}</dd>
+            </div>
+          ))}
+        </dl>
+        <p className="mt-5 text-base">
+          <span className="rotulo mr-3">{ROTULO_DOS_PAPEIS}</span>
+          <span className="text-texto">
+            {ORDEM_DOS_PAPEIS.map((p) => NOME_DO_PAPEL[p]).join(' · ')}
+          </span>
+        </p>
+      </>
+    ),
+
+    /* 7 · O que já existe: benchmarking pela lacuna e a SWOT pelo resumo. */
+    existentes: (slide) => (
+      <>
+        <Titulo slide={slide} />
+        <div className="mt-7 grid grid-cols-1 gap-8 md:grid-cols-[3fr_2fr]">
+          <div>
+            <p className="rotulo">{COLUNAS_DOS_EXISTENTES.benchmarking}</p>
+            <ul className="cascata mt-3 grid grid-cols-1">
+              {REFERENCIAS_SR1.map((ref) => (
+                <li
+                  key={ref.nome}
+                  className="bloco-raso linha-sr1 grid grid-cols-1 gap-1 sm:grid-cols-[13.5rem_1fr] sm:gap-4"
+                >
+                  <span className="text-base text-texto">{ref.nome}</span>
+                  <span className="text-base">{ref.lacuna}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div>
+            <p className="rotulo">{COLUNAS_DOS_EXISTENTES.swot}</p>
+            <dl className="mt-3 grid grid-cols-1 sm:grid-cols-2">
+              {QUADRANTES_SR1.map((q) => (
+                <div key={q.titulo} className="bloco-raso sm:-ml-px">
+                  <dt className="rotulo">{q.titulo}</dt>
+                  <dd className="mt-1 text-base text-texto">{q.curto}</dd>
+                </div>
+              ))}
+            </dl>
+          </div>
+        </div>
+      </>
+    ),
+
+    /* 8 · Os objetivos, cada um com o prazo e o estado de hoje. */
+    objetivos: (slide) => (
+      <>
+        <Titulo slide={slide} />
+        <ol className="cascata mt-7 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5">
+          {OBJETIVOS_NO_SR1.map((objetivo) => (
+            <li key={objetivo.resumo} className="bloco-raso md:-ml-px">
+              <p className="rotulo">{objetivo.quando}</p>
+              <p className="titulo-bloco mt-2 text-lg">{objetivo.resumo}</p>
+              <Etiqueta tom={tomDoObjetivo(objetivo.estado)} className="mt-3 uppercase">
+                {objetivo.estado}
+              </Etiqueta>
             </li>
           ))}
         </ol>
+        <div className="mt-6 border-l border-linha-alta pl-4">
+          <p className="rotulo">{ESCOPO_SR1.rotulo}</p>
+          <p className="mt-1 text-base text-texto">{ESCOPO_SR1.dentro}</p>
+          <p className="mt-1 text-base">{ESCOPO_SR1.fora}</p>
+        </div>
       </>
     ),
 
-    /* 7 · A demonstração. Ao vivo no sistema; de reserva, a conta de junho
+    /* 9 · As técnicas de ideação e o funil até a escolhida. */
+    tecnicas: (slide) => (
+      <>
+        <Titulo slide={slide} />
+        <ol className="cascata mt-8 grid grid-cols-1 md:grid-cols-3">
+          {TECNICAS_SR1.map((tecnica, indice) => (
+            <li key={tecnica.nome} className="bloco-raso md:-ml-px">
+              <span className="ordinal">0{indice + 1}</span>
+              <p className="titulo-bloco mt-2 text-xl">{tecnica.nome}</p>
+              <p className="rotulo mt-1">
+                {tecnica.minutos} {ROTULO_DOS_MINUTOS}
+              </p>
+              <p className="mt-3 text-lg text-texto">{tecnica.produto}</p>
+            </li>
+          ))}
+        </ol>
+        <p className="mt-6 flex flex-wrap items-baseline gap-x-4 gap-y-1">
+          {FUNIL_DA_IDEACAO.map((passo, indice) => (
+            <span key={passo.rotulo} className="flex items-baseline gap-2">
+              {indice > 0 ? (
+                <span aria-hidden className="text-apagado">
+                  →
+                </span>
+              ) : null}
+              <span
+                className={cn(
+                  'numero fonte-display text-4xl leading-none',
+                  indice === FUNIL_DA_IDEACAO.length - 1 ? 'text-acento' : 'text-texto',
+                )}
+              >
+                {passo.numero}
+              </span>
+              <span className="text-base">{passo.rotulo}</span>
+            </span>
+          ))}
+        </p>
+      </>
+    ),
+
+    /* 10 · A matriz de decisão inteira, a escolhida em destaque. */
+    escolha: (slide) => (
+      <>
+        <Titulo slide={slide} />
+        <div className="mt-6" role="table" aria-label={slide.titulo}>
+          <div
+            role="row"
+            className="hidden grid-cols-[1fr_6rem_6rem_6rem_11rem] gap-3 px-4 pb-2 md:grid"
+          >
+            <span role="columnheader" className="rotulo">
+              {COLUNAS_DA_MATRIZ.alternativa}
+            </span>
+            <span role="columnheader" className="rotulo text-right">
+              {COLUNAS_DA_MATRIZ.impacto}
+            </span>
+            <span role="columnheader" className="rotulo text-right">
+              {COLUNAS_DA_MATRIZ.esforco}
+            </span>
+            <span role="columnheader" className="rotulo text-right">
+              {COLUNAS_DA_MATRIZ.aderencia}
+            </span>
+            <span role="columnheader" className="rotulo md:pl-8">
+              {COLUNAS_DA_MATRIZ.destino}
+            </span>
+          </div>
+          {ALTERNATIVAS_SR1.map((alternativa) => (
+            <div
+              key={alternativa.nome}
+              role="row"
+              className={cn(
+                'bloco-raso linha-sr1 grid grid-cols-[1fr_auto] gap-x-3 gap-y-1 md:grid-cols-[1fr_6rem_6rem_6rem_11rem]',
+                alternativa.escolhida && 'border-acento',
+              )}
+            >
+              <span
+                role="cell"
+                className={cn('text-base', alternativa.escolhida ? 'text-texto' : '')}
+              >
+                {alternativa.nome}
+              </span>
+              <Nota rotulo={COLUNAS_DA_MATRIZ.impacto} valor={alternativa.impacto} />
+              <Nota rotulo={COLUNAS_DA_MATRIZ.esforco} valor={alternativa.esforco} />
+              <Nota rotulo={COLUNAS_DA_MATRIZ.aderencia} valor={alternativa.aderencia} />
+              <span
+                role="cell"
+                className={cn('rotulo self-center md:pl-8', alternativa.escolhida && 'text-texto')}
+              >
+                {alternativa.destino}
+              </span>
+            </div>
+          ))}
+        </div>
+        <p className="mt-4 text-base">
+          <span className="rotulo mr-3">{LEGENDA_DA_MATRIZ.rotulo}</span>
+          <span className="text-texto">{LEGENDA_DA_MATRIZ.texto}</span>
+        </p>
+      </>
+    ),
+
+    /* 11 · Uma disciplina por cartão, cada uma com duas decisões. */
+    disciplinas: (slide) => (
+      <>
+        <Titulo slide={slide} />
+        <ul className="cascata mt-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4">
+          {DISCIPLINAS_SR1.map((disciplina) => (
+            <li key={disciplina.nome} className="bloco-raso md:-ml-px">
+              <p className="titulo-bloco text-lg">{disciplina.nome}</p>
+              <ul className="mt-3 space-y-2">
+                {disciplina.itens.map((item) => (
+                  <li key={item} className="text-base text-texto">
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </li>
+          ))}
+        </ul>
+      </>
+    ),
+
+    /* 12 · A solução: o caminho de um mês, e o tamanho do sistema. */
+    solucao: (slide) => (
+      <>
+        <Titulo slide={slide} />
+        <ol className="cascata mt-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4">
+          {FLUXO_DO_MES.map((passo, indice) => (
+            <li
+              key={passo.quem}
+              className={cn(
+                'bloco-raso md:-ml-px',
+                indice === FLUXO_DO_MES.length - 1 && 'border-acento md:z-10',
+              )}
+            >
+              <span className="ordinal">0{indice + 1}</span>
+              <p className="rotulo mt-2">{passo.quem}</p>
+              <p className="mt-2 text-lg text-texto">{passo.faz}</p>
+            </li>
+          ))}
+        </ol>
+        <dl className="cascata mt-6 flex flex-wrap gap-x-10 gap-y-3">
+          <Numero numero={TELAS_NO_SR1.length} rotulo={CONTAGENS_DA_SOLUCAO.telas} />
+          <Numero numero={Object.keys(PERFIS).length} rotulo={CONTAGENS_DA_SOLUCAO.papeis} />
+          <Numero numero={BASE.regras.length} rotulo={CONTAGENS_DA_SOLUCAO.regras} />
+        </dl>
+        <p className="mt-5 text-base">
+          <span className="rotulo mr-3">{AINDA_NAO_SR1.rotulo}</span>
+          <span className="text-texto">{AINDA_NAO_SR1.texto}</span>
+        </p>
+      </>
+    ),
+
+    /* 13 · Os protótipos de baixa fidelidade. */
+    wireframes: (slide) => (
+      <>
+        <Titulo slide={slide} />
+        <ul className="cascata mt-7 grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-4">
+          {WIREFRAMES.map(({ id, Desenho }, indice) => (
+            <li key={id} className="wireframe-sr1">
+              <Desenho className="w-full" />
+              <p className="mt-2 text-base text-texto">{LEGENDAS_DO_WIREFRAME_SR1[indice]}</p>
+            </li>
+          ))}
+        </ul>
+      </>
+    ),
+
+    /* 14 · A demonstração. Ao vivo no sistema; de reserva, a conta de junho
        pela versão 3, calculada pelo motor na hora de montar o slide. */
     demo: (slide) => (
       <>
@@ -277,166 +512,181 @@ export function SlidesSR1({ versao }: { versao: Versao }) {
             <span className="numero">{ENDERECO_DA_DEMO}</span>
           </p>
           <div className="mt-3">
-            <CartaoScore avaliacao={DEMO_SR1.avaliacao} />
+            <CartaoScore
+              avaliacao={DEMO_SR1.avaliacao}
+              percentualAConfirmar={PERCENTUAL_A_CONFIRMAR}
+              enxuto
+            />
           </div>
           <div className="mt-3">
-            <MemoriaDeCalculo avaliacao={DEMO_SR1.avaliacao} aberta compacta />
+            <MemoriaDeCalculo avaliacao={DEMO_SR1.avaliacao} aberta compacta enxuta />
           </div>
         </div>
       </>
     ),
 
-    /* 8 · Cada um vê o que é seu. */
-    papeis: (slide) => (
-      <>
-        <Titulo slide={slide} />
-        <ul className="cascata mt-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4">
-          {ORDEM_DOS_PAPEIS.map((papel) => (
-            <li key={papel} className="bloco-raso md:-ml-px">
-              <p className="numero fonte-display text-5xl leading-none text-texto">
-                {telasDoPapel(papel)}
-                <span className="rotulo ml-2 align-middle">
-                  / {TELAS_NO_SR1.length} {ROTULO_DAS_TELAS}
-                </span>
-              </p>
-              <p className="titulo-bloco mt-3 text-lg">{NOME_DO_PAPEL[papel]}</p>
-            </li>
-          ))}
-        </ul>
-        <p className="mt-6 border-l-2 border-acento pl-3 text-base text-texto">{REGRA_DA_PORTA}</p>
-      </>
-    ),
-
-    /* 9 · Os quatro zooms do C4. */
-    arquitetura: (slide) => (
-      <>
-        <Titulo slide={slide} />
-        <ol className="cascata mt-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4">
-          {NIVEIS_C4.map((nivel, indice) => (
-            <li key={nivel.nivel} className="bloco-raso md:-ml-px">
-              <span className="ordinal">0{indice + 1}</span>
-              <p className="titulo-bloco mt-2 text-xl">{nivel.nivel}</p>
-              <p className="mt-2 text-base">{nivel.mostra}</p>
-            </li>
-          ))}
-        </ol>
-        <p className="mt-6 border-l-2 border-acento pl-3 text-base text-texto">{DESTAQUE_DO_MOTOR}</p>
-        <Endereco rota={ENDERECO_DA_ARQUITETURA} />
-      </>
-    ),
-
-    /* 10 · Como sabemos que a conta está certa. */
-    confianca: (slide) => (
-      <>
-        <Titulo slide={slide} />
-        <dl className="cascata mt-8 grid grid-cols-1 md:grid-cols-3">
-          <Contagem numero={TESTES_DO_MOTOR} rotulo={ROTULOS_DA_CONFIANCA.testes}>
-            {ROTULOS_DA_CONFIANCA.testesLegenda}
-          </Contagem>
-          <Contagem numero={BASE.regras.length} rotulo={ROTULOS_DA_CONFIANCA.regras}>
-            {ROTULOS_DA_CONFIANCA.regrasLegenda}
-          </Contagem>
-          <Contagem numero={mesesFechados} rotulo={ROTULOS_DA_CONFIANCA.meses}>
-            {ROTULOS_DA_CONFIANCA.mesesLegenda}
-          </Contagem>
-        </dl>
-        <p className="mt-6 text-base">{FALTA_NA_CONFIANCA}</p>
-      </>
-    ),
-
-    /* 11 · A base de verdade, na lente de aprendizado de máquina. */
-    ml: (slide) => (
-      <>
-        <Titulo slide={slide} />
-        <ul className="cascata mt-8 grid grid-cols-1 md:grid-cols-3">
-          {MODELOS_SR1.map((modelo) => (
-            <li key={modelo.id} className="bloco-raso md:-ml-px">
-              <p className="rotulo">{modelo.tarefa}</p>
-              <p className="numero fonte-display mt-3 text-5xl leading-none text-texto">
-                {modelo.numero}
-              </p>
-              <p className="mt-2 text-base">{modelo.rotulo}</p>
-              <p className="rotulo mt-2">{modelo.referencia}</p>
-            </li>
-          ))}
-        </ul>
-        <p className="mt-6 border-l-2 border-acento pl-3 text-base text-texto">
-          {LIMITE_DOS_MODELOS}
-        </p>
-        <Endereco rota={ENDERECO_DO_ML} />
-      </>
-    ),
-
-    /* 12 · Riscos, ditos antes. */
-    riscos: (slide) => (
-      <>
-        <Titulo slide={slide} />
-        <div className="mt-8 grid grid-cols-1 gap-8 md:grid-cols-[3fr_2fr]">
-          <ol className="cascata grid grid-cols-1">
-            {RISCOS_SR1.map((risco, indice) => (
-              <li key={risco} className="bloco-raso flex items-baseline gap-4">
-                <span className="ordinal">0{indice + 1}</span>
-                <span className="text-base text-texto">{risco}</span>
-              </li>
-            ))}
-          </ol>
-          <dl className="cascata grid grid-cols-1">
-            <Contagem numero={CONTAGENS_PITCH.ameacasStride} rotulo={ROTULOS_DA_SEGURANCA.stride} />
-            <Contagem numero={CONTAGENS_PITCH.itensOwasp} rotulo={ROTULOS_DA_SEGURANCA.owasp} />
-          </dl>
-        </div>
-      </>
-    ),
-
-    /* 13 · O que prometemos, e o que fizemos. O estado é rótulo de estado:
-       caixa alta, e o único acento é o que não foi feito. */
-    prometido: (slide) => (
+    /* 15 · Os três diferenciais. O acento vai no número que NÃO mudou. */
+    diferenciais: (slide) => (
       <>
         <Titulo slide={slide} />
         <ol className="cascata mt-8 grid grid-cols-1 md:grid-cols-3">
-          {COMPROMISSOS_NO_SR1.map((item) => {
-            const ciclo = cicloPorId(item.ciclo)
-            return (
-              <li key={item.ciclo} className="bloco-raso md:-ml-px">
-                <p className="rotulo">
-                  {ciclo.rotulo.toLowerCase()} · {formatarBR(ciclo.data)} ·{' '}
-                  {nomeCurto(item.quem).toLowerCase()}
+          {DIFERENCIAIS_SR1.map((diferencial, indice) => (
+            <li key={diferencial.id} className="bloco-raso md:-ml-px">
+              <span className="ordinal">0{indice + 1}</span>
+              <p className="titulo-bloco mt-2 text-xl">{diferencial.titulo}</p>
+              <p className="mt-2 text-base text-texto">{diferencial.texto}</p>
+              {'contra' in diferencial ? (
+                <p className="mt-3 text-base">
+                  <span className="rotulo mr-2">{ROTULO_DO_CONTRA}:</span>
+                  {diferencial.contra}
                 </p>
-                <p className="titulo-bloco mt-3 text-xl">{item.compromisso}</p>
-                <Etiqueta
-                  tom={item.estado === 'feito' ? 'ok' : item.estado === 'não feito' ? 'acento' : 'neutro'}
-                  className="mt-3 uppercase"
-                >
-                  {item.estado}
-                </Etiqueta>
-                <p className="mt-3 text-base">{item.porque}</p>
-              </li>
-            )
-          })}
+              ) : null}
+              {'numero' in diferencial ? (
+                <>
+                  <p className="numero fonte-display mt-4 text-5xl leading-none text-acento">
+                    {diferencial.numero}
+                  </p>
+                  <p className="mt-2 text-base text-texto">{diferencial.legenda}</p>
+                </>
+              ) : null}
+              {'prova' in diferencial ? (
+                <p className="mt-3 border-l border-linha-alta pl-3 text-base">
+                  {diferencial.prova}
+                </p>
+              ) : null}
+            </li>
+          ))}
         </ol>
       </>
     ),
 
-    /* 14 · A correção de rota. */
-    rota: (slide) => (
+    /* 16 · O ciclo de vida: as fases com as datas do cronograma, a rotina e
+       o backlog. O acento vai na fase de hoje. */
+    processo: (slide) => (
       <>
         <Titulo slide={slide} />
-        <div className="mt-8 grid grid-cols-1 gap-8 md:grid-cols-[3fr_2fr]">
+        <ol className="cascata mt-6 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-9">
+          {FASES_DO_SEMESTRE.map((fase) => (
+            <li
+              key={fase.nome}
+              className={cn(
+                'bloco-raso celula-sr1 -ml-px',
+                fase.atual && 'border-acento',
+              )}
+            >
+              <p className="numero text-sm text-texto">{datasDaFase(fase.ciclos)}</p>
+              <p className="mt-1 text-base leading-snug text-texto">{fase.nome}</p>
+              <p className="mt-1 text-sm leading-snug">{fase.faz}</p>
+            </li>
+          ))}
+        </ol>
+        <div className="mt-6 grid grid-cols-1 gap-8 md:grid-cols-[3fr_2fr]">
           <div>
-            <p className="rotulo">{COLUNAS_DA_ROTA.entra}</p>
-            <ul className="cascata mt-3 grid grid-cols-1">
-              {CORRECAO_DE_ROTA.entra.map((item) => (
-                <li key={item} className="bloco-raso text-lg text-texto">
+            <p className="rotulo">{ROTINA_DA_SEMANA.rotulo}</p>
+            <ul className="mt-2 space-y-1.5">
+              {ROTINA_DA_SEMANA.itens.map((item) => (
+                <li key={item} className="text-base text-texto">
                   {item}
                 </li>
               ))}
             </ul>
           </div>
           <div>
-            <p className="rotulo">{COLUNAS_DA_ROTA.depois}</p>
-            <ul className="cascata mt-3 grid grid-cols-1">
-              {CORRECAO_DE_ROTA.depois.map((item) => (
-                <li key={item} className="bloco-raso text-lg">
+            <p className="rotulo">{BACKLOG_SR1.rotulo}</p>
+            <dl className="mt-2 space-y-1.5">
+              {BACKLOG_SR1.itens.map((item) => (
+                <div key={item.rotulo} className="flex items-baseline gap-3">
+                  <dd className="numero w-8 shrink-0 text-right text-2xl leading-none text-texto">
+                    {item.numero}
+                  </dd>
+                  <dt className="text-base">
+                    {item.rotulo} · {item.noAr} {BACKLOG_SR1.noAr}
+                  </dt>
+                </div>
+              ))}
+            </dl>
+          </div>
+        </div>
+      </>
+    ),
+
+    /* 17 · Papéis e responsabilidades, um por linha. */
+    equipe: (slide) => (
+      <>
+        <Titulo slide={slide} />
+        <div className="mt-6" role="table" aria-label={slide.titulo}>
+          <div role="row" className="hidden grid-cols-[9rem_22rem_1fr] gap-4 px-4 pb-1.5 md:grid">
+            <span role="columnheader" className="rotulo">
+              {COLUNAS_DA_EQUIPE.nome}
+            </span>
+            <span role="columnheader" className="rotulo">
+              {COLUNAS_DA_EQUIPE.papel}
+            </span>
+            <span role="columnheader" className="rotulo">
+              {COLUNAS_DA_EQUIPE.responsabilidades}
+            </span>
+          </div>
+          {EQUIPE_SR1.map((integrante) => (
+            <div
+              key={integrante.id}
+              role="row"
+              className="bloco-raso linha-sr1 grid grid-cols-1 gap-x-4 md:grid-cols-[9rem_22rem_1fr]"
+            >
+              <span role="cell" className="text-base text-texto">
+                {integrante.nome}
+              </span>
+              <span role="cell" className="text-base text-texto">
+                {integrante.papel}
+              </span>
+              <span role="cell" className="text-base">
+                {integrante.responsabilidades}
+              </span>
+            </div>
+          ))}
+        </div>
+      </>
+    ),
+
+    /* 18 · As ferramentas, o site no lugar do Google Site e a pasta do Drive. */
+    ferramentas: (slide) => (
+      <>
+        <Titulo slide={slide} />
+        <div className="mt-6 grid grid-cols-1 gap-8 md:grid-cols-2">
+          <div>
+            <p className="rotulo">{ROTULO_DAS_FERRAMENTAS}</p>
+            <ul className="mt-2">
+              {FERRAMENTAS_SR1.map((ferramenta) => (
+                <li
+                  key={ferramenta.nome}
+                  className="grid grid-cols-1 border-t border-linha py-2 sm:grid-cols-[9rem_1fr] sm:gap-3"
+                >
+                  <span className="text-base text-texto">{ferramenta.nome}</span>
+                  <span className="text-base">{ferramenta.para}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div>
+            <p className="rotulo">{SITE_SR1.rotulo}</p>
+            <a
+              href={URL_SITE}
+              className="numero mt-2 inline-block text-lg text-texto underline decoration-linha-alta underline-offset-4 hover:decoration-acento"
+            >
+              {ENDERECO_SITE}
+            </a>
+            <ol className="mt-3 grid grid-cols-2 gap-x-4 gap-y-1">
+              {SECOES.map((secao) => (
+                <li key={secao.ancora} className="flex items-baseline gap-2 text-base">
+                  <span className="numero text-apagado">{secao.numero}</span>
+                  <span className="text-texto">{secao.rotulo}</span>
+                </li>
+              ))}
+            </ol>
+            <p className="mt-2 text-base">{SITE_SR1.diario}</p>
+            <p className="rotulo mt-5">{DRIVE_SR1.rotulo}</p>
+            <ul className="mt-2 space-y-1">
+              {DRIVE_SR1.itens.map((item) => (
+                <li key={item} className="text-base text-texto">
                   {item}
                 </li>
               ))}
@@ -446,50 +696,156 @@ export function SlidesSR1({ versao }: { versao: Versao }) {
       </>
     ),
 
-    /* 15 · Até o SR2: datas do cronograma, a validação em destaque. */
-    sr2: (slide) => (
+    /* 19 · Planejado x realizado, fase a fase, com quem respondeu. */
+    planejado: (slide) => (
       <>
         <Titulo slide={slide} />
-        <ol className="cascata mt-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-7">
+        <div className="mt-5" role="table" aria-label={slide.titulo}>
+          <div role="row" className="hidden grid-cols-[14rem_5rem_6rem_1fr] gap-3 px-4 pb-1.5 md:grid">
+            <span role="columnheader" className="rotulo">
+              {COLUNAS_DO_PLANEJADO.fase}
+            </span>
+            <span role="columnheader" className="rotulo">
+              {COLUNAS_DO_PLANEJADO.data}
+            </span>
+            <span role="columnheader" className="rotulo">
+              {COLUNAS_DO_PLANEJADO.entregue}
+            </span>
+            <span role="columnheader" className="rotulo">
+              {COLUNAS_DO_PLANEJADO.quem}
+            </span>
+          </div>
+          {PLANEJADO_X_REALIZADO.map((linha) => {
+            const ciclo = cicloPorId(linha.ciclo)
+            const completo = linha.entregues === linha.planejadas
+            return (
+              <div
+                key={linha.ciclo}
+                role="row"
+                className="bloco-raso linha-sr1 grid grid-cols-[1fr_auto] gap-x-3 md:grid-cols-[14rem_5rem_6rem_1fr]"
+              >
+                <span role="cell" className="text-base text-texto">
+                  {ciclo.rotulo.toLowerCase()}
+                </span>
+                <span role="cell" className="numero text-base">
+                  {formatarBR(ciclo.data).slice(0, 5)}
+                </span>
+                <span
+                  role="cell"
+                  className={cn('numero text-base', completo ? 'text-ok' : 'text-texto')}
+                >
+                  {linha.entregues}/{linha.planejadas}
+                </span>
+                <span role="cell" className="text-base">
+                  {linha.responsaveis.map((r) => nomeCurto(r)).join(', ')}
+                </span>
+              </div>
+            )
+          })}
+        </div>
+        <p className="mt-4 text-base text-balance">
+          <Etiqueta className="mr-3 uppercase">{ROTULO_EM_ANDAMENTO}</Etiqueta>
+          {EM_ANDAMENTO_SR1.map((grupo, indice) => (
+            <span key={grupo.dono ?? 'sem-dono'}>
+              {indice > 0 ? ' · ' : null}
+              <span className="text-texto">{listaNaTela(grupo.itens)}</span>
+              {grupo.dono ? ` (${nomeCurto(grupo.dono)})` : null}
+            </span>
+          ))}
+        </p>
+      </>
+    ),
+
+    /* 20 · O avanço em três contas, e os compromissos do Kick-off. O único
+       acento é o compromisso que não foi feito. */
+    avanco: (slide) => (
+      <>
+        <Titulo slide={slide} />
+        <dl className="cascata mt-7 grid grid-cols-1 md:grid-cols-3">
+          {AVANCO.map((item) => (
+            <div key={item.id} className="bloco-raso md:-ml-px">
+              <dd className="odometro fonte-display numero text-6xl leading-none text-texto">
+                {item.numero}
+              </dd>
+              <dt className="mt-3 text-base text-texto">{item.rotulo}</dt>
+              <dd className="mt-1 text-base">{item.conta}</dd>
+            </div>
+          ))}
+        </dl>
+        <p className="rotulo mt-6">{ROTULO_DOS_COMPROMISSOS}</p>
+        <ul className="mt-2 grid grid-cols-1 md:grid-cols-3">
+          {COMPROMISSOS_NO_SR1.map((item) => (
+            <li key={item.ciclo} className="bloco-raso md:-ml-px">
+              <p className="text-base text-texto">{item.compromisso}</p>
+              <Etiqueta tom={tomDoCompromisso(item.estado)} className="mt-2 uppercase">
+                {item.estado}
+              </Etiqueta>
+              <p className="mt-2 text-base">
+                {item.dono}: {item.agora}
+              </p>
+            </li>
+          ))}
+        </ul>
+      </>
+    ),
+
+    /* 21 · O balanço do projeto e da equipe, cada ponto com o tratamento. */
+    balanco: (slide) => (
+      <>
+        <Titulo slide={slide} />
+        <div className="cascata mt-7 grid grid-cols-1 md:grid-cols-3">
+          <Coluna rotulo={BALANCO_SR1.fortes.rotulo} itens={BALANCO_SR1.fortes.itens} />
+          <Tratamentos rotulo={BALANCO_SR1.melhorias.rotulo} itens={BALANCO_SR1.melhorias.itens} />
+          <Tratamentos rotulo={BALANCO_SR1.riscos.rotulo} itens={BALANCO_SR1.riscos.itens} />
+        </div>
+      </>
+    ),
+
+    /* 22 · Fechamento: a conclusão do problema ao plano, o caminho até o SR2,
+       o endereço e as perguntas. */
+    fechamento: (slide) => (
+      <>
+        <h2 className="slide-titulo">
+          {slide.titulo}
+          <span aria-hidden className="text-acento pisca">
+            _
+          </span>
+        </h2>
+        <p className="slide-apoio">{slide.apoio}</p>
+        <ol className="cascata mt-6 grid grid-cols-1 md:grid-cols-3">
+          {CONCLUSAO_SR1.map((passo, indice) => (
+            <li key={passo.rotulo} className="bloco-raso md:-ml-px">
+              <p className="rotulo">
+                {indice > 0 ? <span aria-hidden>→ </span> : null}
+                {passo.rotulo}
+              </p>
+              <p className="mt-1 text-lg text-texto">{passo.texto}</p>
+            </li>
+          ))}
+        </ol>
+        <ol className="mt-5 grid grid-cols-2 sm:grid-cols-4 md:grid-cols-7">
           {PARADAS_ATE_O_SR2.map((parada) => {
             const ciclo = cicloPorId(parada.ciclo)
             return (
               <li
                 key={parada.ciclo}
-                className={cn('bloco-raso md:-ml-px', parada.destaque && 'border-acento md:z-10')}
+                className={cn('bloco-raso celula-sr1 -ml-px', parada.destaque && 'border-acento')}
               >
-                <p className="numero text-xl text-texto">{formatarBR(ciclo.data).slice(0, 5)}</p>
-                <p className="rotulo mt-1">{ciclo.rotulo.toLowerCase()}</p>
-                <p className="mt-2 text-sm">{parada.entrega}</p>
+                <p className="numero text-lg text-texto">{formatarBR(ciclo.data).slice(0, 5)}</p>
+                <p className="mt-1 text-base leading-snug">{parada.entrega}</p>
               </li>
             )
           })}
         </ol>
-      </>
-    ),
-
-    /* 16 · Fechamento. */
-    fechamento: (slide) => (
-      <>
-        <h2 className="hero">
-          {PRODUTO.nome.toLowerCase()}
-          <span aria-hidden className="text-acento pisca">
-            _
-          </span>
-        </h2>
-        <p className="slide-apoio text-texto">{slide.apoio}</p>
-        <a
-          href={URL_SITE}
-          className="numero mt-6 inline-block self-start text-xl text-texto underline decoration-linha-alta underline-offset-8 hover:decoration-acento sm:text-3xl"
-        >
-          {ENDERECO_SITE}
-        </a>
-        <p className="mt-8 text-sm">
-          {INSTITUICAO.escola} · {INSTITUICAO.curso} · {INSTITUICAO.periodo} ·{' '}
-          {INSTITUICAO.equipe} · {sr1.rotulo.toLowerCase()}
+        <p className="mt-6 flex flex-wrap items-baseline gap-x-8 gap-y-2">
+          <a
+            href={URL_SITE}
+            className="numero text-xl text-texto underline decoration-linha-alta underline-offset-8 hover:decoration-acento sm:text-2xl"
+          >
+            {ENDERECO_SITE}
+          </a>
+          <span className="fonte-display text-3xl text-texto">{PERGUNTA_FINAL}</span>
         </p>
-        <p className="fonte-display mt-10 text-2xl">perguntas?</p>
-        <HorizonteDoRecife className="horizonte" />
       </>
     ),
   }
@@ -497,7 +853,6 @@ export function SlidesSR1({ versao }: { versao: Versao }) {
   const classeDoQuadro: Partial<Record<SlideSR1Id, string>> = {
     capa: 'grao',
     demo: 'slide-demo',
-    fechamento: 'grao',
   }
 
   return (
@@ -508,8 +863,7 @@ export function SlidesSR1({ versao }: { versao: Versao }) {
           slide={slide}
           posicao={indice + 1}
           total={lista.length}
-          inicio={inicioNaVersao(indice, versao)}
-          versao={versao}
+          inicio={inicioDoSlide(indice)}
           className={classeDoQuadro[slide.id as SlideSR1Id]}
         >
           {corpo[slide.id as SlideSR1Id](slide)}
@@ -526,7 +880,6 @@ function Quadro({
   posicao,
   total,
   inicio,
-  versao,
   className,
   children,
 }: {
@@ -534,11 +887,10 @@ function Quadro({
   posicao: number
   total: number
   inicio: number
-  versao: Versao
   className?: string
   children: ReactNode
 }) {
-  const notas = notasNaVersao(slide, versao)
+  const parte = rotuloDaParte(slide.parte)
 
   return (
     <section
@@ -553,12 +905,12 @@ function Quadro({
         <summary>
           <span className="rotulo">notas</span>
           <span>
-            {nomeCurto(slide.quemFala).toLowerCase()} ·{' '}
-            {formatarTempo(segundosNaVersao(slide, versao))} · começa em {formatarTempo(inicio)}
+            {nomeCurto(slide.quemFala).toLowerCase()} · {formatarTempo(slide.segundos)} · começa em{' '}
+            {formatarTempo(inicio)}
           </span>
         </summary>
         <ol>
-          {notas.map((linha) => (
+          {slide.notas.map((linha) => (
             <li key={linha}>{linha}</li>
           ))}
         </ol>
@@ -580,26 +932,13 @@ function Quadro({
           <span aria-hidden className="text-acento">
             _
           </span>{' '}
-          · {PILULA_DA_CAPA_SR1}
+          · sr1{parte ? <> · {parte}</> : null}
         </span>
-        <span className="numero">
+        <span className="numero rodape-posicao">
           {posicao}/{total}
         </span>
       </footer>
     </section>
-  )
-}
-
-/** Uma rota do site, clicável no deck e legível no papel. */
-function Endereco({ rota }: { rota: string }) {
-  return (
-    <a
-      href={rota}
-      className="numero mt-4 self-start text-sm underline decoration-linha-alta underline-offset-4 hover:decoration-acento"
-    >
-      {ENDERECO_SITE}
-      {rota}
-    </a>
   )
 }
 
@@ -612,24 +951,85 @@ function Titulo({ slide }: { slide: SlideSR1 }) {
   )
 }
 
-function Contagem({
-  numero,
-  rotulo,
-  children,
-}: {
-  numero: number
-  rotulo: string
-  children?: ReactNode
-}) {
+/** Um bloco com rótulo e uma lista curta: causas, consequências, balanço. */
+function Coluna({ rotulo, itens }: { rotulo: string; itens: readonly string[] }) {
   return (
     <div className="bloco-raso md:-ml-px">
-      <dt className="rotulo">{rotulo}</dt>
-      <dd className="odometro fonte-display numero mt-1 text-6xl leading-none">{numero}</dd>
-      <dd aria-hidden className="risco-anima mt-3 h-px w-10 bg-linha-alta" />
-      {children ? <dd className="mt-2 text-sm">{children}</dd> : null}
+      <p className="rotulo">{rotulo}</p>
+      <ul className="mt-3 space-y-2">
+        {itens.map((item) => (
+          <li key={item} className="text-base text-texto">
+            {item}
+          </li>
+        ))}
+      </ul>
     </div>
   )
 }
 
-/* Tipo reexportado para a página, que não precisa conhecer o conteúdo. */
-export type { Versao }
+/** Um bloco de pontos, cada um com o que fazemos sobre ele. */
+function Tratamentos({
+  rotulo,
+  itens,
+}: {
+  rotulo: string
+  itens: readonly { ponto: string; trato: string }[]
+}) {
+  return (
+    <div className="bloco-raso md:-ml-px">
+      <p className="rotulo">{rotulo}</p>
+      <ul className="mt-3 space-y-3">
+        {itens.map((item) => (
+          <li key={item.ponto} className="text-base">
+            <span className="block text-texto">{item.ponto}</span>
+            <span className="block">→ {item.trato}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  )
+}
+
+/** Uma nota de 1 a 5 da matriz. No celular, o rótulo vai junto do número. */
+function Nota({ rotulo, valor }: { rotulo: string; valor: number }) {
+  return (
+    <span role="cell" className="numero text-base text-texto md:text-right">
+      <span className="rotulo mr-1 md:hidden">{rotulo}</span>
+      {valor}
+    </span>
+  )
+}
+
+/** Um número grande com o rótulo ao lado. */
+function Numero({ numero, rotulo }: { numero: number; rotulo: string }) {
+  return (
+    <div className="flex items-baseline gap-2">
+      <dd className="numero fonte-display text-4xl leading-none text-texto">{numero}</dd>
+      <dt className="text-base">{rotulo}</dt>
+    </div>
+  )
+}
+
+/** As datas de uma fase: um dia, "08 a 15/08" no mesmo mês, "17/10 a 14/11" entre dois. */
+/** "a, b e c": os itens de um mesmo dono, numa linha. */
+function listaNaTela(itens: readonly string[]): string {
+  return itens.length < 2 ? itens.join('') : `${itens.slice(0, -1).join(', ')} e ${itens.at(-1)}`
+}
+
+function datasDaFase(ciclos: readonly Parameters<typeof cicloPorId>[0][]): string {
+  const primeira = formatarBR(cicloPorId(ciclos[0]).data).slice(0, 5)
+  const ultima = formatarBR(cicloPorId(ciclos[ciclos.length - 1]).data).slice(0, 5)
+  if (primeira === ultima) return primeira
+  const mesmoMes = primeira.slice(3) === ultima.slice(3)
+  return mesmoMes ? `${primeira.slice(0, 2)} a ${ultima}` : `${primeira} a ${ultima}`
+}
+
+function tomDoObjetivo(estado: EstadoDoObjetivo): 'ok' | 'neutro' {
+  return estado === 'alcançado' ? 'ok' : 'neutro'
+}
+
+function tomDoCompromisso(estado: EstadoDoCompromisso): 'ok' | 'acento' | 'neutro' {
+  if (estado === 'feito') return 'ok'
+  if (estado === 'não feito') return 'acento'
+  return 'neutro'
+}

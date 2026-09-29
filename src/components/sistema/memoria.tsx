@@ -35,10 +35,19 @@ function porcentagem(valor: number | null): string {
   return valor === null ? ', ' : `${(valor * 100).toFixed(1)}%`
 }
 
+/**
+ * O número como a banca lê: vírgula decimal, sem mudar as casas. Só o modo
+ * enxuto usa; a tela do sistema continua com o número cru do motor.
+ */
+function numeroBR(valor: number): string {
+  return valor.toLocaleString('pt-BR', { maximumFractionDigits: 4 })
+}
+
 export function MemoriaDeCalculo({
   avaliacao,
   aberta = false,
   compacta = false,
+  enxuta = false,
 }: {
   avaliacao: Avaliacao
   /** Já aberta ao carregar. O pitch usa; a tela "meu resultado" deixa fechada. */
@@ -58,10 +67,20 @@ export function MemoriaDeCalculo({
    * lendo o que o motor calculou; não é imagem nem maquete.
    */
   compacta?: boolean
+  /**
+   * A compacta, para um PDF lido sem a fala (o SR1). Vírgula decimal, a
+   * regra só pela versão, e sem o que repete outra coluna ou precisa de
+   * explicação: a coluna Pontos (no método de notas ela é a própria Nota), a
+   * pontuação máxima, a soma dos pesos e a fórmula escrita por extenso. A
+   * conta final fica, com os números dela.
+   */
+  enxuta?: boolean
 }) {
   const { memoria } = avaliacao
   const porNotas = memoria.metodo === 'notas'
-  const corpo = compacta ? 'text-sm' : 'text-xs'
+  const corpo = enxuta ? 'text-base' : compacta ? 'text-sm' : 'text-xs'
+  const num = (valor: number) => (enxuta ? numeroBR(valor) : valor)
+  const semPontos = enxuta && porNotas
 
   return (
     <details
@@ -109,17 +128,19 @@ export function MemoriaDeCalculo({
         <div className={cn('flex flex-wrap items-center gap-x-4 gap-y-2', corpo, compacta ? '' : 'mt-4')}>
           <span>
             <span className="rotulo">Regra</span>{' '}
-            <Num>
-              {memoria.regraId} v{memoria.versaoRegra}
-            </Num>
+            <Num>{enxuta ? `v${memoria.versaoRegra}` : `${memoria.regraId} v${memoria.versaoRegra}`}</Num>
           </span>
-          <span>
-            <span className="rotulo">Pontuação máxima</span>{' '}
-            <Num>{memoria.pontuacaoMaxima}</Num>
-          </span>
-          <span>
-            <span className="rotulo">Soma dos pesos</span> <Num>{memoria.somaPesos}</Num>
-          </span>
+          {enxuta ? null : (
+            <>
+              <span>
+                <span className="rotulo">Pontuação máxima</span>{' '}
+                <Num>{memoria.pontuacaoMaxima}</Num>
+              </span>
+              <span>
+                <span className="rotulo">Soma dos pesos</span> <Num>{memoria.somaPesos}</Num>
+              </span>
+            </>
+          )}
         </div>
 
         <div className="mt-3 overflow-x-auto border border-linha">
@@ -133,6 +154,7 @@ export function MemoriaDeCalculo({
             <thead>
               <tr className="border-b border-linha bg-superficie">
                 {COLUNAS.filter((coluna) => !(compacta && coluna === 'Faixa'))
+                  .filter((coluna) => !(semPontos && coluna === 'Pontos'))
                   .map((coluna) => (coluna === 'Atingimento' && porNotas ? 'Nota' : coluna))
                   .map((coluna) => (
                   <th key={coluna} className="rotulo px-2 py-1.5 text-left whitespace-nowrap">
@@ -173,13 +195,17 @@ export function MemoriaDeCalculo({
                     {passo.valor === null ? (
                       <span className="text-alerta">sem lançamento</span>
                     ) : (
-                      passo.valor
+                      num(passo.valor)
                     )}
                   </td>
-                  <td className="px-2 py-1.5 whitespace-nowrap">{passo.meta}</td>
+                  <td className="px-2 py-1.5 whitespace-nowrap">{num(passo.meta)}</td>
                   <td className="px-2 py-1.5 whitespace-nowrap">
                     {porNotas ? (
-                      (passo.nota ?? <span className="text-alerta">sem nota</span>)
+                      passo.nota === null || passo.nota === undefined ? (
+                        <span className="text-alerta">sem nota</span>
+                      ) : (
+                        num(passo.nota)
+                      )
                     ) : (
                       porcentagem(passo.atingimento)
                     )}
@@ -195,18 +221,21 @@ export function MemoriaDeCalculo({
                   {compacta ? null : (
                     <td className="px-2 py-1.5 whitespace-nowrap text-apagado">{passo.faixa}</td>
                   )}
-                  <td className="px-2 py-1.5">{passo.pontos}</td>
-                  <td className="px-2 py-1.5">{passo.peso}</td>
-                  <td className="px-2 py-1.5 font-semibold">{passo.contribuicao}</td>
+                  {semPontos ? null : <td className="px-2 py-1.5">{num(passo.pontos)}</td>}
+                  <td className="px-2 py-1.5">{num(passo.peso)}</td>
+                  <td className="px-2 py-1.5 font-semibold">{num(passo.contribuicao)}</td>
                 </tr>
               ))}
             </tbody>
             <tfoot>
               <tr className="border-t-2 border-linha-alta bg-superficie">
-                <td colSpan={compacta ? 6 : 7} className="rotulo px-2 py-1.5 text-right">
+                <td
+                  colSpan={(compacta ? 6 : 7) - (semPontos ? 1 : 0)}
+                  className="rotulo px-2 py-1.5 text-right"
+                >
                   Soma das contribuições
                 </td>
-                <td className="px-2 py-1.5 font-semibold">{memoria.somaContribuicoes}</td>
+                <td className="px-2 py-1.5 font-semibold">{num(memoria.somaContribuicoes)}</td>
               </tr>
             </tfoot>
           </table>
@@ -214,10 +243,10 @@ export function MemoriaDeCalculo({
 
         <div className="mt-3 border-l-2 border-acento bg-superficie px-3 py-2">
           <p className="rotulo">A conta final</p>
-          <p className={cn('numero mt-1', corpo)}>{memoria.formula}</p>
-          <p className={cn('numero mt-1.5', compacta ? 'text-lg' : 'text-sm')}>
-            ({memoria.somaContribuicoes}) ÷ ({memoria.somaPesos} × {memoria.pontuacaoMaxima}) ×
-            100 = <strong>{memoria.score}</strong>
+          {enxuta ? null : <p className={cn('numero mt-1', corpo)}>{memoria.formula}</p>}
+          <p className={cn('numero mt-1.5', enxuta ? 'text-xl' : compacta ? 'text-lg' : 'text-sm')}>
+            ({num(memoria.somaContribuicoes)}) ÷ ({num(memoria.somaPesos)} ×{' '}
+            {num(memoria.pontuacaoMaxima)}) × 100 = <strong>{num(memoria.score)}</strong>
           </p>
         </div>
 
@@ -254,17 +283,35 @@ function descreverSubPasso(sub: PassoSubindicador): string {
  */
 export function CartaoScore({
   avaliacao,
+  percentualAConfirmar,
+  enxuto = false,
 }: {
   avaliacao: Pick<Avaliacao, 'score' | 'faixa' | 'avisos'>
+  /**
+   * No lugar do "recebe X% da gratificação", uma frase que diz que o
+   * percentual ainda não tem fonte. O percentual de cada classe é suposição
+   * nossa (está no Decreto 36.482/2023, que não temos), e o slide do SR1 vai
+   * para o PDF, que é lido sem a fala: lá ele não pode parecer norma.
+   */
+  percentualAConfirmar?: string
+  /** Vírgula decimal e "de 0 a 100", como no resto do deck do SR1. */
+  enxuto?: boolean
 }) {
   return (
     <div className="flex flex-wrap items-end justify-between gap-4 rounded-xl border border-linha bg-superficie p-5">
       <div>
         <p className="rotulo">Nota do mês</p>
         <p className="numero mt-1 text-5xl font-semibold leading-none">
-          {avaliacao.score.toFixed(2)}
+          {enxuto
+            ? avaliacao.score.toLocaleString('pt-BR', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              })
+            : avaliacao.score.toFixed(2)}
         </p>
-        <p className="mt-1 text-xs text-apagado">o score, de 0 a 100</p>
+        <p className={cn('mt-1 text-apagado', enxuto ? 'text-sm' : 'text-xs')}>
+          {enxuto ? 'de 0 a 100' : 'o score, de 0 a 100'}
+        </p>
       </div>
 
       <div className="text-right">
@@ -272,7 +319,7 @@ export function CartaoScore({
         <p className="fonte-display mt-1 text-xl">{avaliacao.faixa?.rotulo ?? 'sem faixa'}</p>
         {avaliacao.faixa ? (
           <p className="numero mt-0.5 text-sm text-apagado">
-            recebe {avaliacao.faixa.percentual}% da gratificação
+            {percentualAConfirmar ?? `recebe ${avaliacao.faixa.percentual}% da gratificação`}
           </p>
         ) : null}
       </div>

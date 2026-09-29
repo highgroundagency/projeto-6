@@ -1,10 +1,9 @@
 import { expect, test, type Page } from '@playwright/test'
-import { SLIDES_SR1, SLIDES_SR1_CURTA } from '@/content/apresentacao-sr1'
+import { SLIDES_SR1 } from '@/content/apresentacao-sr1'
 import { CICLOS_PUBLICOS } from './cronograma'
 
-/** Quantos slides cada versão tem HOJE. Sai do conteúdo, nunca de um número à mão. */
+/** Quantos slides o deck tem HOJE. Sai do conteúdo, nunca de um número à mão. */
 const TOTAL = SLIDES_SR1.length
-const TOTAL_CURTA = SLIDES_SR1_CURTA.length
 
 /** O deck é conteúdo do SR1: o visitante o vê quando o release libera `sr1`. */
 const SR1_PUBLICO = CICLOS_PUBLICOS.includes('sr1')
@@ -75,22 +74,16 @@ test.describe('o deck do SR1', () => {
     await expect(caixa).toContainText('Soma das contribuições')
   })
 
-  test('a versão de cinco minutos é o mesmo deck, com menos slides e a fala cortada', async ({
-    page,
-  }) => {
+  test('o rodapé diz a parte da rubrica e a posição atual/total', async ({ page }) => {
     await entrarNoPainel(page)
-    await page.goto('/sr1?versao=curta')
-    expect(await page.locator('[data-slide]').count()).toBe(TOTAL_CURTA)
-    await expect(page.locator(`[data-slide="${TOTAL_CURTA}"] .slide-rodape`)).toContainText(
-      `${TOTAL_CURTA}/${TOTAL_CURTA}`,
-    )
-    // O link do topo troca de uma versão para a outra.
-    await expect(page.getByRole('link', { name: 'versão completa' })).toHaveAttribute('href', '/sr1')
     await page.goto('/sr1')
-    await expect(page.getByRole('link', { name: 'versão de 5 min' })).toHaveAttribute(
-      'href',
-      '/sr1?versao=curta',
+    await expect(page.locator(`[data-slide="${TOTAL}"] .slide-rodape`)).toContainText(
+      `${TOTAL}/${TOTAL}`,
     )
+    // O slide 3 abre a imersão, o critério 1 da rubrica.
+    await expect(page.locator('[data-slide="3"] .slide-rodape')).toContainText('1 · imersão')
+    // A versão de cinco minutos saiu (ADR-047): não há mais link para ela.
+    await expect(page.getByRole('link', { name: 'versão de 5 min' })).toHaveCount(0)
   })
 
   for (const tamanho of [

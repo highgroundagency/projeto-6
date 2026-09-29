@@ -70,16 +70,16 @@ npm run verificar
 Roda, nesta ordem: `tsc --noEmit` → Vitest → `next build` → verificação de vazamento →
 conferência do dossiê. O end-to-end fica em `npm run e2e`.
 
-O que está coberto, contado em 25/09:
+O que está coberto, contado em 28/09:
 
-- **671 testes de unidade** — aritmética de data no fuso do projeto, motor de releases,
+- **677 testes de unidade** — aritmética de data no fuso do projeto, motor de releases,
   config store, sessão do admin, completude do registro, motor de cálculo (55 casos), base
   sintética, a fronteira de `ml/data/` e os números ditos nos decks, conferidos contra os
   documentos de onde vêm.
 - **23 verificações que exigem um PostgreSQL real** — 21 das políticas de RLS por perfil e
   dos invariantes de gatilho, aplicando as migrações reais num banco descartável
   (`npm run testar-rls`), e 2 da semeadura. Puladas automaticamente sem `DATABASE_URL_TESTE`.
-- **179 verificações de vazamento** — nenhum conteúdo de release futuro no HTML, no payload
+- **184 verificações de vazamento** — nenhum conteúdo de release futuro no HTML, no payload
   RSC ou no bundle do cliente; rota não liberada responde 404, inclusive `/pitch` e `/sr1`.
 - **152 testes end-to-end** — jornadas críticas em desktop e em 360px, os decks incluídos.
 - **Tipagem como portão** — um ciclo publicado sem responsáveis, com lista vazia ou com

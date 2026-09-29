@@ -116,13 +116,22 @@ export function CronogramaPublico({
                 <td className="px-2 py-2">
                   {ciclo.evidencias.length > 0 ? ciclo.evidencias.join(' · ') : 'entregas da semana anterior'}
                 </td>
+                {/* O imprensado não entrega nada: ele empurra a entrega para a
+                    semana seguinte. Sem este caso, a linha aparecia como "a
+                    fazer" e "a definir", uma pendência que não existe. */}
                 <td className="px-2 py-2">
-                  <Pastilha status={status} />
+                  {ciclo.tipo === 'pausa' ? (
+                    <span className="text-apagado">pausa</span>
+                  ) : (
+                    <Pastilha status={status} />
+                  )}
                 </td>
                 <td className="px-2 py-2">
-                  {donos.length > 0
-                    ? donos.map((id) => nomeCurto(id)).join(', ')
-                    : <span className="text-apagado">a definir</span>}
+                  {ciclo.tipo === 'pausa' ? null : donos.length > 0 ? (
+                    donos.map((id) => nomeCurto(id)).join(', ')
+                  ) : (
+                    <span className="text-apagado">a definir</span>
+                  )}
                 </td>
               </tr>
             )

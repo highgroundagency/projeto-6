@@ -344,7 +344,8 @@ export const documentos = [
           <Nota>
             Toda linha da primeira coluna tem uma origem que dá para conferir. É isso que separa
             uma matriz CSD de uma lista de opiniões: certeza sem fonte é chute com voz firme. As
-            suposições também estão declaradas dentro do código, onde elas agem.
+            suposições também estão declaradas dentro do código, onde elas agem. A versão de
+            25/09, depois da planilha da Secretaria, está na síntese da pesquisa do SR1.
           </Nota>
         </div>
       </>

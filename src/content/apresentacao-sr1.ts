@@ -1,16 +1,30 @@
 import dados from '@/content/ml/apresentacao.json'
 import resultados from '@/content/ml/resultados.json'
-import { CITACAO_DA_SECRETARIA, decimal, DIVISOR_DAS_SEIS, enxuto } from '@/content/apresentacao-ml'
-import type { IntegranteId } from '@/content/equipe'
+import { CITACAO_DA_SECRETARIA, decimal, enxuto } from '@/content/apresentacao-ml'
+import {
+  ALTERNATIVAS,
+  BENCHMARKING,
+  CSD_EM_25_09,
+  MAPA_DE_EMPATIA,
+  SWOT,
+  TECNICAS_DE_IDEACAO,
+} from '@/content/analises'
+import { CHECKLIST } from '@/content/checklist'
+import { BACKLOG, type Moscow } from '@/content/ciclos/s6'
+import { EQUIPE, nomeCurto, type IntegranteId } from '@/content/equipe'
 import {
   COMPROMISSOS_ATE_O_SR1,
   CONTAGENS_PITCH,
-  ETAPAS_DO_MES,
+  LEGENDAS_DO_WIREFRAME,
+  PESSOAS,
   formatarTempo,
 } from '@/content/pitch'
+import { SECOES } from '@/components/base/indice'
+import { ENDERECO_SITE, OBJETIVOS_ESPECIFICOS, OBJETIVO_GERAL_CURTO } from '@/content/produto'
 import { calcularAvaliacao } from '@/lib/calculo/motor'
 import type { Avaliacao } from '@/lib/calculo/tipos'
-import { cicloPorId, indiceDoCiclo, type CicloId } from '@/lib/cronograma'
+import { CRONOGRAMA, cicloPorId, indiceDoCiclo, type CicloId } from '@/lib/cronograma'
+import { formatarBR, formatarExtenso } from '@/lib/datas'
 import { FEATURES, PERFIS, type PerfilId } from '@/lib/features'
 import { BASE } from '@/lib/seed'
 // Só o tipo: `lib/ml.ts` é server-only, e este arquivo também roda nos scripts.
@@ -25,27 +39,28 @@ import type { ResultadosML } from '@/lib/ml'
  * cabe no tempo e que nenhum número dito no palco diverge da fonte. O
  * componente escolhe a forma do visual; as palavras vêm daqui.
  *
- * O KICK-OFF PROMETEU, O SR1 PRESTA CONTA. O deck do Kick-off apresentou o
- * problema e a ideia. Este mostra o que mudou desde então: a planilha do
- * cliente, a regra corrigida, o sistema rodando, e o que foi e o que não foi
- * cumprido. Ele NÃO repete quem sofre, SWOT, ideação e wireframes: já foram
- * avaliados e continuam no site.
+ * NA ORDEM DA RUBRICA (ADR-047). As orientações oficiais do SR1 chegaram em
+ * 28/09 com seis critérios de conteúdo, cada um com a lista do que mostrar.
+ * O deck anterior tinha sido montado antes delas e deixava de fora, de
+ * propósito, personas, SWOT, ideação e wireframes, porque o Kick-off já tinha
+ * mostrado. A rubrica cobra tudo isso de novo, atualizado. Agora cada slide
+ * pertence a uma parte (`parte`), o rodapé diz qual, e o slide 2 é o mapa:
+ * quem avalia confere a rubrica sem procurar.
+ *
+ * AUTOCONTIDO. O PDF vai para o Drive e é lido sem a fala. Por isso o teto de
+ * palavras subiu de 70 para 90: a tela precisa dizer o bastante para ser
+ * entendida sozinha, e continua não sendo teleprompter.
  *
  * NENHUM NÚMERO DIGITADO. A nota de maio e de junho sai do motor de cálculo na
- * hora de montar o slide; a planilha, de `ml/apresentacao.json`; os modelos,
- * de `ml/resultados.json`; as contagens de segurança, de `CONTAGENS_PITCH`,
- * que o teste do Kick-off confere contra `docs/seguranca.md`. Se a fonte
- * mudar, a tela e a fala mudam junto.
+ * hora de montar o slide; a planilha e a base, de `ml/apresentacao.json`; os
+ * modelos, de `ml/resultados.json`; o planejado x realizado, do cronograma e
+ * do checklist; o avanço do backlog, de `BACKLOG`. Se a fonte mudar, a tela e
+ * a fala mudam junto.
  *
- * DUAS VERSÕES, UM DECK. O tempo do SR1 não foi confirmado: a diretriz do
- * Kick-off dizia cinco minutos e o professor liberou dez. A versão completa
- * fecha em 9:00; a curta, em 4:55, abre com `/sr1?versao=curta` e usa só os
- * slides com `curto`, dizendo só as primeiras `curto.notas` linhas da fala.
- * Os sete falam nas duas.
- *
- * Nomes aparecem aqui só como QUEM FALA. Nenhuma pessoa real aparece nos
- * dados: o sistema roda com dados de teste, e a base da Secretaria é por
- * unidade de saúde, sem nome, CPF ou matrícula (ADR-044).
+ * Nomes aparecem aqui só como QUEM FALA e como responsável por entrega.
+ * Nenhuma pessoa real aparece nos dados: o sistema roda com dados de teste, e
+ * a base da Secretaria é por unidade de saúde, sem nome, CPF ou matrícula
+ * (ADR-044).
  */
 
 /* -------------------------------------------------------------------------
@@ -73,31 +88,16 @@ function avaliar(cicloId: string, regraId: string): Avaliacao {
 }
 
 /**
- * Slide 6: a mesma unidade em três contas.
+ * A mesma unidade em três contas: é a prova do diferencial "regra com versão".
  *
  * Maio fechou pela versão 2 e continua com o número que publicou. Maio pela
  * versão 3 é a conta que NÃO foi feita, calculada aqui só para mostrar o
  * tamanho da mudança. Junho já usa a versão 3.
  */
 export const TRES_CONTAS = [
-  {
-    id: 'maio-v2',
-    rotulo: 'maio, pela regra de maio',
-    versao: 'versão 2',
-    avaliacao: avaliar('ciclo-2026-05', 'regra-v2'),
-  },
-  {
-    id: 'maio-v3',
-    rotulo: 'maio, se fosse pela regra nova',
-    versao: 'versão 3',
-    avaliacao: avaliar('ciclo-2026-05', 'regra-v3'),
-  },
-  {
-    id: 'junho-v3',
-    rotulo: 'junho, pela regra nova',
-    versao: 'versão 3',
-    avaliacao: avaliar('ciclo-2026-06', 'regra-v3'),
-  },
+  { id: 'maio-v2', avaliacao: avaliar('ciclo-2026-05', 'regra-v2') },
+  { id: 'maio-v3', avaliacao: avaliar('ciclo-2026-05', 'regra-v3') },
+  { id: 'junho-v3', avaliacao: avaliar('ciclo-2026-06', 'regra-v3') },
 ] as const
 
 const [MAIO_V2, MAIO_V3, JUNHO_V3] = TRES_CONTAS.map((c) => c.avaliacao)
@@ -117,7 +117,7 @@ export function classe(avaliacao: Avaliacao): string {
   return (avaliacao.faixa?.rotulo ?? 'sem classe').toLowerCase()
 }
 
-/** Slide 7: a demonstração de reserva, com a conta de junho pela versão 3. */
+/** A demonstração de reserva, com a conta de junho pela versão 3. */
 export const DEMO_SR1 = { cicloId: 'ciclo-2026-06', avaliacao: JUNHO_V3 } as const
 
 /** Telas que estão no ar no dia do SR1: as que o ciclo de cada uma já abriu. */
@@ -129,15 +129,13 @@ export const TELAS_NO_SR1 = FEATURES.filter(
 export const TESTES_DO_MOTOR = 55
 
 const CLASSIFICACAO = ML.modelos.find((m) => m.modelo === 'classificacao')
-const REGRESSAO = ML.modelos.find((m) => m.modelo === 'regressao')
 const AGRUPAMENTO = ML.modelos.find((m) => m.modelo === 'clustering')
-if (!CLASSIFICACAO || !REGRESSAO || !AGRUPAMENTO) {
-  throw new Error('resultados.json sem os três modelos')
+if (!CLASSIFICACAO || !AGRUPAMENTO) {
+  throw new Error('resultados.json sem os modelos de classificação e agrupamento')
 }
 
 const ACERTO = CLASSIFICACAO.metricas.acuracia as number
 const ACERTO_DO_CHUTE = (CLASSIFICACAO.referencia as { acuracia: number }).acuracia
-const R2 = REGRESSAO.metricas.r2 as number
 const GRUPOS = AGRUPAMENTO.metricas.k as number
 const SILHUETA = AGRUPAMENTO.metricas.silhueta as number
 
@@ -146,22 +144,292 @@ function porcentoInteiro(fracao: number): string {
   return `${Math.round(fracao * 100)}%`
 }
 
-const DIVISOR = enxuto(DIVISOR_DAS_SEIS, 1)
+/** Quantos distritos a base da Secretaria tem, lido da própria base. */
+export const DISTRITOS_NA_BASE =
+  B.categoricas.find((c) => c.coluna === 'Distrito Sanitário')?.valores ?? 0
+
+/* -------------------------------------------------------------------------
+   O planejado x realizado, contado no cronograma e no checklist
+------------------------------------------------------------------------- */
+
+function entregue(ciclo: CicloId, evidencia: string): boolean {
+  const item = CHECKLIST.find((i) => i.ciclo === ciclo && i.evidencia === evidencia)
+  return item?.status === 'feito' || item?.status === 'validado'
+}
+
+/** Os ciclos com entrega, sem os imprensados, que não pedem nada. */
+const CICLOS_COM_ENTREGA = CRONOGRAMA.filter((c) => c.tipo !== 'pausa')
+
+/** Os ciclos até o SR1, inclusive: o que já devia estar feito no dia. */
+const CICLOS_ATE_O_SR1 = CICLOS_COM_ENTREGA.filter(
+  (c) => indiceDoCiclo(c.id) <= indiceDoCiclo('sr1'),
+)
+
+export interface LinhaDoPlanejado {
+  readonly ciclo: CicloId
+  readonly planejadas: number
+  readonly entregues: number
+  /** As evidências que ainda não estão feitas, com o nome do cronograma. */
+  readonly emAndamento: readonly string[]
+  /** Quem responde pelas evidências do ciclo, na ordem da equipe. */
+  readonly responsaveis: readonly IntegranteId[]
+}
+
+export const PLANEJADO_X_REALIZADO: readonly LinhaDoPlanejado[] = CICLOS_ATE_O_SR1.map((c) => {
+  const itens = CHECKLIST.filter((i) => i.ciclo === c.id)
+  const donos = new Set(itens.flatMap((i) => (i.responsavel ? [i.responsavel] : [])))
+  return {
+    ciclo: c.id,
+    planejadas: c.evidencias.length,
+    entregues: c.evidencias.filter((e) => entregue(c.id, e)).length,
+    emAndamento: c.evidencias.filter((e) => !entregue(c.id, e)),
+    responsaveis: EQUIPE.map((i) => i.id).filter((id) => donos.has(id)),
+  }
+})
+
+/**
+ * O que ainda falta até o SR1, agrupado por quem responde, com o nome curto
+ * que o SR1 usa. O rótulo do cronograma ("Brainwriting, Brainstorming e
+ * Crazy 8's registrados"), solto na tela, sugere que a sessão não aconteceu;
+ * o que falta é o registro dela.
+ */
+const NOME_SR1_DA_EVIDENCIA: Record<string, { tela: string; fala: string }> = {
+  "Brainwriting, Brainstorming e Crazy 8's registrados": {
+    tela: 'registro da ideação',
+    fala: 'o registro da sessão de ideação',
+  },
+  'Pacote SR1': { tela: 'pacote do sr1', fala: 'o pacote deste SR1' },
+  'Escopo maduro': { tela: 'escopo maduro', fala: 'o escopo maduro' },
+  'Plano de correção de rota': {
+    tela: 'plano de correção de rota',
+    fala: 'o plano de correção de rota',
+  },
+}
+
+function donoDa(ciclo: CicloId, evidencia: string): IntegranteId | null {
+  return CHECKLIST.find((i) => i.ciclo === ciclo && i.evidencia === evidencia)?.responsavel ?? null
+}
+
+/** "a, b e c": a lista dita em português. */
+function listaFalada(itens: readonly string[]): string {
+  return itens.length < 2 ? itens.join('') : `${itens.slice(0, -1).join(', ')} e ${itens.at(-1)}`
+}
+
+interface GrupoEmAndamento {
+  readonly dono: IntegranteId | null
+  /** Sem artigo, para caber na linha. */
+  readonly itens: readonly string[]
+  readonly falados: readonly string[]
+}
+
+export const EM_ANDAMENTO_SR1: readonly GrupoEmAndamento[] = (() => {
+  const grupos = new Map<IntegranteId | null, { itens: string[]; falados: string[] }>()
+  for (const linha of PLANEJADO_X_REALIZADO) {
+    for (const evidencia of linha.emAndamento) {
+      const dono = donoDa(linha.ciclo, evidencia)
+      const nome = NOME_SR1_DA_EVIDENCIA[evidencia] ?? {
+        tela: evidencia.toLowerCase(),
+        fala: evidencia.toLowerCase(),
+      }
+      const grupo = grupos.get(dono) ?? { itens: [], falados: [] }
+      grupo.itens.push(nome.tela)
+      grupo.falados.push(nome.fala)
+      grupos.set(dono, grupo)
+    }
+  }
+  return [...grupos].map(([dono, g]) => ({ dono, ...g }))
+})()
+
+/** A mesma lista, na fala: "o registro da sessão de ideação, com o João Pedro". */
+const EM_ANDAMENTO_FALADO = listaFalada(
+  EM_ANDAMENTO_SR1.map(({ dono, falados }) =>
+    dono ? `${listaFalada(falados)}, com o ${nomeCurto(dono)}` : listaFalada(falados),
+  ),
+)
+
+const PLANEJADAS_ATE_O_SR1 = PLANEJADO_X_REALIZADO.reduce((s, l) => s + l.planejadas, 0)
+const ENTREGUES_ATE_O_SR1 = PLANEJADO_X_REALIZADO.reduce((s, l) => s + l.entregues, 0)
+const PLANEJADAS_NO_SEMESTRE = CICLOS_COM_ENTREGA.reduce((s, c) => s + c.evidencias.length, 0)
+const ENTREGUES_NO_SEMESTRE = CICLOS_COM_ENTREGA.reduce(
+  (s, c) => s + c.evidencias.filter((e) => entregue(c.id, e)).length,
+  0,
+)
+
+/** Em que semana do semestre o SR1 cai, contando os imprensados: o tempo corre neles também. */
+export const SEMANA_DO_SR1 = indiceDoCiclo('sr1') + 1
+export const SEMANAS_NO_SEMESTRE = CRONOGRAMA.length
+
+const HISTORIAS_NO_AR = BACKLOG.filter((h) => h.estado === 'no_ar').length
+
+function historias(moscow: Moscow, estado?: 'no_ar'): number {
+  return BACKLOG.filter((h) => h.moscow === moscow && (!estado || h.estado === estado)).length
+}
+
+/** 0,907 vira 91%. */
+function porcento(parte: number, todo: number): string {
+  return `${Math.round((parte / todo) * 100)}%`
+}
+
+/**
+ * O percentual de avanço, contado de três jeitos, e cada um diz o seu.
+ *
+ * A rubrica pede "percentual de avanço do projeto", e um número só esconde
+ * a conta. O primeiro compara com o que devia estar pronto hoje; o segundo,
+ * com o semestre inteiro, e é o que se compara com o tempo que passou; o
+ * terceiro olha o produto, e não a disciplina.
+ */
+export const AVANCO = [
+  {
+    id: 'ate-hoje',
+    numero: porcento(ENTREGUES_ATE_O_SR1, PLANEJADAS_ATE_O_SR1),
+    rotulo: 'do que o cronograma pedia até hoje',
+    conta: `${ENTREGUES_ATE_O_SR1} de ${PLANEJADAS_ATE_O_SR1} entregas`,
+  },
+  {
+    id: 'semestre',
+    numero: porcento(ENTREGUES_NO_SEMESTRE, PLANEJADAS_NO_SEMESTRE),
+    rotulo: 'das entregas do semestre',
+    conta: `${ENTREGUES_NO_SEMESTRE} de ${PLANEJADAS_NO_SEMESTRE}, na metade do calendário`,
+  },
+  {
+    id: 'historias',
+    numero: porcento(HISTORIAS_NO_AR, BACKLOG.length),
+    rotulo: 'das histórias do backlog no ar',
+    conta: `${HISTORIAS_NO_AR} de ${BACKLOG.length} histórias`,
+  },
+] as const
+
+/** Número por extenso, como se diz no palco: "cinco fontes", "oito alternativas". */
+/** "24 de outubro": a data do ciclo, dita sem o ano, lida do cronograma. */
+function dataFalada(id: CicloId): string {
+  return formatarExtenso(cicloPorId(id).data).replace(/ de \d{4}$/, '')
+}
+
+export function porExtenso(n: number): string {
+  const nomes = [
+    'zero', 'um', 'dois', 'três', 'quatro', 'cinco', 'seis', 'sete', 'oito', 'nove', 'dez',
+    'onze', 'doze', 'treze', 'catorze', 'quinze', 'dezesseis', 'dezessete', 'dezoito',
+    'dezenove', 'vinte',
+  ]
+  return nomes[n] ?? String(n)
+}
+
+/* -------------------------------------------------------------------------
+   Os dados que a fala também cita
+
+   Moram antes dos slides porque a fala é montada com eles: "cinco fontes",
+   "dois objetivos alcançados". Um número dito no palco sai daqui, nunca de
+   uma frase escrita à mão.
+------------------------------------------------------------------------- */
+
+/** Slide 4: as fontes, na ordem em que chegaram. */
+export const FONTES_SR1 = [
+  { quando: 'semana 1', fonte: 'o case da cesar com a sesau' },
+  { quando: '22/08', fonte: 'reunião com a secretaria' },
+  { quando: '05/09', fonte: 'a portaria 001/2024' },
+  { quando: '22/09', fonte: 'a planilha que a secretaria usa' },
+  { quando: '23/09', fonte: 'a base de desempenho por unidade' },
+] as const
+
+export const APRENDIZADOS_SR1 = {
+  itens: [
+    { antes: 'indicador preenchido direto', depois: 'cada item medido' },
+    { antes: 'média dos valores', depois: 'média das notas' },
+    { antes: 'faltou número, zera', depois: 'sai da conta com o peso' },
+    { antes: 'nota de 0 a 10', depois: 'nota de 0 a 1' },
+  ],
+} as const
+
+/** Slide 7: o estado de cada objetivo específico, hoje. */
+/**
+ * O estado de cada objetivo. "no prazo" é o objetivo cuja data ainda não
+ * chegou: não é atraso, e também não é promessa cumprida.
+ */
+export type EstadoDoObjetivo = 'alcançado' | 'em parte' | 'no prazo'
+
+export const ESTADO_DOS_OBJETIVOS: Record<
+  (typeof OBJETIVOS_ESPECIFICOS)[number]['resumo'],
+  EstadoDoObjetivo
+> = {
+  'a regra como dado': 'em parte',
+  'a conta sempre aberta': 'em parte',
+  'nada muda sem registro': 'no prazo',
+  'cada um vê o que é seu': 'alcançado',
+  'conferido com o cliente': 'no prazo',
+}
+
+export const OBJETIVOS_NO_SR1 = OBJETIVOS_ESPECIFICOS.map((o) => ({
+  resumo: o.resumo,
+  quando: o.quando.toLowerCase(),
+  estado: ESTADO_DOS_OBJETIVOS[o.resumo],
+}))
+
+/** Slide 18: cada compromisso do Kick-off com o estado de hoje. */
+export type EstadoDoCompromisso = 'feito' | 'em parte' | 'não feito'
+
+/** "24/10": a data do ciclo na tela, lida do cronograma. */
+function dataCurta(id: CicloId): string {
+  return formatarBR(cicloPorId(id).data).slice(0, 5)
+}
+
+/**
+ * `agora` é o cronograma atualizado de cada compromisso, na tela: o que ficou
+ * e para quando foi. A data nova sai do cronograma, nunca daqui.
+ */
+export const ESTADO_DOS_COMPROMISSOS: Record<
+  (typeof COMPROMISSOS_ATE_O_SR1)[number]['ciclo'],
+  { estado: EstadoDoCompromisso; porque: string; agora: string }
+> = {
+  s5: {
+    estado: 'em parte',
+    porque: 'o jeito de calcular entrou; os indicadores ainda são de teste',
+    agora: `os 5 da portaria em ${dataCurta('s8')}`,
+  },
+  s6: {
+    estado: 'feito',
+    porque: `as ${TELAS_NO_SR1.length} telas estão no ar`,
+    agora: `as ${TELAS_NO_SR1.length} telas no ar`,
+  },
+  sr1: {
+    estado: 'não feito',
+    porque: 'a conferência com a secretaria ficou para a semana 11',
+    agora: `passou para ${dataCurta('s11')}`,
+  },
+}
+
+export const COMPROMISSOS_NO_SR1 = COMPROMISSOS_ATE_O_SR1.map((c) => ({
+  ...c,
+  ...ESTADO_DOS_COMPROMISSOS[c.ciclo],
+  dono: nomeCurto(c.quem),
+}))
+
+/* -------------------------------------------------------------------------
+   As partes da rubrica
+------------------------------------------------------------------------- */
+
+/** Os seis critérios de conteúdo da rubrica do SR1, na ordem e com o número dela. */
+export const PARTES_SR1 = [
+  { id: 'imersao', criterio: 1, nome: 'imersão no problema' },
+  { id: 'ideacao', criterio: 2, nome: 'ideação' },
+  { id: 'solucao', criterio: 3, nome: 'proposta de solução' },
+  { id: 'processo', criterio: 4, nome: 'metodologia e processo' },
+  { id: 'planejado', criterio: 5, nome: 'planejado x realizado' },
+  { id: 'balanco', criterio: 6, nome: 'pontos fortes e melhorias' },
+] as const
+
+export type ParteDaRubrica = (typeof PARTES_SR1)[number]['id']
+/** A capa e o roteiro abrem; o fechamento encerra. Nenhum dos dois é critério. */
+export type ParteId = ParteDaRubrica | 'abertura' | 'encerramento'
 
 /* -------------------------------------------------------------------------
    O contrato do slide
 ------------------------------------------------------------------------- */
 
-export interface VersaoCurta {
-  /** Quanto o slide dura na versão de cinco minutos. */
-  readonly segundos: number
-  /** Quantas linhas da fala entram: sempre as primeiras. */
-  readonly notas: number
-}
-
 export interface SlideSR1 {
   readonly id: string
   readonly numero: number
+  /** A parte da rubrica a que o slide responde. O rodapé mostra. */
+  readonly parte: ParteId
   /** Em minúsculas: a identidade baixa tudo. */
   readonly titulo: string
   /** A frase que acompanha o título. Uma só. */
@@ -174,335 +442,478 @@ export interface SlideSR1 {
   readonly notas: readonly string[]
   /** O que RESPONDER se perguntarem. Fora do tempo; aparece junto das notas. */
   readonly perguntas?: readonly string[]
-  /** Presença na versão de cinco minutos. Ausente: o slide sai dela. */
-  readonly curto?: VersaoCurta
 }
 
 /**
- * 9:00, dentro dos dez minutos que o professor liberou no Kick-off.
+ * 11:50 de fala, para uma banca que interrompe em 15:00.
  *
- * Ninguém confirmou ainda o tempo do SR1. Se forem cinco minutos, a versão
- * curta fecha em 4:55, com os sete falando entre 30 segundos e pouco mais de
- * um minuto cada. A margem é de propósito nas duas: ensaio que fecha no
- * limite estoura no dia.
+ * A margem é de propósito: troca de quem fala, a demonstração ao vivo e o
+ * nervoso do dia comem tempo que a conta de palavras não vê. Ensaio que fecha
+ * no limite estoura no dia.
  */
-export const DURACAO_SR1_SEGUNDOS = 540
-export const DURACAO_SR1_CURTA_SEGUNDOS = 295
+export const DURACAO_SR1_SEGUNDOS = 710
+
+/** O limite da banca, das orientações oficiais do SR1. */
+export const LIMITE_SR1_SEGUNDOS = 15 * 60
 
 /** Palavras por segundo de uma fala calma, a mesma conta da AV1 de ML. */
 export const PALAVRAS_POR_SEGUNDO = 2.6
 
-/** O teto de palavras na tela por slide, o mesmo do Kick-off. */
-export const TETO_DE_PALAVRAS_SR1 = 70
+/** O teto de palavras na tela por slide: autocontido, sem virar teleprompter. */
+export const TETO_DE_PALAVRAS_SR1 = 90
 
-/** O PDF de reserva, gerado por `npm run pitch-pdf -- sr1` a partir da rota. */
+/** O PDF, gerado por `npm run pitch-pdf -- sr1` a partir da rota. */
 export const ARQUIVO_PDF_SR1 = '/sr1/pdf'
 
-/** A rota da versão curta. */
-export const ROTA_CURTA_SR1 = '/sr1?versao=curta'
-
 export const SLIDES_SR1 = [
+  /* ---------------------------------------------------------------- abertura */
   {
     id: 'capa',
     numero: 1,
+    parte: 'abertura',
     titulo: 'prumo',
-    apoio: 'o cálculo da gratificação, aberto para qualquer um conferir',
-    visual: 'Wordmark, a pílula do SR1 e os nomes da equipe inteira.',
+    apoio: 'o cálculo da gratificação da saúde do recife, aberto para qualquer um conferir',
+    visual: 'Wordmark, o SR1 com a data, a disciplina, a equipe inteira e o cliente.',
     segundos: 15,
     quemFala: 'gabriel',
     notas: [
-      'Bom dia. Somos a Equipe 2, e este é o Prumo. O cliente é a Secretaria de Saúde do Recife.',
-      'Hoje os sete falam, e qualquer um de nós responde qualquer pergunta no fim.',
+      'Bom dia. Somos a Equipe 2, e este é o Prumo, o nosso projeto com a Secretaria de Saúde do Recife.',
+      'Os sete falam hoje, e qualquer um de nós responde às perguntas no fim.',
     ],
-    curto: { segundos: 10, notas: 1 },
   },
   {
     id: 'roteiro',
     numero: 2,
+    parte: 'abertura',
     titulo: 'o caminho de hoje',
-    apoio: 'do que a planilha mostrou ao que vem até o sr2.',
-    visual: 'As seis paradas do roteiro, numeradas.',
+    apoio: 'a ordem da rubrica do sr1. o rodapé de cada slide diz em que parte ele está.',
+    visual: 'As seis partes da rubrica, com os slides de cada uma.',
     segundos: 10,
-    quemFala: 'fernando',
+    quemFala: 'gabriel',
     notas: [
-      'Seis paradas: o problema, a planilha do cliente, o sistema rodando, como sabemos que está certo, o que prometemos e o que vem.',
+      'Seguimos a ordem da rubrica: o problema, as ideias, a solução, o processo, o planejado contra o realizado e o nosso balanço.',
     ],
   },
+
+  /* ------------------------------------------------ 1 · imersão no problema */
   {
     id: 'problema',
     numero: 3,
-    titulo: 'todo mês, uma conta feita à mão',
-    apoio: 'A regra está num documento oficial. A conta está numa planilha.',
-    visual: 'O caminho do dinheiro em cinco passos, e a frase da Secretaria sobre como a conta é feita.',
-    segundos: 30,
+    parte: 'imersao',
+    titulo: 'o problema: uma conta de dinheiro feita à mão',
+    apoio:
+      'a prefeitura paga um extra no salário de quem dirige uma unidade de saúde e bate as metas do mês.',
+    visual: 'Onde o problema ocorre, as causas e as consequências, em três blocos.',
+    segundos: 40,
     quemFala: 'gabriel',
     notas: [
-      'Quem dirige uma unidade de saúde no Recife recebe um extra no salário quando bate as metas do mês.',
-      'A regra está numa portaria. A conta é feita numa planilha, e é aí que o processo quebra.',
-      'Não é impressão nossa: perguntamos à Secretaria como a conta é feita hoje. A resposta foi esta da tela.',
+      'O problema. A prefeitura do Recife paga um extra no salário de quem dirige uma unidade de saúde e bate as metas do mês. A regra está numa portaria de 2024.',
+      `Acontece todo mês, na Secretaria de Saúde, para ${B.unidades} unidades em ${DISTRITOS_NA_BASE} distritos.`,
+      'A causa: a regra está escrita, mas a conta é feita à mão, numa planilha em que pouca gente sabe mexer.',
+      `A consequência: na planilha real que recebemos, ${porExtenso(B.fora_da_regra)} linhas seguem outra conta, diferente de todo o resto. E quem recebe o dinheiro não consegue conferir a própria nota.`,
     ],
     perguntas: [
-      'A frase veio da Secretaria em 22 de setembro, junto com a planilha. Está registrada no repositório, com a data.',
+      'Por que este problema: é um cliente real, com a dor escrita desde 2023, e uma tentativa anterior de automatizar a conta parou.',
+      'Os números da rede vêm da base de desempenho que a Secretaria enviou em 23 de setembro, sem nome, CPF ou matrícula. Em 39 das 90 combinações de tipo e distrito há uma unidade só; isso está na análise de privacidade.',
     ],
-    curto: { segundos: 25, notas: 3 },
   },
   {
-    id: 'planilha',
+    id: 'pesquisa',
     numero: 4,
-    titulo: 'a planilha deles, por dentro',
-    apoio: 'a base de desempenho da Secretaria: uma linha por unidade, sem dado de pessoa.',
-    visual: 'O funil de linhas até as unidades que seguem a regra, e três achados da leitura.',
+    parte: 'imersao',
+    titulo: 'o que pesquisamos e o que aprendemos',
+    apoio: `${porExtenso(FONTES_SR1.length)} fontes, cada uma com data. a reunião e a planilha corrigiram ${porExtenso(APRENDIZADOS_SR1.itens.length)} pontos do nosso modelo.`,
+    visual: 'As cinco fontes em ordem de chegada, com a planilha em destaque, e os três aprendizados.',
     segundos: 40,
     quemFala: 'matheus',
     notas: [
-      'A Secretaria autorizou o uso da base de desempenho dela. É uma linha por unidade de saúde, sem nome, CPF ou matrícula.',
-      `São ${B.linhas} linhas. Tirando as linhas de distrito, sobram ${B.unidades} unidades de saúde.`,
-      `${B.modeladas} seguem a conta da portaria. ${B.fora_da_regra}, de dois tipos que a portaria não nomeia, seguem outra: a soma dos pontos dividida por ${DIVISOR}.`,
-      `E ${dados.inconsistencias.colunas_numericas_como_texto} colunas de número estão guardadas como texto. É o retrato de uma conta mantida à mão.`,
+      `Pesquisamos em ${porExtenso(FONTES_SR1.length)} fontes, cada uma com data: o caso da escola, a reunião com a Secretaria em 22 de agosto, a portaria, a planilha que a Secretaria usa e a base de desempenho.`,
+      'A reunião mostrou que a unidade preenche cada item medido, e não o indicador. A planilha foi a que mais ensinou: a gente fazia a média dos valores; ela dá nota a cada item e faz a média das notas.',
+      'Quando faltava um número, a gente zerava. Ela tira da conta, e o peso sai junto, como manda o artigo 8º.',
     ],
     perguntas: [
-      'O arquivo está em ml/data, com autorização da Secretaria registrada na ADR-044. Um teste varre o arquivo linha a linha atrás de CPF, e-mail e telefone.',
-      'NDI e SAE não estão entre os sete tipos da portaria. A gente não sabe ainda se a conta diferente é regra ou erro: é uma das perguntas para a Secretaria.',
+      'A pesquisa ainda não tem entrevista com quem opera o processo: as personas vieram do caso e da reunião. A entrevista está prevista para a Semana 11, com roteiro pronto em docs/validacao.md; a data ainda vai ser pedida à Secretaria.',
+      `A Secretaria autorizou o uso da base por unidade na lente de aprendizado de máquina (ADR-044), ainda sem documento escrito: a autorização por escrito é a pergunta 13. São ${B.linhas} linhas; ${B.modeladas} unidades seguem a conta da portaria.`,
+      `Sobre a conta de hoje, a Secretaria respondeu por escrito em 22 de setembro: ${CITACAO_DA_SECRETARIA.frase}.`,
     ],
-    curto: { segundos: 35, notas: 3 },
   },
   {
-    id: 'erros',
+    id: 'csd',
     numero: 5,
-    titulo: 'três coisas que a gente tinha errado',
-    apoio: 'no kick-off, dissemos que parte da conta era aposta nossa. a planilha respondeu.',
-    visual: 'Três linhas, cada uma com o que a gente fazia e o que a planilha faz, e os tipos de unidade.',
-    segundos: 40,
+    parte: 'imersao',
+    titulo: 'o que sabemos, supomos e falta saber',
+    apoio: 'a matriz csd, atualizada em 25/09 com a planilha e a base da secretaria.',
+    visual: 'As três colunas da matriz, com a contagem e dois exemplos de cada, e o que a pesquisa respondeu.',
+    segundos: 25,
+    quemFala: 'matheus',
+    notas: [
+      `A matriz de certezas, suposições e dúvidas foi atualizada em 25 de setembro: ${CSD_EM_25_09.certezas.length} certezas, cada uma com a fonte, ${CSD_EM_25_09.suposicoes.length} suposições declaradas e ${CSD_EM_25_09.duvidas.length} dúvidas, cada uma com a pergunta para a Secretaria.`,
+      'A maior dúvida é quanto se paga em cada classe da nota.',
+    ],
+    perguntas: [
+      'A matriz do Kick-off continua no site, com a data dela. A de 25 de setembro está no documento de síntese da pesquisa, no SR1.',
+    ],
+  },
+  {
+    id: 'usuarios',
+    numero: 6,
+    parte: 'imersao',
+    titulo: 'quem usa: personas e mapa de empatia',
+    apoio: 'personas do caso e o mapa da analista que fecha a conta.',
+    visual: 'As três personas, três quadrantes do mapa de empatia e os quatro papéis que elas viraram.',
+    segundos: 35,
+    quemFala: 'matheus',
+    notas: [
+      `Criamos ${porExtenso(PESSOAS.length)} personas a partir do caso: a analista que fecha a conta, a gerente que manda os números e a coordenadora avaliada, que recebe o extra.`,
+      'O mapa de empatia é da analista. A frase dela resume o medo: se mexer numa fórmula, tem que conferir a planilha inteira de novo.',
+      `Na reunião de 22 de agosto, o cliente deu nome aos ${porExtenso(Object.keys(PERFIS).length)} papéis do sistema; a gerente e a avaliada viraram o gerente de unidade.`,
+    ],
+    perguntas: [
+      'As personas são personagens, não gente real: vieram dos papéis descritos no caso, sem entrevista. A entrevista com quem opera o processo está no plano da Semana 11.',
+      'A segunda persona nasceu como gestor de área técnica. Depois da reunião de 22 de agosto, virou a gerente da unidade, porque é a unidade que manda os números.',
+      'O rascunho das personas foi feito com IA a partir do caso e conferido pela equipe, sem entrevista. Está no registro de uso de IA.',
+    ],
+  },
+  {
+    id: 'existentes',
+    numero: 7,
+    parte: 'imersao',
+    titulo: 'o que já existe: benchmarking e swot',
+    apoio: 'nenhuma junta regra com versão, conta aberta e registro de quem mudou.',
+    visual: 'As cinco soluções estudadas com o que falta a cada uma, e os quatro quadrantes da SWOT.',
+    segundos: 35,
     quemFala: 'kerry',
     notas: [
-      'No Kick-off a gente disse que parte da conta era aposta nossa. A planilha respondeu três apostas.',
-      'A gente fazia a média dos valores. A planilha dá nota a cada item primeiro e faz a média das notas.',
-      'Quando faltava um número, a gente zerava. A planilha tira da conta, e o peso sai junto, como manda o artigo 8º.',
-      'E a nota é de 0 a 1, não de 0 a 10. Os tipos de unidade também estavam errados: são os sete da portaria.',
+      `Antes de construir, olhamos ${porExtenso(BENCHMARKING.length)} soluções: painéis públicos de indicadores, sistemas de metas do SUS, duas ferramentas de metas de empresa e a própria planilha de hoje.`,
+      'Cada uma resolve um pedaço. Nenhuma junta regra com versão, conta aberta e registro de quem mudou.',
+      'Na SWOT, a força é o cliente real, com a regra escrita. A fraqueza: ninguém da equipe conhecia o processo por dentro, e a portaria só chegou em 5 de setembro.',
     ],
     perguntas: [
-      'A planilha mostrou mais duas coisas: tem item em que passar do alvo também perde ponto, e numerador maior que denominador é erro, não nota cheia.',
+      'O benchmarking compara tipos de solução, não produtos com nome. Ele e a SWOT estão na Semana 2 do site, e a SWOT foi revista em setembro, quando a portaria chegou e o Kerry entrou.',
     ],
-    curto: { segundos: 30, notas: 3 },
   },
   {
-    id: 'regra',
-    numero: 6,
-    titulo: 'a regra mudou, e maio não',
-    apoio: 'a correção entrou como regra nova, com número de versão. mês fechado não muda.',
-    visual: 'A mesma unidade de teste em três contas: maio pela versão 2, maio pela versão 3 e junho pela versão 3.',
-    segundos: 40,
-    quemFala: 'joao-henrique',
+    id: 'objetivos',
+    numero: 8,
+    parte: 'imersao',
+    titulo: 'os objetivos e o que já alcançamos',
+    apoio: `objetivo geral: ${OBJETIVO_GERAL_CURTO}`,
+    visual: 'Os cinco objetivos específicos com o prazo e o estado de hoje, e o escopo em uma linha.',
+    segundos: 35,
+    quemFala: 'kerry',
     notas: [
-      'A correção entrou como uma regra nova, a versão 3, guardada como dado. O motor aprendeu o jeito novo sem esquecer o antigo.',
-      `Maio fechou pela versão 2 e continua dando ${notaFalada(MAIO_V2)}. Pela regra nova, maio daria ${notaFalada(MAIO_V3)}.`,
-      `Mas mês fechado não muda quando a regra muda. Junho já usa a versão 3, e dá ${notaFalada(JUNHO_V3)}.`,
-      'Era para isso que a regra virou dado: a primeira mudança grande aconteceu sem tocar em resultado publicado.',
+      'O objetivo geral: tirar a conta da planilha e deixar cada nota aberta para conferir.',
+      `Dos cinco específicos, um foi alcançado e dois estão em parte: a regra já tem versão, mas ainda muda por código, e o ranking mostra a nota sem a conta. Os outros dois vencem em ${dataFalada('s9')} e ${dataFalada('s11')}.`,
+      'O escopo foi revisto na Semana 6, depois da portaria e da planilha: entraram os sete tipos de unidade e a conta da planilha, e os cinco indicadores da portaria ficaram para as sprints.',
     ],
     perguntas: [
-      'A classe de cada nota (satisfatório, excelente) vem da planilha. O percentual pago em cada classe ainda é suposição nossa: ele está num decreto que a gente ainda não tem.',
-      'Os indicadores do sistema ainda são de teste. O que entrou foi o jeito de calcular, que vale para qualquer indicador.',
+      'O escopo da Semana 4 foi revisto depois da portaria, de 5 de setembro, e da planilha, de 22 de setembro. A revisão está na Semana 6 do site.',
+      'A regra com versão funciona: maio não mudou quando a regra mudou. Mas a versão 3 pediu código novo no motor, e cadastrar a regra pela tela está no backlog.',
+      'A conta aberta está em parte porque o ranking do painel da gestão mostra a nota sem a conta. Levar a conta a toda tela que mostra nota está no backlog.',
+      'Cada um vê o que é seu na permissão: cada tela confere o papel no servidor e responde 404. O login é simulado, e o da prefeitura está fora do escopo.',
     ],
-    curto: { segundos: 30, notas: 3 },
+  },
+
+  /* ------------------------------------------------------------ 2 · ideação */
+  {
+    id: 'tecnicas',
+    numero: 9,
+    parte: 'ideacao',
+    titulo: 'como geramos as ideias',
+    apoio: `${porExtenso(TECNICAS_DE_IDEACAO.length)} técnicas na semana 3, com uma regra: somar antes de criticar.`,
+    visual: 'As três técnicas, com o tempo e o que cada uma produziu, e o funil até a escolhida.',
+    segundos: 30,
+    quemFala: 'joao-pedro',
+    notas: [
+      `Na Semana 3 seguimos um roteiro de ${porExtenso(TECNICAS_DE_IDEACAO.length)} técnicas. No brainwriting, cada um escreve em silêncio e passa a folha adiante, para ninguém ser puxado por quem fala primeiro.`,
+      `No brainstorming, as ideias parecidas viraram ${porExtenso(ALTERNATIVAS.length)} alternativas. No crazy 8s, cada um rascunha oito telas em oito minutos.`,
+      'Publicamos o roteiro e as alternativas. As folhas, ainda não.',
+    ],
+    perguntas: [
+      'O site tem o roteiro das três técnicas e o resultado, as oito alternativas. As folhas e os desenhos da sessão ainda não foram publicados: é um item em aberto no nosso checklist.',
+      'SCAMPER não foi usado: seguimos as três técnicas do roteiro da Semana 3.',
+    ],
+  },
+  {
+    id: 'escolha',
+    numero: 10,
+    parte: 'ideacao',
+    titulo: 'os critérios e a ideia escolhida',
+    apoio: 'nota de 1 a 5 em impacto, esforço (5 = mais trabalho) e aderência ao órgão público.',
+    visual: 'As oito alternativas com as três notas e o destino de cada uma, a escolhida em destaque.',
+    segundos: 30,
+    quemFala: 'rafael',
+    notas: [
+      'Cada alternativa recebeu nota de 1 a 5 em três critérios, fixados antes das ideias: impacto, esforço e aderência ao órgão público.',
+      'Venceu o sistema web com a conta aberta: maior impacto e maior aderência. Ele ataca a causa, porque hoje a conta só existe em fórmula de planilha.',
+      'A planilha travada ficou como linha de base. A ideia do modelo virou a tela de analytics, que aponta onde olhar sem mudar nota.',
+    ],
+    perguntas: [
+      'Não somamos as notas. O esforço 4 foi aceito porque cabe em fatias: lançamento, conta e conta aberta até o SR1, e o resto nas sprints.',
+      'A lista de risco da tela de analytics é uma média simples, sem modelo. Os modelos rodam sobre a base da Secretaria e mostram o que pesa na nota.',
+    ],
+  },
+  {
+    id: 'disciplinas',
+    numero: 11,
+    parte: 'ideacao',
+    titulo: 'o que cada disciplina pôs no produto',
+    apoio: 'as três lentes técnicas da matriz, e a de direito, que a equipe acrescentou.',
+    visual: 'Quatro cartões, um por disciplina, com duas decisões concretas de cada uma.',
+    segundos: 35,
+    quemFala: 'rafael',
+    notas: [
+      'A ideia escolhida ganhou peças de cada disciplina.',
+      `Segurança: o que não é seu responde como se não existisse, e listamos ${CONTAGENS_PITCH.ameacasStride} ameaças.`,
+      'Nuvem: o sistema roda na Vercel, sem servidor para manter.',
+      'Aprendizado de máquina: três modelos sobre a base real da Secretaria mostram o que pesa na nota, sem fazer a conta.',
+      'E Direito: pelo artigo 20 da Lei Geral de Proteção de Dados, a nota que decide o salário de alguém precisa ser explicada. Por isso a conta fica aberta.',
+    ],
+    perguntas: [
+      `O classificador acerta ${porcentoInteiro(ACERTO)}, contra ${porcentoInteiro(ACERTO_DO_CHUTE)} do chute mais simples, porque aprende a própria conta da portaria. Por isso o modelo diz o que pesa, e não calcula nada.`,
+      `O agrupamento separa ${GRUPOS} grupos de unidades, nunca de pessoas, com silhueta de ${decimal(SILHUETA, 2)}. A apresentação completa está em /ml.`,
+      `Dos ${CONTAGENS_PITCH.itensOwasp} riscos da lista OWASP Top 10, ${CONTAGENS_PITCH.owaspParciais} ainda estão cobertos só pela metade. O login do sistema é simulado.`,
+      'O banco já está projetado, com as regras de acesso testadas num Postgres de verdade, mas ainda com os papéis de antes da reunião de 22 de agosto, e está desligado: o sistema roda em memória para qualquer pessoa clonar e rodar sem senha.',
+      'O desenho do sistema em quatro níveis (C4) está na página de arquitetura do site.',
+    ],
+  },
+
+  /* ------------------------------------------------ 3 · proposta de solução */
+  {
+    id: 'solucao',
+    numero: 12,
+    parte: 'solucao',
+    titulo: 'a solução: do número à nota, com a conta aberta',
+    apoio: 'um sistema web que faz a conta da portaria e mostra de onde veio cada número.',
+    visual: 'O caminho de um mês em quatro passos, com o papel de quem faz cada um, e as contagens do sistema.',
+    segundos: 35,
+    quemFala: 'joao-henrique',
+    notas: [
+      'A solução é um sistema web que faz a conta da portaria e mostra de onde veio cada número.',
+      'Todo mês, a unidade lança os números, o distrito confere, e a coordenação da SEAB, que conduz a avaliação na Secretaria, fecha o mês. Então cada um vê a própria nota, com a conta inteira embaixo.',
+      `São ${TELAS_NO_SR1.length} telas e ${Object.keys(PERFIS).length} papéis. A regra é um dado com número de versão, separado do motor que faz a conta.`,
+    ],
+    perguntas: [
+      'Hoje a regra nova entra por código, como dado. Cadastrar indicador e regra pela tela é história do backlog que ainda não está pronta.',
+    ],
+  },
+  {
+    id: 'wireframes',
+    numero: 13,
+    parte: 'solucao',
+    titulo: 'os protótipos de baixa fidelidade',
+    apoio: 'quatro desenhos de três telas centrais, propositalmente sem texto. os nomes são os do menu.',
+    visual: 'Os quatro wireframes, um por tela, com a legenda de cada.',
+    segundos: 20,
+    quemFala: 'joao-henrique',
+    notas: [
+      'Estes são os protótipos de baixa fidelidade de três telas centrais: o lançamento, o painel da SEAB e o meu resultado, que tem dois desenhos.',
+      'Cada desenho corresponde a uma tela que vocês veem funcionando agora.',
+    ],
+    perguntas: [
+      'Os desenhos foram gerados com IA na semana do Kick-off, a partir das telas que já existiam, e conferidos pela equipe. O site diz essa data, e os rascunhos em papel do crazy 8s não foram publicados.',
+      'Barra cinza no lugar de texto é de propósito: a conversa é sobre onde cada coisa fica, não sobre a frase.',
+    ],
   },
   {
     id: 'demo',
-    numero: 7,
-    titulo: 'do número à nota, ao vivo',
-    apoio: 'o sistema rodando agora, com dados de teste.',
+    numero: 14,
+    parte: 'solucao',
+    titulo: 'o sistema funcionando, ao vivo',
+    apoio: 'dados de teste: nenhuma pessoa real.',
     visual: 'O sistema ao vivo, lançando julho. De reserva, a nota de junho com a conta aberta, calculada na hora.',
-    segundos: 105,
+    segundos: 70,
     quemFala: 'joao-pedro',
     notas: [
-      'Agora o sistema, ao vivo. Tudo o que aparece são dados de teste: nenhuma pessoa real.',
-      'Primeiro, a unidade. Escolho a USF Canário e lanço um número de julho, dizendo de onde ele veio.',
+      'Agora o sistema funcionando, ao vivo, com dados de teste.',
+      'Primeiro, a unidade. Escolhemos a USF Canário e lançamos um número de julho, dizendo de onde ele veio.',
       'Depois, a coordenação. O painel mostra quem já mandou e quem falta, e o mês avança uma etapa por vez, até fechar.',
-      'Por fim, o resultado de julho, com a conta inteira embaixo. Cada linha mostra o número, o alvo, a nota e quanto pesa.',
-      'Repare na soma dos pesos. Um item ficou sem número e saiu da conta com o peso junto, como manda o artigo 8º.',
-      'A última linha fecha a conta na frente de todo mundo. Qualquer pessoa refaz no papel.',
-      `Se a rede cair, esta tela mostra junho, já fechado pela regra nova: ${notaFalada(JUNHO_V3)}, com a mesma conta aberta. E o PDF tem ela também.`,
+      'Por fim, o resultado, com a conta inteira embaixo. Cada linha mostra o número, o alvo, a nota e quanto pesa.',
+      'Um item ficou sem número e saiu da conta com o peso junto, como faz a planilha da Secretaria. A última linha fecha a conta: qualquer pessoa refaz no papel.',
+      `Se a rede cair, esta tela mostra junho, já fechado: ${notaFalada(JUNHO_V3)}, com a mesma conta aberta.`,
     ],
     perguntas: [
       'Quem mexe na tela não é quem fala: assim a demonstração não depende de uma pessoa só.',
       'O que um visitante lança fica na sessão dele. A demonstração de um não muda a tela de outro.',
+      'O percentual de cada classe está no Decreto 36.482/2023, que ainda buscamos. No sistema ele é suposição nossa; o nome da classe vem da planilha. Vale também para o percentual que aparece em julho, ao vivo.',
+      'Se a demonstração cair na reserva de junho, a frase do item sem número não vale: em junho os cinco itens têm número.',
     ],
-    curto: { segundos: 80, notas: 6 },
   },
   {
-    id: 'papeis',
-    numero: 8,
-    titulo: 'cada um vê o que é seu',
-    apoio: 'quem manda o número não escolhe a meta.',
-    visual: 'Os quatro papéis e quantas telas cada um enxerga.',
-    segundos: 20,
-    quemFala: 'joao-pedro',
+    id: 'diferenciais',
+    numero: 15,
+    parte: 'solucao',
+    titulo: 'por que esta solução: três diferenciais',
+    apoio: 'o que nenhuma das soluções estudadas junta.',
+    visual: 'Os três diferenciais, com a prova de cada um: a conta aberta, maio que não muda e a porta que não abre.',
+    segundos: 30,
+    quemFala: 'joao-henrique',
     notas: [
-      'São quatro papéis, e cada um só enxerga as telas dele. Quem manda o número não escolhe a meta.',
-      'O que não é seu, para o sistema, não existe: a página responde que não foi encontrada.',
+      'Três diferenciais, e nenhuma solução que estudamos junta os três. Cada um responde a uma causa que mostramos no começo.',
+      'A conta aberta: qualquer pessoa refaz a nota no papel.',
+      `A regra com versão: a regra nova vale a partir de junho, e maio continuou com ${notaFalada(MAIO_V2)}. Pela regra nova daria ${notaFalada(MAIO_V3)}, mas mês fechado não muda.`,
+      'E cada papel só vê o que é seu. Quem manda o número não escolhe a meta.',
     ],
     perguntas: [
       'O login ainda é simulado: você escolhe o papel. Um teste percorre as oito telas contra os quatro papéis e falha se uma porta abrir para quem não devia.',
       'A resposta é "não encontrado" e nunca "proibido" de propósito: da porta, não dá para saber se a tela existe.',
+      `Escrevemos a regra 3 em setembro, com a planilha do cliente, valendo a partir de junho. Junho dá ${notaFalada(JUNHO_V3)}. O motor tem ${TESTES_DO_MOTOR} testes só dele, e cada envio de código roda todos de novo.`,
     ],
   },
+
+  /* --------------------------------------------- 4 · metodologia e processo */
   {
-    id: 'arquitetura',
-    numero: 9,
-    titulo: 'o prumo em quatro zooms',
-    apoio: 'do contexto ao código, no padrão C4. o desenho inteiro está no site.',
-    visual: 'Os quatro níveis do C4, com o motor de cálculo em destaque e o endereço da página.',
-    segundos: 30,
-    quemFala: 'joao-henrique',
-    notas: [
-      'Desenhamos o sistema em quatro níveis de zoom, no padrão C4. O desenho inteiro está na página de arquitetura do site.',
-      'O ponto que importa: o motor de cálculo não lê relógio, rede nem banco. Recebe números e devolve a nota com a conta.',
-      'E um teste lê o código e falha se alguém fizer o motor olhar para fora.',
-    ],
-    perguntas: [
-      'O banco de dados existe desenhado, com as regras de acesso testadas num Postgres de verdade, mas está desligado: o sistema roda em memória para qualquer pessoa clonar e rodar sem senha.',
-    ],
-  },
-  {
-    id: 'confianca',
-    numero: 10,
-    titulo: 'como sabemos que a conta está certa',
-    apoio: 'teste automático a cada mudança, e mês fechado que continua dando o mesmo número.',
-    visual: 'Três contagens: testes do motor, versões da regra guardadas e meses fechados.',
+    id: 'processo',
+    numero: 16,
+    parte: 'processo',
+    titulo: 'o ciclo de vida do projeto',
+    apoio: 'o semestre em fases, com um registro por semana no site.',
+    visual: 'As fases do semestre com as datas do cronograma, o SR1 em destaque, a rotina da semana e o backlog priorizado.',
     segundos: 35,
     quemFala: 'fernando',
     notas: [
-      `Primeiro, ${TESTES_DO_MOTOR} testes só para o motor, cobrindo as bordas de cada faixa e o arredondamento.`,
-      `Segundo, as ${BASE.regras.length} versões da regra continuam guardadas, e cada mês aponta para a que usou.`,
-      'Terceiro, cada envio de código ao repositório roda todos os testes de novo, sozinho.',
-      'O que falta: conferir a nossa conta contra linhas reais da planilha. Está na correção de rota.',
+      'As fases estão na tela, cada uma com o que entrega. Hoje é o SR1; depois vêm quatro sprints, a validação e o SR2.',
+      'Toda semana tem registro no site, com o que avançou, o que travou e quem fez. Toda decisão fica escrita com o porquê.',
+      `O backlog tem ${BACKLOG.length} histórias, priorizadas por MoSCoW. Das ${historias('M')} obrigatórias, ${historias('M', 'no_ar')} estão no ar, como lançar cada item e abrir a conta. O plano era ter todas hoje; as que faltam são as de configurar pela tela.`,
     ],
     perguntas: [
-      'O motor é uma função pura: mesma entrada, mesmo número, em qualquer dia. Recalcular fevereiro em dezembro dá o número de fevereiro.',
-      'A checagem automática também prova que conteúdo de semana futura não aparece no site antes da hora.',
-    ],
-    curto: { segundos: 30, notas: 3 },
-  },
-  {
-    id: 'ml',
-    numero: 11,
-    titulo: 'a base de verdade, com aprendizado de máquina',
-    apoio: `três modelos sobre as ${B.modeladas} unidades. eles mostram o que pesa, não fazem a conta.`,
-    visual: 'Os três modelos, cada um com o número principal e a referência ao lado.',
-    segundos: 35,
-    quemFala: 'rafael',
-    notas: [
-      `Na disciplina de aprendizado de máquina, usamos a base da Secretaria: as ${B.modeladas} unidades que seguem a regra.`,
-      `O classificador acerta ${porcentoInteiro(ACERTO)}, e o chute mais simples acerta ${porcentoInteiro(ACERTO_DO_CHUTE)}. Ele acerta porque aprende a própria conta da portaria.`,
-      'Por isso o modelo diz o que mais pesa, e não calcula nada. Nenhum resultado dele entra na gratificação.',
-      'O sistema continua com dados de teste. A base real fica nos cadernos.',
-    ],
-    perguntas: [
-      'A apresentação completa de aprendizado de máquina está na página ml do site, com o PDF.',
-      `O agrupamento separa ${GRUPOS} grupos de unidades, nunca de pessoas, com silhueta de ${decimal(SILHUETA, 2)}.`,
+      'As sprints da Semana 7 à 10 começam pelo retorno desta banca. A ordem do backlog muda com ele.',
     ],
   },
   {
-    id: 'riscos',
-    numero: 12,
-    titulo: 'o que pode dar errado, dito antes',
-    apoio: 'login de faz de conta, banco desligado, e parte da regra ainda é suposição.',
-    visual: 'Os quatro riscos maiores, e as contagens de segurança.',
+    id: 'equipe',
+    numero: 17,
+    parte: 'processo',
+    titulo: 'papéis e responsabilidades',
+    apoio: 'seis frentes com dono; o kerry apoia a pesquisa.',
+    visual: 'Os sete integrantes, com o papel e as responsabilidades de cada um.',
     segundos: 30,
-    quemFala: 'rafael',
+    quemFala: 'fernando',
     notas: [
-      'A gente prefere dizer o que falta antes que alguém pergunte. O registro de riscos inteiro está no site.',
-      'O maior: o percentual pago em cada classe ainda é suposição. Ele está num decreto que a gente não tem.',
-      'Os indicadores ainda são de teste, e o prazo para contestar a nota ainda não existe.',
+      'Gabriel cuida do produto e das prioridades, Matheus da pesquisa, com o apoio do Kerry, João Henrique da arquitetura e da conta, João Pedro das telas, Rafael dos dados, e eu da qualidade e da documentação.',
+      'Kerry entrou no Kick-off e apoia o Matheus na pesquisa e na validação.',
     ],
-    perguntas: [
-      `Em segurança, ${CONTAGENS_PITCH.ameacasStride} ameaças listadas uma a uma (STRIDE) e as ${CONTAGENS_PITCH.itensOwasp} falhas mais comuns conferidas (OWASP), ${CONTAGENS_PITCH.owaspParciais} ainda pela metade.`,
-      'Uma unidade que é única no distrito pode apontar quem a dirige. Isso está na análise de privacidade, e é uma pergunta para a Secretaria.',
-    ],
-    curto: { segundos: 30, notas: 3 },
   },
   {
-    id: 'prometido',
-    numero: 13,
-    titulo: 'o que prometemos, e o que fizemos',
-    apoio: 'os três compromissos do kick-off, cada um com o estado de hoje.',
-    visual: 'Os três compromissos do Kick-off, com quem puxou, o estado e o porquê.',
+    id: 'ferramentas',
+    numero: 18,
+    parte: 'processo',
+    titulo: 'ferramentas, o site e o drive',
+    apoio: 'onde o trabalho acontece e onde cada entrega fica.',
+    visual: 'As ferramentas com o uso de cada uma, as oito seções do site no lugar do Google Site e o que a pasta do Drive guarda.',
+    segundos: 30,
+    quemFala: 'fernando',
+    notas: [
+      'O código e os testes ficam no GitHub, e cada envio roda os testes sozinho. O site roda na Vercel.',
+      'O site faz o papel do Google Site: as oito seções do briefing e o diário de bordo de cada semana, com cada documento aberto ali mesmo.',
+      'A pasta do Drive recebe o PDF de cada apresentação.',
+    ],
+    perguntas: [
+      'Trocamos o Google Site pelo site do projeto na Semana 1, com as mesmas oito seções, e cada versão fica guardada no Git, com a data. Se a banca preferir, espelhamos no Drive.',
+      'O uso de IA está em /transparencia-ia, com quem conferiu cada uso. Até aqui o Gabriel conferiu todos; dividir isso entra nas sprints.',
+    ],
+  },
+
+  /* ---------------------------------------------- 5 · planejado x realizado */
+  {
+    id: 'planejado',
+    numero: 19,
+    parte: 'planejado',
+    titulo: 'planejado x realizado: as entregas',
+    apoio: 'o que cada fase pedia, o que foi entregue e quem respondeu.',
+    visual: 'A tabela das fases até o SR1, com entregas, responsáveis e o que está em andamento.',
     segundos: 35,
     quemFala: 'gabriel',
     notas: [
-      'No Kick-off prometemos três coisas até hoje, com data e nome. Vamos prestar contas.',
-      `As telas estão no ar: as ${TELAS_NO_SR1.length}.`,
-      'A regra oficial entrou em parte: o jeito de calcular da planilha está no sistema, mas os indicadores ainda são de teste.',
-      'E a conferência com a Secretaria não aconteceu. As perguntas estão escritas, e a conferência da conta ficou para a Semana 11.',
+      `Até hoje o cronograma pedia ${PLANEJADAS_ATE_O_SR1} entregas, e entregamos ${ENTREGUES_ATE_O_SR1}. As que faltam estão na linha de baixo: ${EM_ANDAMENTO_FALADO}. O escopo e o plano fecham com o retorno desta banca.`,
+      'O Rafael não aparece na tabela porque responde pela lente de aprendizado de máquina, que tem calendário próprio, com a avaliação em 30 de setembro.',
     ],
-    curto: { segundos: 15, notas: 2 },
   },
   {
-    id: 'rota',
-    numero: 14,
-    titulo: 'a correção de rota',
-    apoio: 'o que a planilha mudou nas quatro sprints, e o que continua fora.',
-    visual: 'O que entra nas sprints por causa da planilha, e o que fica para depois.',
-    segundos: 30,
-    quemFala: 'matheus',
+    id: 'avanco',
+    numero: 20,
+    parte: 'planejado',
+    titulo: 'o avanço e o estágio de hoje',
+    apoio: 'estágio: protótipo navegável, com dados de teste.',
+    visual: 'Três percentuais de avanço com a conta de cada um, e os três compromissos do Kick-off com o estado.',
+    segundos: 25,
+    quemFala: 'gabriel',
     notas: [
-      'A planilha mudou o plano. Entram os indicadores reais da portaria, o porte das unidades e o prazo de contestação.',
-      'Entra também conferir a nossa conta contra linhas reais da planilha, com as perguntas que decidem a regra.',
-      'Folha de pagamento, login da prefeitura e dado de pessoa continuam fora. O estado de cada história está no site.',
+      `Chegamos à metade do calendário do semestre, com ${AVANCO[1].numero} das entregas feitas e ${AVANCO[2].numero} das histórias do backlog no ar.`,
+      `Dos três compromissos do Kick-off, um foi feito e um saiu em parte: os indicadores oficiais entram em ${dataFalada('s8')}. A conferência com a Secretaria passou para ${dataFalada('s11')}.`,
     ],
     perguntas: [
+      'No Kick-off também dissemos que o prazo de contestação entraria na regra 3. Não entrou: ficou para a Sprint 3, e a tela diz que ele ainda não existe.',
+    ],
+  },
+
+  /* ------------------------------------------ 6 · pontos fortes e melhorias */
+  {
+    id: 'balanco',
+    numero: 21,
+    parte: 'balanco',
+    titulo: 'pontos fortes, melhorias e riscos',
+    apoio: 'do projeto e da equipe. a seta diz como tratamos.',
+    visual: 'Três colunas: pontos fortes, pontos de melhoria com o tratamento, e os três riscos maiores com o tratamento.',
+    segundos: 40,
+    quemFala: 'rafael',
+    notas: [
+      'Pontos fortes: um cliente real com regra escrita, o sistema no ar com as oito telas, e uma equipe com seis frentes separadas.',
+      'Pontos de melhoria: a pesquisa ainda não tem entrevista, e vamos entrevistar na Semana 11. E o registro das entregas ficou concentrado em poucas pessoas: nas sprints, cada entrega tem um dono.',
+      'O maior risco é o percentual pago em cada classe, que ainda é dúvida: está num decreto que não temos. O Matheus busca o decreto, o João Henrique troca os indicadores pelos cinco da portaria, e o Gabriel pede já a data da Semana 11.',
+    ],
+    perguntas: [
+      'O registro de riscos inteiro está na Semana 6 do site, com probabilidade, impacto, mitigação e dono.',
+      'Uma unidade que é única no distrito pode apontar quem a dirige. Isso está na análise de privacidade, e é uma pergunta para a Secretaria.',
       'O retorno desta banca entra por cima de tudo isso, na primeira sprint.',
     ],
   },
-  {
-    id: 'sr2',
-    numero: 15,
-    titulo: 'até o sr2',
-    apoio: 'quatro sprints, uma semana com o cliente e a entrega final.',
-    visual: 'As sete paradas até o SR2, com a data de cada uma e a validação em destaque.',
-    segundos: 25,
-    quemFala: 'kerry',
-    notas: [
-      'Daqui até o SR2 são quatro sprints, uma semana de validação com o cliente e a entrega final.',
-      'A semana que mais importa é a da validação: é quando a Secretaria confere se a nossa conta bate com a dela.',
-    ],
-  },
+
+  /* ------------------------------------------------------------ encerramento */
   {
     id: 'fechamento',
-    numero: 16,
-    titulo: 'prumo',
-    apoio: 'o registro, os documentos, o sistema e esta apresentação estão no ar.',
-    visual: 'Wordmark, o endereço do site e a pergunta para a banca.',
-    segundos: 20,
-    quemFala: 'gabriel',
+    numero: 22,
+    parte: 'encerramento',
+    titulo: 'conclusão e próximos passos',
+    apoio: 'do problema ao plano.',
+    visual: 'A linha do problema à solução e ao plano, as paradas até o SR2 com a data de cada uma, o endereço do site e a pergunta para a banca.',
+    segundos: 30,
+    quemFala: 'kerry',
     notas: [
-      'Obrigado. Tudo o que mostramos está no site, e qualquer um de nós responde.',
-      'O site tem um índice no topo com as oito seções, na ordem em que vocês pediram.',
+      'Para fechar: a regra está na portaria, mas a conta só existe em fórmula de planilha. A solução deixa a regra com versão e a conta aberta.',
+      'O plano até o SR2: quatro sprints, e pedir à Secretaria a Semana 11 para conferir a conta com a gente.',
+      'Obrigado. Tudo está no site, e qualquer um de nós responde.',
     ],
-    curto: { segundos: 10, notas: 1 },
   },
 ] as const satisfies readonly SlideSR1[]
 
 export type SlideSR1Id = (typeof SLIDES_SR1)[number]['id']
 
-/** Os slides da versão de cinco minutos, na mesma ordem. */
-export const SLIDES_SR1_CURTA: readonly SlideSR1[] = (SLIDES_SR1 as readonly SlideSR1[]).filter(
-  (slide) => slide.curto,
-)
+/** A lista como o tipo largo, para quem só precisa do contrato. */
+const LISTA = SLIDES_SR1 as readonly SlideSR1[]
 
-export type Versao = 'completa' | 'curta'
-
-export function slidesDaVersao(versao: Versao): readonly SlideSR1[] {
-  return versao === 'curta' ? SLIDES_SR1_CURTA : (SLIDES_SR1 as readonly SlideSR1[])
+/** O primeiro e o último slide de uma parte, na numeração do deck. */
+export function slidesDaParte(parte: ParteId): readonly [number, number] {
+  const numeros = LISTA.filter((s) => s.parte === parte).map((s) => s.numero)
+  if (numeros.length === 0) throw new Error(`Parte sem slide: ${parte}`)
+  return [numeros[0], numeros[numeros.length - 1]]
 }
 
-/** Quanto o slide dura naquela versão. */
-export function segundosNaVersao(slide: SlideSR1, versao: Versao): number {
-  return versao === 'curta' ? (slide.curto?.segundos ?? 0) : slide.segundos
+/** "slides 3 a 8", "slides 19 e 20", ou "slide 21" quando a parte tem um só. */
+export function intervaloDaParte(parte: ParteId): string {
+  const [primeiro, ultimo] = slidesDaParte(parte)
+  if (primeiro === ultimo) return `slide ${primeiro}`
+  return ultimo === primeiro + 1
+    ? `slides ${primeiro} e ${ultimo}`
+    : `slides ${primeiro} a ${ultimo}`
 }
 
-/** O que se diz naquele slide, naquela versão. */
-export function notasNaVersao(slide: SlideSR1, versao: Versao): readonly string[] {
-  return versao === 'curta' ? slide.notas.slice(0, slide.curto?.notas ?? 0) : slide.notas
+/** O que o rodapé diz da parte: o número do critério e o nome, ou nada. */
+export function rotuloDaParte(parte: ParteId): string | null {
+  if (parte === 'abertura') return null
+  if (parte === 'encerramento') return 'encerramento'
+  const achada = PARTES_SR1.find((p) => p.id === parte)
+  return achada ? `${achada.criterio} · ${achada.nome}` : null
 }
 
 /* -------------------------------------------------------------------------
@@ -512,71 +923,78 @@ export function notasNaVersao(slide: SlideSR1, versao: Versao): readonly string[
 ------------------------------------------------------------------------- */
 
 /** Capa. */
-export const PILULA_DA_CAPA_SR1 = 'sr1'
+export const PILULA_DA_CAPA_SR1 = 'sr1 · status report 1'
 
-/** Slide 2: as seis paradas. */
-export const ROTEIRO_SR1 = [
-  'o problema',
-  'a planilha do cliente',
-  'o sistema rodando',
-  'como sabemos que está certo',
-  'o que prometemos',
-  'até o sr2',
-] as const
+/** Slide 2: cada parte da rubrica com os slides dela. */
+export const ROTEIRO_SR1 = PARTES_SR1.map((p) => ({
+  ...p,
+  slides: intervaloDaParte(p.id),
+}))
 
-/** Slide 3: o caminho do dinheiro é o do Kick-off, e a frase é da Secretaria. */
-export { ETAPAS_DO_MES, CITACAO_DA_SECRETARIA }
-
-/** Slide 4: o funil e os achados. */
-export const FUNIL_SR1 = [
-  { numero: B.linhas, rotulo: 'linhas na base' },
-  { numero: B.unidades, rotulo: 'unidades de saúde', motivo: 'sem as linhas de distrito' },
-  { numero: B.modeladas, rotulo: 'seguem a conta da portaria', motivo: `${B.fora_da_regra} seguem outra` },
-] as const
-
-export const ACHADOS_DA_PLANILHA = [
-  {
-    numero: B.fora_da_regra,
-    texto: `unidades (${B.familias_fora_da_regra.join(' e ')}) com outra conta: pontos ÷ ${DIVISOR}`,
+/** Slide 3: onde, por quê e o que acontece. */
+export const PROBLEMA_SR1 = {
+  onde: {
+    rotulo: 'onde ocorre',
+    texto: `na secretaria de saúde do recife, todo mês: ${B.unidades} unidades em ${DISTRITOS_NA_BASE} distritos`,
   },
-  {
-    numero: dados.inconsistencias.colunas_numericas_como_texto,
-    texto: 'colunas de número guardadas como texto',
+  causas: {
+    rotulo: 'causas',
+    itens: [
+      'a regra está na portaria; a conta, numa planilha',
+      'fórmula arrastada à mão, célula a célula',
+      'pouca gente sabe fazer a conta',
+    ],
   },
-  {
-    numero: dados.inconsistencias.metas_escritas_de_dois_jeitos.length,
-    texto: 'metas escritas de dois jeitos, como 20 e 2000%',
+  consequencias: {
+    rotulo: 'consequências',
+    itens: [
+      `na planilha real, ${B.fora_da_regra} linhas com outra conta`,
+      'quem recebe não confere a própria nota',
+      'o processo para quando essas pessoas faltam',
+    ],
   },
-] as const
-
-export const ROTULO_DA_BASE = 'dado de unidade, autorizado pela Secretaria; nenhuma pessoa'
-
-/** Slide 5: o que a gente fazia, o que a planilha faz. */
-export const TRES_ERROS = [
-  { antes: 'média dos valores', depois: 'média das notas' },
-  { antes: 'faltou número, zera', depois: 'faltou número, sai da conta com o peso' },
-  { antes: 'nota de 0 a 10', depois: 'nota de 0 a 1' },
-] as const
-
-export const COLUNAS_DOS_ERROS = { antes: 'a gente fazia', depois: 'a planilha faz' } as const
-
-export const TIPOS_DE_UNIDADE = {
-  antes: 'eram 4 tipos de unidade, dois inventados',
-  depois: `são os ${BASE.tiposUnidade.length} da portaria`,
 } as const
 
-/** Slide 6: o rótulo de cada coluna da comparação. */
-export const ROTULO_DA_UNIDADE_DO_DECK = 'dados de teste'
+/** Slide 5: a matriz de 25/09, com a contagem e dois exemplos por coluna. */
+export const CSD_SR1 = [
+  { rotulo: 'certezas', itens: CSD_EM_25_09.certezas },
+  { rotulo: 'suposições', itens: CSD_EM_25_09.suposicoes },
+  { rotulo: 'dúvidas', itens: CSD_EM_25_09.duvidas },
+].map((coluna) => ({
+  rotulo: coluna.rotulo,
+  total: coluna.itens.length,
+  exemplos: coluna.itens.slice(0, 2).map((l) => l.item.toLowerCase()),
+}))
 
-/** O nome da unidade vem da base, como no Kick-off: é dado, não texto nosso. */
-export const NOME_DA_UNIDADE_DO_DECK =
-  BASE.unidades.find((u) => u.id === UNIDADE_DO_DECK)?.nome ?? UNIDADE_DO_DECK
+/**
+ * O que a pesquisa respondeu da matriz do Kick-off. A mesma conta da nota do
+ * documento de síntese da pesquisa, no SR1: a dúvida do peso do art. 8º virou
+ * certeza, e a suposição de que a planilha confirmaria o modelo caiu.
+ */
+export const CSD_RESPONDIDO = {
+  rotulo: 'desde o kick-off',
+  texto: 'uma dúvida virou certeza, e uma suposição caiu',
+} as const
 
-/** Slide 7: o rótulo da demonstração de reserva. */
-export const ROTULO_DA_DEMO_SR1 = 'junho, já fechado · dados de teste, nenhuma pessoa real'
-export const ENDERECO_DA_DEMO = '/sistema'
+export const COLUNAS_DAS_FONTES = { fontes: 'as fontes', aprendizados: 'o que aprendemos' } as const
 
-/** Slide 8: os quatro papéis, na ordem da equipe do sistema. */
+/** Slide 5: as personas são as do Kick-off; o mapa, o da Semana 2. */
+/**
+ * A terceira persona é "a coordenadora" no Kick-off. No SR1 ela divide a tela
+ * com a coordenação da SEAB, que fecha o mês e não recebe nada: aqui ela é a
+ * coordenadora avaliada, como no documento da Semana 2.
+ */
+const NOME_SR1_DA_PERSONA: Record<string, string> = { 'a coordenadora': 'a coordenadora avaliada' }
+export const PESSOAS_SR1 = PESSOAS.map((p) => ({ ...p, quem: NOME_SR1_DA_PERSONA[p.quem] ?? p.quem }))
+
+export const ROTULO_DAS_PERSONAS = 'personas'
+export const MAPA_NO_SR1 = MAPA_DE_EMPATIA.filter((q) =>
+  ['Diz', 'Dores', 'Ganhos'].includes(q.termo),
+)
+export const ROTULO_DO_MAPA_SR1 = 'mapa de empatia: 3 de 6 quadrantes'
+export const ROTULO_DOS_PAPEIS = `no sistema, ${Object.keys(PERFIS).length} papéis`
+
+/** Os papéis na ordem do processo: de quem coordena a quem manda o número. */
 export const ORDEM_DOS_PAPEIS: readonly PerfilId[] = [
   'seab',
   'administrador',
@@ -584,122 +1002,309 @@ export const ORDEM_DOS_PAPEIS: readonly PerfilId[] = [
   'gerente_unidade',
 ]
 
-export function telasDoPapel(perfil: PerfilId): number {
-  return TELAS_NO_SR1.filter((f) => (f.perfis as readonly PerfilId[]).includes(perfil)).length
-}
-
 export const NOME_DO_PAPEL: Record<PerfilId, string> = Object.fromEntries(
   Object.entries(PERFIS).map(([id, perfil]) => [id, perfil.rotulo.toLowerCase()]),
 ) as Record<PerfilId, string>
 
-export const ROTULO_DAS_TELAS = 'telas'
-export const REGRA_DA_PORTA = 'o que não é seu responde "não encontrado" (404), nunca "proibido"'
-
-/** Slide 9: os quatro níveis do C4. */
-export const NIVEIS_C4 = [
-  { nivel: 'contexto', mostra: 'quem usa o prumo, e com quem ele conversa' },
-  { nivel: 'contêineres', mostra: 'o site, as telas e onde os dados moram' },
-  { nivel: 'componentes', mostra: 'as rotas, a camada de dados e o motor' },
-  { nivel: 'código', mostra: 'as peças do cálculo por dentro' },
-] as const
-
-export const DESTAQUE_DO_MOTOR = 'o motor de cálculo não lê relógio, rede nem banco'
-export const ENDERECO_DA_ARQUITETURA = '/arquitetura'
-
-/** Slide 10: as três contagens. O número vem da fonte; aqui, só as palavras. */
-export const ROTULOS_DA_CONFIANCA = {
-  testes: 'testes só do motor',
-  testesLegenda: 'bordas de cada faixa e arredondamento',
-  regras: 'versões da regra guardadas',
-  regrasLegenda: 'cada mês aponta para a que usou',
-  meses: 'meses fechados',
-  mesesLegenda: 'o número não muda quando a regra muda',
+/** Slide 6: o benchmarking pela lacuna, e a SWOT pelo resumo. */
+export const REFERENCIAS_SR1 = BENCHMARKING.map((r) => ({ nome: r.curto, lacuna: r.lacuna }))
+/**
+ * O resumo do quadrante de oportunidades é do Kick-off ("já tentaram, e
+ * parou"), e lido sozinho no PDF parece fraqueza. No SR1 ele diz a
+ * oportunidade; o Kick-off, que está fechado, continua com o dele.
+ */
+const RESUMO_SR1_DO_QUADRANTE: Record<string, string> = {
+  Oportunidades: 'a demanda existe: já tentaram antes',
+}
+export const QUADRANTES_SR1 = SWOT.map((q) => ({
+  titulo: q.titulo.toLowerCase(),
+  curto: RESUMO_SR1_DO_QUADRANTE[q.titulo] ?? q.curto,
+}))
+export const COLUNAS_DOS_EXISTENTES = {
+  benchmarking: `benchmarking de ${BENCHMARKING.length} tipos: o que falta a cada um`,
+  swot: 'swot',
 } as const
 
-export const FALTA_NA_CONFIANCA = 'falta: conferir a conta contra linhas reais da planilha'
-
-/** Slide 11: os três modelos. */
-export const MODELOS_SR1 = [
-  {
-    id: 'classificacao',
-    tarefa: 'fica abaixo de 90%?',
-    numero: porcentoInteiro(ACERTO),
-    rotulo: 'de acerto',
-    referencia: `o chute simples acerta ${porcentoInteiro(ACERTO_DO_CHUTE)}`,
-  },
-  {
-    id: 'regressao',
-    tarefa: 'que resultado esperar?',
-    numero: decimal(R2, 2),
-    rotulo: 'do resultado explicado (R²)',
-    referencia: 'soma com peso das mesmas notas',
-  },
-  {
-    id: 'agrupamento',
-    tarefa: 'quem se parece com quem?',
-    numero: String(GRUPOS),
-    rotulo: 'grupos de unidades',
-    referencia: `silhueta de ${decimal(SILHUETA, 2)}`,
-  },
-] as const
-
-export const LIMITE_DOS_MODELOS = 'nenhum resultado de modelo entra no cálculo da gratificação'
-export const ENDERECO_DO_ML = '/ml'
-
-/** Slide 12: os quatro riscos maiores. O registro inteiro está na Semana 6. */
-export const RISCOS_SR1 = [
-  'o percentual de cada classe depende de um decreto que não temos',
-  'os indicadores do sistema ainda são de teste',
-  'o prazo para contestar a nota ainda não existe',
-  'unidade única no distrito pode apontar quem a dirige',
-] as const
-
-export const ROTULOS_DA_SEGURANCA = {
-  stride: 'ameaças listadas (STRIDE)',
-  owasp: `falhas comuns conferidas (OWASP), ${CONTAGENS_PITCH.owaspParciais} pela metade`,
+export const ESCOPO_SR1 = {
+  rotulo: 'escopo revisto na semana 6',
+  dentro: 'lançar os números, fazer a conta e mostrar cada nota com a conta aberta',
+  fora: 'fora: folha de pagamento, login da prefeitura e dado de pessoa',
 } as const
 
-/** Slide 13: cada compromisso do Kick-off com o estado de hoje. */
-export type EstadoDoCompromisso = 'feito' | 'em parte' | 'não feito'
-
-export const ESTADO_DOS_COMPROMISSOS: Record<
-  (typeof COMPROMISSOS_ATE_O_SR1)[number]['ciclo'],
-  { estado: EstadoDoCompromisso; porque: string }
-> = {
-  s5: {
-    estado: 'em parte',
-    porque: 'o jeito de calcular entrou; os indicadores ainda são de teste',
-  },
-  s6: {
-    estado: 'feito',
-    porque: `as ${TELAS_NO_SR1.length} telas estão no ar`,
-  },
-  sr1: {
-    estado: 'não feito',
-    porque: 'as perguntas estão escritas; a conferência ficou para a semana 11',
-  },
+/** Slide 8: as técnicas, como a Semana 3 registrou. */
+/**
+ * O que cada técnica deixou, dito como está registrado. O resumo do Kick-off
+ * ("18 ideias no papel") é a previsão do roteiro, e a sessão não tem as folhas
+ * publicadas; no SR1 a tela diz só o que dá para abrir.
+ */
+const PRODUTO_SR1_DA_TECNICA: Record<string, string> = {
+  Brainwriting: 'ideias escritas antes da conversa',
+  Brainstorming: `${porExtenso(ALTERNATIVAS.length)} alternativas`,
+  "Crazy 8's": 'rascunhos, ainda não publicados',
 }
 
-export const COMPROMISSOS_NO_SR1 = COMPROMISSOS_ATE_O_SR1.map((c) => ({
-  ...c,
-  ...ESTADO_DOS_COMPROMISSOS[c.ciclo],
+export const TECNICAS_SR1 = TECNICAS_DE_IDEACAO.map((t) => ({
+  nome: t.nome.toLowerCase(),
+  minutos: t.minutos,
+  produto: PRODUTO_SR1_DA_TECNICA[t.nome] ?? t.produtoCurto,
 }))
+export const ROTULO_DOS_MINUTOS = 'min'
+export const FUNIL_DA_IDEACAO = [
+  { numero: ALTERNATIVAS.length, rotulo: 'alternativas' },
+  { numero: 1, rotulo: 'escolhida' },
+] as const
 
-/** Slide 14: o que entra e o que fica para depois. */
-export const CORRECAO_DE_ROTA = {
-  entra: [
-    'os 5 indicadores da portaria',
-    'o porte de cada unidade',
-    'o prazo para contestar a nota',
-    'os cortes das classes, quando a secretaria responder',
-    'a conta testada com linhas reais da base',
-  ],
-  depois: ['a folha de pagamento', 'o login da prefeitura', 'dado de pessoa no sistema'],
+/** Slide 9: a matriz de decisão inteira. */
+export const COLUNAS_DA_MATRIZ = {
+  alternativa: 'alternativa',
+  impacto: 'impacto',
+  esforco: 'esforço',
+  aderencia: 'aderência',
+  destino: 'destino',
+} as const
+export const ALTERNATIVAS_SR1 = ALTERNATIVAS.map((a) => ({
+  nome: a.curto,
+  impacto: a.impacto,
+  esforco: a.esforco,
+  aderencia: a.aderencia,
+  destino: a.situacao.toLowerCase(),
+  escolhida: a.situacao === 'Escolhida',
+}))
+export const LEGENDA_DA_MATRIZ = {
+  rotulo: 'por quê',
+  texto: 'ataca a causa, não o sintoma · esforço alto, mas cabe em fatias',
 } as const
 
-export const COLUNAS_DA_ROTA = { entra: 'entra nas sprints', depois: 'continua fora' } as const
+/** Slide 10: o que cada disciplina decidiu no produto. */
+export const DISCIPLINAS_SR1 = [
+  {
+    nome: 'segurança da informação',
+    itens: [
+      'o que não é seu responde "não encontrado" (404)',
+      `${CONTAGENS_PITCH.ameacasStride} ameaças listadas (STRIDE)`,
+    ],
+  },
+  {
+    nome: 'arquitetura nativa na nuvem',
+    itens: ['roda na vercel, sem servidor para manter', 'desenho em quatro níveis (C4)'],
+  },
+  {
+    nome: 'aprendizado de máquina',
+    itens: ['três modelos sobre a base da secretaria', 'sinalizam, nunca mudam nota'],
+  },
+  {
+    nome: 'direito',
+    itens: [
+      'a nota decide o salário do gerente: é dado pessoal, e se explica (LGPD, art. 20)',
+      'no protótipo, nenhuma pessoa real',
+    ],
+  },
+] as const
 
-/** Slide 15: as paradas até o SR2, lidas do cronograma, e o que cada uma entrega. */
+/** Slide 11: o caminho de um mês, e quem faz cada passo. */
+export const FLUXO_DO_MES = [
+  { quem: NOME_DO_PAPEL.gerente_unidade, faz: 'lança os números do mês' },
+  { quem: NOME_DO_PAPEL.gerente_distrital, faz: 'confere as unidades do distrito' },
+  { quem: NOME_DO_PAPEL.seab, faz: 'fecha o mês e faz a conta' },
+  { quem: 'cada um', faz: 'vê a própria nota com a conta aberta' },
+] as const
+
+export const CONTAGENS_DA_SOLUCAO = {
+  telas: 'telas',
+  papeis: 'papéis',
+  regras: 'versões da regra',
+} as const
+
+/** Slide 12: o que ainda está em desenvolvimento, dito na tela. */
+export const AINDA_NAO_SR1 = {
+  rotulo: 'ainda não',
+  texto: 'abrir o mês e cadastrar a regra pela tela, indicadores reais, login real',
+} as const
+
+/**
+ * Slide 13: as legendas usam o nome das telas no menu, para a banca ligar o
+ * desenho à tela da demonstração. As do Kick-off ficam com o Kick-off.
+ */
+export const LEGENDAS_DO_WIREFRAME_SR1 = [
+  'lançamento da unidade',
+  'meu resultado: a conta',
+  'painel da seab',
+  'meu resultado: os meses',
+] as const satisfies { length: (typeof LEGENDAS_DO_WIREFRAME)['length'] }
+
+/**
+ * Slide 14: a linha que troca o "recebe 80% da gratificação" do cartão. O
+ * percentual de cada classe está no Decreto 36.482/2023, que a equipe ainda
+ * não tem: no sistema ele é suposição nossa, e o PDF não pode mostrá-lo como
+ * regra.
+ */
+export const PERCENTUAL_A_CONFIRMAR = 'percentual a confirmar no decreto 36.482/2023'
+
+/** Slide 13: o rótulo da demonstração de reserva. */
+export const ROTULO_DA_DEMO_SR1 = 'junho, já fechado · dados de teste, nenhuma pessoa real'
+export const ENDERECO_DA_DEMO = '/sistema'
+
+/** O nome da unidade vem da base, como no Kick-off: é dado, não texto nosso. */
+export const NOME_DA_UNIDADE_DO_DECK =
+  BASE.unidades.find((u) => u.id === UNIDADE_DO_DECK)?.nome ?? UNIDADE_DO_DECK
+
+/** Slide 14: os três diferenciais, e a prova de cada um. */
+export const DIFERENCIAIS_SR1 = [
+  {
+    id: 'conta',
+    titulo: 'conta aberta',
+    texto: 'qualquer pessoa refaz a nota no papel, linha por linha',
+    contra: 'quem recebe não confere a própria nota',
+  },
+  {
+    id: 'versao',
+    titulo: 'regra com versão',
+    texto: 'mês fechado não muda quando a regra muda',
+    contra: 'fórmula arrastada à mão, célula a célula',
+    numero: nota(MAIO_V2),
+    legenda: `maio, pela regra de maio. pela regra nova, daria ${nota(MAIO_V3)}`,
+  },
+  {
+    id: 'papeis',
+    titulo: 'cada um vê o seu',
+    texto: 'quem manda o número não escolhe a meta',
+    prova: 'o que não é seu responde "não encontrado" (404), nunca "proibido"',
+  },
+] as const
+
+export const ROTULO_DO_CONTRA = 'contra'
+
+/** Slide 15: as fases do semestre. As datas saem do cronograma. */
+export const FASES_DO_SEMESTRE: readonly {
+  nome: string
+  ciclos: readonly [CicloId, ...CicloId[]]
+  /** A atividade da fase, numa linha: a rubrica pede fases E atividades. */
+  faz: string
+  atual?: true
+}[] = [
+  { nome: 'imersão', ciclos: ['s1', 's2'], faz: 'pesquisa, personas, swot' },
+  { nome: 'ideação', ciclos: ['s3'], faz: 'técnicas e alternativas' },
+  { nome: 'proposta', ciclos: ['s4'], faz: 'escopo e backlog' },
+  { nome: 'kick-off', ciclos: ['ko'], faz: 'pitch e wireframes' },
+  { nome: 'protótipo', ciclos: ['s5', 's6'], faz: 'arquitetura e 8 telas' },
+  { nome: 'sr1', ciclos: ['sr1'], faz: 'hoje', atual: true },
+  { nome: 'sprints 1 a 4', ciclos: ['s7', 's8', 's9', 's10'], faz: 'indicadores oficiais e contestação' },
+  { nome: 'validação', ciclos: ['s11'], faz: 'a secretaria confere' },
+  { nome: 'sr2', ciclos: ['s12', 'sr2'], faz: 'entrega final' },
+]
+
+export const ROTINA_DA_SEMANA = {
+  rotulo: 'toda semana',
+  itens: [
+    'registro no site: o que avançou, o que travou, quem fez',
+    'cada decisão escrita, com o porquê',
+    'testes automáticos a cada envio ao github',
+  ],
+} as const
+
+export const BACKLOG_SR1 = {
+  rotulo: 'backlog priorizado (MoSCoW)',
+  itens: [
+    { numero: historias('M'), rotulo: 'obrigatórias', noAr: historias('M', 'no_ar') },
+    { numero: historias('S'), rotulo: 'desejáveis', noAr: historias('S', 'no_ar') },
+    { numero: historias('C'), rotulo: 'possíveis', noAr: historias('C', 'no_ar') },
+  ],
+  noAr: 'no ar',
+} as const
+
+/**
+ * Slide 17: papel e responsabilidades. A responsabilidade é a frente de
+ * `equipe.ts` dita em palavras simples: a frente original usa termos que o
+ * teste de palavra difícil barra no palco.
+ */
+export const RESPONSABILIDADES_SR1: Record<IntegranteId, string> = {
+  gabriel: 'escopo, backlog e contato com o cliente',
+  matheus: 'personas, benchmarking e entrevistas',
+  'joao-henrique': 'modelo de dados e motor da conta',
+  'joao-pedro': 'telas e acessibilidade',
+  rafael: 'dados e modelos de previsão',
+  fernando: 'testes, documentação e LGPD',
+  kerry: 'apoio ao benchmarking e à validação',
+}
+
+export const EQUIPE_SR1 = EQUIPE.map((i) => ({
+  id: i.id,
+  nome: nomeCurto(i.id),
+  papel: i.papel.toLowerCase(),
+  responsabilidades: RESPONSABILIDADES_SR1[i.id],
+}))
+
+export const COLUNAS_DA_EQUIPE = {
+  nome: 'quem',
+  papel: 'papel',
+  responsabilidades: 'responsabilidades',
+} as const
+
+/** Slide 18: as ferramentas, o site e o Drive. */
+export const FERRAMENTAS_SR1 = [
+  { nome: 'github', para: 'código e testes a cada envio' },
+  { nome: 'vercel', para: 'o site no ar' },
+  { nome: 'jupyter', para: 'os cadernos de dados' },
+  { nome: 'claude (IA)', para: 'cada uso registrado' },
+  { nome: 'google drive', para: 'a pasta da equipe' },
+] as const
+
+export const SITE_SR1 = {
+  rotulo: 'o site, no lugar do google site',
+  diario: 'e o diário de bordo semanal',
+} as const
+
+export const DRIVE_SR1 = {
+  rotulo: 'a pasta do drive',
+  itens: ['recebe o pdf de cada apresentação'],
+} as const
+
+export const ROTULO_DAS_FERRAMENTAS = 'ferramentas'
+
+/** Slide 17: as colunas da tabela e o rótulo do que falta. */
+export const COLUNAS_DO_PLANEJADO = {
+  fase: 'fase',
+  data: 'data',
+  entregue: 'entregue',
+  quem: 'responsáveis',
+} as const
+export const ROTULO_EM_ANDAMENTO = 'em andamento'
+
+export const ROTULO_DOS_COMPROMISSOS = 'o que prometemos no kick-off'
+
+/**
+ * Slide 21: o balanço do projeto e da equipe. Os riscos são os três maiores
+ * do registro da Semana 6; a melhoria da equipe sai do checklist, em que as
+ * entregas até o SR1 ficaram registradas em nome de poucas pessoas.
+ */
+export const BALANCO_SR1 = {
+  fortes: {
+    rotulo: 'avanços e pontos fortes',
+    itens: [
+      'cliente real, com regra escrita',
+      `as ${TELAS_NO_SR1.length} telas no ar`,
+      'seis frentes, cada uma com dono',
+    ],
+  },
+  melhorias: {
+    rotulo: 'dificuldades e melhorias',
+    itens: [
+      { ponto: 'pesquisa sem entrevista', trato: 'entrevistar na semana 11' },
+      { ponto: 'entregas em nome de poucos', trato: 'um dono por entrega nas sprints' },
+      { ponto: 'perguntas sem resposta', trato: 'mandar por escrito, com prazo' },
+    ],
+  },
+  riscos: {
+    rotulo: 'três riscos',
+    itens: [
+      { ponto: 'percentual das classes sem o decreto', trato: 'buscar o decreto' },
+      { ponto: 'indicadores de teste', trato: 'trocar pelos 5 da portaria' },
+      { ponto: 'agenda do cliente', trato: 'pedir já a data da semana 11' },
+    ],
+  },
+} as const
+
+/** Slide 20: as paradas até o SR2, lidas do cronograma, e o que cada uma entrega. */
 export const PARADAS_ATE_O_SR2: readonly { ciclo: CicloId; entrega: string; destaque?: true }[] = [
   { ciclo: 's7', entrega: 'o retorno do sr1 aplicado' },
   { ciclo: 's8', entrega: 'os indicadores da portaria' },
@@ -710,6 +1315,15 @@ export const PARADAS_ATE_O_SR2: readonly { ciclo: CicloId; entrega: string; dest
   { ciclo: 'sr2', entrega: 'a entrega final' },
 ]
 
+/** Slide 22: a relação que a rubrica pede, do problema à solução e ao plano. */
+export const CONCLUSAO_SR1 = [
+  { rotulo: 'o problema', texto: 'a conta só existe em fórmula de planilha' },
+  { rotulo: 'a solução', texto: 'a regra com versão e a conta aberta' },
+  { rotulo: 'o plano', texto: 'os indicadores reais e a conta conferida pela secretaria' },
+] as const
+
+export const PERGUNTA_FINAL = 'obrigado. perguntas?'
+
 export const ROTULO_SE_PERGUNTAREM_SR1 = 'se perguntarem'
 
 /* -------------------------------------------------------------------------
@@ -717,9 +1331,9 @@ export const ROTULO_SE_PERGUNTAREM_SR1 = 'se perguntarem'
 ------------------------------------------------------------------------- */
 
 /**
- * Todo texto que o autor põe na tela, por slide. Número vindo da fonte e nome
- * de papel lido de `features.ts` ficam de fora da conta de palavras só quando
- * são dado; rótulo escrito aqui conta sempre.
+ * Todo texto que o autor põe na tela, por slide, INCLUSIVE o que vem de outra
+ * fonte (análises, equipe, papéis): o teto mede o que a banca lê, e não de
+ * onde a palavra veio. Número puro não conta, porque não tem letra.
  */
 export function textoNaTela(id: SlideSR1Id): readonly string[] {
   const slide = SLIDES_SR1.find((s) => s.id === id)
@@ -730,79 +1344,162 @@ export function textoNaTela(id: SlideSR1Id): readonly string[] {
     case 'capa':
       return [slide.apoio, PILULA_DA_CAPA_SR1]
     case 'roteiro':
-      return [...base, ...ROTEIRO_SR1]
+      return [...base, ...ROTEIRO_SR1.flatMap((p) => [p.nome, p.slides])]
     case 'problema':
       return [
         ...base,
-        ...ETAPAS_DO_MES.flatMap((e) => (e.quebra ? [e.quem, e.oQue, 'aqui quebra'] : [e.quem, e.oQue])),
-        CITACAO_DA_SECRETARIA.frase,
-        CITACAO_DA_SECRETARIA.fonte,
+        PROBLEMA_SR1.onde.rotulo,
+        PROBLEMA_SR1.onde.texto,
+        PROBLEMA_SR1.causas.rotulo,
+        ...PROBLEMA_SR1.causas.itens,
+        PROBLEMA_SR1.consequencias.rotulo,
+        ...PROBLEMA_SR1.consequencias.itens,
       ]
-    case 'planilha':
+    case 'pesquisa':
       return [
         ...base,
-        ...FUNIL_SR1.flatMap((f) => ('motivo' in f ? [f.rotulo, f.motivo] : [f.rotulo])),
-        ...ACHADOS_DA_PLANILHA.map((a) => a.texto),
+        COLUNAS_DAS_FONTES.fontes,
+        ...FONTES_SR1.flatMap((f) => [f.quando, f.fonte]),
+        COLUNAS_DAS_FONTES.aprendizados,
+        ...APRENDIZADOS_SR1.itens.flatMap((a) => [a.antes, a.depois]),
       ]
-    case 'erros':
+    case 'csd':
       return [
         ...base,
-        COLUNAS_DOS_ERROS.antes,
-        COLUNAS_DOS_ERROS.depois,
-        ...TRES_ERROS.flatMap((e) => [e.antes, e.depois]),
-        TIPOS_DE_UNIDADE.antes,
-        TIPOS_DE_UNIDADE.depois,
+        ...CSD_SR1.flatMap((c) => [c.rotulo, ...c.exemplos]),
+        CSD_RESPONDIDO.rotulo,
+        CSD_RESPONDIDO.texto,
       ]
-    case 'regra':
+    case 'usuarios':
       return [
         ...base,
-        ROTULO_DA_UNIDADE_DO_DECK,
-        ...TRES_CONTAS.flatMap((c) => [c.rotulo, c.versao, classe(c.avaliacao)]),
+        ROTULO_DAS_PERSONAS,
+        ...PESSOAS_SR1.flatMap((p) => [p.quem, p.dor]),
+        ROTULO_DO_MAPA_SR1,
+        ...MAPA_NO_SR1.flatMap((q) => [q.termo, q.curto]),
+        ROTULO_DOS_PAPEIS,
+        ...ORDEM_DOS_PAPEIS.map((p) => NOME_DO_PAPEL[p]),
       ]
+    case 'existentes':
+      return [
+        ...base,
+        COLUNAS_DOS_EXISTENTES.benchmarking,
+        ...REFERENCIAS_SR1.flatMap((r) => [r.nome, r.lacuna]),
+        COLUNAS_DOS_EXISTENTES.swot,
+        ...QUADRANTES_SR1.flatMap((q) => [q.titulo, q.curto]),
+      ]
+    case 'objetivos':
+      return [
+        ...base,
+        ...OBJETIVOS_NO_SR1.flatMap((o) => [o.resumo, o.quando, o.estado]),
+        ESCOPO_SR1.rotulo,
+        ESCOPO_SR1.dentro,
+        ESCOPO_SR1.fora,
+      ]
+    case 'tecnicas':
+      return [
+        ...base,
+        ...TECNICAS_SR1.flatMap((t) => [t.nome, ROTULO_DOS_MINUTOS, t.produto]),
+        ...FUNIL_DA_IDEACAO.map((f) => f.rotulo),
+      ]
+    case 'escolha':
+      return [
+        ...base,
+        ...Object.values(COLUNAS_DA_MATRIZ),
+        ...ALTERNATIVAS_SR1.flatMap((a) => [a.nome, a.destino]),
+        LEGENDA_DA_MATRIZ.rotulo,
+        LEGENDA_DA_MATRIZ.texto,
+      ]
+    case 'disciplinas':
+      return [...base, ...DISCIPLINAS_SR1.flatMap((d) => [d.nome, ...d.itens])]
+    case 'solucao':
+      return [
+        ...base,
+        ...FLUXO_DO_MES.flatMap((p) => [p.quem, p.faz]),
+        ...Object.values(CONTAGENS_DA_SOLUCAO),
+        AINDA_NAO_SR1.rotulo,
+        AINDA_NAO_SR1.texto,
+      ]
+    case 'wireframes':
+      return [...base, ...LEGENDAS_DO_WIREFRAME_SR1]
     case 'demo':
       // A frase de apoio aparece; a conta de reserva é a interface do
       // sistema, não texto nosso, e fica fora do teto como no Kick-off.
-      return [...base, ROTULO_DA_DEMO_SR1, ENDERECO_DA_DEMO]
-    case 'papeis':
+      return [...base, ROTULO_DA_DEMO_SR1, ENDERECO_DA_DEMO, PERCENTUAL_A_CONFIRMAR]
+    case 'diferenciais':
       return [
         ...base,
-        ...ORDEM_DOS_PAPEIS.map((p) => NOME_DO_PAPEL[p]),
-        ROTULO_DAS_TELAS,
-        REGRA_DA_PORTA,
+        ...DIFERENCIAIS_SR1.flatMap((d) => [
+          d.titulo,
+          d.texto,
+          ...('contra' in d ? [ROTULO_DO_CONTRA, d.contra] : []),
+          ...('legenda' in d ? [d.legenda] : []),
+          ...('prova' in d ? [d.prova] : []),
+        ]),
       ]
-    case 'arquitetura':
+    case 'processo':
       return [
         ...base,
-        ...NIVEIS_C4.flatMap((n) => [n.nivel, n.mostra]),
-        DESTAQUE_DO_MOTOR,
-        ENDERECO_DA_ARQUITETURA,
+        ...FASES_DO_SEMESTRE.flatMap((f) => [f.nome, f.faz]),
+        ROTINA_DA_SEMANA.rotulo,
+        ...ROTINA_DA_SEMANA.itens,
+        BACKLOG_SR1.rotulo,
+        ...BACKLOG_SR1.itens.map((i) => i.rotulo),
+        BACKLOG_SR1.noAr,
       ]
-    case 'confianca':
-      return [...base, ...Object.values(ROTULOS_DA_CONFIANCA), FALTA_NA_CONFIANCA]
-    case 'ml':
+    case 'equipe':
       return [
         ...base,
-        ...MODELOS_SR1.flatMap((m) => [m.tarefa, m.rotulo, m.referencia]),
-        LIMITE_DOS_MODELOS,
-        ENDERECO_DO_ML,
+        ...Object.values(COLUNAS_DA_EQUIPE),
+        ...EQUIPE_SR1.flatMap((i) => [i.nome, i.papel, i.responsabilidades]),
       ]
-    case 'riscos':
-      return [...base, ...RISCOS_SR1, ...Object.values(ROTULOS_DA_SEGURANCA)]
-    case 'prometido':
+    case 'ferramentas':
       return [
         ...base,
-        ...COMPROMISSOS_NO_SR1.flatMap((c) => [c.compromisso, c.estado, c.porque]),
+        ROTULO_DAS_FERRAMENTAS,
+        ...FERRAMENTAS_SR1.flatMap((f) => [f.nome, f.para]),
+        SITE_SR1.rotulo,
+        ENDERECO_SITE,
+        ...SECOES.map((secao) => secao.rotulo),
+        SITE_SR1.diario,
+        DRIVE_SR1.rotulo,
+        ...DRIVE_SR1.itens,
       ]
-    case 'rota':
+    case 'planejado':
       return [
         ...base,
-        COLUNAS_DA_ROTA.entra,
-        COLUNAS_DA_ROTA.depois,
-        ...CORRECAO_DE_ROTA.entra,
-        ...CORRECAO_DE_ROTA.depois,
+        ...Object.values(COLUNAS_DO_PLANEJADO),
+        ...PLANEJADO_X_REALIZADO.flatMap((l) => [
+          cicloPorId(l.ciclo).rotulo,
+          ...l.responsaveis.map((r) => nomeCurto(r)),
+        ]),
+        ROTULO_EM_ANDAMENTO,
+        ...EM_ANDAMENTO_SR1.flatMap((g) => [...g.itens, ...(g.dono ? [nomeCurto(g.dono)] : [])]),
       ]
-    case 'sr2':
-      return [...base, ...PARADAS_ATE_O_SR2.map((p) => p.entrega)]
+    case 'avanco':
+      return [
+        ...base,
+        ...AVANCO.flatMap((a) => [a.rotulo, a.conta]),
+        ROTULO_DOS_COMPROMISSOS,
+        ...COMPROMISSOS_NO_SR1.flatMap((c) => [c.compromisso, c.estado, c.dono, c.agora]),
+      ]
+    case 'balanco':
+      return [
+        ...base,
+        BALANCO_SR1.fortes.rotulo,
+        ...BALANCO_SR1.fortes.itens,
+        BALANCO_SR1.melhorias.rotulo,
+        ...BALANCO_SR1.melhorias.itens.flatMap((m) => [m.ponto, m.trato]),
+        BALANCO_SR1.riscos.rotulo,
+        ...BALANCO_SR1.riscos.itens.flatMap((r) => [r.ponto, r.trato]),
+      ]
+    case 'fechamento':
+      return [
+        ...base,
+        ...CONCLUSAO_SR1.flatMap((c) => [c.rotulo, c.texto]),
+        ...PARADAS_ATE_O_SR2.map((p) => p.entrega),
+        PERGUNTA_FINAL,
+      ]
     default:
       return base
   }
@@ -817,23 +1514,21 @@ export function palavrasNaTela(id: SlideSR1Id): number {
   return contarPalavras(textoNaTela(id).join(' '))
 }
 
-/** Quantas palavras a fala daquele slide tem, naquela versão. */
-export function palavrasFaladas(slide: SlideSR1, versao: Versao = 'completa'): number {
-  return notasNaVersao(slide, versao).join(' ').split(/\s+/).filter(Boolean).length
+/** Quantas palavras a fala daquele slide tem. */
+export function palavrasFaladas(slide: SlideSR1): number {
+  return slide.notas.join(' ').split(/\s+/).filter(Boolean).length
 }
 
-/** Em que segundo da apresentação o slide de índice `indice` começa, naquela versão. */
-export function inicioNaVersao(indice: number, versao: Versao): number {
-  return slidesDaVersao(versao)
-    .slice(0, indice)
-    .reduce((soma, slide) => soma + segundosNaVersao(slide, versao), 0)
+/** Em que segundo da apresentação o slide de índice `indice` começa. */
+export function inicioDoSlide(indice: number): number {
+  return LISTA.slice(0, indice).reduce((soma, slide) => soma + slide.segundos, 0)
 }
 
-/** Quanto tempo cada pessoa fala, naquela versão. */
-export function tempoPorIntegranteSR1(versao: Versao): ReadonlyMap<IntegranteId, number> {
+/** Quanto tempo cada pessoa fala. */
+export function tempoPorIntegranteSR1(): ReadonlyMap<IntegranteId, number> {
   const mapa = new Map<IntegranteId, number>()
-  for (const slide of slidesDaVersao(versao)) {
-    mapa.set(slide.quemFala, (mapa.get(slide.quemFala) ?? 0) + segundosNaVersao(slide, versao))
+  for (const slide of LISTA) {
+    mapa.set(slide.quemFala, (mapa.get(slide.quemFala) ?? 0) + slide.segundos)
   }
   return mapa
 }

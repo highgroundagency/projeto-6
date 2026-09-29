@@ -12,8 +12,8 @@ Site do Projeto 6 da CESAR School (2026.2, Equipe 2). Duas camadas:
   artefato avaliado pelo professor e substitui o Google Site. `/registro` continua existindo
   como redirecionamento para `/#registro`.
 - **`/pitch`** — os dezessete slides do Kick-off, fechados pelo ciclo `ko`.
-- **`/sr1`** — os dezesseis slides do SR1, fechados pelo ciclo `sr1`, com a versão de cinco
-  minutos em `/sr1?versao=curta`. `/ml` é a AV1 de machine learning, sem portão.
+- **`/sr1`** — os vinte e dois slides do SR1, na ordem da rubrica oficial (ADR-047), fechados
+  pelo ciclo `sr1`. `/ml` é a AV1 de machine learning, sem portão.
 - **`/sistema`** — MVP do cálculo da gratificação por desempenho da SESAU Recife.
 
 ## Regras que não se negociam

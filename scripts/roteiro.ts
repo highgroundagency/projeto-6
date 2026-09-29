@@ -28,8 +28,9 @@ import {
   SLIDES_SR1,
   type SlideSR1,
   type SlideSR1Id,
-  inicioNaVersao,
+  inicioDoSlide as inicioDoSlideSR1,
   palavrasNaTela as palavrasNaTelaSR1,
+  rotuloDaParte,
 } from '../src/content/apresentacao-sr1'
 
 const ARQUIVO = join(process.cwd(), 'docs', 'pitch-kickoff.md')
@@ -72,18 +73,19 @@ function corpoML(): string {
   }).join('\n\n')
 }
 
-/** O SR1: quem fala, e o que entra na versão de cinco minutos. */
+/** O SR1: quem fala, e a que parte da rubrica o slide responde. */
 function corpoSR1(): string {
   return (SLIDES_SR1 as readonly SlideSR1[]).map((slide, indice) => {
     const falas = slide.notas.map((nota) => `  1. ${nota}`).join('\n')
-    const curta = slide.curto
-      ? `**na versão de 5 min:** ${formatarTempo(slide.curto.segundos)}, ${slide.curto.notas === slide.notas.length ? 'a fala inteira' : slide.curto.notas === 1 ? 'só a primeira fala' : `só as ${slide.curto.notas} primeiras falas`}`
-      : '**fora da versão de 5 min**'
+    const parte =
+      slide.parte === 'abertura' || slide.parte === 'encerramento'
+        ? `${slide.parte}, fora dos critérios`
+        : `critério ${rotuloDaParte(slide.parte)}`
     return [
       `### Slide ${slide.numero}: ${slide.titulo}`,
       '',
-      `- **Começa em** ${formatarTempo(inicioNaVersao(indice, 'completa'))} · **dura** ${formatarTempo(slide.segundos)} · **quem fala:** ${nomeCurto(slide.quemFala)} · **${palavrasNaTelaSR1(slide.id as SlideSR1Id)} palavras na tela**`,
-      `- ${curta}`,
+      `- **Começa em** ${formatarTempo(inicioDoSlideSR1(indice))} · **dura** ${formatarTempo(slide.segundos)} · **quem fala:** ${nomeCurto(slide.quemFala)} · **${palavrasNaTelaSR1(slide.id as SlideSR1Id)} palavras na tela**`,
+      `- **Parte da rubrica:** ${parte}`,
       `- **Frase da tela:** ${slide.apoio}`,
       `- **O que a tela mostra:** ${slide.visual}`,
       '- **A fala:**',
@@ -126,5 +128,5 @@ regenerar(
   corpoSR1(),
 )
 console.log(
-  `Roteiro do SR1 regenerado: ${SLIDES_SR1.length} slides, ${formatarTempo(inicioNaVersao(SLIDES_SR1.length, 'completa'))}.`,
+  `Roteiro do SR1 regenerado: ${SLIDES_SR1.length} slides, ${formatarTempo(inicioDoSlideSR1(SLIDES_SR1.length))}.`,
 )

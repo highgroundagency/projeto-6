@@ -1319,3 +1319,70 @@ instâncias diferentes podem não enxergar a mesma cópia: já era assim antes, 
 `supabase/migrations/` não tem `lancamento_recusado`, mais uma divergência declarada de um
 schema que continua desligado do app. E junho mudou de números: ele nunca tinha sido publicado,
 mas quem guardou o 70 da auditoria de 24/09 vai encontrar 75.
+
+## ADR-047 · As orientações do SR1 chegaram, e o deck passou a seguir a rubrica
+
+**Contexto.** Em 28/09 chegaram as orientações oficiais do SR1. A apresentação tem até 15
+minutos e é interrompida no limite. Os slides vão em PPT ou PDF, salvos no Drive da equipe, e
+cada um é numerado como atual/total. São sete critérios com pontos: imersão 1,75, ideação 1,75,
+proposta de solução 2, metodologia e processo 1,5, planejado x realizado 1, pontos fortes e
+melhorias 0,5 e apresentação 1,5. Cada critério traz a lista do que mostrar. O deck de 24/09
+(ADR-045) foi montado antes delas: 16 slides em 9:00. De propósito, ele deixava de fora
+personas, SWOT, ideação e wireframes, porque o Kick-off já os tinha mostrado. Também não tinha
+metodologia, papéis, ferramentas, a organização do site e do Drive nem o percentual de avanço.
+Pela rubrica, essas ausências custavam ponto em quatro dos seis critérios de conteúdo.
+
+**Decisão.**
+
+1. **A ordem da rubrica.** São 22 slides em seis partes, entre a abertura e o encerramento.
+   Cada slide leva a parte a que responde (`parte`), e o rodapé diz qual, com o número do
+   critério ("1 · imersão no problema"). O slide 2 é o mapa, com os slides de cada parte. Um
+   teste confere que as seis partes existem, em ordem, e que cada item da rubrica tem slide.
+2. **Autocontido.** O teto de palavras na tela subiu de 70 para 90. O PDF vai para o Drive e é
+   lido sem a fala, e as orientações pedem slides "claros, completos e autocontidos".
+3. **Nenhum número digitado, também nas partes novas.** O planejado x realizado sai do
+   cronograma e do checklist: 39 de 43 entregas até o SR1, com os responsáveis. O avanço sai do
+   backlog. A matriz CSD de 25/09 virou dado (`CSD_EM_25_09`, em `analises.ts`), e o documento
+   de síntese da pesquisa passou a lê-la de lá. Quando a fala diz "cinco fontes" ou "oito
+   alternativas", o número vem da fonte, por extenso.
+4. **A versão de cinco minutos saiu.** Ela existia porque o tempo não estava confirmado. Agora
+   está, e o deck fecha em 11:50 de fala, com 3:10 de margem para as trocas de quem fala, a
+   demonstração ao vivo e o nervoso do dia. `?versao=curta` cai no deck inteiro.
+5. **Legível numa chamada de vídeo.** O SR1 herdou a escala compacta da AV1 de ML. Os ordinais
+   saíram da cor da hairline (1,8:1) para o cinza de texto. O rótulo passou a 13px, o rodapé a
+   14px e a posição atual/total a 16px, em cor de texto. O traço dos wireframes passou a usar o
+   cinza de texto, e o slide cresce em telas de 1500 e 1800 pixels.
+6. **A fala só diz o que o repositório sustenta.** Os wireframes foram desenhados depois das
+   primeiras telas, então a fala diz que cada desenho "corresponde" a uma tela, e não que
+   "virou" uma. A regra é dado com versão, mas muda por código, e a fala não diz que ela se
+   ajusta pela tela. A sessão de ideação está registrada só como roteiro e resultado, o SCAMPER
+   não foi usado, a pesquisa não tem entrevista e as personas vieram do caso. Os quatro pontos
+   estão nas respostas preparadas, e dois deles estão no balanço como pontos de melhoria.
+7. **Dois defeitos do site que a banca veria.** O link da pasta do Drive nunca aparecia, porque
+   `TopoRegistro`, o único componente que o mostrava, não é montado em lugar nenhum. Agora a
+   seção de documentos mostra o link quando `NEXT_PUBLIC_DRIVE_URL` existe. O imprensado
+   aparecia no cronograma público como "a fazer" e "a definir", e agora aparece como pausa.
+8. **Revisado como banca antes de sair.** Uma leitura do PDF como quem avalia, critério a
+   critério, achou afirmações que o repositório não sustenta, e elas mudaram. O cartão da
+   demonstração de reserva dizia "recebe 80% da gratificação", e o percentual é suposição
+   nossa até termos o Decreto 36.482/2023: no slide, a linha passou a dizer isso. "A regra como
+   dado" saiu de alcançado para em parte, porque a versão 3 pediu código novo no motor. A
+   equipe tem seis frentes com dono, não sete: o Kerry apoia a pesquisa. A ideação mostra o que
+   dá para abrir (o roteiro e as oito alternativas), e não as 18 ideias que o roteiro previa. O
+   planejado x realizado ganhou o dono e a data nova de cada compromisso, e o que está em
+   andamento ganhou dono. A matriz CSD do Kick-off voltou à versão de 12/09, que tinha sido
+   reescrita no lugar; a de 25/09 continua em `CSD_EM_25_09`. O slide 8 e o 19 ganharam cinco
+   segundos cada, e o deck passou de 11:35 para 11:50 de fala.
+
+**Consequência.** Cada critério da rubrica tem slide próprio, e a banca confere a cobertura
+pelo rodapé. A relação entre problema, solução e plano, que as orientações pedem, está dita em
+uma linha no fechamento. O percentual de avanço aparece de três jeitos, cada um com a conta:
+91% do que o cronograma pedia até hoje, 55% das entregas do semestre, na metade do calendário, e 65%
+das histórias do backlog no ar.
+
+**O que se perdeu.** O deck ficou mais denso, e a demonstração ao vivo encurtou para 70
+segundos. O balanço diz em público que as entregas até o SR1 estão registradas em nome de poucas
+pessoas. Isso é verdade no checklist, e o tratamento está no mesmo slide. Algumas pendências só a
+equipe resolve, e continuam abertas: salvar o PDF no Drive e preencher a variável na Vercel,
+publicar o registro da sessão de ideação, validar os registros das semanas 5 e 6 e ensaiar com
+cronômetro.

@@ -35,7 +35,7 @@ export const registro = {
       'Riscos, escopo revisado e backlog com estado viraram documentos desta semana. Antes, nenhum dos três estava no site.',
       'Vamos fechar o pacote do SR1, conferindo cada link do mapa no site publicado.',
       'Vamos montar e ensaiar a apresentação com os sete, de cronômetro na mão.',
-      'Vamos confirmar com o professor o tempo e os critérios do SR1.',
+      'As orientações do SR1 chegaram em 28/09: até 15 minutos, com seis critérios de conteúdo e a apresentação avaliada à parte. O deck foi refeito na ordem delas (ADR-047).',
     ],
   },
 
@@ -65,7 +65,6 @@ export const registro = {
     selo: 'rascunho',
     validadoPor: null,
     conteudo: [
-      'O tempo do SR1 ainda não foi confirmado com o professor.',
       'As perguntas 4 e 6 a 12 para a Secretaria continuam abertas. Sem elas, os cortes das classes seguem como suposição.',
     ],
   },
@@ -89,7 +88,7 @@ export const registro = {
       {
         integrante: 'gabriel',
         contribuicao:
-          'Fecha o pacote do SR1 e o backlog com estado. Confirma o tempo com o professor.',
+          'Fecha o pacote do SR1 e o backlog com estado.',
       },
       {
         integrante: 'joao-pedro',
@@ -223,10 +222,12 @@ export const RISCOS: readonly Risco[] = [
     dono: 'fernando',
   },
   {
-    risco: 'O tempo e os critérios do SR1 não foram confirmados.',
+    risco:
+      'A apresentação passar dos 15 minutos. As orientações de 28/09 dizem que a banca interrompe no limite.',
     probabilidade: 'média',
-    impacto: 'Médio: a apresentação pode não caber no tempo.',
-    mitigacao: 'Perguntar ao professor antes do SR1. Deixar um corte curto pronto nas notas.',
+    impacto: 'Alto: o que vem depois do corte não é avaliado.',
+    mitigacao:
+      'O deck fecha em 11:50 de fala, com 3:10 de margem. Ensaiar os sete, com cronômetro e a demonstração inteira.',
     dono: 'gabriel',
   },
   {

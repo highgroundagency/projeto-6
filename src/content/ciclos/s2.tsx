@@ -230,7 +230,9 @@ export const documentos = [
           titulo="Mapa de empatia: analista da CAM"
           descricao="A pessoa que carrega o processo hoje: o que ela diz, pensa, faz e sente, suas dores e seus ganhos."
         >
-          <ListaDefinicao itens={MAPA_DE_EMPATIA.map((i) => ({ ...i }))} />
+          <ListaDefinicao
+            itens={MAPA_DE_EMPATIA.map((i) => ({ termo: i.termo, definicao: i.definicao }))}
+          />
         </Secao>
       </>
     ),

@@ -1337,6 +1337,110 @@ html:fullscreen .ajuda-deck {
   color: var(--color-apagado);
 }
 
+/* ---------------------------------------------------------------------------
+   O DECK DO SR1, LEGÍVEL NUMA CHAMADA DE VÍDEO (ADR-047)
+
+   As orientações do SR1 pedem "fontes legíveis, cores contrastantes" e
+   slides numerados. A apresentação é por vídeo: a tela chega comprimida e
+   menor do que num projetor. Então o SR1 herda a escala compacta da AV1 (os
+   slides são mais densos, porque precisam ser autocontidos), os ordinais
+   ganham a cor legível, o rótulo e o rodapé crescem, e a posição atual/total
+   sai do cinza.
+--------------------------------------------------------------------------- */
+
+.slide-sr1 .slide-titulo {
+  max-width: 40ch;
+  font-size: clamp(1.45rem, 2.9vw, 2.2rem);
+  text-wrap: balance;
+}
+
+.slide-sr1 .slide-apoio {
+  max-width: 72ch;
+  margin-top: 0.55rem;
+  font-size: clamp(0.95rem, 1.3vw, 1.1rem);
+  line-height: 1.5;
+  text-wrap: balance;
+}
+
+[data-modo='deck'] .slide-sr1 {
+  padding-top: 32px;
+  padding-bottom: 60px;
+}
+
+.slide-sr1 .ordinal {
+  color: var(--color-apagado);
+}
+
+.slide-sr1:not(.slide-demo) .rotulo {
+  font-size: 0.8125rem;
+}
+
+.slide-sr1 .slide-rodape {
+  font-size: 0.875rem;
+}
+
+.slide-sr1 .rodape-posicao {
+  font-size: 1rem;
+  color: var(--color-texto);
+}
+
+/* A DENSIDADE DO SR1. `.bloco-raso` mora fora de camada, então vence os
+   utilitários de espaçamento e de cor de borda (é o caso que a ADR-033 deixou
+   de fora): `py-2` e `border-acento` escritos num bloco raso não têm efeito.
+   Os slides do SR1 são tabelas e listas densas, então a densidade e o
+   destaque vêm daqui, com o mesmo escopo e fora de camada de propósito, para
+   vencer a regra de base. Linha de tabela usa `linha-sr1`; célula de linha do
+   tempo, `celula-sr1`. */
+.slide-sr1 .bloco-raso {
+  padding: 14px 18px;
+}
+
+.slide-sr1 .bloco-raso.linha-sr1 {
+  padding: 7px 16px;
+}
+
+.slide-sr1 .bloco-raso.celula-sr1 {
+  padding: 10px 12px;
+}
+
+.slide-sr1 .bloco-raso.border-acento {
+  border-color: var(--color-acento);
+  z-index: 10;
+}
+
+/* A capa do SR1 tem uma linha a mais que a do Kick-off (a disciplina e o
+   curso), e o bloco centralizado descia até a paisagem do Recife: o cacto
+   cortava os nomes. O respiro embaixo, do tamanho da paisagem, sobe o bloco;
+   a frase de apoio cabe numa linha. */
+@media (min-width: 768px) {
+  .slide-sr1.grao {
+    padding-bottom: calc(64px + 10rem);
+  }
+
+  .slide-sr1.grao .slide-apoio {
+    max-width: 90ch;
+  }
+}
+
+/* O wireframe desenha com a hairline, que no escuro some numa tela
+   compartilhada. Aqui o traço usa o cinza de texto: é remapeamento de token
+   dentro da caixa, não cor nova, e acompanha os dois temas. */
+.wireframe-sr1 {
+  --color-linha-alta: var(--color-apagado);
+}
+
+@media screen and (min-width: 1500px) and (min-height: 880px) {
+  [data-modo='deck'] .slide-sr1:not(.grao):not(.slide-demo) .slide-corpo {
+    zoom: 1.2;
+  }
+}
+
+@media screen and (min-width: 1800px) and (min-height: 1000px) {
+  [data-modo='deck'] .slide-sr1:not(.grao):not(.slide-demo) .slide-corpo {
+    zoom: 1.4;
+  }
+}
+
 /* As respostas preparadas, dentro das notas: separadas da fala por uma
    hairline, porque não entram no tempo. */
 .notas-perguntas {
