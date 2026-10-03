@@ -337,7 +337,7 @@ test.describe('o sistema, visto pelo admin', () => {
       '/sistema?abrir=meu-resultado&res_gerente=ger-usf-canario&res_ciclo=ciclo-2026-05',
     )
     // O número do Kick-off: USF Canário, maio, pela v2.
-    await expect(page.locator('#alvo-res-score').getByText('86.67', { exact: true })).toBeVisible()
+    await expect(page.locator('#alvo-res-score').getByText('86,67', { exact: true })).toBeVisible()
     await page.getByText('Memória de cálculo', { exact: true }).click()
     await expect(page.getByRole('columnheader', { name: 'Atingimento' })).toBeVisible()
     await expect(page.getByText(/score = \(Σ pontos × peso\)/)).toBeVisible()
@@ -475,7 +475,7 @@ test.describe('cada visitante escreve na própria cópia', () => {
     await expect(page.getByRole('columnheader', { name: 'Nota', exact: true })).toBeVisible()
     const memoria = page.locator('#alvo-res-memoria')
     await expect(memoria.getByText('regra-v3 v3')).toBeVisible()
-    await expect(memoria.getByText(/÷ \(0\.8 × 1\) × 100 =/)).toBeVisible()
+    await expect(memoria.getByText(/÷ \(0,8 × 1\) × 100 =/)).toBeVisible()
     await expect(memoria.getByText('Vacinação infantil em dia')).toHaveCount(0)
 
     // 4. Fora do prazo, a tentativa não entra, mas fica no histórico.

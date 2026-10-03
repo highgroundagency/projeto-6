@@ -74,8 +74,48 @@ function corpoML(): string {
 }
 
 /** O SR1: quem fala, e a que parte da rubrica o slide responde. */
+/**
+ * A cola do ensaio: quem fala, em que slides e a partir de que minuto. Sai dos
+ * mesmos dados do deck, então nunca fica para trás quando um tempo muda.
+ */
+function colaDoEnsaioSR1(): string {
+  const slides = SLIDES_SR1 as readonly SlideSR1[]
+  const blocos: { quem: SlideSR1['quemFala']; de: number; ate: number }[] = []
+  slides.forEach((slide, indice) => {
+    const ultimo = blocos.at(-1)
+    if (ultimo && ultimo.quem === slide.quemFala) ultimo.ate = indice
+    else blocos.push({ quem: slide.quemFala, de: indice, ate: indice })
+  })
+  const ordem = [...new Set(slides.map((s) => s.quemFala))]
+  const linhas = ordem.map((quem) => {
+    const trechos = blocos
+      .filter((b) => b.quem === quem)
+      .map((b) => {
+        const numeros =
+          b.de === b.ate
+            ? `${b.de + 1}`
+            : b.ate === b.de + 1
+              ? `${b.de + 1} e ${b.ate + 1}`
+              : `${b.de + 1} a ${b.ate + 1}`
+        return `${numeros} (${formatarTempo(inicioDoSlideSR1(b.de))})`
+      })
+      .join(' · ')
+    const total = slides.filter((s) => s.quemFala === quem).reduce((soma, s) => soma + s.segundos, 0)
+    return `| ${nomeCurto(quem)} | ${trechos} | ${formatarTempo(total)} |`
+  })
+  return [
+    '### Cola do ensaio: quem fala, em que slides e a partir de que minuto',
+    '',
+    '| Quem | Slides (começa em) | Tempo de fala |',
+    '| --- | --- | --- |',
+    ...linhas,
+    '',
+    `Total de fala: ${formatarTempo(inicioDoSlideSR1(slides.length))}, com limite de 15:00. Quem passa o slide é quem opera a tela, não quem fala.`,
+  ].join('\n')
+}
+
 function corpoSR1(): string {
-  return (SLIDES_SR1 as readonly SlideSR1[]).map((slide, indice) => {
+  return [colaDoEnsaioSR1(), ...(SLIDES_SR1 as readonly SlideSR1[]).map((slide, indice) => {
     const falas = slide.notas.map((nota) => `  1. ${nota}`).join('\n')
     const parte =
       slide.parte === 'abertura' || slide.parte === 'encerramento'
@@ -94,7 +134,7 @@ function corpoSR1(): string {
         ? ['- **Se perguntarem** (fora do tempo):', ...slide.perguntas.map((p) => `  - ${p}`)]
         : []),
     ].join('\n')
-  }).join('\n\n')
+  })].join('\n\n')
 }
 
 /** Troca só o miolo entre os dois marcadores; a prosa em volta é de gente. */

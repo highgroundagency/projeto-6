@@ -213,13 +213,17 @@ se aplica a ele. Mas duas coisas precisam ser ditas, porque fingir que o sistema
 nada distribuído seria falso:
 
 **Onde o sistema já encosta na distribuição.** O deploy roda em funções sem servidor fixo na
-Vercel, que são efêmeras e podem existir em mais de uma instância ao mesmo tempo. Como a base
-do MVP vive **em memória**, a falácia que já nos morde não é de rede: é a suposição de estado
-compartilhado. Um lançamento gravado numa instância pode não ser visto por outra. Isso é uma
-limitação conhecida e declarada do MVP, não uma surpresa, e é a primeira coisa que o banco
-resolve. Desde 25/09 cada visitante escreve numa cópia própria (ADR-046), então dois
-avaliadores navegando ao mesmo tempo não se atropelam; o que continua valendo é que a cópia
-vive na memória de uma instância só.
+Vercel, que são efêmeras e podem existir em mais de uma instância ao mesmo tempo. A base do
+MVP vive **em memória**, e a falácia que nos mordeu não foi de rede: foi a suposição de estado
+compartilhado. Desde 25/09 cada visitante escreve numa cópia própria (ADR-046), mas até 03/10
+essa cópia ficava na memória do processo, e na Vercel a rota que grava (`/api/sistema/*`) e a
+página que lê (`/sistema`) são **funções diferentes**: o lançamento respondia "registrado" e a
+tela seguia igual. Os testes de ponta a ponta não pegavam, porque `next start` é um processo
+só. Reproduzimos com dois processos atrás de um proxy, um para `/api` e outro para as
+páginas: a versão antiga falha, a nova passa. Agora a cópia sai de um **diário assinado no
+cookie** do próprio navegador, refeito a cada requisição (ADR-048), então qualquer instância
+de qualquer função enxerga a mesma coisa. Durar de verdade, para todo mundo, continua sendo a
+primeira coisa que o banco resolve.
 
 **Quais falácias apareceriam primeiro se distribuíssemos.** Se um dia o cálculo virar serviço
 próprio, as três que batem primeiro neste domínio são:

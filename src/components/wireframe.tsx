@@ -138,14 +138,15 @@ export function WireframeConta({ className }: { className?: string }) {
         {/* A tabela: cabeçalho e cinco linhas, sete colunas. */}
         <Caixa x={14} y={82} w={292} h={86} />
         <rect x="14" y="82" width="292" height="14" fill={CHEIO} />
-        {[14, 110, 150, 190, 230, 262, 288].map((x) => (
-          <Texto key={x} x={x + 6} y={86} w={x === 14 ? 44 : 22} h={4} />
+        {/* Seis colunas a cada 32: a última termina antes da borda (x = 306). */}
+        {[14, 110, 142, 174, 206, 238, 270].map((x) => (
+          <Texto key={x} x={x + 6} y={86} w={x === 14 ? 44 : 16} h={4} />
         ))}
         {[96, 110, 124, 138, 152].map((y) => (
           <g key={y}>
             <line x1="14" y1={y} x2="306" y2={y} stroke={FRACO} strokeWidth="0.5" />
             <Texto x={20} y={y + 4} w={80} h={4} />
-            {[116, 156, 196, 236, 268, 294].map((x) => (
+            {[116, 148, 180, 212, 244, 276].map((x) => (
               <Texto key={x} x={x} y={y + 4} w={14} h={4} />
             ))}
           </g>

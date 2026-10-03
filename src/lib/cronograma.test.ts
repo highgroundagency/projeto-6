@@ -92,7 +92,7 @@ describe('cronograma', () => {
 
   it('tem marcos paralelos de ML e Direito com datas válidas', () => {
     expect(MARCOS_PARALELOS.filter((m) => m.trilha === 'ml')).toHaveLength(4)
-    expect(MARCOS_PARALELOS.filter((m) => m.trilha === 'direito')).toHaveLength(2)
+    expect(MARCOS_PARALELOS.filter((m) => m.trilha === 'direito')).toHaveLength(3)
     for (const marco of MARCOS_PARALELOS) {
       expect(ehDataISO(marco.data), `${marco.rotulo} tem data inválida`).toBe(true)
     }

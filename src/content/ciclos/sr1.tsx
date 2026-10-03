@@ -2,8 +2,21 @@ import { Lista, Nota, Secao, Tabela } from '@/components/conteudo'
 import { CSD_EM_25_09 } from '@/content/analises'
 import { nomeCurto } from '@/content/equipe'
 import { COMPROMISSOS_ATE_O_SR1 } from '@/content/pitch'
+import {
+  ATIVIDADE_2,
+  BACKLOG_DE_PRIVACIDADE,
+  BASE_LEGAL_DA_ATIVIDADE,
+  DADOS_PESSOAIS,
+  DADOS_SENSIVEIS,
+  NORMAS_DA_POLITICA,
+  NOTA_DA_IMPLANTACAO,
+  NOTA_DA_PORTARIA,
+  REQUISITOS_DE_PRIVACIDADE,
+  contarRequisitos,
+} from '@/content/privacidade'
 import { OBJETIVOS_ESPECIFICOS, URL_REPOSITORIO } from '@/content/produto'
 import { cicloPorId } from '@/lib/cronograma'
+import { formatarBR } from '@/lib/datas'
 import type { Documento, RegistroSemana } from '@/lib/registro/tipos'
 import { BACKLOG, contarBacklog } from './s6'
 
@@ -66,7 +79,7 @@ export const registro = {
     selo: 'rascunho',
     validadoPor: null,
     conteudo: [
-      'As perguntas 4 e 6 a 12 para a Secretaria continuam abertas. Sem elas, a regra não fica conferida até o SR1.',
+      'As perguntas 4 e 6 a 13 para a Secretaria continuam abertas. Sem elas, a regra não fica conferida até o SR1.',
     ],
   },
 
@@ -106,7 +119,8 @@ export const registro = {
       },
       {
         integrante: 'joao-pedro',
-        contribuicao: 'Vai mostrar as técnicas de ideação e explicar a demonstração ao vivo.',
+        contribuicao:
+          'Vai mostrar as técnicas de ideação e os protótipos, e explicar a demonstração ao vivo.',
       },
       {
         integrante: 'rafael',
@@ -116,7 +130,7 @@ export const registro = {
       {
         integrante: 'joao-henrique',
         contribuicao:
-          'Vai mostrar a solução, os protótipos e os diferenciais, e operar o sistema na demonstração.',
+          'Vai mostrar a solução e os diferenciais, e operar o sistema na demonstração.',
       },
       {
         integrante: 'fernando',
@@ -248,6 +262,7 @@ export const MAPA_DO_PACOTE = [
           { rotulo: 'Nuvem e fluxo de dados', href: '#doc-s5-nuvem' },
           { rotulo: 'Segurança', href: '#doc-sr1-seguranca' },
           { rotulo: 'Direito e LGPD', href: '#doc-sr1-direito-base-legal' },
+          { rotulo: 'Privacy by design', href: '#doc-sr1-privacy-by-design' },
           { rotulo: 'Lente de ML', href: '/ml' },
           { rotulo: 'Uso de IA', href: '/transparencia-ia' },
         ],
@@ -461,7 +476,7 @@ export const ITENS_OWASP = [
 
 export const LIMITACOES_DE_SEGURANCA = [
   'O seletor de perfil não é autenticação. Num site público, qualquer pessoa troca entre os quatro perfis. A única credencial real é a sessão de admin.',
-  'A escrita do sistema vive em memória. O que se grava some no reinício, e pode não valer entre duas requisições. Lançamento e contestação ficam abertos a qualquer visitante, por decisão, e desde a semana do SR1 cada visitante escreve numa cópia própria.',
+  'A escrita do sistema não tem banco. O que se grava fica num diário assinado no cookie do próprio navegador e some quando ele fecha. Até 03/10 ficava na memória do servidor, e na Vercel a página não enxergava o que a rota tinha gravado (ADR-048). Lançamento e contestação ficam abertos a qualquer visitante, por decisão, e cada visitante só vê o que ele mesmo escreveu.',
   'Esconder o link do painel reduz tropeço, não é segurança. A proteção real é trocar a senha em produção.',
   'A CSP usa unsafe-inline para script e estilo. O próximo passo é um nonce por requisição.',
   'Não há proteção CSRF além do cookie sameSite=lax. Basta para formulário da mesma origem, não para uma API pública.',
@@ -491,12 +506,13 @@ const BALANCO_DOS_COMPROMISSOS: Record<CicloDoCompromisso, Balanco> = {
   },
   s6: {
     estado: 'feito',
-    motivo: 'Quatro telas no ar desde 19/09. As oito, com a liberação desta semana.',
+    motivo:
+      'As três primeiras telas estão no ar desde 11/09, véspera do Kick-off. As oito, desde 25/09.',
     ajuste: 'Nenhum.',
   },
   sr1: {
     estado: 'não feito',
-    motivo: 'As perguntas 4 e 6 a 12 para a Secretaria continuam sem resposta.',
+    motivo: 'As perguntas 4 e 6 a 13 para a Secretaria continuam sem resposta.',
     ajuste:
       'Levar as perguntas por escrito antes do SR1. A conferência da conta fica na Semana 11.',
   },
@@ -750,7 +766,7 @@ export const documentos = [
     Conteudo: () => (
       <>
         <p>
-          A fonte é o arquivo docs/seguranca.md, escrito desde 16/08. Este documento transcreve
+          A fonte é o arquivo docs/seguranca.md, escrito desde 15/08. Este documento transcreve
           as tabelas dele para o site. Um teste confere que as contagens batem.
         </p>
         <div className="mt-4">
@@ -834,10 +850,12 @@ export const documentos = [
             ]}
           />
           <Nota>
-            O sistema não guarda dados sensíveis, os do art. 5º, II. Também não guarda dados de
-            pacientes, dados bancários nem valores de folha. Ele só calcula o percentual devido.
-            A folha de pagamento é outro sistema, e deixamos isso fora do escopo de forma
-            declarada.
+            O sistema não tem campo para dado sensível, os do art. 5º, II. O único lugar onde um
+            pode entrar sem querer é o texto livre da contestação, e por isso o formulário avisa
+            para não escrever. A Atividade 2 de Direito, no documento abaixo, trata esse e os
+            outros casos. O sistema também não guarda dados de pacientes, dados bancários nem
+            valores de folha. Ele só calcula o percentual devido. A folha de pagamento é outro
+            sistema, e deixamos isso fora do escopo de forma declarada.
           </Nota>
         </Secao>
 
@@ -890,6 +908,102 @@ export const documentos = [
                 ],
               ]}
             />
+          </div>
+        </Secao>
+      </>
+    ),
+  },
+  {
+    id: 'privacy-by-design',
+    titulo: 'Direito: requisitos de privacy by design',
+    resumo: `a atividade 2 de direito: ${DADOS_PESSOAIS.length} dados pessoais mapeados, ${REQUISITOS_DE_PRIVACIDADE.length} riscos com requisito e teste, e onde cada requisito está hoje.`,
+    Conteudo: () => (
+      <>
+        <p className="text-sm leading-relaxed">
+          A Atividade 2 de {ATIVIDADE_2.disciplina} ({ATIVIDADE_2.peso}), entregue em{' '}
+          {formatarBR(ATIVIDADE_2.entrega)}, levantou os requisitos de privacidade da plataforma
+          antes do código: que dado pessoal ela trataria, o que pode dar errado com cada um e que
+          controle evita o risco. Cada requisito nomeia o princípio de privacy by design que o
+          sustenta e traz um critério de verificação que dá para testar. Este documento
+          transcreve o catálogo e acrescenta uma coluna que o original não tem: onde cada
+          requisito está hoje no sistema.
+        </p>
+
+        <Secao
+          titulo="Base legal"
+          descricao="Por que a plataforma pode tratar esses dados sem pedir consentimento."
+        >
+          <Lista itens={BASE_LEGAL_DA_ATIVIDADE} />
+          <div className="mt-3">
+            <Nota>
+              {NOTA_DA_PORTARIA} As normas da política: {NORMAS_DA_POLITICA.join(', ')}.
+            </Nota>
+          </div>
+        </Secao>
+
+        <Secao
+          titulo="Os dados pessoais que a plataforma trataria"
+          descricao={`${DADOS_PESSOAIS.length} categorias, classificadas pelo art. 5º, I e II da LGPD. ${DADOS_SENSIVEIS.length} são sensíveis ou podem ser, a maioria por inferência.`}
+        >
+          <Tabela
+            colunas={['Dado', 'Classificação', 'Por quê']}
+            linhas={DADOS_PESSOAIS.map((d) => [d.dado, d.classe, d.porque])}
+            alinharNumeros={false}
+          />
+          <div className="mt-3">
+            <Nota>
+              No protótipo, nenhum desses dados é de pessoa real: o sistema roda só com dados de
+              teste. Dos sensíveis, só um tem lugar no protótipo hoje, o texto livre da
+              contestação, e o formulário avisa para não escrever dado sensível nele.
+            </Nota>
+          </div>
+        </Secao>
+
+        <Secao
+          titulo="Riscos e requisitos"
+          descricao={`${REQUISITOS_DE_PRIVACIDADE.length} riscos, cada um com o requisito que o trata e o critério que prova que o requisito foi cumprido.`}
+        >
+          <Tabela
+            colunas={['Nº', 'Risco', 'Requisito', 'Critério de verificação']}
+            linhas={REQUISITOS_DE_PRIVACIDADE.map((r, i) => [
+              String(i + 1),
+              r.risco,
+              r.requisito,
+              r.criterio,
+            ])}
+          />
+        </Secao>
+
+        <Secao
+          titulo="Onde cada requisito está hoje"
+          descricao={`${contarRequisitos('no MVP')} já valem no sistema, ${contarRequisitos('em parte')} valem em parte, ${contarRequisitos('no backlog')} estão no backlog e ${contarRequisitos('na implantação')} dependem de infraestrutura real.`}
+        >
+          <Tabela
+            colunas={['Nº', 'Princípio', 'Estado', 'O que existe e o que falta']}
+            linhas={REQUISITOS_DE_PRIVACIDADE.map((r, i) => [
+              String(i + 1),
+              r.principio,
+              r.estado,
+              r.hoje,
+            ])}
+          />
+        </Secao>
+
+        <Secao
+          titulo="O que a atividade acrescenta ao sistema"
+          descricao="O backlog de privacidade. Os números da coluna de riscos são os das tabelas acima."
+        >
+          <Tabela
+            colunas={['Item', 'O que é', 'Riscos', 'Estado']}
+            linhas={BACKLOG_DE_PRIVACIDADE.map((b) => [
+              b.item,
+              b.detalhe,
+              b.riscos.length ? b.riscos.join(', ') : 'todos',
+              b.estado,
+            ])}
+          />
+          <div className="mt-3">
+            <Nota>{NOTA_DA_IMPLANTACAO}</Nota>
           </div>
         </Secao>
       </>

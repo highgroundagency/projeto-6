@@ -31,13 +31,16 @@ const COLUNAS = [
  * auditoria — e dentro de um `<details>` nativo, sem uma linha de JavaScript.
  */
 
-function porcentagem(valor: number | null): string {
-  return valor === null ? ', ' : `${(valor * 100).toFixed(1)}%`
+function porcentagem(valor: number | null, virgula = false): string {
+  if (valor === null) return ', '
+  const texto = (valor * 100).toFixed(1)
+  return `${virgula ? texto.replace('.', ',') : texto}%`
 }
 
 /**
- * O número como a banca lê: vírgula decimal, sem mudar as casas. Só o modo
- * enxuto usa; a tela do sistema continua com o número cru do motor.
+ * O número como a banca lê: vírgula decimal, sem mudar as casas. Usam o modo
+ * enxuto do slide e, com `virgula`, a tela do sistema; o Kick-off continua com
+ * o número cru do motor, como foi apresentado.
  */
 function numeroBR(valor: number): string {
   return valor.toLocaleString('pt-BR', { maximumFractionDigits: 4 })
@@ -48,6 +51,7 @@ export function MemoriaDeCalculo({
   aberta = false,
   compacta = false,
   enxuta = false,
+  virgula = false,
 }: {
   avaliacao: Avaliacao
   /** Já aberta ao carregar. O pitch usa; a tela "meu resultado" deixa fechada. */
@@ -75,11 +79,14 @@ export function MemoriaDeCalculo({
    * conta final fica, com os números dela.
    */
   enxuta?: boolean
+  /** Vírgula decimal em todo número, sem mudar mais nada: a tela do sistema. */
+  virgula?: boolean
 }) {
   const { memoria } = avaliacao
   const porNotas = memoria.metodo === 'notas'
   const corpo = enxuta ? 'text-base' : compacta ? 'text-sm' : 'text-xs'
-  const num = (valor: number) => (enxuta ? numeroBR(valor) : valor)
+  const br = enxuta || virgula
+  const num = (valor: number) => (br ? numeroBR(valor) : valor)
   const semPontos = enxuta && porNotas
 
   return (
@@ -134,10 +141,10 @@ export function MemoriaDeCalculo({
             <>
               <span>
                 <span className="rotulo">Pontuação máxima</span>{' '}
-                <Num>{memoria.pontuacaoMaxima}</Num>
+                <Num>{num(memoria.pontuacaoMaxima)}</Num>
               </span>
               <span>
-                <span className="rotulo">Soma dos pesos</span> <Num>{memoria.somaPesos}</Num>
+                <span className="rotulo">Soma dos pesos</span> <Num>{num(memoria.somaPesos)}</Num>
               </span>
             </>
           )}
@@ -182,9 +189,9 @@ export function MemoriaDeCalculo({
                         {passo.subPassos.map((sub) => (
                           <li key={sub.subindicadorId} className="text-[0.65rem] text-apagado">
                             <span className="font-sans">{sub.subindicador}</span>:{' '}
-                            {descreverSubPasso(sub)}
+                            {descreverSubPasso(sub, num)}
                             {sub.nota === null || sub.nota === undefined ? null : (
-                              <span className="text-texto"> → nota {sub.nota}</span>
+                              <span className="text-texto"> → nota {num(sub.nota)}</span>
                             )}
                           </li>
                         ))}
@@ -207,7 +214,7 @@ export function MemoriaDeCalculo({
                         num(passo.nota)
                       )
                     ) : (
-                      porcentagem(passo.atingimento)
+                      porcentagem(passo.atingimento, br)
                     )}
                     {passo.aplicouTeto ? (
                       <span
@@ -269,12 +276,17 @@ export function MemoriaDeCalculo({
 }
 
 /** A conta de um subindicador, numa linha: valor direto ou numerador ÷ denominador. */
-function descreverSubPasso(sub: PassoSubindicador): string {
+function descreverSubPasso(
+  sub: PassoSubindicador,
+  num: (valor: number) => number | string,
+): string {
   if (sub.aviso) return sub.aviso
+  const comoNumero = (valor: number | null | undefined) =>
+    valor === null || valor === undefined ? String(valor) : String(num(valor))
   if (sub.tipo === 'razao') {
-    return `${sub.numerador} ÷ ${sub.denominador} = ${sub.valor}%`
+    return `${comoNumero(sub.numerador)} ÷ ${comoNumero(sub.denominador)} = ${comoNumero(sub.valor)}%`
   }
-  return String(sub.valor)
+  return comoNumero(sub.valor)
 }
 
 /**
@@ -285,6 +297,7 @@ export function CartaoScore({
   avaliacao,
   percentualAConfirmar,
   enxuto = false,
+  virgula = false,
 }: {
   avaliacao: Pick<Avaliacao, 'score' | 'faixa' | 'avisos'>
   /**
@@ -296,13 +309,15 @@ export function CartaoScore({
   percentualAConfirmar?: string
   /** Vírgula decimal e "de 0 a 100", como no resto do deck do SR1. */
   enxuto?: boolean
+  /** Só a vírgula decimal: a tela do sistema. */
+  virgula?: boolean
 }) {
   return (
     <div className="flex flex-wrap items-end justify-between gap-4 rounded-xl border border-linha bg-superficie p-5">
       <div>
         <p className="rotulo">Nota do mês</p>
         <p className="numero mt-1 text-5xl font-semibold leading-none">
-          {enxuto
+          {enxuto || virgula
             ? avaliacao.score.toLocaleString('pt-BR', {
                 minimumFractionDigits: 2,
                 maximumFractionDigits: 2,

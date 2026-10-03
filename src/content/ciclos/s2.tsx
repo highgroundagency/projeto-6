@@ -224,6 +224,13 @@ export const documentos = [
               </p>
             </Cartao>
           </Grade>
+          <div className="mt-3">
+            <Nota>
+              Revisão de 10/09, para o Kick-off: depois da reunião de 22/08, a segunda persona
+              passou a ser a gerente da unidade, porque é a unidade que manda os números. Os
+              cartões acima mantêm as personas de 15/08.
+            </Nota>
+          </div>
         </Secao>
 
         <Secao
@@ -264,6 +271,13 @@ export const documentos = [
     Conteudo: () => (
       <>
         <Quadro quadrantes={SWOT.map((q) => ({ titulo: q.titulo, itens: [...q.itens] }))} />
+        <div className="mt-3">
+          <Nota>
+            Revista em 11 e 12/09: a fraqueza da portaria passou a dizer quando ela chegou, e a
+            força passou a contar sete integrantes, com a entrada do Kerry. A versão de 16/08
+            está no histórico do Git.
+          </Nota>
+        </div>
       </>
     ),
   },

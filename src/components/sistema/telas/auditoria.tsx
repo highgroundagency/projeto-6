@@ -34,7 +34,8 @@ const LIMITE = 120
 /**
  * Quantos registros a tela LÊ para contar. Bem acima do histórico inteiro (a
  * base de teste tem pouco mais de 560, e cada sessão de teste soma no máximo
- * 200): contar só os 500 primeiros fazia o total mentir quando julho entrou.
+ * 200, bem menos na prática, porque o diário cabe num cookie): contar só os 500
+ * primeiros fazia o total mentir quando julho entrou.
  */
 const LIMITE_DE_LEITURA = 5000
 

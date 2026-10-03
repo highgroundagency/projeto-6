@@ -1,7 +1,7 @@
 import 'server-only'
 import { BASE } from '@/lib/seed'
-import { estadoDo, type EstadoDoVisitante } from '@/lib/sistema/estado'
-import { visitanteAtual } from '@/lib/sistema/visitante'
+import { estadoDo, type EstadoDoVisitante, type Sessao } from '@/lib/sistema/estado'
+import { MENSAGEM_DIARIO_CHEIO, gravarSessao, sessaoAtual } from '@/lib/sistema/visitante'
 import type {
   EntradaContestacao,
   EntradaLancamento,
@@ -18,19 +18,36 @@ import type {
  * É o que permite `git clone && npm run dev` funcionar sem nenhuma credencial,
  * o que importa num trabalho em equipe. Ver ADR-011 em docs/decisoes.md.
  *
- * CADA CHAMADA RESOLVE O VISITANTE. A base é a mesma para todos; o que foi
- * escrito pela interface mora numa cópia por visitante (`sistema/estado.ts`).
- * As telas não sabem disso: o contrato de `RepositorioDados` não mudou.
+ * CADA CHAMADA LÊ A SESSÃO DO VISITANTE. A base é a mesma para todos; o que
+ * foi escrito pela interface mora numa cópia por visitante, refeita do diário
+ * que ele carrega no cookie (`sistema/estado.ts` e `sistema/visitante.ts`). As
+ * telas não sabem disso: o contrato de `RepositorioDados` não mudou.
  *
- * `quemEsta` existe para o teste trocar de visitante sem simular cookie.
+ * `lerSessao` e `gravar` existem para o teste trocar de visitante sem simular
+ * cookie.
  */
 export function driverSeed(
-  quemEsta: () => Promise<string | null> = visitanteAtual,
+  lerSessao: () => Promise<Sessao | null> = sessaoAtual,
+  gravar: (sessao: Sessao) => Promise<boolean> = gravarSessao,
 ): RepositorioDados {
-  const estado = async (): Promise<EstadoDoVisitante> => estadoDo(await quemEsta())
+  const estado = async (): Promise<EstadoDoVisitante> => estadoDo(await lerSessao())
+
+  /**
+   * Escreve na cópia e grava o diário de volta. Se o diário não cabe mais no
+   * cookie, a escrita não vale, e quem escreveu fica sabendo.
+   */
+  async function escrever(fazer: (estado: EstadoDoVisitante) => Resultado): Promise<Resultado> {
+    const sessao = await lerSessao()
+    const antes = sessao?.diario.length ?? 0
+    const resultado = fazer(estadoDo(sessao))
+    if (sessao && sessao.diario.length !== antes && !(await gravar(sessao))) {
+      return { ok: false, mensagem: MENSAGEM_DIARIO_CHEIO }
+    }
+    return resultado
+  }
 
   return {
-    nome: 'seed em memória, uma cópia por visitante',
+    nome: 'seed em memória, com a cópia de cada visitante refeita do cookie dele',
     persistente: false,
 
     async panorama(): Promise<Panorama> {
@@ -81,31 +98,35 @@ export function driverSeed(
     },
 
     async registrarLancamento(entrada: EntradaLancamento, agora: string): Promise<Resultado> {
-      return (await estado()).registrarLancamento(
-        {
-          subindicadorId: entrada.subindicadorId,
-          unidadeId: entrada.unidadeId,
-          cicloId: entrada.cicloId,
-          valor: entrada.valor,
-          numerador: entrada.numerador,
-          denominador: entrada.denominador,
-          evidencia: entrada.evidencia,
-          autor: entrada.autor,
-          registradoEm: agora,
-          status: 'enviado',
-        },
-        agora,
-        entrada.perfil,
+      return escrever((estado) =>
+        estado.registrarLancamento(
+          {
+            subindicadorId: entrada.subindicadorId,
+            unidadeId: entrada.unidadeId,
+            cicloId: entrada.cicloId,
+            valor: entrada.valor,
+            numerador: entrada.numerador,
+            denominador: entrada.denominador,
+            evidencia: entrada.evidencia,
+            autor: entrada.autor,
+            registradoEm: agora,
+            status: 'enviado',
+          },
+          agora,
+          entrada.perfil,
+        ),
       )
     },
 
     async avancarCiclo(cicloId: string, autor: string, agora: string): Promise<Resultado> {
-      return (await estado()).avancarCiclo(cicloId, autor, agora)
+      return escrever((estado) => estado.avancarCiclo(cicloId, autor, agora))
     },
 
     async abrirContestacao(entrada: EntradaContestacao, agora: string): Promise<Resultado> {
       const { perfil, ...dados } = entrada
-      return (await estado()).abrirContestacao({ ...dados, abertaEm: agora }, perfil)
+      return escrever((estado) =>
+        estado.abrirContestacao({ ...dados, abertaEm: agora }, perfil),
+      )
     },
   }
 }

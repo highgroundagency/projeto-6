@@ -129,8 +129,8 @@ export async function TelaLancamento({ ctx }: PropsTela) {
       <div className="mt-6">
         <Aviso>
           Os {dados.indicadores.length} indicadores daqui são de teste. Os 5 da portaria
-          ainda vão entrar. O que você lança fica só na sua sessão de teste: ninguém mais vê,
-          e some quando o servidor reinicia.
+          ainda vão entrar. O que você lança fica só na sua sessão de teste, guardada neste
+          navegador: ninguém mais vê, e some quando você fecha o navegador.
         </Aviso>
       </div>
 
@@ -242,7 +242,7 @@ export async function TelaLancamento({ ctx }: PropsTela) {
 
                         {sub.tipo === 'razao' && valorApurado !== null ? (
                           <p className="numero mt-1.5 text-xs text-apagado">
-                            proporção apurada: {valorApurado.toFixed(1)}%
+                            proporção apurada: {valorApurado.toFixed(1).replace('.', ',')}%
                           </p>
                         ) : null}
 

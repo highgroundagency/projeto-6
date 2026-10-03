@@ -23,6 +23,8 @@ export const INSTITUICAO = {
 export const CLIENTE = {
   orgao: 'Secretaria de Saúde do Recife (SESAU)',
   area: 'Secretaria Executiva de Atenção Básica (SEAB), com a SECOGE',
+  /** Para a capa do SR1: a sigla SEAB aparece no deck inteiro e precisa estar expandida. */
+  areaCurta: 'Secretaria Executiva de Atenção Básica (SEAB)',
 } as const
 
 /**

@@ -11,9 +11,35 @@ import type { Documento, RegistroSemana } from '@/lib/registro/tipos'
  * Até 24/09 este arquivo dizia que a semana "ainda não aconteceu", com a semana
  * já pública e em curso.
  *
- * Os blocos seguem em `rascunho` porque ninguém da equipe conferiu e assinou
- * ainda. O selo não aparece para o visitante (ADR-026): ele lê isto como fato,
- * e é por isso que só entra o que tem fonte no repositório.
+ * O selo não aparece para o visitante (ADR-026): ele lê isto como fato, e é
+ * por isso que só entra o que tem fonte no repositório.
+ *
+ * CONFERIDO EM 02/10, a pedido do Gabriel, frase a frase contra o repositório:
+ * o git log e os deploys de produção no GitHub, as ADR-041 a 047,
+ * docs/retomada.md, docs/perguntas-para-a-sesau.md, docs/uso-de-ia.md, o seed,
+ * src/lib/features.ts, src/content/travas.ts e o CSV de ml/data. O que não batia
+ * mudou antes do selo:
+ * - "Em 19/09, meu resultado entrou no ar" não aconteceu para o visitante. A tela
+ *   é do ciclo s6, e a produção lia o adiantamento como zero até o deploy de
+ *   2aede44 (docs/releases.md). As oito telas abriram juntas em 25/09.
+ * - "Liberar as quatro telas" saiu dos próximos passos: aconteceu em 25/09.
+ * - "Os meses fechados seguem na v1 e na v2" virou "até maio": junho fechou
+ *   pela v3 (ADR-046).
+ * - O art. 20 da LGPD saiu do porquê da regra 1: o próprio site o lê como
+ *   explicação de decisão automatizada (docs/privacidade.md, slide 11 do SR1).
+ * - "Sem nenhuma pessoa" virou "sem nome, CPF, matrícula, e-mail ou telefone":
+ *   o risco de identificação indireta está nos riscos da Semana 6.
+ * - O teste de pureza segura importe e relógio, não `fetch`; a frase diz isso.
+ * - No documento de nuvem, "Processos: sem estado" passou a dizer onde a escrita
+ *   do protótipo morava NA SEMANA 5: na memória do servidor (ADR-046). A troca
+ *   pelo diário no cookie é de 03/10 (ADR-048) e fica fora deste registro.
+ * Validados: objetivo, avanços, decisões, bloqueios, feedback e próximos
+ * passos. Em `rascunho`: responsáveis, que cada integrante confirma, e
+ * evidências, porque o link do repositório depende de NEXT_PUBLIC_REPO_URL na
+ * Vercel e ninguém o abriu no site publicado.
+ *
+ * DATAS: são as do git, gravadas em UTC. Em Recife, a v3 e os sete tipos são de
+ * 22/09 às 21:46, e as oito telas foram para produção em 24/09 às 22:43.
  *
  * O feedback do cliente tem fonte: a resposta da Secretaria de 22/09 está em
  * docs/retomada.md e em docs/perguntas-para-a-sesau.md (pergunta 5).
@@ -23,36 +49,36 @@ export const registro = {
   marcador: 'PRUMO-MARCADOR-CICLO-s5',
 
   objetivo: {
-    selo: 'rascunho',
-    validadoPor: null,
+    selo: 'validado',
+    validadoPor: 'gabriel',
     conteudo:
       'Fechar o desenho da arquitetura do MVP. Ter o motor de cálculo (a parte que faz a conta da nota) rodando de ponta a ponta. Ele roda sobre a base de teste, feita só de dados inventados.',
   },
 
   avancos: {
-    selo: 'rascunho',
-    validadoPor: null,
+    selo: 'validado',
+    validadoPor: 'gabriel',
     conteudo: [
-      'Em 19/09, a tela meu resultado entrou no ar. Com ela, quatro telas ficaram abertas: painel da SEAB, indicadores, lançamento e meu resultado.',
       'Em 22/09, a Secretaria enviou a planilha que usa hoje, sem os nomes. Lemos as fórmulas uma a uma.',
       'Em 23/09, a regra v3 entrou no motor. Ela segue o método da planilha: média das notas, peso redistribuído e nota de 0 a 1. As regras v1 e v2 continuam de pé, e nenhum mês fechado mudou.',
       'Em 23/09, os tipos de unidade passaram a ser os sete da portaria: USF, UBT, UBT Mista, CAPS, CECON, UCIS e MAC.',
       'A base de teste, gerada por programa, agora tem 7 tipos de unidade. Ela segue com 3 distritos, 12 unidades, 8 indicadores e 12 itens medidos.',
       'Publicamos os quatro níveis do C4 em /arquitetura. C4 é um jeito de desenhar sistemas em níveis de zoom. Os níveis 3 e 4 são de 23/09.',
-      'Em 23/09, a base de desempenho por unidade da Secretaria entrou em ml/data, com autorização. É dado da instituição, sem nenhuma pessoa.',
+      'Em 23/09, a base de desempenho por unidade da Secretaria entrou em ml/data, com autorização. É dado da instituição, sem nome, CPF, matrícula, e-mail ou telefone de ninguém.',
       'Em 23/09, os cadernos de ML passaram a ler essa base, na entrega parcial de ML. Os slides da AV1 de ML ficaram em /ml.',
+      'Em 25/09, as oito telas do sistema ficaram abertas ao visitante. Até ali, só três estavam no ar: painel da SEAB, indicadores e lançamento.',
     ],
   },
 
   decisoes: {
-    selo: 'rascunho',
-    validadoPor: null,
+    selo: 'validado',
+    validadoPor: 'gabriel',
     conteudo: [
       {
         decisao:
-          'A regra v3 vale daqui para a frente. Os meses fechados seguem nas regras v1 e v2.',
+          'A regra v3 vale de junho em diante. Os meses até maio seguem nas regras v1 e v2.',
         porque:
-          'Nota publicada tem prazo de recurso. Se ela mudasse depois, o prazo do art. 9º perderia o sentido (ADR-041).',
+          'Nota publicada tem prazo de recurso. Se ela mudasse depois, o prazo do art. 9º perderia o sentido (ADR-041 e docs/arquitetura.md).',
       },
       {
         decisao: 'Os tipos antigos viram os novos sem apagar as regras antigas.',
@@ -62,19 +88,20 @@ export const registro = {
         decisao:
           'A base por unidade da Secretaria entra no repositório. Dado de pessoa, nunca.',
         porque:
-          'A Secretaria autorizou o dado da instituição. Dado de pessoa não depende dela: é o art. 20 da LGPD (ADR-044).',
+          'A Secretaria autorizou o dado da instituição. Dado de pessoa fica fora mesmo com autorização, e isso vale para o repositório, a base de teste e os prompts de IA (ADR-044).',
       },
       {
-        decisao: 'O motor não olha relógio nem rede, e desde 23/09 um teste segura isso.',
+        decisao:
+          'O motor não lê relógio nem importa nada de fora, e desde 23/09 um teste segura isso.',
         porque:
-          'Assim o mesmo dado dá sempre o mesmo número. O teste falha se alguém ligar o motor ao mundo de fora.',
+          'Assim o mesmo dado dá sempre o mesmo número. O teste falha se o motor importar arquivo, banco ou framework, sortear número ou ler o relógio.',
       },
     ],
   },
 
   bloqueios: {
-    selo: 'rascunho',
-    validadoPor: null,
+    selo: 'validado',
+    validadoPor: 'gabriel',
     conteudo: [
       'Os cortes das classes foram digitados à mão na planilha. Não dá para tirá-los das fórmulas, e a v3 usa 0,80 como suposição.',
       'Os percentuais de cada classe estão no Decreto 36.482/2023, que ainda não temos.',
@@ -83,8 +110,8 @@ export const registro = {
   },
 
   feedback: {
-    selo: 'rascunho',
-    validadoPor: null,
+    selo: 'validado',
+    validadoPor: 'gabriel',
     conteudo: [
       {
         origem: 'cliente',
@@ -95,17 +122,20 @@ export const registro = {
   },
 
   proximosPassos: {
-    selo: 'rascunho',
-    validadoPor: null,
+    selo: 'validado',
+    validadoPor: 'gabriel',
     conteudo: [
       'Levar à Secretaria as perguntas abertas: cortes das classes, decreto e Indicador 3.',
-      'Liberar as quatro telas que faltam no sistema.',
       'Fechar o pacote do SR1, com riscos, escopo revisado e backlog com estado.',
     ],
   },
 
-  /* Os responsáveis seguem a frente de cada um (src/content/equipe.ts). A
-     equipe confere e assina junto com os outros blocos. */
+  /* Os responsáveis foram INFERIDOS pela frente de cada um (src/content/equipe.ts),
+     e não registrados. O repositório só sustenta duas linhas: a do João Pedro
+     (autor do commit 84faccd) e a do Gabriel (validador das linhas de uso de IA
+     de 19 a 24/09 em docs/uso-de-ia.md). O git registra o Claude como autor da
+     v3, dos tipos, do C4 e do teste da regra 1. Fica em rascunho até cada
+     integrante confirmar ou corrigir a própria linha. */
   responsaveis: {
     selo: 'rascunho',
     validadoPor: null,
@@ -211,7 +241,7 @@ export const documentos = [
               'A unidade informa cada item medido, junto com a evidência. Pode ser um valor direto, ou um numerador e um denominador. O envio é um formulário comum (POST). A biblioteca zod confere os dados na entrada e recusa o que está errado, dizendo o motivo.',
               'A camada de dados grava o lançamento e, no mesmo passo, ESCREVE UM EVENTO no histórico. Não existe caminho que grave sem registrar.',
               'A SEAB fecha a janela de lançamento. O ciclo avança um passo, e essa mudança também vira evento no histórico.',
-              'O motor de cálculo junta os itens medidos e forma cada indicador. Aplica as metas e os pesos do tipo da unidade, na versão da regra que vale para o mês. Devolve a nota (score), a faixa e a memória de cálculo, com cada passo da conta.',
+              'O motor de cálculo junta os itens medidos e forma cada indicador. Aplica a régua e os pesos do tipo da unidade, na versão da regra que vale para o mês. Devolve a nota (score), a faixa e a memória de cálculo, com cada passo da conta.',
               'A tela mostra a memória de cálculo que saiu dessa mesma conta. Nunca refaz a conta por fora.',
               'O painel da gestão soma os resultados e exporta em CSV. A auditoria lê o histórico e não escreve nada.',
             ]}
@@ -245,7 +275,7 @@ export const documentos = [
               ],
               [
                 'Segredo não pode morar no repositório',
-                'A senha do painel e o segredo do cookie só existem em variável de ambiente. Sem elas, o painel simplesmente não existe: responde 404',
+                'O segredo do cookie só existe em variável de ambiente. Sem ele, o painel simplesmente não existe: responde 404. A senha tem um padrão público, e o que protege o painel é trocá-la em produção',
               ],
               [
                 'Publicar é dar um push',
@@ -281,7 +311,11 @@ export const documentos = [
               ],
               [
                 'Processos',
-                'Sem estado. O que precisa durar vai para cookie assinado ou para o Git',
+                'Sem estado que precise durar. O que dura vai para cookie assinado ou para o Git. A escrita do protótipo fica na memória do servidor e some no reinício (ADR-046)',
+              ],
+              [
+                'Vínculo de porta',
+                'O app sobe o próprio servidor HTTP numa porta, com `next start`. Na Vercel, a plataforma faz essa ligação',
               ],
               [
                 'Concorrência',
@@ -290,7 +324,7 @@ export const documentos = [
               ['Descartabilidade', 'Liga rápido e desliga sem cerimônia'],
               [
                 'Paridade dev/prod',
-                'A verificação de vazamento roda sobre o mesmo build que vai para produção',
+                'A verificação de vazamento sobe um build de produção (`next build` e `next start`), e não o modo de desenvolvimento',
               ],
               ['Logs', 'Os registros saem na saída padrão, e a plataforma recolhe'],
               [
@@ -419,9 +453,9 @@ export const documentos = [
         <Nota>
           Em 22/09 a Secretaria enviou, sem os nomes, a planilha que usa hoje. A planilha com as
           fórmulas não entra no repositório: entra a regra que aprendemos lendo as fórmulas. A
-          base de desempenho por unidade, só com números, entrou em ml/data com autorização da
-          Secretaria (ADR-044). Não há nome, CPF, e-mail nem telefone de ninguém neste
-          documento, e não havia no arquivo.
+          base de desempenho por unidade, com tipo, distrito e números, sem nome de unidade,
+          entrou em ml/data com autorização da Secretaria (ADR-044). Não há nome, CPF, e-mail
+          nem telefone de ninguém neste documento, e não havia no arquivo.
         </Nota>
 
         <Secao
@@ -484,7 +518,7 @@ export const documentos = [
               ],
               [
                 '6',
-                'Seguem outra conta: a planilha divide a soma dos pontos por 1,7, a soma dos pesos 0,2 / 0,2 / 0,8 / 0,5',
+                'Seguem outra conta: a planilha divide a soma dos pontos por 1,7, e não por 1,0. Em cinco delas, o indicador 3 entra nos pontos com peso 0,8, e não 0,2',
                 'Quem cai nessas linhas é avaliado numa régua diferente de todo mundo. São as NDI e SAE, dois tipos de unidade que a portaria não nomeia',
               ],
               [
