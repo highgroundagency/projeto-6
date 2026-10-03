@@ -251,7 +251,7 @@ Total de fala: 11:59, com limite de 15:00. Quem passa o slide é quem opera a te
 - **Se perguntarem** (fora do tempo):
   - As personas são personagens, não gente real: vieram dos papéis descritos no caso, sem entrevista. A entrevista com quem opera o processo está no plano da Semana 11.
   - A segunda persona nasceu como gestor de área técnica. Depois da reunião de 22 de agosto, virou a gerente da unidade, porque é a unidade que manda os números.
-  - O rascunho das personas foi feito com IA a partir do caso e conferido pela equipe, sem entrevista. Está no registro de uso de IA.
+  - O rascunho das personas foi feito com IA a partir do caso e conferido pelo Gabriel, sem entrevista. Está no registro de uso de IA.
 
 ### Slide 7: o que já existe: benchmarking e SWOT
 
@@ -337,6 +337,7 @@ Total de fala: 11:59, com limite de 15:00. Quem passa o slide é quem opera a te
   - Dos 15 requisitos de privacidade, 2 já valem no sistema, 8 valem em parte, 2 estão no backlog e 3 dependem de infraestrutura real. A tabela está no documento de privacy by design do SR1, no site.
   - Um exemplo de dado sensível por inferência: a licença médica que justifica uma meta perdida revela saúde. No sistema, o único lugar em que isso pode entrar é o texto da contestação, e o formulário avisa para não escrever.
   - O PDF da Atividade 2 cita a Portaria 05 de 2023, que foi revogada pela 001 de 2024. O site já cita a vigente.
+  - O backlog de privacidade tem 8 itens, e cada um cobre um ou mais riscos: 1 feito, 3 em parte e 4 a fazer. Os 2 requisitos no backlog são os que ainda não têm nada no sistema.
   - O artigo 20 vale mesmo com a CAM decidindo? A nota sai de uma conta automática, e quem recebe precisa conseguir conferir. Na Atividade 2, a conta aberta atende aos direitos do titular do artigo 18, e o artigo 20 aparece no modelo: nenhuma saída de modelo entra na nota, e a decisão continua humana e contestável.
 
 ### Slide 12: a solução: do número à nota, com a conta aberta
@@ -400,6 +401,7 @@ Total de fala: 11:59, com limite de 15:00. Quem passa o slide é quem opera a te
 - **Se perguntarem** (fora do tempo):
   - O registro já está no ar: lançamento, correção e avanço de etapa vão para a trilha de auditoria, com o antes e o depois. Refazer qualquer contestação passo a passo é o objetivo do slide 8, e fecha na Semana 9.
   - A trilha só recebe linha nova: não há caminho para apagar. No protótipo, isso depende de toda escrita passar pela mesma camada; no banco projetado, um gatilho garante o mesmo.
+  - A regra ainda muda por código, e cada versão fica no Git, com autor e data. Cadastrar a regra pela tela, com registro na trilha, está no backlog.
   - Cada papel só vê o que é seu: é o objetivo alcançado do slide 8, e quem manda o número não escolhe a meta. O login ainda é simulado, e um teste percorre as oito telas contra os quatro papéis.
   - A resposta é “não encontrado” e nunca “proibido” de propósito: da porta, não dá para saber se a tela existe.
   - Escrevemos a regra 3 em setembro, com a planilha do cliente, valendo a partir de junho. Quando ela entrou, junho ainda estava aberto na base de teste; os meses até maio, já fechados, não mudaram. Junho dá 75. O motor tem 55 testes só dele, e cada envio de código roda todos de novo.
@@ -416,7 +418,7 @@ Total de fala: 11:59, com limite de 15:00. Quem passa o slide é quem opera a te
   1. O backlog tem 26 histórias, priorizadas por MoSCoW. Das 16 obrigatórias, 10 estão no ar, como lançar cada item e abrir a conta. O plano era ter todas hoje; as que faltam são as de configurar pela tela.
 - **Se perguntarem** (fora do tempo):
   - As sprints da Semana 7 à 10 começam pelo retorno desta banca. A ordem do backlog muda com ele.
-  - Por que há desejáveis no ar antes de todas as obrigatórias: algumas vieram junto de uma obrigatória, como publicar o mês, que é a última etapa do mesmo botão que avança a etapa. As 6 obrigatórias que faltam são todas de configuração pela tela da SEAB, e entram nas sprints, na ordem que o retorno desta banca pedir.
+  - Por que há desejáveis no ar antes de todas as obrigatórias: algumas vieram junto de uma obrigatória, como publicar o mês, que é a última etapa do mesmo botão que avança a etapa. As 6 obrigatórias que faltam são todas da SEAB configurando pela tela: abrir o mês, a janela de lançamento, os indicadores e a regra. Entram nas sprints, na ordem que o retorno desta banca pedir.
 
 ### Slide 17: papéis e responsabilidades
 
@@ -450,10 +452,10 @@ Total de fala: 11:59, com limite de 15:00. Quem passa o slide é quem opera a te
 - **O que a tela mostra:** A tabela das fases até o SR1, com entregas, responsáveis e o que está em andamento.
 - **A fala:**
   1. Até hoje o cronograma pedia 43 entregas, e entregamos 39. As que faltam estão na linha de baixo: com o João Pedro, o registro da sessão de ideação; e comigo, o pacote deste SR1, o escopo maduro e o plano de correção de rota. O escopo espera respostas da Secretaria; o plano, já no site, fecha com o retorno desta banca.
-  1. Rafael e Kerry não aparecem porque a tabela só conta o cronograma de Projeto: o Rafael responde pela lente de aprendizado de máquina, e o Kerry apoia a pesquisa.
+  1. O Rafael não aparece porque responde pela lente de aprendizado de máquina, que tem calendário próprio; o Kerry apoia o Matheus na pesquisa.
 - **Se perguntarem** (fora do tempo):
-  - O Rafael responde pela lente de aprendizado de máquina, que tem calendário e avaliação próprios: a AV1 foi em 30 de setembro, e os slides estão em /ml.
-  - O Kerry entrou no Kick-off, em 12 de setembro, sem frente própria: ele apoia a pesquisa do Matheus.
+  - O Rafael responde pela lente de aprendizado de máquina, que tem marcos próprios: a entrega parcial em 23 de setembro e a AV1 em 30 de setembro. Os slides estão em /ml.
+  - O Kerry entrou no Kick-off, em 12 de setembro, e ainda não tem frente própria: apoia o Matheus na pesquisa e na validação, como diz o slide 17.
   - Por que um nome se repete em quase toda linha: as entregas ficaram registradas no nome de poucos, e esse é o ponto de melhoria do slide 21.
 
 ### Slide 20: o avanço e o estágio de hoje
@@ -467,7 +469,7 @@ Total de fala: 11:59, com limite de 15:00. Quem passa o slide é quem opera a te
   1. No cronograma atualizado, dos três compromissos do Kick-off, um foi feito e um saiu em parte: os indicadores oficiais entram em 24 de outubro. O terceiro não saiu: a conferência com a Secretaria depende de perguntas ainda em aberto, e passou para 21 de novembro.
 - **Se perguntarem** (fora do tempo):
   - Por que a conferência não saiu: as perguntas 4 e 6 a 13 para a Secretaria seguem em aberto, e sem elas a regra não tem como ser conferida. O motivo e o ajuste de cada desvio estão no documento de correção de rota, no registro do SR1.
-  - 21 de novembro é a Semana 11 do nosso cronograma, e a Secretaria ainda não confirmou a data. Pedir a data é o tratamento do risco de agenda, no slide 21.
+  - 21 de novembro é a Semana 11 do nosso cronograma; a data ainda vai ser pedida à Secretaria, e pedir é o tratamento do risco de agenda, no slide 21.
   - No Kick-off também dissemos que o prazo de contestação entraria na regra 3. Não entrou: ficou para a Sprint 3, e a tela diz que ele ainda não existe.
 
 ### Slide 21: pontos fortes, melhorias e riscos
@@ -493,7 +495,7 @@ Total de fala: 11:59, com limite de 15:00. Quem passa o slide é quem opera a te
 - **O que a tela mostra:** A linha do problema à solução e ao plano, as paradas até o SR2 com a data de cada uma, o endereço do site e a pergunta para a banca.
 - **A fala:**
   1. Para fechar: a regra está na portaria, mas a conta só existe em fórmula de planilha. A solução deixa a regra com versão e a conta aberta.
-  1. Próximos passos: em 17 de outubro, aplicar o retorno desta banca; em 24 de outubro, os cinco indicadores da portaria; e, na Semana 11, conferir a conta com a Secretaria.
+  1. Próximos passos: em 17 de outubro, aplicar o retorno desta banca; em 24 de outubro, os cinco indicadores da portaria; e pedir à Secretaria a Semana 11, para conferir a conta com a gente.
   1. Obrigado. Tudo está no site, e qualquer um de nós responde.
 
 <!-- roteiro-sr1:fim -->

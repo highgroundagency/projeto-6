@@ -198,7 +198,7 @@ Bastante, e está tudo escrito: o registro de uso de IA tinha 61 linhas até 23/
 Tudo declarado. As respostas da Secretaria que decidem a régua: os cortes das classes, o decreto dos percentuais e o Indicador 3 bimestral. Os cinco indicadores reais e o porte. O teste do motor contra a planilha deles. A autorização por escrito para publicar a base. O ensaio do SR1 com cronômetro. A foto da dinâmica de ideação, o benchmarking sem produtos e o link do Drive. A lista de riscos está publicada no registro.
 
 **Como vão validar com o cliente?**
-Na Semana 11, 21 de novembro no nosso cronograma, com a data ainda a confirmar com a Secretaria. Entrevista de 45 minutos, com 15 de demonstração em que a pessoa faz quatro tarefas sozinha. Depois, um questionário. Os critérios de sucesso foram fixados antes de coletar.
+Na Semana 11, 21 de novembro no nosso cronograma; a data ainda vai ser pedida à Secretaria. Entrevista de 45 minutos, com 15 de demonstração em que a pessoa faz quatro tarefas sozinha. Depois, um questionário. Os critérios de sucesso foram fixados antes de coletar.
 
 **⚠ E se a Secretaria não abrir agenda?**
 O risco está na lista de riscos do registro, e o único mitigador é marcar com antecedência. O canal já funcionou três vezes: a reunião de agosto, a portaria em 5 de setembro e a planilha em 22 de setembro.
@@ -218,7 +218,7 @@ Não, por três coisas que planilha não faz. A regra é guardada com versão. T
 Plano de manutenção escrito não temos, e seria fácil inventar um agora. O que existe: repositório público, cada decisão com o porquê, testes que quebram quando alguém erra, e a lista do que falta para virar produção. Já houve uma tentativa anterior de automatizar essa conta e ela parou. É esse risco que o registro tenta reduzir.
 
 **⚠ Vocês testaram com usuário de verdade?**
-Com quem opera o processo na Secretaria, ainda não. Está planejado para a Semana 11, com a data ainda a pedir. Já houve retorno de quem usou o site, e ele mudou o produto duas vezes: a navegação foi refeita e a linguagem foi simplificada.
+Com quem opera o processo na Secretaria, ainda não. Está planejado para a Semana 11, e a data ainda vai ser pedida. Já houve retorno de quem usou o site, e ele mudou o produto duas vezes: a navegação foi refeita e a linguagem foi simplificada.
 
 **⚠ Qual a chance real de a prefeitura usar isso?**
 Não temos promessa de adoção, e não vamos fingir. O que temos é conversa real: a reunião de agosto mudou o sistema, e em setembro eles mandaram a portaria e, duas vezes, a planilha que usam. Para virar uso de verdade falta banco ligado, login institucional e a conferência da nossa conta com a deles.

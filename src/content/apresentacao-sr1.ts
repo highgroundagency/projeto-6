@@ -20,7 +20,13 @@ import {
   formatarTempo,
 } from '@/content/pitch'
 import { SECOES } from '@/components/base/indice'
-import { DADOS_PESSOAIS, REQUISITOS_DE_PRIVACIDADE, contarRequisitos } from '@/content/privacidade'
+import {
+  ATIVIDADE_2,
+  BACKLOG_DE_PRIVACIDADE,
+  DADOS_PESSOAIS,
+  REQUISITOS_DE_PRIVACIDADE,
+  contarRequisitos,
+} from '@/content/privacidade'
 import { ENDERECO_SITE, OBJETIVOS_ESPECIFICOS, OBJETIVO_GERAL_CURTO } from '@/content/produto'
 import { calcularAvaliacao } from '@/lib/calculo/motor'
 import type { Avaliacao } from '@/lib/calculo/tipos'
@@ -340,6 +346,11 @@ export const AVANCO = [
   },
 ] as const
 
+/** Quantos itens do backlog de privacidade estão num estado: a resposta do slide 11 conta daqui. */
+function itensDoBacklog(estado: (typeof BACKLOG_DE_PRIVACIDADE)[number]['estado']): number {
+  return BACKLOG_DE_PRIVACIDADE.filter((i) => i.estado === estado).length
+}
+
 /** Número por extenso, como se diz no palco: "cinco fontes", "oito alternativas". */
 /** "24 de outubro": a data do ciclo, dita sem o ano, lida do cronograma. */
 function dataFalada(id: CicloId): string {
@@ -626,7 +637,7 @@ export const SLIDES_SR1 = [
     perguntas: [
       'As personas são personagens, não gente real: vieram dos papéis descritos no caso, sem entrevista. A entrevista com quem opera o processo está no plano da Semana 11.',
       'A segunda persona nasceu como gestor de área técnica. Depois da reunião de 22 de agosto, virou a gerente da unidade, porque é a unidade que manda os números.',
-      'O rascunho das personas foi feito com IA a partir do caso e conferido pela equipe, sem entrevista. Está no registro de uso de IA.',
+      'O rascunho das personas foi feito com IA a partir do caso e conferido pelo Gabriel, sem entrevista. Está no registro de uso de IA.',
     ],
   },
   {
@@ -739,6 +750,7 @@ export const SLIDES_SR1 = [
       `Dos ${REQUISITOS_DE_PRIVACIDADE.length} requisitos de privacidade, ${contarRequisitos('no MVP')} já valem no sistema, ${contarRequisitos('em parte')} valem em parte, ${contarRequisitos('no backlog')} estão no backlog e ${contarRequisitos('na implantação')} dependem de infraestrutura real. A tabela está no documento de privacy by design do SR1, no site.`,
       'Um exemplo de dado sensível por inferência: a licença médica que justifica uma meta perdida revela saúde. No sistema, o único lugar em que isso pode entrar é o texto da contestação, e o formulário avisa para não escrever.',
       'O PDF da Atividade 2 cita a Portaria 05 de 2023, que foi revogada pela 001 de 2024. O site já cita a vigente.',
+      `O backlog de privacidade tem ${BACKLOG_DE_PRIVACIDADE.length} itens, e cada um cobre um ou mais riscos: ${itensDoBacklog('feito')} feito, ${itensDoBacklog('em parte')} em parte e ${itensDoBacklog('a fazer')} a fazer. Os ${contarRequisitos('no backlog')} requisitos no backlog são os que ainda não têm nada no sistema.`,
       'O artigo 20 vale mesmo com a CAM decidindo? A nota sai de uma conta automática, e quem recebe precisa conseguir conferir. Na Atividade 2, a conta aberta atende aos direitos do titular do artigo 18, e o artigo 20 aparece no modelo: nenhuma saída de modelo entra na nota, e a decisão continua humana e contestável.',
     ],
   },
@@ -826,6 +838,7 @@ export const SLIDES_SR1 = [
     perguntas: [
       'O registro já está no ar: lançamento, correção e avanço de etapa vão para a trilha de auditoria, com o antes e o depois. Refazer qualquer contestação passo a passo é o objetivo do slide 8, e fecha na Semana 9.',
       'A trilha só recebe linha nova: não há caminho para apagar. No protótipo, isso depende de toda escrita passar pela mesma camada; no banco projetado, um gatilho garante o mesmo.',
+      'A regra ainda muda por código, e cada versão fica no Git, com autor e data. Cadastrar a regra pela tela, com registro na trilha, está no backlog.',
       'Cada papel só vê o que é seu: é o objetivo alcançado do slide 8, e quem manda o número não escolhe a meta. O login ainda é simulado, e um teste percorre as oito telas contra os quatro papéis.',
       'A resposta é “não encontrado” e nunca “proibido” de propósito: da porta, não dá para saber se a tela existe.',
       `Escrevemos a regra 3 em setembro, com a planilha do cliente, valendo a partir de junho. Quando ela entrou, junho ainda estava aberto na base de teste; os meses até maio, já fechados, não mudaram. Junho dá ${notaFalada(JUNHO_V3)}. O motor tem ${TESTES_DO_MOTOR} testes só dele, e cada envio de código roda todos de novo.`,
@@ -849,7 +862,7 @@ export const SLIDES_SR1 = [
     ],
     perguntas: [
       'As sprints da Semana 7 à 10 começam pelo retorno desta banca. A ordem do backlog muda com ele.',
-      `Por que há desejáveis no ar antes de todas as obrigatórias: algumas vieram junto de uma obrigatória, como publicar o mês, que é a última etapa do mesmo botão que avança a etapa. As ${historias('M') - historias('M', 'no_ar')} obrigatórias que faltam são todas de configuração pela tela da SEAB, e entram nas sprints, na ordem que o retorno desta banca pedir.`,
+      `Por que há desejáveis no ar antes de todas as obrigatórias: algumas vieram junto de uma obrigatória, como publicar o mês, que é a última etapa do mesmo botão que avança a etapa. As ${historias('M') - historias('M', 'no_ar')} obrigatórias que faltam são todas da SEAB configurando pela tela: abrir o mês, a janela de lançamento, os indicadores e a regra. Entram nas sprints, na ordem que o retorno desta banca pedir.`,
     ],
   },
   {
@@ -898,11 +911,11 @@ export const SLIDES_SR1 = [
     quemFala: 'gabriel',
     notas: [
       `Até hoje o cronograma pedia ${PLANEJADAS_ATE_O_SR1} entregas, e entregamos ${ENTREGUES_ATE_O_SR1}. As que faltam estão na linha de baixo: ${EM_ANDAMENTO_FALADO}. O escopo espera respostas da Secretaria; o plano, já no site, fecha com o retorno desta banca.`,
-      'Rafael e Kerry não aparecem porque a tabela só conta o cronograma de Projeto: o Rafael responde pela lente de aprendizado de máquina, e o Kerry apoia a pesquisa.',
+      'O Rafael não aparece porque responde pela lente de aprendizado de máquina, que tem calendário próprio; o Kerry apoia o Matheus na pesquisa.',
     ],
     perguntas: [
-      'O Rafael responde pela lente de aprendizado de máquina, que tem calendário e avaliação próprios: a AV1 foi em 30 de setembro, e os slides estão em /ml.',
-      'O Kerry entrou no Kick-off, em 12 de setembro, sem frente própria: ele apoia a pesquisa do Matheus.',
+      'O Rafael responde pela lente de aprendizado de máquina, que tem marcos próprios: a entrega parcial em 23 de setembro e a AV1 em 30 de setembro. Os slides estão em /ml.',
+      'O Kerry entrou no Kick-off, em 12 de setembro, e ainda não tem frente própria: apoia o Matheus na pesquisa e na validação, como diz o slide 17.',
       'Por que um nome se repete em quase toda linha: as entregas ficaram registradas no nome de poucos, e esse é o ponto de melhoria do slide 21.',
     ],
   },
@@ -921,7 +934,7 @@ export const SLIDES_SR1 = [
     ],
     perguntas: [
       'Por que a conferência não saiu: as perguntas 4 e 6 a 13 para a Secretaria seguem em aberto, e sem elas a regra não tem como ser conferida. O motivo e o ajuste de cada desvio estão no documento de correção de rota, no registro do SR1.',
-      `${dataFalada('s11')} é a Semana 11 do nosso cronograma, e a Secretaria ainda não confirmou a data. Pedir a data é o tratamento do risco de agenda, no slide 21.`,
+      `${dataFalada('s11')} é a Semana 11 do nosso cronograma; a data ainda vai ser pedida à Secretaria, e pedir é o tratamento do risco de agenda, no slide 21.`,
       'No Kick-off também dissemos que o prazo de contestação entraria na regra 3. Não entrou: ficou para a Sprint 3, e a tela diz que ele ainda não existe.',
     ],
   },
@@ -960,7 +973,7 @@ export const SLIDES_SR1 = [
     quemFala: 'kerry',
     notas: [
       'Para fechar: a regra está na portaria, mas a conta só existe em fórmula de planilha. A solução deixa a regra com versão e a conta aberta.',
-      `Próximos passos: em ${dataFalada('s7')}, aplicar o retorno desta banca; em ${dataFalada('s8')}, os cinco indicadores da portaria; e, na Semana 11, conferir a conta com a Secretaria.`,
+      `Próximos passos: em ${dataFalada('s7')}, aplicar o retorno desta banca; em ${dataFalada('s8')}, os cinco indicadores da portaria; e pedir à Secretaria a Semana 11, para conferir a conta com a gente.`,
       'Obrigado. Tudo está no site, e qualquer um de nós responde.',
     ],
   },
@@ -1183,9 +1196,9 @@ export const DISCIPLINAS_SR1 = [
   {
     nome: 'direito',
     itens: [
-      'nota que decide salário precisa ser explicada (LGPD, art. 20)',
-      'base legal: política pública, não consentimento (art. 7º, III)',
-      `Atividade 2: ${DADOS_PESSOAIS.length} dados pessoais, ${REQUISITOS_DE_PRIVACIDADE.length} riscos com requisito e teste`,
+      'nota que decide salário: explicável (LGPD, art. 20)',
+      'base legal: política pública (arts. 7º, III, e 23)',
+      `Atividade 2 (${formatarBR(ATIVIDADE_2.entrega).slice(0, 5)}): ${DADOS_PESSOAIS.length} dados pessoais, ${REQUISITOS_DE_PRIVACIDADE.length} riscos com requisito e teste, backlog de ${BACKLOG_DE_PRIVACIDADE.length} itens`,
     ],
   },
 ] as const
