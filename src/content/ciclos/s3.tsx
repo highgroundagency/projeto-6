@@ -62,7 +62,7 @@ export const registro = {
     selo: 'validado',
     validadoPor: 'fernando',
     conteudo: [
-      'Ainda falta registrar como as três dinâmicas aconteceram de verdade. Esta parte é preenchida na semana, com fotos e o material produzido.',
+      'As fotos e as folhas da sessão não foram publicadas. O registro das três dinâmicas é o roteiro, com o tempo e o que cada uma produziu, e as oito alternativas.',
       'A planilha real de cálculo, prometida na reunião, ainda não chegou. Sem ela, seguimos com suposições declaradas, marcadas na ata. Uma: como os itens medidos formam o indicador. Outra: como as unidades formam a nota do distrito.',
     ],
   },

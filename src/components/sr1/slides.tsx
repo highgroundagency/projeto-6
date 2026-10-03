@@ -744,16 +744,18 @@ export function SlidesSR1() {
             )
           })}
         </div>
-        <p className="mt-4 text-base text-balance">
-          <Etiqueta className="mr-3 uppercase">{ROTULO_EM_ANDAMENTO}</Etiqueta>
-          {EM_ANDAMENTO_SR1.map((grupo, indice) => (
-            <span key={grupo.dono ?? 'sem-dono'}>
-              {indice > 0 ? ' · ' : null}
-              <span className="text-texto">{listaNaTela(grupo.itens)}</span>
-              {grupo.dono ? ` (${nomeCurto(grupo.dono)})` : null}
-            </span>
-          ))}
-        </p>
+        {EM_ANDAMENTO_SR1.length > 0 ? (
+          <p className="mt-4 text-base text-balance">
+            <Etiqueta className="mr-3 uppercase">{ROTULO_EM_ANDAMENTO}</Etiqueta>
+            {EM_ANDAMENTO_SR1.map((grupo, indice) => (
+              <span key={grupo.dono ?? 'sem-dono'}>
+                {indice > 0 ? ' · ' : null}
+                <span className="text-texto">{listaNaTela(grupo.itens)}</span>
+                {grupo.dono ? ` (${nomeCurto(grupo.dono)})` : null}
+              </span>
+            ))}
+          </p>
+        ) : null}
       </>
     ),
 
