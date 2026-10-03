@@ -1438,7 +1438,9 @@ tentativa recusada que fica na trilha), cada uma com a hora gravada. O diário v
 
 **Como se prova.** Um teste refaz a demonstração do SR1 só com o diário, como faz a página na
 Vercel, e compara a cópia, os ids e as notas. A suíte de ponta a ponta passou inteira com rotas e
-páginas em processos separados atrás do proxy.
+páginas em processos separados atrás do proxy. E na própria Vercel, com curl de uma sandbox: o
+mesmo lançamento (170 de 200, USF Canário, julho), seguido de cinco leituras da tela, voltou
+vazio nas cinco na produção de 8a36db8 e com 170 nas cinco no preview desta mudança.
 
 **Consequência.** Qualquer instância de qualquer função enxerga a mesma cópia, e a demonstração do
 slide 14 não depende de sorte. O "pode não valer entre requisições" da ADR-046 deixa de valer, e

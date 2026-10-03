@@ -281,7 +281,7 @@ feedback de professor ou de cliente seria fabricar evidência.
       Precisa: entender por que o valor foi aquele.
       Teme: ser avaliada por dado que ela não pôde conferir.
 
-      Revisão de 10/09, para o Kick-off: depois da reunião de 22/08, a segunda persona passou a ser a gerente da unidade, porque é a unidade que manda os números. Os cartões acima seguem o texto de 15/08.
+      Revisão de 10/09, para o Kick-off: depois da reunião de 22/08, a segunda persona passou a ser a gerente da unidade, porque é a unidade que manda os números. Os cartões acima mantêm as personas de 15/08.
 
       Mapa de empatia: analista da CAM
       A pessoa que carrega o processo hoje: o que ela diz, pensa, faz e sente, suas dores e seus ganhos.

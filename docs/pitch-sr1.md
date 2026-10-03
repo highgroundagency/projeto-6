@@ -58,9 +58,10 @@ usa para se preparar fica no repositório.
 - [ ] **Pedir a data da Semana 11 e mandar as perguntas por escrito**, na mesma mensagem para a
   Secretaria (`docs/perguntas-para-a-sesau.md`). O slide 21 promete as duas coisas. Se a data
   vier, diga a data na fala do 22.
-- [ ] **Ter à mão o registro da Semana 1.** O slide 18 diz que o professor dispensou o Google
-  Site na Semana 1, como está no registro validado daquela semana. Se alguém da banca não
-  souber da troca, é ali que se mostra.
+- [ ] **Confirmar com o professor, por escrito, a troca do Google Site pelo site.** O registro
+  validado da Semana 1 diz que o professor dispensou o Google Site, mas a pergunta 6 de
+  `docs/perguntas-para-a-banca.md` ainda está aberta. Até o escrito chegar, o slide 18 diz só
+  que o site faz o papel do Google Site, e a resposta preparada oferece espelhar no Drive.
 - [ ] **Os sete conferem o próprio nome no checklist** (`src/content/checklist.ts`). Da Semana 5
   em diante, o dono foi inferido pela frente de cada um, e o slide 19 mostra esses nomes. Cada
   um ensaia uma frase sobre a própria entrega. O slide 19 diz, calculado, quem está fora da
@@ -98,8 +99,8 @@ usa para se preparar fica no repositório.
   em `/admin/entrar`, abrir `/sr1` numa aba, em tela cheia (tecla `f`), e `/sistema` em outra,
   baixar o PDF pelo link do deck e **compartilhar a tela inteira, não uma aba**: a banca precisa
   ver as duas. O que se lança fica num cookie dessa janela, então um ensaio na mesma janela
-  deixa julho fechado, e o lançamento do dia é recusado. Depois de cada ensaio, feche a janela
-  anônima e abra outra. Se a rede cair, o slide 14 tem a mesma conta, parada, e o PDF também.
+  deixa julho fechado, e o lançamento do dia é recusado. Depois de cada ensaio, feche todas as
+  janelas anônimas (no Chrome elas dividem os cookies) e abra outra. Se a rede cair, o slide 14 tem a mesma conta, parada, e o PDF também.
 - **Se perguntarem se os dados são reais:** o sistema roda com dados de teste, gerados com
   semente fixa e guardados em memória. O que um visitante lança fica num diário assinado no
   próprio navegador (ADR-048). O schema do banco existe e está testado, mas desligado
@@ -112,8 +113,9 @@ cada tela a partir de um diário assinado no cookie do navegador (ADR-046 e ADR-
 estraga a tela de ninguém, e o que a banca lançar sozinha não aparece na tela de quem apresenta.
 Junho já está fechado pela regra 3; julho é o mês aberto.
 
-0. **Numa janela anônima nova, aberta só para a demonstração.** O cookie dura até a janela
-   fechar: um ensaio na mesma janela deixa julho fechado, e o lançamento do dia é recusado.
+0. **Numa janela anônima nova, aberta só para a demonstração.** Feche antes todas as janelas
+   anônimas: no Chrome elas dividem os cookies, e o cookie dura até a última fechar. Um ensaio
+   deixa julho fechado nessa cópia, e o lançamento do dia é recusado.
 1. **Antes de subir ao palco, fora da tela:** entrar em `/admin/entrar` com a senha de
    produção, nessa janela. Fechar o mês exige essa sessão.
 2. `/sistema`, em "Estou usando como", escolher **Gerente de unidade**.
@@ -194,11 +196,11 @@ Total de fala: 11:59, com limite de 15:00. Quem passa o slide é quem opera a te
   1. O problema. A prefeitura do Recife paga um extra no salário de quem dirige uma unidade de saúde e bate as metas do mês. A regra está numa portaria de 2024.
   1. Acontece todo mês, na Secretaria de Saúde, para 196 unidades em 8 distritos.
   1. A causa: a regra está escrita, mas a conta é feita à mão, numa planilha em que pouca gente sabe mexer.
-  1. A consequência: na planilha real, seis unidades seguem uma conta que a portaria não traz, e só a planilha sabe dela. E quem recebe o dinheiro não consegue conferir a própria nota.
+  1. A consequência: na planilha real, seis unidades seguem uma conta que a portaria não traz. E quem recebe o dinheiro não consegue conferir a própria nota.
 - **Se perguntarem** (fora do tempo):
   - Por que este problema: é um cliente real, com a dor escrita desde 2023, e uma tentativa anterior de automatizar a conta parou.
   - Os números da rede vêm da base de desempenho que a Secretaria enviou em 23 de setembro, sem nome, CPF ou matrícula. Em 39 das 90 combinações de tipo e distrito há uma unidade só; isso está na análise de privacidade.
-  - As seis são NDI e SAE, dois tipos que a portaria não nomeia. Não sabemos se é regra provisória ou erro: é pergunta para a SEAB, e está na matriz CSD. Na aba de pesos há outro caso: uma coluna de peso diferente da portaria, que ninguém versiona.
+  - As seis são NDI e SAE, dois tipos que a portaria não nomeia. Não sabemos se é regra provisória ou erro: é pergunta para a SEAB, e está na matriz CSD. Na aba de pesos há outro caso: uma coluna de peso diferente da portaria, e não sabemos quem decidiu nem até quando vale.
 
 ### Slide 4: o que pesquisamos e o que aprendemos
 
@@ -217,14 +219,14 @@ Total de fala: 11:59, com limite de 15:00. Quem passa o slide é quem opera a te
 
 ### Slide 5: o que sabemos, supomos e falta saber
 
-- **Começa em** 1:45 · **dura** 0:25 · **quem fala:** Matheus · **89 palavras na tela**
+- **Começa em** 1:45 · **dura** 0:25 · **quem fala:** Matheus · **90 palavras na tela**
 - **Parte da rubrica:** critério 1 · imersão no problema
 - **Frase da tela:** a matriz CSD, atualizada em 25/09 com a planilha e a base da Secretaria.
 - **O que a tela mostra:** As três colunas da matriz, com a contagem e dois exemplos de cada, e o que a pesquisa respondeu.
 - **A fala:**
   1. A matriz de certezas, suposições e dúvidas foi atualizada em 25 de setembro: 11 certezas, cada uma com a fonte, 4 suposições declaradas e 8 dúvidas, cada uma com a pergunta para a Secretaria.
   1. A maior dúvida é quanto se paga em cada classe da nota.
-  1. Desde o Kick-off, a planilha resolveu a dúvida do peso que falta e corrigiu o nosso modelo.
+  1. Desde o Kick-off, a dúvida do indicador sem número virou certeza, e a planilha corrigiu o nosso modelo.
 - **Se perguntarem** (fora do tempo):
   - A matriz do Kick-off continua no site, com a data dela. A de 25 de setembro está no documento de síntese da pesquisa, no SR1.
 
@@ -261,11 +263,11 @@ Total de fala: 11:59, com limite de 15:00. Quem passa o slide é quem opera a te
 - **Começa em** 3:20 · **dura** 0:35 · **quem fala:** Kerry · **90 palavras na tela**
 - **Parte da rubrica:** critério 1 · imersão no problema
 - **Frase da tela:** objetivo geral: tirar a conta da planilha e deixar cada nota aberta para qualquer um conferir.
-- **O que a tela mostra:** Os cinco objetivos específicos com o prazo e o estado de hoje, e o escopo em uma linha.
+- **O que a tela mostra:** Os cinco objetivos específicos com o prazo, o estado de hoje e o que falta, e o fora do escopo em uma linha.
 - **A fala:**
   1. O objetivo geral: tirar a conta da planilha e deixar cada nota aberta para conferir.
   1. Dos cinco específicos, um foi alcançado e dois estão em parte: a regra já tem versão, mas ainda muda por código, e o ranking mostra a nota sem a conta. Os outros dois vencem em 7 de novembro e 21 de novembro.
-  1. Próximos passos: cadastrar a regra pela tela, levar a conta ao ranking e marcar a Semana 11.
+  1. Próximos passos: cadastrar a regra pela tela, levar a conta ao ranking e pedir a data da Semana 11.
   1. O escopo foi revisto na Semana 6, com a portaria e a planilha.
 - **Se perguntarem** (fora do tempo):
   - O escopo da Semana 4 foi revisto depois da portaria, de 5 de setembro, e da planilha, de 22 de setembro. A revisão está na Semana 6 do site.
@@ -273,14 +275,14 @@ Total de fala: 11:59, com limite de 15:00. Quem passa o slide é quem opera a te
   - A conta aberta está em parte porque o ranking do painel da gestão mostra a nota sem a conta. Levar a conta a toda tela que mostra nota está no backlog.
   - Cada um vê o que é seu na permissão: cada tela confere o papel no servidor e responde 404. O login é simulado, e o da prefeitura está fora do escopo.
   - Por isso, no documento de privacy by design, o requisito de acesso por área está em parte: sem login real, o próprio distrito é escolhido no seletor.
-  - As metas de entrega da Semana 2 também têm estado: o motor com testes dos casos-limite saiu até a Semana 6, e o protótipo navegável está no ar. A entrevista da Semana 11 e o SR2 estão no prazo.
+  - As metas de entrega da Semana 2 também têm estado: o motor com testes dos casos-limite saiu até a Semana 6, e o protótipo navegável está no ar. O ciclo inteiro com histórico, a entrevista da Semana 11 e o SR2 estão no prazo.
 
 ### Slide 9: como geramos as ideias
 
 - **Começa em** 3:55 · **dura** 0:30 · **quem fala:** João Pedro · **60 palavras na tela**
 - **Parte da rubrica:** critério 2 · ideação
 - **Frase da tela:** três técnicas na semana 3, com uma regra: somar antes de criticar.
-- **O que a tela mostra:** As três técnicas, com o tempo e o que cada uma produziu, e o funil até a escolhida.
+- **O que a tela mostra:** As três técnicas, com o tempo, como cada uma funciona e o que produziu, e o funil até a escolhida.
 - **A fala:**
   1. Na Semana 3 seguimos um roteiro de três técnicas. No brainwriting, cada um escreve em silêncio e passa a folha adiante, para ninguém ser puxado por quem fala primeiro.
   1. No brainstorming, as ideias parecidas viraram oito alternativas. No crazy 8s, cada um rascunha oito telas em oito minutos.
@@ -302,14 +304,14 @@ Total de fala: 11:59, com limite de 15:00. Quem passa o slide é quem opera a te
 - **Se perguntarem** (fora do tempo):
   - Não somamos as notas. O esforço 4 foi aceito porque cabe em fatias: lançamento, conta e conta aberta até o SR1, e o resto nas sprints.
   - A lista de risco da tela de analytics é uma média simples, sem modelo. Os modelos rodam sobre a base da Secretaria e mostram o que pesa na nota.
-  - Aderência é sobreviver a portaria nova e a troca de equipe. A regra com versão já mostrou a primeira: a regra 3 entrou e maio não mudou. Cadastrar a regra pela tela ainda está no backlog.
+  - Aderência é sobreviver no órgão: pregão, portaria nova e troca de equipe. Na Semana 3, a razão escrita foi mudar a regra pela tela, e isso ainda está no backlog. O que já funciona é a versão: a regra 3 entrou e maio não mudou.
 
 ### Slide 11: o que cada disciplina pôs no produto
 
-- **Começa em** 4:55 · **dura** 0:44 · **quem fala:** Rafael · **89 palavras na tela**
+- **Começa em** 4:55 · **dura** 0:44 · **quem fala:** Rafael · **90 palavras na tela**
 - **Parte da rubrica:** critério 2 · ideação
 - **Frase da tela:** como cada lente moldou a ideia escolhida: as três da matriz e direito.
-- **O que a tela mostra:** Quatro cartões, um por disciplina, com as decisões concretas de cada uma, e a Atividade 2 no de Direito.
+- **O que a tela mostra:** Quatro cartões, um por disciplina, com as decisões concretas de cada uma; o de direito traz a base legal e a Atividade 2.
 - **A fala:**
   1. A ideia escolhida ganhou peças de cada disciplina.
   1. Segurança: o que não é seu responde como se não existisse, e listamos 14 ameaças.
@@ -327,6 +329,7 @@ Total de fala: 11:59, com limite de 15:00. Quem passa o slide é quem opera a te
   - Dos 15 requisitos de privacidade, 2 já valem no sistema, 8 valem em parte, 2 estão no backlog e 3 dependem de infraestrutura real. A tabela está no documento de privacy by design do SR1, no site.
   - Um exemplo de dado sensível por inferência: a licença médica que justifica uma meta perdida revela saúde. No sistema, o único lugar em que isso pode entrar é o texto da contestação, e o formulário avisa para não escrever.
   - O PDF da Atividade 2 cita a Portaria 05 de 2023, que foi revogada pela 001 de 2024. O site já cita a vigente.
+  - O artigo 20 vale mesmo com a CAM decidindo? A nota sai de uma conta automática, e quem recebe precisa conseguir conferir. Na Atividade 2, a conta aberta atende aos direitos do titular do artigo 18, e o artigo 20 aparece no modelo: nenhuma saída de modelo entra na nota, e a decisão continua humana e contestável.
 
 ### Slide 12: a solução: do número à nota, com a conta aberta
 
@@ -425,10 +428,10 @@ Total de fala: 11:59, com limite de 15:00. Quem passa o slide é quem opera a te
 - **O que a tela mostra:** As ferramentas com o uso de cada uma, as oito seções do site no lugar do Google Site e o que a pasta do Drive guarda.
 - **A fala:**
   1. O código e os testes ficam no GitHub, e cada envio roda os testes sozinho. O site roda na Vercel.
-  1. O professor dispensou o Google Site na Semana 1, e o nosso site faz o papel dele: as oito seções do briefing e o diário de bordo de cada semana, com cada documento aberto ali mesmo.
+  1. O site faz o papel do Google Site: as oito seções do briefing e o diário de bordo de cada semana, com cada documento aberto ali mesmo.
   1. A pasta do Drive recebe o PDF de cada apresentação.
 - **Se perguntarem** (fora do tempo):
-  - O professor dispensou o Google Site na Semana 1, e a decisão está no registro daquela semana. Cada versão do site fica guardada no Git, com a data.
+  - Trocamos o Google Site pelo site do projeto na Semana 1, com as mesmas oito seções, e cada versão fica guardada no Git, com a data. Se a banca preferir, espelhamos no Drive.
   - O uso de IA está em /transparencia-ia, com quem conferiu cada uso. Até aqui o Gabriel conferiu todos; dividir isso entra nas sprints.
 
 ### Slide 19: planejado x realizado: as entregas

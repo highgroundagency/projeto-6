@@ -228,7 +228,7 @@ export const documentos = [
             <Nota>
               Revisão de 10/09, para o Kick-off: depois da reunião de 22/08, a segunda persona
               passou a ser a gerente da unidade, porque é a unidade que manda os números. Os
-              cartões acima seguem o texto de 15/08.
+              cartões acima mantêm as personas de 15/08.
             </Nota>
           </div>
         </Secao>

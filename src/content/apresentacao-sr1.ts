@@ -404,7 +404,7 @@ export const PROXIMO_DO_OBJETIVO: Partial<Record<(typeof OBJETIVOS_ESPECIFICOS)[
   'a regra como dado': 'falta: cadastrar pela tela',
   'a conta sempre aberta': 'falta: a conta no ranking',
   'nada muda sem registro': 'trilha já no ar',
-  'conferido com o cliente': 'falta: marcar a data',
+  'conferido com o cliente': 'falta: pedir a data',
 }
 
 export const OBJETIVOS_NO_SR1 = OBJETIVOS_ESPECIFICOS.map((o) => ({
@@ -563,12 +563,12 @@ export const SLIDES_SR1 = [
       'O problema. A prefeitura do Recife paga um extra no salário de quem dirige uma unidade de saúde e bate as metas do mês. A regra está numa portaria de 2024.',
       `Acontece todo mês, na Secretaria de Saúde, para ${B.unidades} unidades em ${DISTRITOS_NA_BASE} distritos.`,
       'A causa: a regra está escrita, mas a conta é feita à mão, numa planilha em que pouca gente sabe mexer.',
-      `A consequência: na planilha real, ${porExtenso(B.fora_da_regra)} unidades seguem uma conta que a portaria não traz, e só a planilha sabe dela. E quem recebe o dinheiro não consegue conferir a própria nota.`,
+      `A consequência: na planilha real, ${porExtenso(B.fora_da_regra)} unidades seguem uma conta que a portaria não traz. E quem recebe o dinheiro não consegue conferir a própria nota.`,
     ],
     perguntas: [
       'Por que este problema: é um cliente real, com a dor escrita desde 2023, e uma tentativa anterior de automatizar a conta parou.',
       'Os números da rede vêm da base de desempenho que a Secretaria enviou em 23 de setembro, sem nome, CPF ou matrícula. Em 39 das 90 combinações de tipo e distrito há uma unidade só; isso está na análise de privacidade.',
-      `As ${porExtenso(B.fora_da_regra)} são NDI e SAE, dois tipos que a portaria não nomeia. Não sabemos se é regra provisória ou erro: é pergunta para a SEAB, e está na matriz CSD. Na aba de pesos há outro caso: uma coluna de peso diferente da portaria, que ninguém versiona.`,
+      `As ${porExtenso(B.fora_da_regra)} são ${B.familias_fora_da_regra.join(' e ')}, ${porExtenso(B.familias_fora_da_regra.length)} tipos que a portaria não nomeia. Não sabemos se é regra provisória ou erro: é pergunta para a SEAB, e está na matriz CSD. Na aba de pesos há outro caso: uma coluna de peso diferente da portaria, e não sabemos quem decidiu nem até quando vale.`,
     ],
   },
   {
@@ -603,7 +603,7 @@ export const SLIDES_SR1 = [
     notas: [
       `A matriz de certezas, suposições e dúvidas foi atualizada em 25 de setembro: ${CSD_EM_25_09.certezas.length} certezas, cada uma com a fonte, ${CSD_EM_25_09.suposicoes.length} suposições declaradas e ${CSD_EM_25_09.duvidas.length} dúvidas, cada uma com a pergunta para a Secretaria.`,
       'A maior dúvida é quanto se paga em cada classe da nota.',
-      'Desde o Kick-off, a planilha resolveu a dúvida do peso que falta e corrigiu o nosso modelo.',
+      'Desde o Kick-off, a dúvida do indicador sem número virou certeza, e a planilha corrigiu o nosso modelo.',
     ],
     perguntas: [
       'A matriz do Kick-off continua no site, com a data dela. A de 25 de setembro está no documento de síntese da pesquisa, no SR1.',
@@ -653,13 +653,13 @@ export const SLIDES_SR1 = [
     parte: 'imersao',
     titulo: 'os objetivos e o que já alcançamos',
     apoio: `objetivo geral: ${OBJETIVO_GERAL_CURTO}`,
-    visual: 'Os cinco objetivos específicos com o prazo e o estado de hoje, e o escopo em uma linha.',
+    visual: 'Os cinco objetivos específicos com o prazo, o estado de hoje e o que falta, e o fora do escopo em uma linha.',
     segundos: 35,
     quemFala: 'kerry',
     notas: [
       'O objetivo geral: tirar a conta da planilha e deixar cada nota aberta para conferir.',
       `Dos cinco específicos, um foi alcançado e dois estão em parte: a regra já tem versão, mas ainda muda por código, e o ranking mostra a nota sem a conta. Os outros dois vencem em ${dataFalada('s9')} e ${dataFalada('s11')}.`,
-      'Próximos passos: cadastrar a regra pela tela, levar a conta ao ranking e marcar a Semana 11.',
+      'Próximos passos: cadastrar a regra pela tela, levar a conta ao ranking e pedir a data da Semana 11.',
       'O escopo foi revisto na Semana 6, com a portaria e a planilha.',
     ],
     perguntas: [
@@ -668,7 +668,7 @@ export const SLIDES_SR1 = [
       'A conta aberta está em parte porque o ranking do painel da gestão mostra a nota sem a conta. Levar a conta a toda tela que mostra nota está no backlog.',
       'Cada um vê o que é seu na permissão: cada tela confere o papel no servidor e responde 404. O login é simulado, e o da prefeitura está fora do escopo.',
       'Por isso, no documento de privacy by design, o requisito de acesso por área está em parte: sem login real, o próprio distrito é escolhido no seletor.',
-      'As metas de entrega da Semana 2 também têm estado: o motor com testes dos casos-limite saiu até a Semana 6, e o protótipo navegável está no ar. A entrevista da Semana 11 e o SR2 estão no prazo.',
+      'As metas de entrega da Semana 2 também têm estado: o motor com testes dos casos-limite saiu até a Semana 6, e o protótipo navegável está no ar. O ciclo inteiro com histórico, a entrevista da Semana 11 e o SR2 estão no prazo.',
     ],
   },
 
@@ -679,7 +679,7 @@ export const SLIDES_SR1 = [
     parte: 'ideacao',
     titulo: 'como geramos as ideias',
     apoio: `${porExtenso(TECNICAS_DE_IDEACAO.length)} técnicas na semana 3, com uma regra: somar antes de criticar.`,
-    visual: 'As três técnicas, com o tempo e o que cada uma produziu, e o funil até a escolhida.',
+    visual: 'As três técnicas, com o tempo, como cada uma funciona e o que produziu, e o funil até a escolhida.',
     segundos: 30,
     quemFala: 'joao-pedro',
     notas: [
@@ -709,7 +709,7 @@ export const SLIDES_SR1 = [
     perguntas: [
       'Não somamos as notas. O esforço 4 foi aceito porque cabe em fatias: lançamento, conta e conta aberta até o SR1, e o resto nas sprints.',
       'A lista de risco da tela de analytics é uma média simples, sem modelo. Os modelos rodam sobre a base da Secretaria e mostram o que pesa na nota.',
-      'Aderência é sobreviver a portaria nova e a troca de equipe. A regra com versão já mostrou a primeira: a regra 3 entrou e maio não mudou. Cadastrar a regra pela tela ainda está no backlog.',
+      'Aderência é sobreviver no órgão: pregão, portaria nova e troca de equipe. Na Semana 3, a razão escrita foi mudar a regra pela tela, e isso ainda está no backlog. O que já funciona é a versão: a regra 3 entrou e maio não mudou.',
     ],
   },
   {
@@ -718,7 +718,7 @@ export const SLIDES_SR1 = [
     parte: 'ideacao',
     titulo: 'o que cada disciplina pôs no produto',
     apoio: 'como cada lente moldou a ideia escolhida: as três da matriz e direito.',
-    visual: 'Quatro cartões, um por disciplina, com as decisões concretas de cada uma, e a Atividade 2 no de Direito.',
+    visual: 'Quatro cartões, um por disciplina, com as decisões concretas de cada uma; o de direito traz a base legal e a Atividade 2.',
     segundos: 44,
     quemFala: 'rafael',
     notas: [
@@ -739,6 +739,7 @@ export const SLIDES_SR1 = [
       `Dos ${REQUISITOS_DE_PRIVACIDADE.length} requisitos de privacidade, ${contarRequisitos('no MVP')} já valem no sistema, ${contarRequisitos('em parte')} valem em parte, ${contarRequisitos('no backlog')} estão no backlog e ${contarRequisitos('na implantação')} dependem de infraestrutura real. A tabela está no documento de privacy by design do SR1, no site.`,
       'Um exemplo de dado sensível por inferência: a licença médica que justifica uma meta perdida revela saúde. No sistema, o único lugar em que isso pode entrar é o texto da contestação, e o formulário avisa para não escrever.',
       'O PDF da Atividade 2 cita a Portaria 05 de 2023, que foi revogada pela 001 de 2024. O site já cita a vigente.',
+      'O artigo 20 vale mesmo com a CAM decidindo? A nota sai de uma conta automática, e quem recebe precisa conseguir conferir. Na Atividade 2, a conta aberta atende aos direitos do titular do artigo 18, e o artigo 20 aparece no modelo: nenhuma saída de modelo entra na nota, e a decisão continua humana e contestável.',
     ],
   },
 
@@ -876,11 +877,11 @@ export const SLIDES_SR1 = [
     quemFala: 'fernando',
     notas: [
       'O código e os testes ficam no GitHub, e cada envio roda os testes sozinho. O site roda na Vercel.',
-      'O professor dispensou o Google Site na Semana 1, e o nosso site faz o papel dele: as oito seções do briefing e o diário de bordo de cada semana, com cada documento aberto ali mesmo.',
+      'O site faz o papel do Google Site: as oito seções do briefing e o diário de bordo de cada semana, com cada documento aberto ali mesmo.',
       'A pasta do Drive recebe o PDF de cada apresentação.',
     ],
     perguntas: [
-      'O professor dispensou o Google Site na Semana 1, e a decisão está no registro daquela semana. Cada versão do site fica guardada no Git, com a data.',
+      'Trocamos o Google Site pelo site do projeto na Semana 1, com as mesmas oito seções, e cada versão fica guardada no Git, com a data. Se a banca preferir, espelhamos no Drive.',
       'O uso de IA está em /transparencia-ia, com quem conferiu cada uso. Até aqui o Gabriel conferiu todos; dividir isso entra nas sprints.',
     ],
   },
@@ -1051,7 +1052,7 @@ export const CSD_SR1 = [
  */
 export const CSD_RESPONDIDO = {
   rotulo: 'desde o kick-off',
-  texto: 'a planilha resolveu o peso que falta e corrigiu o nosso modelo',
+  texto: 'a dúvida do indicador sem número virou certeza; a planilha corrigiu o modelo',
 } as const
 
 export const COLUNAS_DAS_FONTES = { fontes: 'as fontes', aprendizados: 'o que aprendemos' } as const
@@ -1125,7 +1126,7 @@ const PRODUTO_SR1_DA_TECNICA: Record<string, string> = {
 /** Como cada técnica funciona, numa linha: a rubrica pede como as ideias foram geradas. */
 const COMO_SR1_DA_TECNICA: Record<string, string> = {
   Brainwriting: 'cada um escreve em silêncio e passa a folha',
-  Brainstorming: 'a conversa junta as parecidas e dá nome',
+  Brainstorming: 'a conversa junta as ideias parecidas em grupos',
   "Crazy 8's": 'oito telas em oito minutos, cada um sozinho',
 }
 
@@ -1182,7 +1183,7 @@ export const DISCIPLINAS_SR1 = [
   {
     nome: 'direito',
     itens: [
-      'nota de salário precisa ser explicável (LGPD, art. 20)',
+      'nota que decide salário precisa ser explicada (LGPD, art. 20)',
       'base legal: política pública, não consentimento (art. 7º, III)',
       `Atividade 2: ${DADOS_PESSOAIS.length} dados pessoais, ${REQUISITOS_DE_PRIVACIDADE.length} riscos com requisito e teste`,
     ],
@@ -1228,7 +1229,7 @@ export const DECISOES_DO_WIREFRAME_SR1 = [
   'um campo para cada item medido',
   'a nota em cima, a conta inteira embaixo',
   'cada unidade numa linha, e quem falta em destaque',
-  'o mês de hoje contra os anteriores',
+  'o mês escolhido ao lado dos anteriores',
 ] as const satisfies { length: (typeof LEGENDAS_DO_WIREFRAME)['length'] }
 
 /**
