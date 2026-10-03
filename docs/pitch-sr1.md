@@ -127,6 +127,20 @@ em instâncias diferentes podem não enxergar a mesma cópia. Por isso a reserva
 
 <!-- roteiro-sr1:inicio -->
 
+### Cola do ensaio: quem fala, em que slides e a partir de que minuto
+
+| Quem | Slides (começa em) | Tempo de fala |
+| --- | --- | --- |
+| Gabriel | 1 a 3 (0:00) · 19 e 20 (9:45) | 2:05 |
+| Matheus | 4 a 6 (1:05) | 1:40 |
+| Kerry | 7 e 8 (2:45) · 22 (11:25) | 1:40 |
+| João Pedro | 9 (3:55) · 14 (6:30) | 1:40 |
+| Rafael | 10 e 11 (4:25) · 21 (10:45) | 1:50 |
+| João Henrique | 12 e 13 (5:35) · 15 (7:40) | 1:25 |
+| Fernando | 16 a 18 (8:10) | 1:35 |
+
+Total de fala: 11:55, com limite de 15:00. Quem passa o slide é quem opera a tela, não quem fala.
+
 ### Slide 1: prumo
 
 - **Começa em** 0:00 · **dura** 0:15 · **quem fala:** Gabriel · **16 palavras na tela**
@@ -262,26 +276,30 @@ em instâncias diferentes podem não enxergar a mesma cópia. Por isso a reserva
 
 ### Slide 11: o que cada disciplina pôs no produto
 
-- **Começa em** 4:55 · **dura** 0:35 · **quem fala:** Rafael · **86 palavras na tela**
+- **Começa em** 4:55 · **dura** 0:40 · **quem fala:** Rafael · **88 palavras na tela**
 - **Parte da rubrica:** critério 2 · ideação
 - **Frase da tela:** as três lentes técnicas da matriz, e a de direito, que a equipe acrescentou.
 - **O que a tela mostra:** Quatro cartões, um por disciplina, com duas decisões concretas de cada uma.
 - **A fala:**
-  1. A ideia escolhida ganhou peças de cada disciplina.
   1. Segurança: o que não é seu responde como se não existisse, e listamos 14 ameaças.
   1. Nuvem: o sistema roda na Vercel, sem servidor para manter.
   1. Aprendizado de máquina: três modelos sobre a base real da Secretaria mostram o que pesa na nota, sem fazer a conta.
   1. E Direito: pelo artigo 20 da Lei Geral de Proteção de Dados, a nota que decide o salário de alguém precisa ser explicada. Por isso a conta fica aberta.
+  1. Na Atividade 2 de Direito, mapeamos dezesseis dados pessoais e quinze riscos de privacidade, cada um com requisito e teste. O que falta virou backlog.
 - **Se perguntarem** (fora do tempo):
   - O classificador acerta 100%, contra 54% do chute mais simples, porque aprende a própria conta da portaria. Por isso o modelo diz o que pesa, e não calcula nada.
   - O agrupamento separa 4 grupos de unidades, nunca de pessoas, com silhueta de 0,71. A apresentação completa está em /ml.
   - Dos 10 riscos da lista OWASP Top 10, 5 ainda estão cobertos só pela metade. O login do sistema é simulado.
   - O banco já está projetado, com as regras de acesso testadas num Postgres de verdade, mas ainda com os papéis de antes da reunião de 22 de agosto, e está desligado: o sistema roda em memória para qualquer pessoa clonar e rodar sem senha.
   - O desenho do sistema em quatro níveis (C4) está na página de arquitetura do site.
+  - A base legal é o artigo 7º, inciso III, lido com o artigo 23: o Poder Público executando uma política pública. Não é consentimento, que seria frágil numa relação de trabalho.
+  - Dos 15 requisitos de privacidade, 2 já valem no sistema, 8 valem em parte, 2 estão no backlog e 3 dependem de infraestrutura real. A tabela está no documento de privacy by design do SR1, no site.
+  - Um exemplo de dado sensível por inferência: a licença médica que justifica uma meta perdida revela saúde. No sistema, o único lugar em que isso pode entrar é o texto da contestação, e o formulário avisa para não escrever.
+  - O PDF da Atividade 2 cita a Portaria 05 de 2023, que foi revogada pela 001 de 2024. O site já cita a vigente.
 
 ### Slide 12: a solução: do número à nota, com a conta aberta
 
-- **Começa em** 5:30 · **dura** 0:35 · **quem fala:** João Henrique · **81 palavras na tela**
+- **Começa em** 5:35 · **dura** 0:35 · **quem fala:** João Henrique · **81 palavras na tela**
 - **Parte da rubrica:** critério 3 · proposta de solução
 - **Frase da tela:** um sistema web que faz a conta da portaria e mostra de onde veio cada número.
 - **O que a tela mostra:** O caminho de um mês em quatro passos, com o papel de quem faz cada um, e as contagens do sistema.
@@ -294,7 +312,7 @@ em instâncias diferentes podem não enxergar a mesma cópia. Por isso a reserva
 
 ### Slide 13: os protótipos de baixa fidelidade
 
-- **Começa em** 6:05 · **dura** 0:20 · **quem fala:** João Henrique · **34 palavras na tela**
+- **Começa em** 6:10 · **dura** 0:20 · **quem fala:** João Henrique · **34 palavras na tela**
 - **Parte da rubrica:** critério 3 · proposta de solução
 - **Frase da tela:** quatro desenhos de três telas centrais, propositalmente sem texto. os nomes são os do menu.
 - **O que a tela mostra:** Os quatro wireframes, um por tela, com a legenda de cada.
@@ -307,7 +325,7 @@ em instâncias diferentes podem não enxergar a mesma cópia. Por isso a reserva
 
 ### Slide 14: o sistema funcionando, ao vivo
 
-- **Começa em** 6:25 · **dura** 1:10 · **quem fala:** João Pedro · **26 palavras na tela**
+- **Começa em** 6:30 · **dura** 1:10 · **quem fala:** João Pedro · **26 palavras na tela**
 - **Parte da rubrica:** critério 3 · proposta de solução
 - **Frase da tela:** dados de teste: nenhuma pessoa real.
 - **O que a tela mostra:** O sistema ao vivo, lançando julho. De reserva, a nota de junho com a conta aberta, calculada na hora.
@@ -326,7 +344,7 @@ em instâncias diferentes podem não enxergar a mesma cópia. Por isso a reserva
 
 ### Slide 15: por que esta solução: três diferenciais
 
-- **Começa em** 7:35 · **dura** 0:30 · **quem fala:** João Henrique · **84 palavras na tela**
+- **Começa em** 7:40 · **dura** 0:30 · **quem fala:** João Henrique · **84 palavras na tela**
 - **Parte da rubrica:** critério 3 · proposta de solução
 - **Frase da tela:** o que nenhuma das soluções estudadas junta.
 - **O que a tela mostra:** Os três diferenciais, com a prova de cada um: a conta aberta, maio que não muda e a porta que não abre.
@@ -342,7 +360,7 @@ em instâncias diferentes podem não enxergar a mesma cópia. Por isso a reserva
 
 ### Slide 16: o ciclo de vida do projeto
 
-- **Começa em** 8:05 · **dura** 0:35 · **quem fala:** Fernando · **86 palavras na tela**
+- **Começa em** 8:10 · **dura** 0:35 · **quem fala:** Fernando · **86 palavras na tela**
 - **Parte da rubrica:** critério 4 · metodologia e processo
 - **Frase da tela:** o semestre em fases, com um registro por semana no site.
 - **O que a tela mostra:** As fases do semestre com as datas do cronograma, o SR1 em destaque, a rotina da semana e o backlog priorizado.
@@ -355,7 +373,7 @@ em instâncias diferentes podem não enxergar a mesma cópia. Por isso a reserva
 
 ### Slide 17: papéis e responsabilidades
 
-- **Começa em** 8:40 · **dura** 0:30 · **quem fala:** Fernando · **86 palavras na tela**
+- **Começa em** 8:45 · **dura** 0:30 · **quem fala:** Fernando · **86 palavras na tela**
 - **Parte da rubrica:** critério 4 · metodologia e processo
 - **Frase da tela:** seis frentes com dono; o kerry apoia a pesquisa.
 - **O que a tela mostra:** Os sete integrantes, com o papel e as responsabilidades de cada um.
@@ -365,7 +383,7 @@ em instâncias diferentes podem não enxergar a mesma cópia. Por isso a reserva
 
 ### Slide 18: ferramentas, o site e o drive
 
-- **Começa em** 9:10 · **dura** 0:30 · **quem fala:** Fernando · **78 palavras na tela**
+- **Começa em** 9:15 · **dura** 0:30 · **quem fala:** Fernando · **78 palavras na tela**
 - **Parte da rubrica:** critério 4 · metodologia e processo
 - **Frase da tela:** onde o trabalho acontece e onde cada entrega fica.
 - **O que a tela mostra:** As ferramentas com o uso de cada uma, as oito seções do site no lugar do Google Site e o que a pasta do Drive guarda.
@@ -379,7 +397,7 @@ em instâncias diferentes podem não enxergar a mesma cópia. Por isso a reserva
 
 ### Slide 19: planejado x realizado: as entregas
 
-- **Começa em** 9:40 · **dura** 0:35 · **quem fala:** Gabriel · **88 palavras na tela**
+- **Começa em** 9:45 · **dura** 0:35 · **quem fala:** Gabriel · **88 palavras na tela**
 - **Parte da rubrica:** critério 5 · planejado x realizado
 - **Frase da tela:** o que cada fase pedia, o que foi entregue e quem respondeu.
 - **O que a tela mostra:** A tabela das fases até o SR1, com entregas, responsáveis e o que está em andamento.
@@ -389,7 +407,7 @@ em instâncias diferentes podem não enxergar a mesma cópia. Por isso a reserva
 
 ### Slide 20: o avanço e o estágio de hoje
 
-- **Começa em** 10:15 · **dura** 0:25 · **quem fala:** Gabriel · **82 palavras na tela**
+- **Começa em** 10:20 · **dura** 0:25 · **quem fala:** Gabriel · **82 palavras na tela**
 - **Parte da rubrica:** critério 5 · planejado x realizado
 - **Frase da tela:** estágio: protótipo navegável, com dados de teste.
 - **O que a tela mostra:** Três percentuais de avanço com a conta de cada um, e os três compromissos do Kick-off com o estado.
@@ -401,7 +419,7 @@ em instâncias diferentes podem não enxergar a mesma cópia. Por isso a reserva
 
 ### Slide 21: pontos fortes, melhorias e riscos
 
-- **Começa em** 10:40 · **dura** 0:40 · **quem fala:** Rafael · **89 palavras na tela**
+- **Começa em** 10:45 · **dura** 0:40 · **quem fala:** Rafael · **89 palavras na tela**
 - **Parte da rubrica:** critério 6 · pontos fortes e melhorias
 - **Frase da tela:** do projeto e da equipe. a seta diz como tratamos.
 - **O que a tela mostra:** Três colunas: pontos fortes, pontos de melhoria com o tratamento, e os três riscos maiores com o tratamento.
@@ -416,7 +434,7 @@ em instâncias diferentes podem não enxergar a mesma cópia. Por isso a reserva
 
 ### Slide 22: conclusão e próximos passos
 
-- **Começa em** 11:20 · **dura** 0:30 · **quem fala:** Kerry · **73 palavras na tela**
+- **Começa em** 11:25 · **dura** 0:30 · **quem fala:** Kerry · **73 palavras na tela**
 - **Parte da rubrica:** encerramento, fora dos critérios
 - **Frase da tela:** do problema ao plano.
 - **O que a tela mostra:** A linha do problema à solução e ao plano, as paradas até o SR2 com a data de cada uma, o endereço do site e a pergunta para a banca.

@@ -153,6 +153,12 @@ export async function TelaContestacao({ ctx }: PropsTela) {
               className="mt-1 w-full border border-linha px-2 py-1.5 text-sm"
             />
             <p className="mt-1 text-xs text-apagado">Entre 20 e 1000 caracteres.</p>
+            {/* Requisito 6 da Atividade 2 de Direito (src/content/privacidade.ts):
+                o texto livre pode receber dado sensível sem querer. */}
+            <p className="mt-1 text-xs text-apagado">
+              Não escreva aqui dado de saúde, de filiação sindical, de religião ou de origem
+              racial. O motivo é lido por quem analisa a contestação.
+            </p>
           </div>
 
           <Botao type="submit" variante="primario" disabled={!podeAbrir}>

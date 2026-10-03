@@ -20,6 +20,7 @@ import {
   formatarTempo,
 } from '@/content/pitch'
 import { SECOES } from '@/components/base/indice'
+import { DADOS_PESSOAIS, REQUISITOS_DE_PRIVACIDADE, contarRequisitos } from '@/content/privacidade'
 import { ENDERECO_SITE, OBJETIVOS_ESPECIFICOS, OBJETIVO_GERAL_CURTO } from '@/content/produto'
 import { calcularAvaliacao } from '@/lib/calculo/motor'
 import type { Avaliacao } from '@/lib/calculo/tipos'
@@ -445,13 +446,13 @@ export interface SlideSR1 {
 }
 
 /**
- * 11:50 de fala, para uma banca que interrompe em 15:00.
+ * 11:55 de fala, para uma banca que interrompe em 15:00.
  *
  * A margem é de propósito: troca de quem fala, a demonstração ao vivo e o
  * nervoso do dia comem tempo que a conta de palavras não vê. Ensaio que fecha
  * no limite estoura no dia.
  */
-export const DURACAO_SR1_SEGUNDOS = 710
+export const DURACAO_SR1_SEGUNDOS = 715
 
 /** O limite da banca, das orientações oficiais do SR1. */
 export const LIMITE_SR1_SEGUNDOS = 15 * 60
@@ -660,14 +661,14 @@ export const SLIDES_SR1 = [
     titulo: 'o que cada disciplina pôs no produto',
     apoio: 'as três lentes técnicas da matriz, e a de direito, que a equipe acrescentou.',
     visual: 'Quatro cartões, um por disciplina, com duas decisões concretas de cada uma.',
-    segundos: 35,
+    segundos: 40,
     quemFala: 'rafael',
     notas: [
-      'A ideia escolhida ganhou peças de cada disciplina.',
       `Segurança: o que não é seu responde como se não existisse, e listamos ${CONTAGENS_PITCH.ameacasStride} ameaças.`,
       'Nuvem: o sistema roda na Vercel, sem servidor para manter.',
       'Aprendizado de máquina: três modelos sobre a base real da Secretaria mostram o que pesa na nota, sem fazer a conta.',
       'E Direito: pelo artigo 20 da Lei Geral de Proteção de Dados, a nota que decide o salário de alguém precisa ser explicada. Por isso a conta fica aberta.',
+      `Na Atividade 2 de Direito, mapeamos ${porExtenso(DADOS_PESSOAIS.length)} dados pessoais e ${porExtenso(REQUISITOS_DE_PRIVACIDADE.length)} riscos de privacidade, cada um com requisito e teste. O que falta virou backlog.`,
     ],
     perguntas: [
       `O classificador acerta ${porcentoInteiro(ACERTO)}, contra ${porcentoInteiro(ACERTO_DO_CHUTE)} do chute mais simples, porque aprende a própria conta da portaria. Por isso o modelo diz o que pesa, e não calcula nada.`,
@@ -675,6 +676,10 @@ export const SLIDES_SR1 = [
       `Dos ${CONTAGENS_PITCH.itensOwasp} riscos da lista OWASP Top 10, ${CONTAGENS_PITCH.owaspParciais} ainda estão cobertos só pela metade. O login do sistema é simulado.`,
       'O banco já está projetado, com as regras de acesso testadas num Postgres de verdade, mas ainda com os papéis de antes da reunião de 22 de agosto, e está desligado: o sistema roda em memória para qualquer pessoa clonar e rodar sem senha.',
       'O desenho do sistema em quatro níveis (C4) está na página de arquitetura do site.',
+      'A base legal é o artigo 7º, inciso III, lido com o artigo 23: o Poder Público executando uma política pública. Não é consentimento, que seria frágil numa relação de trabalho.',
+      `Dos ${REQUISITOS_DE_PRIVACIDADE.length} requisitos de privacidade, ${contarRequisitos('no MVP')} já valem no sistema, ${contarRequisitos('em parte')} valem em parte, ${contarRequisitos('no backlog')} estão no backlog e ${contarRequisitos('na implantação')} dependem de infraestrutura real. A tabela está no documento de privacy by design do SR1, no site.`,
+      'Um exemplo de dado sensível por inferência: a licença médica que justifica uma meta perdida revela saúde. No sistema, o único lugar em que isso pode entrar é o texto da contestação, e o formulário avisa para não escrever.',
+      'O PDF da Atividade 2 cita a Portaria 05 de 2023, que foi revogada pela 001 de 2024. O site já cita a vigente.',
     ],
   },
 
@@ -1095,8 +1100,8 @@ export const DISCIPLINAS_SR1 = [
   {
     nome: 'direito',
     itens: [
-      'a nota decide o salário do gerente: é dado pessoal, e se explica (LGPD, art. 20)',
-      'no protótipo, nenhuma pessoa real',
+      'nota que decide salário é dado pessoal e se explica (LGPD, art. 20)',
+      `${REQUISITOS_DE_PRIVACIDADE.length} riscos de privacidade, cada um com requisito e teste (atividade 2)`,
     ],
   },
 ] as const

@@ -313,6 +313,13 @@ export const MARCOS_PARALELOS: readonly MarcoParalelo[] = [
   },
   {
     trilha: 'direito',
+    data: '2026-09-28',
+    rotulo: 'Direito: Atividade 2 (30% da AV1)',
+    oQueOProjetoAlimenta:
+      'Requisitos de privacy by design com critério de teste (src/content/privacidade.ts)',
+  },
+  {
+    trilha: 'direito',
     data: '2026-10-02',
     rotulo: 'Direito: AV1',
     oQueOProjetoAlimenta:

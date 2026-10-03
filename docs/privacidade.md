@@ -29,8 +29,11 @@ explicitada em cada seção.
 | Autoria de lançamento | Quem informou cada valor, quando | Servidor da área técnica | Rastreabilidade e responsabilização |
 | Contestação | Motivo apresentado, resposta da comissão | Servidor avaliado | Devido processo |
 
-**Não são tratados**: dados sensíveis (art. 5º, II da LGPD), dados de pacientes, dados
-bancários ou valores de folha. O sistema calcula o **percentual devido**; a folha é outro
+**Não são tratados**: dados de pacientes, dados bancários ou valores de folha. **Não há campo
+para dado sensível** (art. 5º, II da LGPD), mas o texto livre da contestação pode receber um
+sem querer, e por isso o formulário avisa para não escrever. A Atividade 2 de Direito, na
+seção [Atividade 2 de Direito](#atividade-2-de-direito-requisitos-de-privacy-by-design),
+mostra que dado sensível também aparece por inferência, e trata cada caso. O sistema calcula o **percentual devido**; a folha é outro
 sistema, e isso está explicitamente fora do escopo.
 
 ## Base legal
@@ -152,6 +155,34 @@ guardada junto da ADR.
    apontar a unidade. A justificativa precisa dizer a base legal da publicação.
 
 Até a decisão, o risco fica declarado aqui.
+
+## Atividade 2 de Direito: requisitos de privacy by design
+
+A Atividade 2 da disciplina de Direito (30% da AV1), entregue em 28/09, levantou os
+requisitos de privacidade da plataforma antes do código, com o método de privacy by design:
+16 categorias de dado pessoal, 15 riscos e, para cada risco, o requisito que o trata, o
+princípio que o sustenta e um critério de verificação testável. O catálogo inteiro está
+transcrito em `src/content/privacidade.ts` e aparece no site como documento do SR1
+(`#doc-sr1-privacy-by-design`), com uma coluna que o PDF não tem: onde cada requisito está
+hoje no código.
+
+O que ela acrescenta a este documento:
+
+- **Base legal:** art. 7º, III **lido com o art. 23** (tratamento pelo Poder Público), e o
+  art. 11, II, "b" para dado sensível. O encarregado é o canal com titulares e ANPD (arts.
+  23, III e 41), e o compartilhamento entre órgãos segue o art. 26.
+- **Sensível por inferência** (art. 11, § 1º): a nota é dado comum, mas o motivo registrado
+  (licença médica, falta por dia de greve) revela saúde ou filiação sindical.
+- **Transparência:** o Tema 483 do STF permite divulgar nome e remuneração do servidor, mas
+  não alcança as notas individuais, de acesso restrito (art. 31 da LAI).
+- **Backlog de privacidade:** oito itens. Um já está feito, o teste que garante que nenhum
+  modelo recebe identificador de gestor e que o motor não lê saída de modelo
+  (`src/lib/calculo/fronteira.test.ts`). O aviso contra dado sensível no formulário da
+  contestação também entrou.
+
+**Correção sobre o PDF.** A atividade cita a Portaria Conjunta SESAU nº 05/2023 como norma da
+política. Ela foi revogada pela Portaria Conjunta nº 001/2024 (art. 12), que é a vigente e a
+que o projeto usa. O site e este documento citam a vigente.
 
 ## Pendências honestas
 

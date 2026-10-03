@@ -1399,7 +1399,7 @@ feedback de professor ou de cliente seria fabricar evidência.
   - [documento] Uso de IA -> /transparencia-ia
   - [codigo] Código e testes -> https://github.com/highgroundagency/projeto-6
 
-  Documentos de entrega desta semana (5)
+  Documentos de entrega desta semana (6)
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   >>> PACOTE DE ENTREGA DO SR1
@@ -1458,6 +1458,7 @@ feedback de professor ou de cliente seria fabricar evidência.
        - Nuvem e fluxo de dados →
        - Segurança →
        - Direito e LGPD →
+       - Privacy by design →
        - Lente de ML →
        - Uso de IA →
       Uma peça por lente técnica, cada uma no seu lugar.
@@ -1649,7 +1650,7 @@ feedback de professor ou de cliente seria fabricar evidência.
        Quem fez o lançamento (quem informou, quando) | Servidor da área técnica | Ter o histórico de quem informou, para poder responsabilizar
        Contestação (motivo, resposta da comissão) | Servidor avaliado | Garantir o direito de defesa (devido processo)
 
-      O sistema não guarda dados sensíveis, os do art. 5º, II. Também não guarda dados de pacientes, dados bancários nem valores de folha. Ele só calcula o percentual devido. A folha de pagamento é outro sistema, e deixamos isso fora do escopo de forma declarada.
+      O sistema não tem campo para dado sensível, os do art. 5º, II. O único lugar onde um pode entrar sem querer é o texto livre da contestação, e por isso o formulário avisa para não escrever. A Atividade 2 de Direito, no documento abaixo, trata esse e os outros casos. O sistema também não guarda dados de pacientes, dados bancários nem valores de folha. Ele só calcula o percentual devido. A folha de pagamento é outro sistema, e deixamos isso fora do escopo de forma declarada.
 
       No sistema, nenhuma pessoa
 
@@ -1676,6 +1677,105 @@ feedback de professor ou de cliente seria fabricar evidência.
 
        A autorização por escrito da Secretaria para publicar | Hoje ela está registrada só no texto da ADR-044, e o repositório é público
        Generalizar as combinações únicas, ou justificar a publicação | Generalizar tira a unidade única da base. Justificar pede dizer com que base legal ela fica
+
+  >>> DIREITO: REQUISITOS DE PRIVACY BY DESIGN
+      âncora no site: #doc-sr1-privacy-by-design
+      a atividade 2 de direito: 16 dados pessoais mapeados, 15 riscos com requisito e
+      teste, e onde cada requisito está hoje.
+
+      A Atividade 2 de Fundamentos de Projeto 6: tópicos em direito (30% da AV1), entregue em 28/09/2026, levantou os requisitos de privacidade da plataforma antes do código: que dado pessoal ela trataria, o que pode dar errado com cada um e que controle evita o risco. Cada requisito nomeia o princípio de privacy by design que o sustenta e traz um critério de verificação que dá para testar. Este documento transcreve o catálogo e acrescenta uma coluna que o original não tem: onde cada requisito está hoje no sistema.
+
+      Base legal
+      Por que a plataforma pode tratar esses dados sem pedir consentimento.
+
+       - A base é o art. 7º, III da LGPD, lido com o art. 23: tratamento pelo Poder Público para executar política pública. Não é o consentimento. Numa relação hierárquica entre a Administração e o servidor avaliado, o consentimento seria frágil.
+       - Para dado sensível, vale o art. 11, II, "b".
+       - A SESAU é a controladora. Um eventual fornecedor de tecnologia seria operador. O encarregado (arts. 23, III e 41) é o canal com os titulares e com a ANPD. O compartilhamento entre órgãos segue o art. 26.
+       - Transparência e privacidade: o Tema 483 do STF (ARE 652.777/SP) permite divulgar nome e remuneração do servidor, mas não alcança as notas individuais de avaliação, que são informação pessoal de acesso restrito (art. 31 da LAI).
+       - Dado sensível que não parece sensível: a nota é dado comum, mas o motivo registrado (licença médica, falta por dia de greve) revela saúde ou filiação sindical. É a regra do art. 11, § 1º.
+      O PDF da atividade cita a Portaria Conjunta SESAU nº 05/2023. Ela foi revogada pela Portaria Conjunta nº 001/2024 (art. 12), que é a vigente e a que o projeto usa. Aqui citamos a vigente. As normas da política: Lei Municipal nº 18.969/2022, Decreto nº 36.482/2023, Portaria Conjunta nº 001/2024.
+
+      Os dados pessoais que a plataforma trataria
+      16 categorias, classificadas pelo art. 5º, I e II da LGPD. 5 são sensíveis ou podem ser, a maioria por inferência.
+
+       Dado | Classificação | Por quê
+
+       Nome completo do gestor avaliado | comum | Identifica diretamente a pessoa natural (art. 5º, I), sem revelar categoria sensível.
+       Matrícula funcional | comum | Identificador único do servidor no órgão (art. 5º, I).
+       CPF, se usado como identificador ou login | comum | Dado identificador (art. 5º, I). Por ser identificador nacional, pede segurança reforçada.
+       Cargo, função e lotação (unidade de saúde) | comum | Dados funcionais ligados a pessoa identificável (art. 5º, I).
+       E-mail funcional | comum | Dado de contato de pessoa identificável (art. 5º, I).
+       Indicadores de desempenho individuais | comum | Referem-se a pessoa identificável (art. 5º, I). Sozinhos, não revelam categoria sensível.
+       Notas e resultados de avaliação | comum | Avaliação individual (art. 5º, I). Comum, porém de acesso restrito (art. 31 da LAI), e fora do alcance do Tema 483 do STF.
+       Histórico de avaliações ao longo do tempo | comum | Série temporal (art. 5º, I). Acumulada, permite traçar perfil: exige prazo de guarda.
+       Quem lançou cada indicador | comum | O servidor que lança também é titular (art. 5º, I): a proteção não se limita ao avaliado.
+       Registros de auditoria (IP, usuário, data e hora, ação) | comum | IP junto com identificador de usuário torna a pessoa identificável (art. 5º, I).
+       Código de afastamento, licença médica ou abono que justifique meta não atingida | sensível por inferência | Não há campo chamado "saúde", mas o registro revela a condição de saúde do gestor: é dado de saúde (art. 5º, II), pela regra do art. 11, § 1º.
+       Falta ou desconto por dia de greve, ou licença para mandato sindical | sensível por inferência | Ao compor a produtividade, expõe de forma indireta filiação sindical e posição política (art. 5º, II, com o art. 11, § 1º).
+       Autodeclaração racial, se ligada a política de cotas no cadastro funcional | sensível | Origem racial ou étnica é categoria expressa do art. 5º, II.
+       Dados biométricos, em login ou ponto integrado | sensível | Dado biométrico ligado a pessoa natural é sensível por definição (art. 5º, II).
+       Texto livre da contestação | potencialmente sensível | Pode receber, sem querer, dado de saúde, sindical ou religioso (art. 5º, II, com o art. 11, § 1º). Trata-se pelo pior caso.
+       Foto funcional, se exibida no perfil | comum, com ressalva | Em regra é comum. Vira sensível se for usada para inferir origem racial ou étnica, ou passar por reconhecimento facial (art. 5º, II).
+
+      No protótipo, nenhum desses dados é de pessoa real: o sistema roda só com dados de teste. Dos sensíveis, só um tem lugar no protótipo hoje, o texto livre da contestação, e o formulário avisa para não escrever dado sensível nele.
+
+      Riscos e requisitos
+      15 riscos, cada um com o requisito que o trata e o critério que prova que o requisito foi cumprido.
+
+       Nº | Risco | Requisito | Critério de verificação
+
+       1 | O painel de gestão pode mostrar indicadores de gestores fora da área de quem está usando. | Controle de acesso por papel, com escopo por área, decidido no servidor e não na interface. Por padrão, nenhum painel mostra indicador individual de outra área. | Quem entra como gestor da área X não recebe, em nenhuma consulta ou API, dado de gestor de outra área.
+       2 | A API devolve a avaliação a partir de um identificador sequencial, sem verificar autorização (IDOR). | A API exige token válido, usa identificadores não sequenciais e confere o escopo do usuário a cada requisição. | Requisição sem token recebe 401. Identificador de outra área recebe 404. Uma varredura sequencial não devolve dado nenhum.
+       3 | Não há prazo de guarda para avaliações antigas. | Data de expiração em cada registro e uma rotina agendada que, no fim do prazo, anonimiza (guardando a série estatística) ou elimina. | Registro vencido não aparece identificável em nenhuma consulta. Cada expurgo registra quanto tratou.
+       4 | Avaliações de gestores exonerados ou aposentados ficam guardadas sem prazo. | O desligamento (exoneração ou aposentadoria) dispara a contagem do prazo de guarda, com anonimização automática ao fim dele. | Avaliação de servidor desligado, depois do prazo, não volta com dado identificável em nenhuma consulta.
+       5 | Usar a base para treinar um modelo que classifique gestores de baixo desempenho. | Os modelos só trabalham com indicadores e áreas agregadas, nunca com perfil individual. Nenhuma saída de modelo entra no cálculo da gratificação, e a decisão continua humana e contestável (art. 20). | Nenhum modelo recebe identificador de gestor como atributo, e o motor de cálculo não lê saída de modelo (teste de dependência).
+       6 | O servidor escreve, por conta própria, dado sensível (saúde, sindicato) no texto aberto. | Aviso fixo pedindo para não escrever dado sensível. Texto cifrado no armazenamento e legível só pelo gestor que escreveu e pela CAM. | O aviso aparece no formulário. Os perfis de área técnica e de auditoria não leem o texto de nenhuma contestação.
+       7 | A exportação em CSV faz circular dado identificado fora do sistema. | Exportação restrita por perfil, com preferência por dado agregado, e registro de cada exportação (usuário, data, recorte e número de linhas). | Perfil sem permissão não exporta, e toda exportação gera um evento que não se apaga na trilha de auditoria.
+       8 | Um ranking comparativo mostra a nota de um gestor, com o nome, aos colegas. | Proibida a nota com nome entre pares. Ranking só agregado, com a anonimização ligada por padrão para projetar em reunião. | Nenhum perfil vê a nota com nome de um par. O painel projeta agregados sem nomes.
+       9 | A trilha identifica quem lança e fica guardada sem prazo. | Política escrita de guarda dos registros, com prazo proporcional e acesso restrito ao perfil de auditoria. | A política está publicada, registro vencido é descartado, e o próprio acesso aos registros é auditado.
+       10 | A CAM e as áreas técnicas acessam além da atribuição legal de cada uma. | Menor privilégio pela atribuição legal: a CAM acessa o necessário para apurar, e a área técnica só os próprios indicadores, sem ver notas. | As consultas da CAM não devolvem dado fora da apuração, e o perfil de área técnica não devolve nota de nenhum gestor.
+       11 | Compartilhamento com outros órgãos ou entes sem base legal. | Nenhuma integração externa sem base legal escrita, e registro de todo fluxo de compartilhamento. | Toda integração ativa tem base registrada e gera um evento de compartilhamento na trilha.
+       12 | Planilhas antigas e espalhadas, com link público, vazam durante a migração. | Plano de migração com inventário das planilhas, revogação dos links públicos e revisão de permissões antes de desligar as planilhas. | A auditoria depois da migração confirma zero planilha antiga com link público.
+       13 | Incidente de segurança sem plano de resposta e sem aviso ao titular e à ANPD. | Plano de resposta a incidentes, com alerta de acesso fora do padrão, registro do evento e fluxo de aviso ao titular e à ANPD. | Um incidente simulado dispara o alerta, gera o registro e inicia o aviso no prazo da política.
+       14 | Falta encarregado identificado e um canal para exercer os direitos. | Encarregado identificado no sistema e canal com protocolo para acesso, correção e informação. No produto: "meu resultado" (acesso), contestação (correção) e memória de cálculo (informação sobre o tratamento). | Uma solicitação de teste gera protocolo, é atendida no fluxo e fica registrada. O encarregado aparece sem login.
+       15 | Os painéis permitem reidentificar alguém em recortes com poucos servidores. | Painéis só agregados, com supressão automática de recortes abaixo de um número mínimo de pessoas. | Nenhuma combinação de filtros isola uma pessoa, e recortes abaixo do mínimo aparecem suprimidos.
+
+      Onde cada requisito está hoje
+      2 já valem no sistema, 8 valem em parte, 2 estão no backlog e 3 dependem de infraestrutura real.
+
+       Nº | Princípio | Estado | O que existe e o que falta
+
+       1 | privacidade embutida no design | em parte | Cada tela confere o perfil no servidor e responde 404 a quem não pode. O gerente distrital vê só o próprio distrito, também no CSV. O perfil ainda vem de um seletor, sem login.
+       2 | proativo, não reativo | em parte | As telas e a exportação conferem o perfil no servidor a cada requisição. Sem login real não há token, e os identificadores são nomes legíveis, não sorteados.
+       3 | segurança de ponta a ponta | na implantação | O protótipo não guarda nada entre reinícios. A proposta de prazo está em docs/privacidade.md e depende da Secretaria.
+       4 | segurança de ponta a ponta | na implantação | Depende do cadastro funcional real, que o protótipo não tem.
+       5 | funcionalidade total: soma positiva | no MVP | Os modelos leem a base por unidade, sem dado de pessoa. Um teste confere que o motor só usa os próprios tipos e que nenhum atributo dos modelos aponta para gestor: src/lib/calculo/fronteira.test.ts.
+       6 | privacidade como padrão | em parte | O formulário da contestação avisa para não escrever dado sensível. A cifragem depende do banco real.
+       7 | visibilidade e transparência | em parte | Só os perfis do painel da gestão exportam, e há a opção anônima. A exportação ainda não gera evento na trilha.
+       8 | privacidade como padrão | em parte | O gerente de unidade não abre o ranking, e o ranking tem modo anônimo. O modo anônimo ainda não vem ligado por padrão.
+       9 | segurança de ponta a ponta | em parte | A trilha só abre para o administrador e para a SEAB. Falta a política de guarda com prazo.
+       10 | privacidade embutida no design | em parte | Cada tela declara quais perfis a abrem, e um teste percorre as telas contra os perfis. O perfil de área técnica ainda não existe no sistema.
+       11 | visibilidade e transparência | no MVP | O sistema não tem integração externa: nenhum dado sai dele por outro caminho.
+       12 | proativo, não reativo | na implantação | Não há migração no protótipo, e a planilha da Secretaria não entra no repositório (ADR-035).
+       13 | proativo, não reativo | no backlog | Há o procedimento de revogação de chaves em docs/seguranca.md, mas ainda não há plano de resposta a incidentes com aviso ao titular e à ANPD.
+       14 | respeito ao titular | em parte | Meu resultado, a contestação e a memória de cálculo estão no ar. Falta identificar o encarregado, que é indicado pela Prefeitura.
+       15 | privacidade como padrão | no backlog | Ainda não há número mínimo. O mesmo cuidado vale para a base por unidade da lente de ML, discutido no documento de Direito.
+
+      O que a atividade acrescenta ao sistema
+      O backlog de privacidade. Os números da coluna de riscos são os das tabelas acima.
+
+       Item | O que é | Riscos | Estado
+
+       Ciclo de guarda completo | Data de expiração e rotina de expurgo, com o desligamento de exonerados e aposentados disparando o prazo. A anonimização guarda a série estatística. | 3, 4, 9 | a fazer
+       Autorização conferida no servidor | Identificadores não sequenciais e conferência de escopo a cada requisição, não importa a interface. | 1, 2, 10 | em parte
+       Proteção do texto da contestação | Aviso contra dado sensível, cifragem no armazenamento e leitura só pelo autor e pela CAM. | 6 | em parte
+       Registro das exportações | Um evento que não se apaga, com usuário, data, recorte e volume, a cada exportação. | 7 | a fazer
+       Supressão de recortes pequenos | Número mínimo de pessoas, configurável, nos painéis agregados. | 15 | a fazer
+       Encarregado e canal do titular | Identificação visível e fluxo com protocolo para acesso, correção e informação. | 14 | em parte
+       Fronteira do uso de modelos | Garantir por teste que nenhum modelo recebe identificador de gestor e que nenhuma saída alimenta o cálculo. | 5 | feito
+       Validação com a CAM | Conferir indicadores e regras com a portaria vigente e usar os critérios de verificação deste catálogo como roteiro de testes. | todos | a fazer
+
+      O que depende de infraestrutura real (cifragem no armazenamento, rotina agendada e migração das planilhas) fica como requisito de implantação, fora do escopo acadêmico do protótipo, que roda só com dados de teste.
 
 --- S7 · Semana 7: Sprint 1 · 17/10/2026 ---------------------------------------------------
 

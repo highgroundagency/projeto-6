@@ -2,8 +2,21 @@ import { Lista, Nota, Secao, Tabela } from '@/components/conteudo'
 import { CSD_EM_25_09 } from '@/content/analises'
 import { nomeCurto } from '@/content/equipe'
 import { COMPROMISSOS_ATE_O_SR1 } from '@/content/pitch'
+import {
+  ATIVIDADE_2,
+  BACKLOG_DE_PRIVACIDADE,
+  BASE_LEGAL_DA_ATIVIDADE,
+  DADOS_PESSOAIS,
+  DADOS_SENSIVEIS,
+  NORMAS_DA_POLITICA,
+  NOTA_DA_IMPLANTACAO,
+  NOTA_DA_PORTARIA,
+  REQUISITOS_DE_PRIVACIDADE,
+  contarRequisitos,
+} from '@/content/privacidade'
 import { OBJETIVOS_ESPECIFICOS, URL_REPOSITORIO } from '@/content/produto'
 import { cicloPorId } from '@/lib/cronograma'
+import { formatarBR } from '@/lib/datas'
 import type { Documento, RegistroSemana } from '@/lib/registro/tipos'
 import { BACKLOG, contarBacklog } from './s6'
 
@@ -248,6 +261,7 @@ export const MAPA_DO_PACOTE = [
           { rotulo: 'Nuvem e fluxo de dados', href: '#doc-s5-nuvem' },
           { rotulo: 'Segurança', href: '#doc-sr1-seguranca' },
           { rotulo: 'Direito e LGPD', href: '#doc-sr1-direito-base-legal' },
+          { rotulo: 'Privacy by design', href: '#doc-sr1-privacy-by-design' },
           { rotulo: 'Lente de ML', href: '/ml' },
           { rotulo: 'Uso de IA', href: '/transparencia-ia' },
         ],
@@ -834,10 +848,12 @@ export const documentos = [
             ]}
           />
           <Nota>
-            O sistema não guarda dados sensíveis, os do art. 5º, II. Também não guarda dados de
-            pacientes, dados bancários nem valores de folha. Ele só calcula o percentual devido.
-            A folha de pagamento é outro sistema, e deixamos isso fora do escopo de forma
-            declarada.
+            O sistema não tem campo para dado sensível, os do art. 5º, II. O único lugar onde um
+            pode entrar sem querer é o texto livre da contestação, e por isso o formulário avisa
+            para não escrever. A Atividade 2 de Direito, no documento abaixo, trata esse e os
+            outros casos. O sistema também não guarda dados de pacientes, dados bancários nem
+            valores de folha. Ele só calcula o percentual devido. A folha de pagamento é outro
+            sistema, e deixamos isso fora do escopo de forma declarada.
           </Nota>
         </Secao>
 
@@ -890,6 +906,102 @@ export const documentos = [
                 ],
               ]}
             />
+          </div>
+        </Secao>
+      </>
+    ),
+  },
+  {
+    id: 'privacy-by-design',
+    titulo: 'Direito: requisitos de privacy by design',
+    resumo: `a atividade 2 de direito: ${DADOS_PESSOAIS.length} dados pessoais mapeados, ${REQUISITOS_DE_PRIVACIDADE.length} riscos com requisito e teste, e onde cada requisito está hoje.`,
+    Conteudo: () => (
+      <>
+        <p className="text-sm leading-relaxed">
+          A Atividade 2 de {ATIVIDADE_2.disciplina} ({ATIVIDADE_2.peso}), entregue em{' '}
+          {formatarBR(ATIVIDADE_2.entrega)}, levantou os requisitos de privacidade da plataforma
+          antes do código: que dado pessoal ela trataria, o que pode dar errado com cada um e que
+          controle evita o risco. Cada requisito nomeia o princípio de privacy by design que o
+          sustenta e traz um critério de verificação que dá para testar. Este documento
+          transcreve o catálogo e acrescenta uma coluna que o original não tem: onde cada
+          requisito está hoje no sistema.
+        </p>
+
+        <Secao
+          titulo="Base legal"
+          descricao="Por que a plataforma pode tratar esses dados sem pedir consentimento."
+        >
+          <Lista itens={BASE_LEGAL_DA_ATIVIDADE} />
+          <div className="mt-3">
+            <Nota>
+              {NOTA_DA_PORTARIA} As normas da política: {NORMAS_DA_POLITICA.join(', ')}.
+            </Nota>
+          </div>
+        </Secao>
+
+        <Secao
+          titulo="Os dados pessoais que a plataforma trataria"
+          descricao={`${DADOS_PESSOAIS.length} categorias, classificadas pelo art. 5º, I e II da LGPD. ${DADOS_SENSIVEIS.length} são sensíveis ou podem ser, a maioria por inferência.`}
+        >
+          <Tabela
+            colunas={['Dado', 'Classificação', 'Por quê']}
+            linhas={DADOS_PESSOAIS.map((d) => [d.dado, d.classe, d.porque])}
+            alinharNumeros={false}
+          />
+          <div className="mt-3">
+            <Nota>
+              No protótipo, nenhum desses dados é de pessoa real: o sistema roda só com dados de
+              teste. Dos sensíveis, só um tem lugar no protótipo hoje, o texto livre da
+              contestação, e o formulário avisa para não escrever dado sensível nele.
+            </Nota>
+          </div>
+        </Secao>
+
+        <Secao
+          titulo="Riscos e requisitos"
+          descricao={`${REQUISITOS_DE_PRIVACIDADE.length} riscos, cada um com o requisito que o trata e o critério que prova que o requisito foi cumprido.`}
+        >
+          <Tabela
+            colunas={['Nº', 'Risco', 'Requisito', 'Critério de verificação']}
+            linhas={REQUISITOS_DE_PRIVACIDADE.map((r, i) => [
+              String(i + 1),
+              r.risco,
+              r.requisito,
+              r.criterio,
+            ])}
+          />
+        </Secao>
+
+        <Secao
+          titulo="Onde cada requisito está hoje"
+          descricao={`${contarRequisitos('no MVP')} já valem no sistema, ${contarRequisitos('em parte')} valem em parte, ${contarRequisitos('no backlog')} estão no backlog e ${contarRequisitos('na implantação')} dependem de infraestrutura real.`}
+        >
+          <Tabela
+            colunas={['Nº', 'Princípio', 'Estado', 'O que existe e o que falta']}
+            linhas={REQUISITOS_DE_PRIVACIDADE.map((r, i) => [
+              String(i + 1),
+              r.principio,
+              r.estado,
+              r.hoje,
+            ])}
+          />
+        </Secao>
+
+        <Secao
+          titulo="O que a atividade acrescenta ao sistema"
+          descricao="O backlog de privacidade. Os números da coluna de riscos são os das tabelas acima."
+        >
+          <Tabela
+            colunas={['Item', 'O que é', 'Riscos', 'Estado']}
+            linhas={BACKLOG_DE_PRIVACIDADE.map((b) => [
+              b.item,
+              b.detalhe,
+              b.riscos.length ? b.riscos.join(', ') : 'todos',
+              b.estado,
+            ])}
+          />
+          <div className="mt-3">
+            <Nota>{NOTA_DA_IMPLANTACAO}</Nota>
           </div>
         </Secao>
       </>
