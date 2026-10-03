@@ -18,7 +18,7 @@ import { OBJETIVOS_ESPECIFICOS, URL_REPOSITORIO } from '@/content/produto'
 import { cicloPorId } from '@/lib/cronograma'
 import { formatarBR } from '@/lib/datas'
 import type { Documento, RegistroSemana } from '@/lib/registro/tipos'
-import { BACKLOG, contarBacklog } from './s6'
+import { BACKLOG, ROTULO_ESTADO_HISTORIA, contarBacklog, type EstadoHistoria } from './s6'
 
 /**
  * SR1: primeira apresentação de resultados. PLANO, não relato.
@@ -554,6 +554,165 @@ function balancoDoObjetivo(resumo: string): Balanco {
 const MUST_QUE_NAO_ESTAO_NO_AR = BACKLOG.filter((h) => h.moscow === 'M' && h.estado !== 'no_ar')
 
 /* ---------------------------------------------------------------------------
+   Histórias que surgiram na construção
+   ------------------------------------------------------------------------- */
+
+/**
+ * O que o sistema faz e nenhuma das 26 histórias da Semana 4 pedia (ADR-049).
+ *
+ * ESCRITO EM 03/10, DEPOIS DA BANCA, a partir do código: cada linha é uma
+ * função que já está no ar e se confere na tela. A maioria já estava no código
+ * antes do backlog da Semana 4 (29/08) e ficou de fora dele. A data "16/08" é
+ * a do commit mais antigo que o histórico do Git guarda, não a da construção.
+ *
+ * FORA DA CONTA DAS 26, DE PROPÓSITO. `BACKLOG` (s6) é o retrato de 25/09, e o
+ * deck do SR1 conta o avanço a partir dele. O deck não importa este arquivo, e
+ * `sr1.test.ts` segura isso: nada daqui muda um número que a banca viu. E
+ * nenhuma história daqui toma o lugar das que faltam: abrir o mês, cadastrar a
+ * régua pela tela e responder à contestação continuam no backlog, com estado.
+ *
+ * Sem MoSCoW: já estão construídas, e prioridade serve para decidir o que
+ * construir. Elas entram na ordem das sprints junto com o resto do backlog.
+ */
+export interface HistoriaDaConstrucao {
+  readonly epico: string
+  /** No formato da Semana 4: como quem, quero o quê, para quê. */
+  readonly historia: string
+  /** Só entra o que existe. O que falta é história do backlog, não daqui. */
+  readonly estado: Extract<EstadoHistoria, 'no_ar' | 'em_parte'>
+  /** De onde a função veio, com a data ou a decisão que se confere. */
+  readonly origem: string
+  /** Onde se confere, em uma frase. */
+  readonly onde: string
+}
+
+/** As do produto: servem a quem usaria o sistema na Secretaria. */
+export const HISTORIAS_DA_CONSTRUCAO: readonly HistoriaDaConstrucao[] = [
+  {
+    epico: 'Ciclo',
+    historia:
+      'Como SEAB, quero ver, unidade por unidade, quem já informou os números do mês e quem falta, para cobrar só quem está atrasado',
+    estado: 'no_ar',
+    origem: 'Já estava no sistema em 16/08, por área. Virou por unidade depois da reunião de 22/08',
+    onde: 'Painel da SEAB: o funil por unidade e a lista de pendências',
+  },
+  {
+    epico: 'Lançamento',
+    historia:
+      'Como SEAB, quero lançar no lugar de uma unidade atrasada, ficando registrado que fui eu, para o mês não travar',
+    estado: 'no_ar',
+    origem: 'Entrou na remodelagem de 25/08 (ADR-034). O autor na trilha, em 26/08',
+    onde: 'Tela de lançamento, no perfil SEAB. Na trilha, quem aparece como autor é a SEAB',
+  },
+  {
+    epico: 'Lançamento',
+    historia:
+      'Como SEAB, quero que o sistema recuse lançamento em mês que não está aberto e guarde a tentativa, para nada entrar fora do prazo sem deixar rastro',
+    estado: 'no_ar',
+    origem: 'ADR-046, em 25/09: a tela dizia que a tentativa ficava registrada, e não ficava',
+    onde: 'Trilha de auditoria: lançamento recusado. Aparece quando alguém tenta lançar depois que a SEAB fecha o mês, e há teste automático',
+  },
+  {
+    epico: 'Resultado',
+    historia:
+      'Como SEAB, quero ver as unidades da maior nota para a menor, na rede ou num distrito, para enxergar o conjunto',
+    estado: 'no_ar',
+    origem: 'Já estava no sistema em 16/08',
+    onde: 'Painel da gestão: o ranking das unidades',
+  },
+  {
+    epico: 'Resultado',
+    historia:
+      'Como SEAB, quero esconder os nomes no ranking e na planilha exportada, para mostrar o resultado numa reunião sem expor ninguém',
+    estado: 'no_ar',
+    origem: 'Já estava no sistema em 16/08',
+    onde: 'Painel da gestão: esconder os nomes. A planilha sai com as unidades numeradas e sem o distrito',
+  },
+  {
+    epico: 'Resultado',
+    historia:
+      'Como gerente distrital, quero ver o painel e baixar a planilha só do meu distrito, para não ver o recorte dos outros',
+    estado: 'em_parte',
+    origem: 'Reunião com o cliente, em 22/08. Entrou em 25/08',
+    onde: 'Painel da gestão, no perfil distrital: não há a opção da rede toda, nem na planilha. O distrito ainda é escolhido, porque o login é simulado',
+  },
+  {
+    epico: 'Governança',
+    historia:
+      'Como SEAB, quero ver os números que parecem erro de digitação, para conferir antes de homologar o mês',
+    estado: 'no_ar',
+    origem: 'Já estava no sistema em 16/08',
+    onde: 'Analytics: os valores cinco vezes acima ou abaixo da meta do tipo da unidade',
+  },
+  {
+    epico: 'Governança',
+    historia:
+      'Como SEAB, quero ver se cada unidade é consistente ou oscila, acima ou abaixo da meta, para saber onde ajudar primeiro',
+    estado: 'no_ar',
+    origem: 'Já estava no sistema em 16/08, por área',
+    onde: 'Analytics: o jeito de cada unidade',
+  },
+  {
+    epico: 'Governança',
+    historia:
+      'Como SEAB, quero ver o que os modelos treinados dizem, sempre com a referência ao lado, para não confiar num número sem comparação',
+    estado: 'no_ar',
+    origem: 'Já estava no sistema em 16/08. Desde 23/09, os modelos leem a base por unidade da Secretaria (ADR-043)',
+    onde: 'Analytics: os três modelos, cada um com método, métrica e linha de base',
+  },
+  {
+    epico: 'Governança',
+    historia:
+      'Como administrador, quero que cada perfil abra só as telas do próprio papel, e que as outras nem apareçam, para ninguém ver o que não é seu',
+    estado: 'no_ar',
+    origem: 'ADR-023, em 16/08: cinco das oito telas não conferiam o perfil',
+    onde: 'Tela fora do perfil responde 404, e um teste percorre as 8 telas contra os 4 perfis. O perfil ainda vem do seletor, sem login',
+  },
+  {
+    epico: 'Uso',
+    historia:
+      'Como quem chega ao sistema, quero um tutorial que me leve pela tela do meu papel, apontando cada botão, para aprender sem treinamento',
+    estado: 'no_ar',
+    origem: 'ADR-024, em 16/08: quem usou pediu um tutorial que conduzisse',
+    onde: 'Topo do sistema: um tutorial guiado para cada perfil',
+  },
+  {
+    epico: 'Uso',
+    historia:
+      'Como quem usa o sistema, quero um tema claro, para ler bem em sala, no projetor e em tela ruim',
+    estado: 'no_ar',
+    origem: 'ADR-027, em 18/08',
+    onde: 'Botão de tema, no topo do sistema',
+  },
+]
+
+/** As do protótipo: servem a quem avalia, não a quem usaria o sistema. */
+export const HISTORIAS_DO_PROTOTIPO: readonly HistoriaDaConstrucao[] = [
+  {
+    epico: 'Protótipo',
+    historia:
+      'Como quem avalia o protótipo, quero trocar de perfil sem login, para ver o sistema pelos olhos de cada papel',
+    estado: 'no_ar',
+    origem: 'Já estava no sistema em 16/08. O login da prefeitura ficou fora do escopo na Semana 4',
+    onde: 'Seletor de perfil, no topo do sistema',
+  },
+  {
+    epico: 'Protótipo',
+    historia:
+      'Como quem avalia o protótipo, quero testar numa cópia só minha, para não mudar a demonstração dos outros',
+    estado: 'no_ar',
+    origem: 'ADR-046, em 25/09: o lançamento de um avaliador aparecia na tela do outro. Refeito em 03/10 (ADR-048)',
+    onde: 'Lançamento e contestação ficam só no navegador de quem fez, e somem quando ele fecha',
+  },
+]
+
+const HISTORIAS_DO_BACKLOG_NO_AR = BACKLOG.filter((h) => h.estado === 'no_ar').length
+
+function contarDaConstrucao(estado: HistoriaDaConstrucao['estado']): number {
+  return HISTORIAS_DA_CONSTRUCAO.filter((h) => h.estado === estado).length
+}
+
+/* ---------------------------------------------------------------------------
    Documentos
    ------------------------------------------------------------------------- */
 
@@ -1008,6 +1167,65 @@ export const documentos = [
             <Nota>{NOTA_DA_IMPLANTACAO}</Nota>
           </div>
         </Secao>
+      </>
+    ),
+  },
+  {
+    id: 'historias-da-construcao',
+    titulo: 'Histórias que surgiram na construção',
+    resumo: `o que o sistema já faz e não estava nas ${BACKLOG.length} histórias do backlog, escrito como história em 03/10, depois da banca.`,
+    Conteudo: () => (
+      <>
+        <p>
+          O backlog da Semana 4 tem {BACKLOG.length} histórias. O sistema faz mais do que elas
+          pedem. Várias funções nasceram enquanto construíamos, a maioria antes do próprio
+          backlog. Nenhuma história as registrava. Em 03/10, depois da banca do SR1, escrevemos
+          cada uma no formato da Semana 4. E conferimos todas na tela.
+        </p>
+
+        <Secao
+          titulo="Do produto"
+          descricao={`${HISTORIAS_DA_CONSTRUCAO.length} histórias: ${contarDaConstrucao('no_ar')} no ar e ${contarDaConstrucao('em_parte')} em parte. Servem a quem usaria o sistema na Secretaria.`}
+        >
+          <Tabela
+            colunas={['Épico', 'História', 'Estado', 'De onde veio', 'Onde se confere']}
+            linhas={HISTORIAS_DA_CONSTRUCAO.map((h) => [
+              h.epico,
+              h.historia,
+              ROTULO_ESTADO_HISTORIA[h.estado],
+              h.origem,
+              h.onde,
+            ])}
+          />
+        </Secao>
+
+        <Secao
+          titulo="Do protótipo"
+          descricao={`${HISTORIAS_DO_PROTOTIPO.length} histórias. Servem a quem avalia o protótipo, não a quem usaria o sistema.`}
+        >
+          <Tabela
+            colunas={['História', 'Estado', 'De onde veio', 'Onde se confere']}
+            linhas={HISTORIAS_DO_PROTOTIPO.map((h) => [
+              h.historia,
+              ROTULO_ESTADO_HISTORIA[h.estado],
+              h.origem,
+              h.onde,
+            ])}
+          />
+        </Secao>
+
+        <div className="mt-3">
+          <Nota>
+            Estas histórias ficam fora da conta das {BACKLOG.length}. O avanço continua o que
+            mostramos no SR1: {HISTORIAS_DO_BACKLOG_NO_AR} de {BACKLOG.length} no ar. Nenhuma
+            delas toma o lugar das {BACKLOG.length - HISTORIAS_DO_BACKLOG_NO_AR} que faltam. Essas
+            seguem no{' '}
+            <a href="#doc-s6-backlog" className="underline underline-offset-4 hover:text-acento">
+              backlog com estado →
+            </a>
+            , e entram nas sprints.
+          </Nota>
+        </div>
       </>
     ),
   },

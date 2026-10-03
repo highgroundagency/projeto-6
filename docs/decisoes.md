@@ -1450,3 +1450,33 @@ o teto de 100 visitantes em memória saiu: não há mais memória por visitante 
 abas escrevendo ao mesmo tempo podem perder uma escrita, e vale a última. O diário depende de
 `ADMIN_COOKIE_SECRET`, que produção já tem; sem o segredo, a escrita não grava. Durar de verdade,
 para todo mundo, continua sendo papel do banco (ADR-011 e ADR-012).
+
+## ADR-049 · O que o sistema fazia sem história virou história, fora da conta das 26
+
+**Contexto.** O backlog da Semana 4 tem 26 histórias, e no SR1 o deck mostrou 17 delas no ar. O
+sistema faz mais do que as 26 pedem: o funil de quem falta lançar, o ranking com a opção de
+esconder os nomes, os sinais de analytics, o tutorial guiado, o tema claro. Quase tudo isso já
+estava no código antes do próprio backlog, de 29/08, e nenhuma história registrava. Quem olhava
+só o backlog via um sistema menor do que o que está no ar.
+
+**Decisão.** Um documento novo no SR1, "Histórias que surgiram na construção", escrito em 03/10,
+depois da banca. São 12 histórias do produto e 2 do protótipo, no formato da Semana 4. Cada uma
+diz de onde veio, com a data ou a ADR que se confere, e onde se confere na tela. Três regras:
+
+1. **Só o que existe.** Estado "no ar" ou "em parte". O que falta é história do backlog, com
+   MoSCoW, e não entra aqui.
+2. **Fora da conta das 26.** `BACKLOG` (s6) continua o retrato de 25/09. O deck do SR1 conta a
+   partir dele e não importa o arquivo do ciclo sr1, e `sr1.test.ts` confere isso: nenhuma
+   história escrita depois da banca muda um número que a banca viu.
+3. **Nenhuma toma o lugar das 9 que faltam.** Abrir o mês, definir a janela, cadastrar a régua e
+   a regra pela tela, responder à contestação, a revisão do distrito e o aviso antes do envio
+   continuam no backlog. Partir uma delas para contar a parte pronta como história nova seria
+   inflar o número. Por isso a régua que já se lê na tela não virou história: ela é a metade
+   "só leitura" de quatro histórias que o backlog já tem.
+
+**Sem MoSCoW.** Elas já estão construídas, e prioridade serve para decidir o que construir.
+Entram na ordem das sprints junto com o resto, quando a Semana 7 reordenar o backlog.
+
+**Consequência.** O avanço do backlog continua 17 de 26, o número do SR1, e o deck e o PDF não
+mudaram. A data "16/08" que aparece em várias linhas é a do commit mais antigo que o Git guarda:
+a função pode ser mais velha, nunca mais nova.
