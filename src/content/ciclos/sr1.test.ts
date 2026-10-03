@@ -137,7 +137,7 @@ describe('as histórias que surgiram na construção', () => {
 
   it('ficam fora da conta das 26, e o deck do SR1 não as lê', () => {
     // O deck conta o avanço a partir de BACKLOG (s6). Se ele passasse a ler
-    // este ciclo, uma história escrita depois da banca poderia mudar um
+    // este ciclo, uma história publicada depois da banca poderia mudar um
     // número que a banca viu.
     expect(BACKLOG).toHaveLength(26)
     for (const arquivo of ['src/content/apresentacao-sr1.ts', 'src/components/sr1/slides.tsx']) {

@@ -560,16 +560,24 @@ const MUST_QUE_NAO_ESTAO_NO_AR = BACKLOG.filter((h) => h.moscow === 'M' && h.est
 /**
  * O que o sistema faz e nenhuma das 26 histórias da Semana 4 pedia (ADR-049).
  *
- * ESCRITO EM 03/10, DEPOIS DA BANCA, a partir do código: cada linha é uma
- * função que já está no ar e se confere na tela. A maioria já estava no código
- * antes do backlog da Semana 4 (29/08) e ficou de fora dele. A data "16/08" é
- * a do commit mais antigo que o histórico do Git guarda, não a da construção.
+ * ESCRITO EM 03/10 E PUBLICADO DEPOIS DA BANCA, a partir do código. Entra o que
+ * passa nos três filtros: a função existe, nenhuma das 26 a cobre, e quem
+ * visita confere na tela, sem sessão de admin. A maioria já estava no código em
+ * 16/08, a data do commit mais antigo que o Git guarda, não a da construção.
  *
- * FORA DA CONTA DAS 26, DE PROPÓSITO. `BACKLOG` (s6) é o retrato de 25/09, e o
- * deck do SR1 conta o avanço a partir dele. O deck não importa este arquivo, e
- * `sr1.test.ts` segura isso: nada daqui muda um número que a banca viu. E
- * nenhuma história daqui toma o lugar das que faltam: abrir o mês, cadastrar a
- * régua pela tela e responder à contestação continuam no backlog, com estado.
+ * FICARAM DE FORA, DE PROPÓSITO, depois de uma revisão adversarial:
+ * - o funil por unidade e as pendências do painel da SEAB. É a história dos
+ *   totais por distrito, que em 16/08 pedia "o funil do ciclo";
+ * - a recusa de lançamento com rastro na trilha. Só aparece com sessão de
+ *   admin, e recusar fora da etapa é parte da janela de lançamento, que falta;
+ * - os avisos da conta no painel da gestão. A base de teste não tem nota com
+ *   aviso, então ninguém confere na tela.
+ *
+ * FORA DA CONTA DAS 26, TAMBÉM DE PROPÓSITO. `BACKLOG` (s6) é o retrato de
+ * 25/09, e o deck do SR1 conta o avanço a partir dele. O deck não importa este
+ * arquivo, e `sr1.test.ts` segura isso: nada daqui muda um número que a banca
+ * viu. E nenhuma história daqui toma o lugar das que faltam: abrir o mês,
+ * cadastrar a régua pela tela e responder à contestação continuam no backlog.
  *
  * Sem MoSCoW: já estão construídas, e prioridade serve para decidir o que
  * construir. Elas entram na ordem das sprints junto com o resto do backlog.
@@ -586,63 +594,66 @@ export interface HistoriaDaConstrucao {
   readonly onde: string
 }
 
+/** O perfil CAM do começo do projeto virou SEAB com a reunião de 22/08 (ADR-034). */
+const DESDE_A_CAM = 'Já estava no sistema em 16/08, no perfil CAM, que virou SEAB em 25/08'
+
 /** As do produto: servem a quem usaria o sistema na Secretaria. */
 export const HISTORIAS_DA_CONSTRUCAO: readonly HistoriaDaConstrucao[] = [
-  {
-    epico: 'Ciclo',
-    historia:
-      'Como SEAB, quero ver, unidade por unidade, quem já informou os números do mês e quem falta, para cobrar só quem está atrasado',
-    estado: 'no_ar',
-    origem: 'Já estava no sistema em 16/08, por área. Virou por unidade depois da reunião de 22/08',
-    onde: 'Painel da SEAB: o funil por unidade e a lista de pendências',
-  },
   {
     epico: 'Lançamento',
     historia:
       'Como SEAB, quero lançar no lugar de uma unidade atrasada, ficando registrado que fui eu, para o mês não travar',
     estado: 'no_ar',
-    origem: 'Entrou na remodelagem de 25/08 (ADR-034). O autor na trilha, em 26/08',
-    onde: 'Tela de lançamento, no perfil SEAB. Na trilha, quem aparece como autor é a SEAB',
+    origem: `${DESDE_A_CAM}. A SEAB como autora na trilha, desde 26/08`,
+    onde: 'Lançamento, no perfil SEAB. Na trilha, quem aparece como autor é a SEAB',
   },
   {
-    epico: 'Lançamento',
+    epico: 'Resultado',
     historia:
-      'Como SEAB, quero que o sistema recuse lançamento em mês que não está aberto e guarde a tentativa, para nada entrar fora do prazo sem deixar rastro',
+      'Como SEAB, quero abrir a nota e a conta de qualquer gerente, como ele vai ver, para conferir antes de divulgar',
     estado: 'no_ar',
-    origem: 'ADR-046, em 25/09: a tela dizia que a tentativa ficava registrada, e não ficava',
-    onde: 'Trilha de auditoria: lançamento recusado. Aparece quando alguém tenta lançar depois que a SEAB fecha o mês, e há teste automático',
+    origem: DESDE_A_CAM,
+    onde: 'Meu resultado, no perfil SEAB: o seletor abre qualquer gerente, também em mês homologado e ainda não publicado',
   },
   {
     epico: 'Resultado',
     historia:
       'Como SEAB, quero ver as unidades da maior nota para a menor, na rede ou num distrito, para enxergar o conjunto',
     estado: 'no_ar',
-    origem: 'Já estava no sistema em 16/08',
+    origem: 'Já estava no sistema em 16/08, por área. Por unidade e com o filtro de distrito, desde 25/08',
     onde: 'Painel da gestão: o ranking das unidades',
   },
   {
     epico: 'Resultado',
     historia:
-      'Como SEAB, quero esconder os nomes no ranking e na planilha exportada, para mostrar o resultado numa reunião sem expor ninguém',
-    estado: 'no_ar',
+      'Como SEAB, quero esconder os nomes no ranking e na planilha exportada, para mostrar o resultado numa reunião sem expor as unidades',
+    estado: 'em_parte',
     origem: 'Já estava no sistema em 16/08',
-    onde: 'Painel da gestão: esconder os nomes. A planilha sai com as unidades numeradas e sem o distrito',
+    onde: 'Painel da gestão: esconder os nomes. No ranking e na planilha, a unidade vira um número e o distrito some. Mas o tipo fica, e a unidade única do tipo ainda se reconhece',
   },
   {
     epico: 'Resultado',
     historia:
       'Como gerente distrital, quero ver o painel e baixar a planilha só do meu distrito, para não ver o recorte dos outros',
     estado: 'em_parte',
-    origem: 'Reunião com o cliente, em 22/08. Entrou em 25/08',
-    onde: 'Painel da gestão, no perfil distrital: não há a opção da rede toda, nem na planilha. O distrito ainda é escolhido, porque o login é simulado',
+    origem: 'Reunião com o cliente, em 22/08. Na tela desde 25/08, e na planilha, conferido no servidor, desde 26/08',
+    onde: 'Painel da gestão, no perfil distrital: não há a opção da rede toda, nem na planilha. Mas o perfil ainda não traz o distrito, e dá para escolher qualquer um',
+  },
+  {
+    epico: 'Resultado',
+    historia:
+      'Como SEAB, quero abrir contestação em nome de um gerente, ficando registrado que fui eu, para o pedido ficar no histórico com data, como os outros',
+    estado: 'no_ar',
+    origem: DESDE_A_CAM,
+    onde: 'Contestação, no perfil SEAB: o pedido sai em nome do gerente escolhido, e a trilha guarda que quem abriu foi a SEAB',
   },
   {
     epico: 'Governança',
     historia:
       'Como SEAB, quero ver os números que parecem erro de digitação, para conferir antes de homologar o mês',
-    estado: 'no_ar',
+    estado: 'em_parte',
     origem: 'Já estava no sistema em 16/08',
-    onde: 'Analytics: os valores cinco vezes acima ou abaixo da meta do tipo da unidade',
+    onde: 'Analytics: até 12 valores acima de cinco vezes a meta do tipo, ou abaixo de um quinto dela, dos meses mais antigos primeiro. Ainda não separa o mês em aberto',
   },
   {
     epico: 'Governança',
@@ -655,10 +666,10 @@ export const HISTORIAS_DA_CONSTRUCAO: readonly HistoriaDaConstrucao[] = [
   {
     epico: 'Governança',
     historia:
-      'Como SEAB, quero ver o que os modelos treinados dizem, sempre com a referência ao lado, para não confiar num número sem comparação',
-    estado: 'no_ar',
+      'Como SEAB, quero ver o que os modelos treinados dizem, com a linha de base ao lado, para não confiar num número sem comparação',
+    estado: 'em_parte',
     origem: 'Já estava no sistema em 16/08. Desde 23/09, os modelos leem a base por unidade da Secretaria (ADR-043)',
-    onde: 'Analytics: os três modelos, cada um com método, métrica e linha de base',
+    onde: 'Analytics: os três modelos, com método e métrica. Classificação e regressão mostram o valor da linha de base, e o agrupamento, só o nome da referência',
   },
   {
     epico: 'Governança',
@@ -666,12 +677,12 @@ export const HISTORIAS_DA_CONSTRUCAO: readonly HistoriaDaConstrucao[] = [
       'Como administrador, quero que cada perfil abra só as telas do próprio papel, e que as outras nem apareçam, para ninguém ver o que não é seu',
     estado: 'no_ar',
     origem: 'ADR-023, em 16/08: cinco das oito telas não conferiam o perfil',
-    onde: 'Tela fora do perfil responde 404, e um teste percorre as 8 telas contra os 4 perfis. O perfil ainda vem do seletor, sem login',
+    onde: 'A tela fora do perfil nem é montada, e o endereço antigo dela responde 404. Um teste percorre as 8 telas contra os 4 perfis. O perfil vem do seletor, sem login, como no resto do protótipo',
   },
   {
     epico: 'Uso',
     historia:
-      'Como quem chega ao sistema, quero um tutorial que me leve pela tela do meu papel, apontando cada botão, para aprender sem treinamento',
+      'Como quem chega ao sistema, quero um tutorial que me leve pelas telas do meu papel, marcando a parte de que cada passo fala, para aprender sem treinamento',
     estado: 'no_ar',
     origem: 'ADR-024, em 16/08: quem usou pediu um tutorial que conduzisse',
     onde: 'Topo do sistema: um tutorial guiado para cada perfil',
@@ -1173,14 +1184,15 @@ export const documentos = [
   {
     id: 'historias-da-construcao',
     titulo: 'Histórias que surgiram na construção',
-    resumo: `o que o sistema já faz e não estava nas ${BACKLOG.length} histórias do backlog, escrito como história em 03/10, depois da banca.`,
+    resumo: `o que o sistema já faz e não estava nas ${BACKLOG.length} histórias do backlog, escrito como história em 03/10 e publicado depois da banca.`,
     Conteudo: () => (
       <>
         <p>
           O backlog da Semana 4 tem {BACKLOG.length} histórias. O sistema faz mais do que elas
-          pedem. Várias funções nasceram enquanto construíamos, a maioria antes do próprio
-          backlog. Nenhuma história as registrava. Em 03/10, depois da banca do SR1, escrevemos
-          cada uma no formato da Semana 4. E conferimos todas na tela.
+          pedem. Várias funções nasceram enquanto construíamos. A maioria já estava no código em
+          16/08, a data mais antiga que o Git guarda. Nenhuma história as registrava. Em 03/10,
+          escrevemos como história as que se conferem na tela, no formato da Semana 4. Elas
+          foram publicadas depois da banca do SR1.
         </p>
 
         <Secao

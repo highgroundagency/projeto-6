@@ -1454,25 +1454,38 @@ para todo mundo, continua sendo papel do banco (ADR-011 e ADR-012).
 ## ADR-049 · O que o sistema fazia sem história virou história, fora da conta das 26
 
 **Contexto.** O backlog da Semana 4 tem 26 histórias, e no SR1 o deck mostrou 17 delas no ar. O
-sistema faz mais do que as 26 pedem: o funil de quem falta lançar, o ranking com a opção de
-esconder os nomes, os sinais de analytics, o tutorial guiado, o tema claro. Quase tudo isso já
-estava no código antes do próprio backlog, de 29/08, e nenhuma história registrava. Quem olhava
-só o backlog via um sistema menor do que o que está no ar.
+sistema faz mais do que as 26 pedem: a SEAB lançando por uma unidade atrasada, o ranking com a
+opção de esconder os nomes, os sinais de analytics, o tutorial guiado, o tema claro. Quase tudo
+isso já estava no código em 16/08, a data mais antiga que o Git guarda, e nenhuma história
+registrava. Quem olhava só o backlog via um sistema menor do que o que está no ar.
 
-**Decisão.** Um documento novo no SR1, "Histórias que surgiram na construção", escrito em 03/10,
-depois da banca. São 12 histórias do produto e 2 do protótipo, no formato da Semana 4. Cada uma
-diz de onde veio, com a data ou a ADR que se confere, e onde se confere na tela. Três regras:
+**Decisão.** Um documento novo no SR1, "Histórias que surgiram na construção", escrito em 03/10
+e publicado depois da banca. São 12 histórias do produto e 2 do protótipo, no formato da Semana
+4. Cada uma diz de onde veio, com a data ou a ADR que se confere, e onde se confere na tela.
+Três regras:
 
-1. **Só o que existe.** Estado "no ar" ou "em parte". O que falta é história do backlog, com
-   MoSCoW, e não entra aqui.
+1. **Só o que existe e se confere na tela.** Estado "no ar" ou "em parte", e visível para quem
+   visita, sem sessão de admin. O que falta é história do backlog, com MoSCoW, e não entra aqui.
 2. **Fora da conta das 26.** `BACKLOG` (s6) continua o retrato de 25/09. O deck do SR1 conta a
    partir dele e não importa o arquivo do ciclo sr1, e `sr1.test.ts` confere isso: nenhuma
-   história escrita depois da banca muda um número que a banca viu.
+   história publicada depois da banca muda um número que a banca viu.
 3. **Nenhuma toma o lugar das 9 que faltam.** Abrir o mês, definir a janela, cadastrar a régua e
    a regra pela tela, responder à contestação, a revisão do distrito e o aviso antes do envio
    continuam no backlog. Partir uma delas para contar a parte pronta como história nova seria
    inflar o número. Por isso a régua que já se lê na tela não virou história: ela é a metade
    "só leitura" de quatro histórias que o backlog já tem.
+
+**A revisão antes do merge.** Um revisor adversarial conferiu cada história contra o código e o
+histórico do Git, e mudou a lista. Saíram duas: o funil por unidade, porque em 16/08 a história
+dos totais por distrito pedia "o funil do ciclo"; e a recusa de lançamento com rastro, que só
+aparece com sessão de admin e cuja recusa é parte da janela, que falta. Entraram duas que
+estavam esquecidas: a SEAB conferindo a nota de qualquer gerente e abrindo contestação em nome
+dele. Uma terceira que ele achou, os avisos da conta no painel da gestão, ficou de fora pelo
+mesmo critério: a base de teste não tem nota com aviso, e ninguém confere na tela.
+Quatro passaram para "em parte": esconder os nomes (o tipo fica, e a unidade única do tipo se
+reconhece), o recorte do distrital, os números que parecem erro (só os 12 primeiros, dos meses
+mais antigos) e os modelos (o agrupamento mostra a referência sem o valor). E três origens
+ganharam a data certa.
 
 **Sem MoSCoW.** Elas já estão construídas, e prioridade serve para decidir o que construir.
 Entram na ordem das sprints junto com o resto, quando a Semana 7 reordenar o backlog.
