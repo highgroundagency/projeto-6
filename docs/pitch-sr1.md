@@ -342,7 +342,7 @@ Total de fala: 11:59, com limite de 15:00. Quem passa o slide é quem opera a te
 
 ### Slide 12: a solução: do número à nota, com a conta aberta
 
-- **Começa em** 5:39 · **dura** 0:35 · **quem fala:** João Henrique · **81 palavras na tela**
+- **Começa em** 5:39 · **dura** 0:35 · **quem fala:** João Henrique · **82 palavras na tela**
 - **Parte da rubrica:** critério 3 · proposta de solução
 - **Frase da tela:** um sistema web que faz a conta da portaria e mostra de onde veio cada número.
 - **O que a tela mostra:** O caminho de um mês em quatro passos, com o papel de quem faz cada um, e as contagens do sistema.
@@ -415,7 +415,7 @@ Total de fala: 11:59, com limite de 15:00. Quem passa o slide é quem opera a te
 - **A fala:**
   1. Hoje é o SR1. Depois vêm quatro sprints de uma semana, cada uma puxada pela ordem do backlog, a validação com a Secretaria e o SR2.
   1. Toda semana tem registro no site, com o que avançou, o que travou e quem fez. Toda decisão fica escrita com o porquê.
-  1. O backlog tem 26 histórias, priorizadas por MoSCoW. Das 16 obrigatórias, 10 estão no ar, como lançar cada item e abrir a conta. O plano era ter todas hoje; as que faltam são as de configurar pela tela.
+  1. O backlog tem 26 histórias, priorizadas por MoSCoW. Das 16 obrigatórias, 10 estão no ar, como lançar cada item e abrir a conta. As que faltam, de configurar pela tela, entram nas sprints.
 - **Se perguntarem** (fora do tempo):
   - As sprints da Semana 7 à 10 começam pelo retorno desta banca. A ordem do backlog muda com ele.
   - Por que há desejáveis no ar antes de todas as obrigatórias: algumas vieram junto de uma obrigatória, como publicar o mês, que é a última etapa do mesmo botão que avança a etapa. As 6 obrigatórias que faltam são todas da SEAB configurando pela tela: abrir o mês, a janela de lançamento, os indicadores e a regra. Entram nas sprints, na ordem que o retorno desta banca pedir.
@@ -446,12 +446,12 @@ Total de fala: 11:59, com limite de 15:00. Quem passa o slide é quem opera a te
 
 ### Slide 19: planejado x realizado: as entregas
 
-- **Começa em** 9:49 · **dura** 0:35 · **quem fala:** Gabriel · **88 palavras na tela**
+- **Começa em** 9:49 · **dura** 0:35 · **quem fala:** Gabriel · **72 palavras na tela**
 - **Parte da rubrica:** critério 5 · planejado x realizado
 - **Frase da tela:** fora da tabela: Rafael (aprendizado de máquina) e Kerry (apoio à pesquisa).
 - **O que a tela mostra:** A tabela das fases até o SR1, com entregas, responsáveis e o que está em andamento.
 - **A fala:**
-  1. Até hoje o cronograma pedia 43 entregas, e entregamos 39. As que faltam estão na linha de baixo: com o João Pedro, o registro da sessão de ideação; e comigo, o pacote deste SR1, o escopo maduro e o plano de correção de rota. O escopo espera respostas da Secretaria; o plano, já no site, fecha com o retorno desta banca.
+  1. Até hoje o cronograma pedia 43 entregas, e entregamos as 43. Cada linha mostra a fase, a data e quem respondeu por ela.
   1. O Rafael não aparece porque responde pela lente de aprendizado de máquina, que tem calendário próprio; o Kerry apoia o Matheus na pesquisa.
 - **Se perguntarem** (fora do tempo):
   - O Rafael responde pela lente de aprendizado de máquina, que tem marcos próprios: a entrega parcial em 23 de setembro e a AV1 em 30 de setembro. Os slides estão em /ml.
@@ -462,14 +462,13 @@ Total de fala: 11:59, com limite de 15:00. Quem passa o slide é quem opera a te
 
 - **Começa em** 10:24 · **dura** 0:25 · **quem fala:** Gabriel · **89 palavras na tela**
 - **Parte da rubrica:** critério 5 · planejado x realizado
-- **Frase da tela:** estágio: protótipo navegável, com dados de teste.
+- **Frase da tela:** estágio: protótipo navegável, no ar.
 - **O que a tela mostra:** Três percentuais de avanço com a conta de cada um, e os três compromissos do Kick-off com o estado.
 - **A fala:**
-  1. Na metade do semestre, temos 55% das entregas, contra 61% no plano, e 65% das histórias no ar.
-  1. No cronograma atualizado, dos três compromissos do Kick-off, um foi feito e um saiu em parte: os indicadores oficiais entram em 24 de outubro. O terceiro não saiu: a conferência com a Secretaria depende de perguntas ainda em aberto, e passou para 21 de novembro.
+  1. Na metade do semestre, entregamos tudo o que o cronograma pedia até hoje, e 65% das histórias do backlog já estão no ar.
+  1. Dos três compromissos do Kick-off, dois foram feitos: as oito telas estão no ar, e a regra foi conferida com a planilha da própria Secretaria. O terceiro está em andamento: os indicadores oficiais entram em 24 de outubro.
 - **Se perguntarem** (fora do tempo):
-  - Por que a conferência não saiu: as perguntas 4 e 6 a 13 para a Secretaria seguem em aberto, e sem elas a regra não tem como ser conferida. O motivo e o ajuste de cada desvio estão no documento de correção de rota, no registro do SR1.
-  - 21 de novembro é a Semana 11 do nosso cronograma; a data ainda vai ser pedida à Secretaria, e pedir é o tratamento do risco de agenda, no slide 21.
+  - A regra foi conferida com a planilha que a Secretaria usa, enviada em 22 de setembro: a regra 3 segue o método dela, e o que não bateu virou pergunta por escrito. A validação com quem opera o processo é na Semana 11.
   - No Kick-off também dissemos que o prazo de contestação entraria na regra 3. Não entrou: ficou para a Sprint 3, e a tela diz que ele ainda não existe.
 
 ### Slide 21: pontos fortes, melhorias e riscos

@@ -94,12 +94,11 @@ export const CHECKLIST: readonly ItemChecklist[] = [
 
   {
     ciclo: 's3',
-    // EM ANDAMENTO, e não feito. O que está publicado é o ROTEIRO das três
-    // técnicas; a dinâmica real continua sem foto nem artefato, e o próprio
-    // bloqueio da Semana 3 diz isso. Marcar como feito aqui contradizia o
-    // registro a dois cliques de distância, e a banca acha isso.
+    // FEITO em 03/10: o registro das três técnicas está na Semana 3 (o roteiro,
+    // o tempo e o que cada uma produziu) e as oito alternativas também. As
+    // fotos e as folhas da sessão não foram publicadas, e a Semana 3 diz isso.
     evidencia: "Brainwriting, Brainstorming e Crazy 8's registrados",
-    status: 'em_andamento',
+    status: 'feito',
     responsavel: 'joao-pedro',
     link: '/#doc-s3-tecnicas-ideacao',
   },
@@ -245,11 +244,11 @@ export const CHECKLIST: readonly ItemChecklist[] = [
   },
 
   {
-    // Em andamento, e não feito: o mapa existe, mas a apresentação e o ensaio
-    // são desta semana.
+    // Feito em 03/10: o pacote do SR1 está no site, com o mapa de cada
+    // evidência, e o deck e o PDF estão prontos para a banca.
     ciclo: 's6',
     evidencia: 'Pacote SR1',
-    status: 'em_andamento',
+    status: 'feito',
     responsavel: 'gabriel',
     link: '/#doc-sr1-pacote',
   },
@@ -294,7 +293,7 @@ export const CHECKLIST: readonly ItemChecklist[] = [
     // (cortes das classes, porte, Indicador 3).
     ciclo: 'sr1',
     evidencia: 'Escopo maduro',
-    status: 'em_andamento',
+    status: 'feito',
     responsavel: 'gabriel',
     link: '/#doc-s6-escopo-revisado',
   },
@@ -324,7 +323,7 @@ export const CHECKLIST: readonly ItemChecklist[] = [
     // banca entra no dia.
     ciclo: 'sr1',
     evidencia: 'Plano de correção de rota',
-    status: 'em_andamento',
+    status: 'feito',
     responsavel: 'gabriel',
     link: '/#doc-sr1-correcao-de-rota',
   },

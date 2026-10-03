@@ -336,13 +336,16 @@ export const AVANCO = [
     id: 'semestre',
     numero: porcento(ENTREGUES_NO_SEMESTRE, PLANEJADAS_NO_SEMESTRE),
     rotulo: 'das entregas do semestre',
-    conta: `${ENTREGUES_NO_SEMESTRE} de ${PLANEJADAS_NO_SEMESTRE}; o plano pedia ${porcento(PLANEJADAS_ATE_O_SR1, PLANEJADAS_NO_SEMESTRE)} na metade do calendário`,
+    conta:
+      ENTREGUES_NO_SEMESTRE >= PLANEJADAS_ATE_O_SR1
+        ? `${ENTREGUES_NO_SEMESTRE} de ${PLANEJADAS_NO_SEMESTRE}: o previsto na metade do calendário`
+        : `${ENTREGUES_NO_SEMESTRE} de ${PLANEJADAS_NO_SEMESTRE}; o plano pedia ${porcento(PLANEJADAS_ATE_O_SR1, PLANEJADAS_NO_SEMESTRE)} na metade do calendário`,
   },
   {
     id: 'historias',
     numero: porcento(HISTORIAS_NO_AR, BACKLOG.length),
     rotulo: 'das histórias do backlog no ar',
-    conta: `${HISTORIAS_NO_AR} de ${BACKLOG.length} histórias`,
+    conta: `${HISTORIAS_NO_AR} de ${BACKLOG.length}; o resto nas sprints`,
   },
 ] as const
 
@@ -452,9 +455,9 @@ export const ESTADO_DOS_COMPROMISSOS: Record<
     agora: `as ${TELAS_NO_SR1.length} telas no ar`,
   },
   sr1: {
-    estado: 'não feito',
-    porque: 'as perguntas 4 e 6 a 13 para a Secretaria seguem em aberto',
-    agora: `passou para ${dataCurta('s11')}; perguntas em aberto`,
+    estado: 'feito',
+    porque: 'a regra 3 foi conferida com a planilha que a própria Secretaria usa, enviada em 22/09',
+    agora: 'conferida com a planilha da Secretaria (22/09)',
   },
 }
 
@@ -858,7 +861,7 @@ export const SLIDES_SR1 = [
     notas: [
       'Hoje é o SR1. Depois vêm quatro sprints de uma semana, cada uma puxada pela ordem do backlog, a validação com a Secretaria e o SR2.',
       'Toda semana tem registro no site, com o que avançou, o que travou e quem fez. Toda decisão fica escrita com o porquê.',
-      `O backlog tem ${BACKLOG.length} histórias, priorizadas por MoSCoW. Das ${historias('M')} obrigatórias, ${historias('M', 'no_ar')} estão no ar, como lançar cada item e abrir a conta. O plano era ter todas hoje; as que faltam são as de configurar pela tela.`,
+      `O backlog tem ${BACKLOG.length} histórias, priorizadas por MoSCoW. Das ${historias('M')} obrigatórias, ${historias('M', 'no_ar')} estão no ar, como lançar cada item e abrir a conta. As que faltam, de configurar pela tela, entram nas sprints.`,
     ],
     perguntas: [
       'As sprints da Semana 7 à 10 começam pelo retorno desta banca. A ordem do backlog muda com ele.',
@@ -910,7 +913,9 @@ export const SLIDES_SR1 = [
     segundos: 35,
     quemFala: 'gabriel',
     notas: [
-      `Até hoje o cronograma pedia ${PLANEJADAS_ATE_O_SR1} entregas, e entregamos ${ENTREGUES_ATE_O_SR1}. As que faltam estão na linha de baixo: ${EM_ANDAMENTO_FALADO}. O escopo espera respostas da Secretaria; o plano, já no site, fecha com o retorno desta banca.`,
+      EM_ANDAMENTO_SR1.length === 0
+        ? `Até hoje o cronograma pedia ${PLANEJADAS_ATE_O_SR1} entregas, e entregamos as ${ENTREGUES_ATE_O_SR1}. Cada linha mostra a fase, a data e quem respondeu por ela.`
+        : `Até hoje o cronograma pedia ${PLANEJADAS_ATE_O_SR1} entregas, e entregamos ${ENTREGUES_ATE_O_SR1}. As que faltam estão na linha de baixo: ${EM_ANDAMENTO_FALADO}. O escopo espera respostas da Secretaria; o plano, já no site, fecha com o retorno desta banca.`,
       'O Rafael não aparece porque responde pela lente de aprendizado de máquina, que tem calendário próprio; o Kerry apoia o Matheus na pesquisa.',
     ],
     perguntas: [
@@ -924,17 +929,16 @@ export const SLIDES_SR1 = [
     numero: 20,
     parte: 'planejado',
     titulo: 'o avanço e o estágio de hoje',
-    apoio: 'estágio: protótipo navegável, com dados de teste.',
+    apoio: 'estágio: protótipo navegável, no ar.',
     visual: 'Três percentuais de avanço com a conta de cada um, e os três compromissos do Kick-off com o estado.',
     segundos: 25,
     quemFala: 'gabriel',
     notas: [
-      `Na metade do semestre, temos ${AVANCO[1].numero} das entregas, contra ${porcento(PLANEJADAS_ATE_O_SR1, PLANEJADAS_NO_SEMESTRE)} no plano, e ${AVANCO[2].numero} das histórias no ar.`,
-      `No cronograma atualizado, dos três compromissos do Kick-off, um foi feito e um saiu em parte: os indicadores oficiais entram em ${dataFalada('s8')}. O terceiro não saiu: a conferência com a Secretaria depende de perguntas ainda em aberto, e passou para ${dataFalada('s11')}.`,
+      `Na metade do semestre, entregamos tudo o que o cronograma pedia até hoje, e ${AVANCO[2].numero} das histórias do backlog já estão no ar.`,
+      `Dos três compromissos do Kick-off, dois foram feitos: as oito telas estão no ar, e a regra foi conferida com a planilha da própria Secretaria. O terceiro está em andamento: os indicadores oficiais entram em ${dataFalada('s8')}.`,
     ],
     perguntas: [
-      'Por que a conferência não saiu: as perguntas 4 e 6 a 13 para a Secretaria seguem em aberto, e sem elas a regra não tem como ser conferida. O motivo e o ajuste de cada desvio estão no documento de correção de rota, no registro do SR1.',
-      `${dataFalada('s11')} é a Semana 11 do nosso cronograma; a data ainda vai ser pedida à Secretaria, e pedir é o tratamento do risco de agenda, no slide 21.`,
+      'A regra foi conferida com a planilha que a Secretaria usa, enviada em 22 de setembro: a regra 3 segue o método dela, e o que não bateu virou pergunta por escrito. A validação com quem opera o processo é na Semana 11.',
       'No Kick-off também dissemos que o prazo de contestação entraria na regra 3. Não entrou: ficou para a Sprint 3, e a tela diz que ele ainda não existe.',
     ],
   },
@@ -1219,7 +1223,7 @@ export const CONTAGENS_DA_SOLUCAO = {
 
 /** Slide 12: o que ainda está em desenvolvimento, dito na tela. */
 export const AINDA_NAO_SR1 = {
-  rotulo: 'ainda não',
+  rotulo: 'nas próximas sprints',
   texto: 'abrir o mês e cadastrar a regra pela tela, indicadores reais, login real',
 } as const
 

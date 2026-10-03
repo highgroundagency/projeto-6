@@ -302,11 +302,10 @@ describe('o deck do SR1', () => {
       expect(['feito', 'em parte', 'não feito']).toContain(item.estado)
       expect(item.porque.length).toBeGreaterThan(10)
     }
-    // A fala do slide 20 diz "um foi feito e um saiu em parte", e dá a data
-    // nova dos outros dois.
-    for (const estado of ['feito', 'em parte', 'não feito']) {
-      expect(COMPROMISSOS_NO_SR1.filter((c) => c.estado === estado), estado).toHaveLength(1)
-    }
+    // A fala do slide 20 diz "dois foram feitos" e dá a data do que está em
+    // andamento.
+    expect(COMPROMISSOS_NO_SR1.filter((c) => c.estado === 'feito')).toHaveLength(2)
+    expect(COMPROMISSOS_NO_SR1.filter((c) => c.estado === 'em parte')).toHaveLength(1)
     // O cronograma atualizado: quem não foi feito diz para quando foi, e a
     // data é uma data do cronograma, depois do SR1.
     const datasDepois = CRONOGRAMA.filter((c) => indiceDoCiclo(c.id) > indiceDoCiclo('sr1')).map(

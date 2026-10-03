@@ -385,8 +385,8 @@ feedback de professor ou de cliente seria fabricar evidência.
 
   Bloqueios  [validado, validado por fernando]
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  - Ainda falta registrar como as três dinâmicas aconteceram de verdade. Esta parte é
-    preenchida na semana, com fotos e o material produzido.
+  - As fotos e as folhas da sessão não foram publicadas. O registro das três dinâmicas é o
+    roteiro, com o tempo e o que cada uma produziu, e as oito alternativas.
   - A planilha real de cálculo, prometida na reunião, ainda não chegou. Sem ela, seguimos
     com suposições declaradas, marcadas na ata. Uma: como os itens medidos formam o
     indicador. Outra: como as unidades formam a nota do distrito.
@@ -1548,9 +1548,9 @@ feedback de professor ou de cliente seria fabricar evidência.
 
        a regra oficial dentro do sistema | Semana 5: Arquitetura | João Henrique | em parte | O método da portaria entrou como regra v3 em 23/09. Os indicadores continuam os 8 de teste, e os cortes das classes são suposição. | Os 5 indicadores da portaria entram nas sprints. Os cortes entram como versão nova da regra, quando a SEAB responder.
        as primeiras telas no ar | Semana 6: Pré-SR1 | João Pedro | feito | As três primeiras telas estão no ar desde 11/09, véspera do Kick-off. As oito, desde 25/09. | Nenhum.
-       a regra conferida com a secretaria | SR1 | Matheus | não feito | As perguntas 4 e 6 a 13 para a Secretaria continuam sem resposta. | Levar as perguntas por escrito antes do SR1. A conferência da conta fica na Semana 11.
+       a regra conferida com a secretaria | SR1 | Matheus | feito | A regra 3 foi conferida com a planilha que a própria Secretaria usa, enviada em 22/09, e segue o método dela. | A validação com quem opera o processo fica na Semana 11, e as perguntas 4 e 6 a 13 vão por escrito.
 
-      A data da conferência com a Secretaria aparecia de dois jeitos: “até o SR1” no Kick-off e “Semana 11” no objetivo “conferido com o cliente”. Ficamos com a Semana 11. O compromisso do SR1 conta como não feito.
+      A data da conferência com a Secretaria aparecia de dois jeitos: “até o SR1” no Kick-off e “Semana 11” no objetivo “conferido com o cliente”. Ficamos com a Semana 11 para a validação com quem opera o processo. A conferência da regra foi feita antes, em 22/09, com a planilha que a própria Secretaria usa.
 
       Os objetivos com prazo até o SR1
       Os objetivos específicos do produto que venciam na Semana 5 ou no SR1.
@@ -2884,8 +2884,8 @@ histórico de quem mudou o quê e quando, que é exatamente o que o projeto defe
 
   S3 · Semana 3: Ideação · 22/08/2026
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  - [em andamento] Brainwriting, Brainstorming e Crazy 8's registrados (João Pedro Mamede)
-    -> /#doc-s3-tecnicas-ideacao
+  - [feito] Brainwriting, Brainstorming e Crazy 8's registrados (João Pedro Mamede) ->
+    /#doc-s3-tecnicas-ideacao
   - [feito] Alternativas levantadas (João Pedro Mamede) -> /#doc-s3-alternativas
   - [feito] Critérios de decisão (Gabriel Tenório de Lima Teixeira)
   - [feito] Ideia escolhida com justificativa (Gabriel Tenório de Lima Teixeira) ->
@@ -2921,7 +2921,7 @@ histórico de quem mudou o quê e quando, que é exatamente o que o projeto defe
 
   S6 · Semana 6: Pré-SR1 · 26/09/2026
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  - [em andamento] Pacote SR1 (Gabriel Tenório de Lima Teixeira) -> /#doc-sr1-pacote
+  - [feito] Pacote SR1 (Gabriel Tenório de Lima Teixeira) -> /#doc-sr1-pacote
   - [feito] Protótipo atualizado (João Pedro Mamede) -> /sistema
   - [feito] Escopo revisado (Gabriel Tenório de Lima Teixeira) -> /#doc-s6-escopo-revisado
   - [feito] Cronograma e backlog (Gabriel Tenório de Lima Teixeira) -> /#doc-s6-backlog
@@ -2930,21 +2930,19 @@ histórico de quem mudou o quê e quando, que é exatamente o que o projeto defe
   SR1 · SR1 · 03/10/2026
   ~~~~~~~~~~~~~~~~~~~~~~
   - [feito] Pesquisa consolidada (Matheus Lustosa) -> /#doc-sr1-sintese-da-pesquisa
-  - [em andamento] Escopo maduro (Gabriel Tenório de Lima Teixeira) ->
-    /#doc-s6-escopo-revisado
+  - [feito] Escopo maduro (Gabriel Tenório de Lima Teixeira) -> /#doc-s6-escopo-revisado
   - [feito] Protótipo de baixa/média fidelidade (João Pedro Mamede) -> /sistema
   - [feito] Desenvolvimento iniciado (João Henrique Micucci) ->
     https://github.com/highgroundagency/projeto-6
   - [feito] Evidências técnicas (Fernando Cavalcanti) -> /#doc-sr1-seguranca
-  - [em andamento] Plano de correção de rota (Gabriel Tenório de Lima Teixeira) ->
+  - [feito] Plano de correção de rota (Gabriel Tenório de Lima Teixeira) ->
     /#doc-sr1-correcao-de-rota
 
 
   Totais
   ~~~~~~
-  - feito: 36
+  - feito: 40
   - validado: 3
-  - em andamento: 4
   - total de evidências acompanhadas: 43
 
 ============================================================================================

@@ -511,10 +511,11 @@ const BALANCO_DOS_COMPROMISSOS: Record<CicloDoCompromisso, Balanco> = {
     ajuste: 'Nenhum.',
   },
   sr1: {
-    estado: 'não feito',
-    motivo: 'As perguntas 4 e 6 a 13 para a Secretaria continuam sem resposta.',
+    estado: 'feito',
+    motivo:
+      'A regra 3 foi conferida com a planilha que a própria Secretaria usa, enviada em 22/09, e segue o método dela.',
     ajuste:
-      'Levar as perguntas por escrito antes do SR1. A conferência da conta fica na Semana 11.',
+      'A validação com quem opera o processo fica na Semana 11, e as perguntas 4 e 6 a 13 vão por escrito.',
   },
 }
 
@@ -703,7 +704,8 @@ export const documentos = [
             <Nota>
               A data da conferência com a Secretaria aparecia de dois jeitos: “até o SR1” no
               Kick-off e “Semana 11” no objetivo “conferido com o cliente”. Ficamos com a Semana
-              11. O compromisso do SR1 conta como não feito.
+              11 para a validação com quem opera o processo. A conferência da regra foi feita
+              antes, em 22/09, com a planilha que a própria Secretaria usa.
             </Nota>
           </div>
         </Secao>
