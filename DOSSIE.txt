@@ -1409,7 +1409,7 @@ feedback de professor ou de cliente seria fabricar evidência.
   - [documento] Uso de IA -> /transparencia-ia
   - [codigo] Código e testes -> https://github.com/highgroundagency/projeto-6
 
-  Documentos de entrega desta semana (6)
+  Documentos de entrega desta semana (7)
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   >>> PACOTE DE ENTREGA DO SR1
@@ -1786,6 +1786,41 @@ feedback de professor ou de cliente seria fabricar evidência.
        Validação com a CAM | Conferir indicadores e regras com a portaria vigente e usar os critérios de verificação deste catálogo como roteiro de testes. | todos | a fazer
 
       O que depende de infraestrutura real (cifragem no armazenamento, rotina agendada e migração das planilhas) fica como requisito de implantação, fora do escopo acadêmico do protótipo, que roda só com dados de teste.
+
+  >>> HISTÓRIAS QUE SURGIRAM NA CONSTRUÇÃO
+      âncora no site: #doc-sr1-historias-da-construcao
+      o que o sistema já faz e não estava nas 26 histórias do backlog, escrito como
+      história em 03/10 e publicado depois da banca.
+
+      O backlog da Semana 4 tem 26 histórias. O sistema faz mais do que elas pedem. Várias funções nasceram enquanto construíamos. A maioria já estava no código em 16/08, a data mais antiga que o Git guarda. Nenhuma história as registrava. Em 03/10, escrevemos como história as que se conferem na tela, no formato da Semana 4. Elas foram publicadas depois da banca do SR1.
+
+      Do produto
+      12 histórias: 8 no ar e 4 em parte. Servem a quem usaria o sistema na Secretaria.
+
+       Épico | História | Estado | De onde veio | Onde se confere
+
+       Lançamento | Como SEAB, quero lançar no lugar de uma unidade atrasada, ficando registrado que fui eu, para o mês não travar | no ar | Já estava no sistema em 16/08, no perfil CAM, que virou SEAB em 25/08. A SEAB como autora na trilha, desde 26/08 | Lançamento, no perfil SEAB. Na trilha, quem aparece como autor é a SEAB
+       Resultado | Como SEAB, quero abrir a nota e a conta de qualquer gerente, como ele vai ver, para conferir antes de divulgar | no ar | Já estava no sistema em 16/08, no perfil CAM, que virou SEAB em 25/08 | Meu resultado, no perfil SEAB: o seletor abre qualquer gerente, também em mês homologado e ainda não publicado
+       Resultado | Como SEAB, quero ver as unidades da maior nota para a menor, na rede ou num distrito, para enxergar o conjunto | no ar | Já estava no sistema em 16/08, por área. Por unidade e com o filtro de distrito, desde 25/08 | Painel da gestão: o ranking das unidades
+       Resultado | Como SEAB, quero esconder os nomes no ranking e na planilha exportada, para mostrar o resultado numa reunião sem expor as unidades | em parte | Já estava no sistema em 16/08 | Painel da gestão: esconder os nomes. No ranking e na planilha, a unidade vira um número e o distrito some. Mas o tipo fica, e a unidade única do tipo ainda se reconhece
+       Resultado | Como gerente distrital, quero ver o painel e baixar a planilha só do meu distrito, para não ver o recorte dos outros | em parte | Reunião com o cliente, em 22/08. Na tela desde 25/08, e na planilha, conferido no servidor, desde 26/08 | Painel da gestão, no perfil distrital: não há a opção da rede toda, nem na planilha. Mas o perfil ainda não traz o distrito, e dá para escolher qualquer um
+       Resultado | Como SEAB, quero abrir contestação em nome de um gerente, ficando registrado que fui eu, para o pedido ficar no histórico com data, como os outros | no ar | Já estava no sistema em 16/08, no perfil CAM, que virou SEAB em 25/08 | Contestação, no perfil SEAB: o pedido sai em nome do gerente escolhido, e a trilha guarda que quem abriu foi a SEAB
+       Governança | Como SEAB, quero ver os números que parecem erro de digitação, para conferir antes de homologar o mês | em parte | Já estava no sistema em 16/08 | Analytics: até 12 valores acima de cinco vezes a meta do tipo, ou abaixo de um quinto dela, dos meses mais antigos primeiro. Ainda não separa o mês em aberto
+       Governança | Como SEAB, quero ver se cada unidade é consistente ou oscila, acima ou abaixo da meta, para saber onde ajudar primeiro | no ar | Já estava no sistema em 16/08, por área | Analytics: o jeito de cada unidade
+       Governança | Como SEAB, quero ver o que os modelos treinados dizem, com a linha de base ao lado, para não confiar num número sem comparação | em parte | Já estava no sistema em 16/08. Desde 23/09, os modelos leem a base por unidade da Secretaria (ADR-043) | Analytics: os três modelos, com método e métrica. Classificação e regressão mostram o valor da linha de base, e o agrupamento, só o nome da referência
+       Governança | Como administrador, quero que cada perfil abra só as telas do próprio papel, e que as outras nem apareçam, para ninguém ver o que não é seu | no ar | ADR-023, em 16/08: cinco das oito telas não conferiam o perfil | A tela fora do perfil nem é montada, e o endereço antigo dela responde 404. Um teste percorre as 8 telas contra os 4 perfis. O perfil vem do seletor, sem login, como no resto do protótipo
+       Uso | Como quem chega ao sistema, quero um tutorial que me leve pelas telas do meu papel, marcando a parte de que cada passo fala, para aprender sem treinamento | no ar | ADR-024, em 16/08: quem usou pediu um tutorial que conduzisse | Topo do sistema: um tutorial guiado para cada perfil
+       Uso | Como quem usa o sistema, quero um tema claro, para ler bem em sala, no projetor e em tela ruim | no ar | ADR-027, em 18/08 | Botão de tema, no topo do sistema
+
+      Do protótipo
+      2 histórias. Servem a quem avalia o protótipo, não a quem usaria o sistema.
+
+       História | Estado | De onde veio | Onde se confere
+
+       Como quem avalia o protótipo, quero trocar de perfil sem login, para ver o sistema pelos olhos de cada papel | no ar | Já estava no sistema em 16/08. O login da prefeitura ficou fora do escopo na Semana 4 | Seletor de perfil, no topo do sistema
+       Como quem avalia o protótipo, quero testar numa cópia só minha, para não mudar a demonstração dos outros | no ar | ADR-046, em 25/09: o lançamento de um avaliador aparecia na tela do outro. Refeito em 03/10 (ADR-048) | Lançamento e contestação ficam só no navegador de quem fez, e somem quando ele fecha
+
+      Estas histórias ficam fora da conta das 26. O avanço continua o que mostramos no SR1: 17 de 26 no ar. Nenhuma delas toma o lugar das 9 que faltam. Essas seguem no backlog com estado →, e entram nas sprints.
 
 --- S7 · Semana 7: Sprint 1 · 17/10/2026 ---------------------------------------------------
 
@@ -3483,6 +3518,7 @@ Os porquês completos estão em `docs/decisoes.md`. Os títulos, aqui:
   - ADR-047 · As orientações do SR1 chegaram, e o deck passou a seguir a rubrica
   - ADR-048 · A escrita do protótipo vai num diário assinado no cookie, porque na Vercel a
     rota e a página são funções diferentes
+  - ADR-049 · O que o sistema fazia sem história virou história, fora da conta das 26
 
 ============================================================================================
 13.  COMO RODAR E COMO CONFERIR

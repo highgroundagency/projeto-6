@@ -7,6 +7,8 @@ import { cicloPorId } from '@/lib/cronograma'
 import { BACKLOG, RISCOS, contarBacklog } from './s6'
 import {
   AMEACAS_STRIDE,
+  HISTORIAS_DA_CONSTRUCAO,
+  HISTORIAS_DO_PROTOTIPO,
   ITENS_OWASP,
   LIMITACOES_DE_SEGURANCA,
   MAPA_DO_PACOTE,
@@ -99,8 +101,53 @@ describe('os documentos do SR1', () => {
 
   it('não usa travessão no texto que vai para a tela', () => {
     // Regra 8 da casa. Comentário pode; copy não.
-    const copy = JSON.stringify([MAPA_DO_PACOTE, AMEACAS_STRIDE, ITENS_OWASP, RISCOS, BACKLOG])
+    const copy = JSON.stringify([
+      MAPA_DO_PACOTE,
+      AMEACAS_STRIDE,
+      ITENS_OWASP,
+      RISCOS,
+      BACKLOG,
+      HISTORIAS_DA_CONSTRUCAO,
+      HISTORIAS_DO_PROTOTIPO,
+    ])
     expect(copy).not.toMatch(/—/)
+  })
+})
+
+describe('as histórias que surgiram na construção', () => {
+  const todas = [...HISTORIAS_DA_CONSTRUCAO, ...HISTORIAS_DO_PROTOTIPO]
+
+  it('seguem o formato da Semana 4: como quem, quero o quê, para quê', () => {
+    for (const h of todas) expect(h.historia).toMatch(/^Como [^,]+, quero .+, para .+[^.]$/)
+  })
+
+  it('só registram o que existe, e dizem de onde veio e onde se confere', () => {
+    // O que falta é história do backlog, com MoSCoW. Aqui só entra o que já
+    // está na tela, e quem lê precisa conseguir conferir sem perguntar.
+    for (const h of todas) {
+      expect(['no_ar', 'em_parte'], h.historia).toContain(h.estado)
+      expect(h.origem.trim().length, h.historia).toBeGreaterThan(10)
+      expect(h.onde.trim().length, h.historia).toBeGreaterThan(10)
+    }
+  })
+
+  it('não repetem história nenhuma', () => {
+    expect(new Set(todas.map((h) => h.historia)).size).toBe(todas.length)
+  })
+
+  it('ficam fora da conta das 26, e o deck do SR1 não as lê', () => {
+    // O deck conta o avanço a partir de BACKLOG (s6). Se ele passasse a ler
+    // este ciclo, uma história publicada depois da banca poderia mudar um
+    // número que a banca viu.
+    expect(BACKLOG).toHaveLength(26)
+    for (const arquivo of ['src/content/apresentacao-sr1.ts', 'src/components/sr1/slides.tsx']) {
+      expect(ler(arquivo), arquivo).not.toMatch(/content\/ciclos\/sr1['"]/)
+    }
+  })
+
+  it('aparecem num documento do SR1, depois dos que a banca recebeu', () => {
+    const ids = documentos.map((d) => d.id)
+    expect(ids.at(-1)).toBe('historias-da-construcao')
   })
 })
 
