@@ -55,6 +55,14 @@ usa para se preparar fica no repositório.
   só cada um sabe o que fez. Leia a sua linha em `src/content/ciclos/s5.tsx` e `s6.tsx`.
 - [ ] **Registro da sessão de ideação.** Se houver fotos, folhas do brainwriting ou desenhos do
   crazy 8s, publique na Semana 3. Se não houver, a resposta preparada do slide 9 já diz isso.
+- [ ] **O João Pedro confirma a data da sessão de ideação.** O texto da Semana 3 já estava no
+  primeiro commit, de 16/08, antes da data da Semana 3 (22/08), e a fala do slide 9 diz que a
+  sessão aconteceu. Se a banca perguntar a data, a resposta precisa ser uma só. Se a sessão não
+  puder ser sustentada, troque as duas primeiras frases do slide 9 por: "Na Semana 3 montamos o
+  roteiro de três técnicas: no brainwriting, cada um escreve em silêncio e passa a folha; no
+  brainstorming, a conversa junta as ideias parecidas; no crazy 8s, oito telas em oito minutos.
+  Levantamos oito alternativas, todas a partir da pesquisa." E a terceira por "Publicamos o
+  roteiro e as alternativas."
 - [ ] **Pedir a data da Semana 11 e mandar as perguntas por escrito**, na mesma mensagem para a
   Secretaria (`docs/perguntas-para-a-sesau.md`). O slide 21 promete as duas coisas. Se a data
   vier, diga a data na fala do 22.
