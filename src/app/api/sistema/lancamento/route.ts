@@ -5,7 +5,6 @@ import { carregarDados } from '@/lib/dados/consultas'
 import { comParametros, redirecionar } from '@/lib/http'
 import { exigirPerfil, identidadeAtual } from '@/lib/sistema'
 import { ancoraDaTela } from '@/lib/sistema/parametros'
-import { garantirVisitante } from '@/lib/sistema/visitante'
 
 /** Volta para a sanfona de lançamento, já aberta e com a unidade preservada. */
 function deVolta(unidade: string, resultado: { ok?: string; erro?: string }): string {
@@ -24,8 +23,8 @@ function deVolta(unidade: string, resultado: { ok?: string; erro?: string }): st
  * existentes. Subindicador 'indice' exige `valor`; 'razao' exige `numerador` e
  * `denominador`. A janela de prazo é garantida pela camada de dados.
  *
- * A escrita cai na cópia de QUEM LANÇOU (ver `sistema/estado.ts`): a rota
- * garante o cookie do visitante antes de escrever, e ninguém mais vê o número.
+ * A escrita cai na cópia de QUEM LANÇOU (ver `sistema/estado.ts`): o driver
+ * grava o diário dele no cookie, e ninguém mais vê o número.
  */
 const corpoSchema = z.object({
   subindicadorId: z.string().min(1).max(80),
@@ -96,7 +95,6 @@ export async function POST(requisicao: NextRequest) {
     )
   }
 
-  await garantirVisitante()
   const agora = new Date().toISOString()
   // O autor da trilha diz quem de fato lançou: o gerente da unidade quando é
   // ele; o próprio papel quando a SEAB ou a gerência distrital lança por ela.

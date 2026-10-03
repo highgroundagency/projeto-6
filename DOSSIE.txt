@@ -281,6 +281,8 @@ feedback de professor ou de cliente seria fabricar evidência.
       Precisa: entender por que o valor foi aquele.
       Teme: ser avaliada por dado que ela não pôde conferir.
 
+      Revisão de 10/09, para o Kick-off: depois da reunião de 22/08, a segunda persona passou a ser a gerente da unidade, porque é a unidade que manda os números. Os cartões acima seguem o texto de 15/08.
+
       Mapa de empatia: analista da CAM
       A pessoa que carrega o processo hoje: o que ela diz, pensa, faz e sente, suas dores e seus ganhos.
       Diz“Se mexer numa fórmula, tenho que conferir a planilha inteira de novo.”
@@ -331,6 +333,8 @@ feedback de professor ou de cliente seria fabricar evidência.
        - A agenda da comissão pode impedir a validação
        - A portaria pode mudar no meio do semestre
        - O projeto crescer até a folha de pagamento, que não faz parte dele
+
+      Revista em 11 e 12/09: a fraqueza da portaria passou a dizer quando ela chegou, e a força passou a contar sete integrantes, com a entrada do Kerry. A versão de 16/08 está no histórico do Git.
 
   >>> OBJETIVOS SMART
       âncora no site: #doc-s2-objetivos
@@ -926,16 +930,14 @@ feedback de professor ou de cliente seria fabricar evidência.
 --- S5 · Semana 5: Arquitetura · 19/09/2026 ------------------------------------------------
 
 
-  Objetivo da semana  [rascunho]
-  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  Objetivo da semana  [validado, validado por gabriel]
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   Fechar o desenho da arquitetura do MVP. Ter o motor de cálculo (a parte que faz a conta
   da nota) rodando de ponta a ponta. Ele roda sobre a base de teste, feita só de dados
   inventados.
 
-  Avanços  [rascunho]
-  ~~~~~~~~~~~~~~~~~~~
-  - Em 19/09, a tela meu resultado entrou no ar. Com ela, quatro telas ficaram abertas:
-    painel da SEAB, indicadores, lançamento e meu resultado.
+  Avanços  [validado, validado por gabriel]
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   - Em 22/09, a Secretaria enviou a planilha que usa hoje, sem os nomes. Lemos as fórmulas
     uma a uma.
   - Em 23/09, a regra v3 entrou no motor. Ela segue o método da planilha: média das notas,
@@ -948,40 +950,43 @@ feedback de professor ou de cliente seria fabricar evidência.
   - Publicamos os quatro níveis do C4 em /arquitetura. C4 é um jeito de desenhar sistemas
     em níveis de zoom. Os níveis 3 e 4 são de 23/09.
   - Em 23/09, a base de desempenho por unidade da Secretaria entrou em ml/data, com
-    autorização. É dado da instituição, sem nenhuma pessoa.
+    autorização. É dado da instituição, sem nome, CPF, matrícula, e-mail ou telefone de
+    ninguém.
   - Em 23/09, os cadernos de ML passaram a ler essa base, na entrega parcial de ML. Os
     slides da AV1 de ML ficaram em /ml.
+  - Em 25/09, as oito telas do sistema ficaram abertas ao visitante. Até ali, só três
+    estavam no ar: painel da SEAB, indicadores e lançamento.
 
-  Decisões  [rascunho]
-  ~~~~~~~~~~~~~~~~~~~~
-  - A regra v3 vale daqui para a frente. Os meses fechados seguem nas regras v1 e v2.
+  Decisões  [validado, validado por gabriel]
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  - A regra v3 vale de junho em diante. Os meses até maio seguem nas regras v1 e v2.
       por quê: Nota publicada tem prazo de recurso. Se ela mudasse depois, o prazo do art.
-      9º perderia o sentido (ADR-041).
+      9º perderia o sentido (ADR-041 e docs/arquitetura.md).
   - Os tipos antigos viram os novos sem apagar as regras antigas.
       por quê: Assim nenhuma unidade perde nota em mês já publicado (ADR-042).
   - A base por unidade da Secretaria entra no repositório. Dado de pessoa, nunca.
-      por quê: A Secretaria autorizou o dado da instituição. Dado de pessoa não depende
-      dela: é o art. 20 da LGPD (ADR-044).
-  - O motor não olha relógio nem rede, e desde 23/09 um teste segura isso.
-      por quê: Assim o mesmo dado dá sempre o mesmo número. O teste falha se alguém ligar o
-      motor ao mundo de fora.
+      por quê: A Secretaria autorizou o dado da instituição. Dado de pessoa fica fora mesmo
+      com autorização, e isso vale para o repositório, a base de teste e os prompts de IA
+      (ADR-044).
+  - O motor não lê relógio nem importa nada de fora, e desde 23/09 um teste segura isso.
+      por quê: Assim o mesmo dado dá sempre o mesmo número. O teste falha se o motor
+      importar arquivo, banco ou framework, sortear número ou ler o relógio.
 
-  Bloqueios  [rascunho]
-  ~~~~~~~~~~~~~~~~~~~~~
+  Bloqueios  [validado, validado por gabriel]
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   - Os cortes das classes foram digitados à mão na planilha. Não dá para tirá-los das
     fórmulas, e a v3 usa 0,80 como suposição.
   - Os percentuais de cada classe estão no Decreto 36.482/2023, que ainda não temos.
   - O Indicador 3 é bimestral, e o ciclo é mensal. O motor ainda não trata essa exceção.
 
-  Feedback recebido  [rascunho]
-  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  Feedback recebido  [validado, validado por gabriel]
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   - (cliente) Em 22/09, ao enviar a planilha, a Secretaria respondeu como a conta é feita
     hoje: “é tudo manual, via procv e afins”.
 
-  Próximos passos  [rascunho]
-  ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  Próximos passos  [validado, validado por gabriel]
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   - Levar à Secretaria as perguntas abertas: cortes das classes, decreto e Indicador 3.
-  - Liberar as quatro telas que faltam no sistema.
   - Fechar o pacote do SR1, com riscos, escopo revisado e backlog com estado.
 
   Responsáveis  [rascunho]
@@ -1029,7 +1034,7 @@ feedback de professor ou de cliente seria fabricar evidência.
        - A unidade informa cada item medido, junto com a evidência. Pode ser um valor direto, ou um numerador e um denominador. O envio é um formulário comum (POST). A biblioteca zod confere os dados na entrada e recusa o que está errado, dizendo o motivo.
        - A camada de dados grava o lançamento e, no mesmo passo, ESCREVE UM EVENTO no histórico. Não existe caminho que grave sem registrar.
        - A SEAB fecha a janela de lançamento. O ciclo avança um passo, e essa mudança também vira evento no histórico.
-       - O motor de cálculo junta os itens medidos e forma cada indicador. Aplica as metas e os pesos do tipo da unidade, na versão da regra que vale para o mês. Devolve a nota (score), a faixa e a memória de cálculo, com cada passo da conta.
+       - O motor de cálculo junta os itens medidos e forma cada indicador. Aplica a régua e os pesos do tipo da unidade, na versão da regra que vale para o mês. Devolve a nota (score), a faixa e a memória de cálculo, com cada passo da conta.
        - A tela mostra a memória de cálculo que saiu dessa mesma conta. Nunca refaz a conta por fora.
        - O painel da gestão soma os resultados e exporta em CSV. A auditoria lê o histórico e não escreve nada.
       Cada passo roda na hora, um atrás do outro, e isso é de propósito. Fila e processamento em lote servem para um volume que este caso não tem. São dezenas de indicadores por mês, não milhões de eventos por minuto. Escolher a arquitetura pelo volume que se sonha ter é como comprar caminhão para carregar feira.
@@ -1042,7 +1047,7 @@ feedback de professor ou de cliente seria fabricar evidência.
        A função não guarda estado, e várias cópias rodam ao mesmo tempo | O contador que limita tentativas (rate limit) vive na memória de uma cópia só. Ele ajuda, mas não garante. Deixamos isso escrito em vez de fingir garantia
        Biblioteca pesada deixa a partida lenta | O treino dos modelos de ML saiu do programa que roda no site. A tela lê um arquivo JSON com a semente, o commit e a data do treino. Semente é o número que fixa o sorteio
        O disco some a cada execução | A configuração vai para variável de ambiente e para o Git. Nunca para arquivo gravado enquanto o site roda
-       Segredo não pode morar no repositório | A senha do painel e o segredo do cookie só existem em variável de ambiente. Sem elas, o painel simplesmente não existe: responde 404
+       Segredo não pode morar no repositório | O segredo do cookie só existe em variável de ambiente. Sem ele, o painel simplesmente não existe: responde 404. A senha tem um padrão público, e o que protege o painel é trocá-la em produção
        Publicar é dar um push | A vitrine ficou guardada em código e abre por commit. Ninguém precisa entrar no painel do provedor e colar valor à mão (ADR-021)
 
       Doze fatores, conferidos
@@ -1054,10 +1059,11 @@ feedback de professor ou de cliente seria fabricar evidência.
        Configuração | Em variáveis de ambiente, com um `.env.example` guardado no Git
        Serviços de apoio | O banco é tratado como peça que se encaixa: dá para trocar o driver
        Build, release, run | Separados: `next build` congela o pacote, e o deploy publica esse pacote
-       Processos | Sem estado. O que precisa durar vai para cookie assinado ou para o Git
+       Processos | Sem estado que precise durar. O que dura vai para cookie assinado ou para o Git. A escrita do protótipo fica na memória do servidor e some no reinício (ADR-046)
+       Vínculo de porta | O app sobe o próprio servidor HTTP numa porta, com `next start`. Na Vercel, a plataforma faz essa ligação
        Concorrência | Cresce criando mais cópias da função. Nenhum usuário fica preso a uma cópia
        Descartabilidade | Liga rápido e desliga sem cerimônia
-       Paridade dev/prod | A verificação de vazamento roda sobre o mesmo build que vai para produção
+       Paridade dev/prod | A verificação de vazamento sobe um build de produção (`next build` e `next start`), e não o modo de desenvolvimento
        Logs | Os registros saem na saída padrão, e a plataforma recolhe
        Processos administrativos | Semear a base e verificar o site são scripts do repositório
 
@@ -1099,7 +1105,7 @@ feedback de professor ou de cliente seria fabricar evidência.
       o que a planilha real ensinou, o que ela corrigiu no nosso motor, e as três coisas
       que ela mostra sobre o problema.
 
-      Em 22/09 a Secretaria enviou, sem os nomes, a planilha que usa hoje. A planilha com as fórmulas não entra no repositório: entra a regra que aprendemos lendo as fórmulas. A base de desempenho por unidade, só com números, entrou em ml/data com autorização da Secretaria (ADR-044). Não há nome, CPF, e-mail nem telefone de ninguém neste documento, e não havia no arquivo.
+      Em 22/09 a Secretaria enviou, sem os nomes, a planilha que usa hoje. A planilha com as fórmulas não entra no repositório: entra a regra que aprendemos lendo as fórmulas. A base de desempenho por unidade, com tipo, distrito e números, sem nome de unidade, entrou em ml/data com autorização da Secretaria (ADR-044). Não há nome, CPF, e-mail nem telefone de ninguém neste documento, e não havia no arquivo.
 
       O que a gente tinha assumido errado
       Três suposições estavam escritas no código como suposições, de propósito. A planilha respondeu as três.
@@ -1126,7 +1132,7 @@ feedback de professor ou de cliente seria fabricar evidência.
        Quantas linhas | O que acontece nelas | Efeito
 
        190 de 228 | Seguem a régua certa: pesos 0,2 / 0,2 / 0,2 / 0,4, somando 1,0 | Nenhum. É a conta correta, e é a maioria
-       6 | Seguem outra conta: a planilha divide a soma dos pontos por 1,7, a soma dos pesos 0,2 / 0,2 / 0,8 / 0,5 | Quem cai nessas linhas é avaliado numa régua diferente de todo mundo. São as NDI e SAE, dois tipos de unidade que a portaria não nomeia
+       6 | Seguem outra conta: a planilha divide a soma dos pontos por 1,7, e não por 1,0. Em cinco delas, o indicador 3 entra nos pontos com peso 0,8, e não 0,2 | Quem cai nessas linhas é avaliado numa régua diferente de todo mundo. São as NDI e SAE, dois tipos de unidade que a portaria não nomeia
        32 | Usam uma função que só existe no Google Planilhas | Aberta no Excel, a célula não recalcula: mostra o último número que o Google gravou. São as linhas dos oito distritos
 
       O que o Prumo oferece contra isso não é uma planilha melhor. É a conta num lugar só, escrita como dado versionado, com teste que falha quando a soma dos pesos de um tipo não fecha. Uma régua diferente para seis linhas deixa de ser possível, em vez de deixar de ser notada.
@@ -1135,49 +1141,51 @@ feedback de professor ou de cliente seria fabricar evidência.
 --- S6 · Semana 6: Pré-SR1 · 26/09/2026 ----------------------------------------------------
 
 
-  Objetivo da semana  [rascunho]
-  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  Objetivo da semana  [validado, validado por gabriel]
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   Chegar ao SR1 com o protótipo navegável, o pacote de entrega fechado e a apresentação
   ensaiada pelos sete.
 
-  Avanços  [rascunho]
-  ~~~~~~~~~~~~~~~~~~~
-  - Desde 19/09, quatro telas do sistema estão no ar: painel da SEAB, indicadores,
-    lançamento e meu resultado.
-  - Com a liberação desta semana, as oito telas ficam no ar. Entram a trilha de auditoria,
-    o painel da gestão, analytics e contestação.
-  - As análises de segurança e de privacidade existem desde 16/08. Agora a de segurança
+  Avanços  [validado, validado por gabriel]
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  - Desde 25/09, as oito telas do sistema estão no ar. Naquele dia entraram juntas meu
+    resultado, a trilha de auditoria, o painel da gestão, analytics e contestação.
+  - As análises de segurança e de privacidade existem desde 15/08. Agora a de segurança
     também está no site, no pacote do SR1.
   - Riscos, escopo revisado e backlog com estado viraram documentos desta semana. Antes,
     nenhum dos três estava no site.
-  - Vamos fechar o pacote do SR1, conferindo cada link do mapa no site publicado.
-  - Vamos montar e ensaiar a apresentação com os sete, de cronômetro na mão.
   - As orientações do SR1 chegaram em 28/09: até 15 minutos, com seis critérios de conteúdo
     e a apresentação avaliada à parte. O deck foi refeito na ordem delas (ADR-047).
+  - Em 28/09, o deck foi revisado como banca antes de ir para o Drive. As afirmações que o
+    repositório não sustentava mudaram (ADR-047).
+  - A Atividade 2 de Direito, com entrega em 28/09, virou documento do SR1: os requisitos
+    de privacy by design, cada um com o estado no sistema.
 
-  Decisões  [rascunho]
-  ~~~~~~~~~~~~~~~~~~~~
-  - A apresentação do SR1 abre pelo problema.
-      por quê: O problema é o que sustenta o projeto, como no Kick-off. A conta aberta vem
-      logo depois, na demonstração.
-  - A arquitetura ganha um slide, com link para /arquitetura.
-      por quê: O SR1 cobra evidência técnica. Os quatro níveis do C4 já estão no site, e o
-      slide leva até eles.
-  - O roteiro da apresentação sai do site.
-      por quê: Material de preparação não é entrega (ADR-040). O roteiro fica no
-      repositório, em docs/pitch-sr1.md.
+  Decisões  [validado, validado por gabriel]
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  - A apresentação do SR1 segue a ordem das orientações e abre pelo problema.
+      por quê: O problema é o que sustenta o projeto, como no Kick-off, e a imersão no
+      problema é o primeiro critério das orientações. A conta aberta aparece depois, na
+      demonstração ao vivo.
+  - A arquitetura não tem slide próprio no deck do SR1.
+      por quê: Nenhum dos sete critérios das orientações de 28/09 é de arquitetura. O slide
+      das disciplinas cita o C4 em quatro níveis, e o desenho fica em /arquitetura.
+  - O roteiro da apresentação sai do registro da semana.
+      por quê: Material de preparação não é entrega (ADR-040). O roteiro fica em
+      docs/pitch-sr1.md, e a fala de cada slide fica nas notas de /sr1.
 
-  Bloqueios  [rascunho]
-  ~~~~~~~~~~~~~~~~~~~~~
-  - As perguntas 4 e 6 a 12 para a Secretaria continuam abertas. Sem elas, os cortes das
-    classes seguem como suposição.
+  Bloqueios  [validado, validado por gabriel]
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  - As perguntas 4 e 6 a 13 para a Secretaria continuam abertas. Sem elas, os cortes das
+    classes seguem como suposição, e falta a autorização por escrito para publicar a base
+    por unidade.
 
   Feedback recebido  [rascunho]
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   - nenhum registro nesta semana.
 
-  Próximos passos  [rascunho]
-  ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  Próximos passos  [validado, validado por gabriel]
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   - Apresentar o SR1.
   - Anotar o retorno da banca no registro do SR1, dizendo de quem veio cada fala.
   - Reordenar o backlog pelo que a banca apontar.
@@ -1189,11 +1197,12 @@ feedback de professor ou de cliente seria fabricar evidência.
   - João Henrique Micucci: Confere o escopo revisado contra o código.
   - Fernando Cavalcanti: Confere o registro de riscos e a segurança publicada no site.
   - Matheus Lustosa: Consolida a pesquisa e leva as perguntas abertas à Secretaria.
-  - Rafael Serpa: Prepara a parte da lente de ML na apresentação.
+  - Rafael Serpa: Prepara os slides dos critérios da escolha, das quatro disciplinas e do
+    balanço.
   - Kerry Muniz: Apoia a síntese da pesquisa e o ensaio.
 
-  Evidências  [rascunho]
-  ~~~~~~~~~~~~~~~~~~~~~~
+  Evidências  [validado, validado por gabriel]
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   - [prototipo] Protótipo navegável -> /sistema
   - [documento] Cronograma com responsável -> /#cronograma
 
@@ -1213,7 +1222,8 @@ feedback de professor ou de cliente seria fabricar evidência.
        Evidências técnicas | Arquitetura, nuvem, segurança, privacidade, ML e uso de IA, todos no site
        Correção de rota | Planejado contra realizado, com motivo e ajuste de cada desvio
        Registro semanal | Todas as semanas que já passaram estão publicadas e validadas
-       Apresentação | Ensaiada pelos sete e cronometrada. Cabe no tempo que o professor confirmar
+       Apresentação | Ensaiada pelos sete e cronometrada. Fecha em até 13 minutos, dentro dos 15 das orientações de 28/09
+       Slides no Drive | O PDF do deck na pasta da equipe, com cada slide numerado como atual/total
 
   >>> RISCOS
       âncora no site: #doc-s6-riscos
@@ -1224,17 +1234,17 @@ feedback de professor ou de cliente seria fabricar evidência.
        Os cortes das classes e os percentuais são suposição nossa. A v3 usa 0,80 como corte, e os percentuais estão no Decreto 36.482/2023, que não temos. | alta | Alto: uma nota pode cair na classe errada. | Levar as perguntas 6 e 7 à SEAB. Buscar o decreto, que é ato público. A resposta entra como versão nova da regra. | Matheus
        O sistema usa 8 indicadores de teste. A portaria tem 5, com outros itens medidos. | já acontece | Alto: a demonstração prova o método, não a régua oficial. | Dizer isso na tela e em voz alta. Trocar o catálogo pelos 5 da portaria depois do SR1. | João Henrique
        O porte das unidades ficou fora: USF 1 a 8, MAC 1 a 4, CAPS II ou III e CAPS III 24h. | já acontece | Médio: a meta ou o peso podem mudar com o porte. | Perguntar à SEAB o que o porte muda. Ele entra como campo da regra, sem mudar a forma do motor (ADR-042). | Matheus
-       O prazo de contestação do art. 9º não existe no sistema. | já acontece | Alto: é uma regra da portaria, e a tela aceita pedido fora do prazo. | Dizer na tela que o prazo ainda não existe. Levar o prazo para a regra nas sprints. | João Henrique
+       O prazo de contestação do art. 9º não existe no sistema. | já acontece | Alto: é uma regra da portaria, e a tela aceita pedido fora do prazo. | A tela já diz que o prazo ainda não existe. Levar o prazo para a regra nas sprints. | João Henrique
        A escrita do protótipo fica em memória: some no reinício e pode não valer entre duas instâncias do servidor. | média | Médio: um lançamento feito na demonstração pode não aparecer na tela seguinte. | Desde 25/09 cada visitante escreve numa cópia própria, e a tela diz isso. Levar a reserva no próprio slide e o PDF. | João Henrique
        A demonstração ao vivo precisa de sessão de admin para fechar o mês. | média | Alto: sem a sessão, nenhuma nota nova aparece na frente da banca. | Testar a sessão antes de começar. Levar a reserva no próprio slide e o PDF. | João Pedro
        A agenda da SEAB e da CAM pode não abrir a tempo. | média | Alto: a conferência da conta com a Secretaria atrasa. | Mandar as perguntas por escrito antes do SR1. Pedir a data da Semana 11 já agora. | Gabriel
        O schema guardado em supabase/migrations/ ainda tem 'cam' como perfil. O app diz 'seab'. | já acontece | Baixo: o schema não está ligado ao app. | Alinhar o schema antes de ligar qualquer banco. A diferença está na ADR-042. | João Henrique
        A base por unidade da SESAU está num repositório público. Em 39 das 90 combinações de tipo e distrito há uma unidade só. | já acontece | Alto: a unidade única pode apontar o gerente, que recebe a gratificação. | Pedir à Secretaria a autorização por escrito para publicar. Decidir entre generalizar e justificar. Dado de pessoa segue barrado por teste. | Fernando
-       A apresentação passar dos 15 minutos. As orientações de 28/09 dizem que a banca interrompe no limite. | média | Alto: o que vem depois do corte não é avaliado. | O deck fecha em 11:50 de fala, com 3:10 de margem. Ensaiar os sete, com cronômetro e a demonstração inteira. | Gabriel
+       A apresentação passar dos 15 minutos. As orientações de 28/09 dizem que a banca interrompe no limite. | média | Alto: o que vem depois do corte não é avaliado. | O deck fecha abaixo de 12 minutos de fala, com mais de 3 de margem. Ensaiar os sete, com cronômetro e a demonstração inteira. | Gabriel
        A pesquisa não tem entrevista com quem opera o processo. As personas vieram do caso. | já acontece | Médio: a banca pode não aceitar como pesquisa consolidada. | Perguntar à banca se a pesquisa precisa ser primária. Entrevistar na Semana 11, com o roteiro de validação. | Matheus
        O sistema roda na base de teste, e a lente de ML roda na base da SESAU. | já acontece | Médio: os números de /sistema e de /ml não se comparam. | Dizer qual base cada tela usa. Não misturar os números na apresentação. | Rafael
 
-      “Já acontece” quer dizer que o risco não é hipótese: o fato já está no código ou no repositório. O dono segue a frente de cada um na equipe. As fontes são docs/perguntas-para-a-sesau.md, docs/seguranca.md e as ADR-041 a ADR-044.
+      “Já acontece” quer dizer que o risco não é hipótese: o fato já está no código ou no repositório. O dono segue a frente de cada um na equipe. As fontes são docs/perguntas-para-a-sesau.md, docs/perguntas-para-a-banca.md, docs/seguranca.md, docs/privacidade.md e as ADR-041 a ADR-047.
 
   >>> ESCOPO REVISADO
       âncora no site: #doc-s6-escopo-revisado
@@ -1250,7 +1260,7 @@ feedback de professor ou de cliente seria fabricar evidência.
        A regra v3: média das notas, peso redistribuído e nota de 0 a 1 | É o método da planilha da Secretaria, lida em 22/09 | ADR-041
        Item em que passar do alvo também perde ponto | A planilha tem esse caso, e a régua antiga premiaria o exagero | ADR-041
        Numerador maior que denominador vira erro | A planilha marca ERRO na célula. Antes, passava como nota cheia | ADR-041
-       A base por unidade da SESAU, só na lente de ML | É dado da instituição, sem pessoa, com autorização | ADR-043 e ADR-044
+       A base por unidade da SESAU, só na lente de ML | É dado da instituição, sem nome, CPF, matrícula, e-mail ou telefone de ninguém, com autorização | ADR-043 e ADR-044
        As oito telas no protótipo do SR1 | A banca navega o protótipo inteiro, e não só metade | src/lib/features.ts
 
       Sai
@@ -1258,7 +1268,7 @@ feedback de professor ou de cliente seria fabricar evidência.
        O quê | Por quê | Fonte
 
        UPA e policlínica como tipos de unidade | Não estão na portaria | ADR-042
-       O método antigo como regra dos meses novos | A planilha mostrou que ele estava errado. Ele fica só para os meses já fechados | ADR-041
+       O método antigo como regra dos meses novos | A planilha mostrou que ele estava errado. Ele fica só para os meses até maio | ADR-041
        A base inventada na lente de ML | A lente passou a ler a base real por unidade | ADR-043
 
       Fica para depois do SR1
@@ -1303,7 +1313,7 @@ feedback de professor ou de cliente seria fabricar evidência.
        Resultado | Gerente compara os próprios ciclos | S | no ar | Tela meu resultado: a evolução mês a mês
        Resultado | Gerente abre contestação | S | no ar | Tela de contestação, sem o prazo do art. 9º
        Resultado | SEAB responde à contestação, com tudo registrado | S | falta | A tela mostra respostas da base de teste. Não há como responder
-       Governança | Administrador vê a linha do tempo de tudo o que aconteceu | M | no ar | Trilha de auditoria, no ar com a liberação desta semana
+       Governança | Administrador vê a linha do tempo de tudo o que aconteceu | M | no ar | Trilha de auditoria, no ar desde 25/09
        Governança | Administrador garante que nada pode ser apagado | M | no ar | A trilha só recebe linha nova. Não existe caminho de apagar
        Governança | SEAB vê os totais por distrito | S | no ar | Painel da gestão: nota por distrito
        Governança | SEAB exporta os resultados em CSV | C | no ar | Painel da gestão: o botão de baixar a planilha
@@ -1354,7 +1364,7 @@ feedback de professor ou de cliente seria fabricar evidência.
 
   Bloqueios  [rascunho]
   ~~~~~~~~~~~~~~~~~~~~~
-  - As perguntas 4 e 6 a 12 para a Secretaria continuam abertas. Sem elas, a regra não fica
+  - As perguntas 4 e 6 a 13 para a Secretaria continuam abertas. Sem elas, a regra não fica
     conferida até o SR1.
 
   Feedback recebido  [rascunho]
@@ -1377,12 +1387,12 @@ feedback de professor ou de cliente seria fabricar evidência.
     empatia.
   - Kerry Muniz: Vai mostrar o benchmarking, a SWOT e os objetivos, e fechar com a
     conclusão e os próximos passos.
-  - João Pedro Mamede: Vai mostrar as técnicas de ideação e explicar a demonstração ao
-    vivo.
+  - João Pedro Mamede: Vai mostrar as técnicas de ideação e os protótipos, e explicar a
+    demonstração ao vivo.
   - Rafael Serpa: Vai mostrar os critérios da escolha, o que cada disciplina pôs no produto
     e o balanço.
-  - João Henrique Micucci: Vai mostrar a solução, os protótipos e os diferenciais, e operar
-    o sistema na demonstração.
+  - João Henrique Micucci: Vai mostrar a solução e os diferenciais, e operar o sistema na
+    demonstração.
   - Fernando Cavalcanti: Vai mostrar o ciclo de vida, os papéis e as ferramentas, com o
     site e o Drive.
 
@@ -1537,8 +1547,8 @@ feedback de professor ou de cliente seria fabricar evidência.
        Compromisso | Até | Quem puxa | Estado | Por quê | Ajuste
 
        a regra oficial dentro do sistema | Semana 5: Arquitetura | João Henrique | em parte | O método da portaria entrou como regra v3 em 23/09. Os indicadores continuam os 8 de teste, e os cortes das classes são suposição. | Os 5 indicadores da portaria entram nas sprints. Os cortes entram como versão nova da regra, quando a SEAB responder.
-       as primeiras telas no ar | Semana 6: Pré-SR1 | João Pedro | feito | Quatro telas no ar desde 19/09. As oito, com a liberação desta semana. | Nenhum.
-       a regra conferida com a secretaria | SR1 | Matheus | não feito | As perguntas 4 e 6 a 12 para a Secretaria continuam sem resposta. | Levar as perguntas por escrito antes do SR1. A conferência da conta fica na Semana 11.
+       as primeiras telas no ar | Semana 6: Pré-SR1 | João Pedro | feito | As três primeiras telas estão no ar desde 11/09, véspera do Kick-off. As oito, desde 25/09. | Nenhum.
+       a regra conferida com a secretaria | SR1 | Matheus | não feito | As perguntas 4 e 6 a 13 para a Secretaria continuam sem resposta. | Levar as perguntas por escrito antes do SR1. A conferência da conta fica na Semana 11.
 
       A data da conferência com a Secretaria aparecia de dois jeitos: “até o SR1” no Kick-off e “Semana 11” no objetivo “conferido com o cliente”. Ficamos com a Semana 11. O compromisso do SR1 conta como não feito.
 
@@ -1579,7 +1589,7 @@ feedback de professor ou de cliente seria fabricar evidência.
       as 14 ameaças stride, os 10 itens owasp e as limitações, transcritos de
       docs/seguranca.md.
 
-      A fonte é o arquivo docs/seguranca.md, escrito desde 16/08. Este documento transcreve as tabelas dele para o site. Um teste confere que as contagens batem.
+      A fonte é o arquivo docs/seguranca.md, escrito desde 15/08. Este documento transcreve as tabelas dele para o site. Um teste confere que as contagens batem.
 
       STRIDE: as ameaças, uma a uma
       Cobre o sistema e também o painel que controla o que o professor vê.
@@ -1619,7 +1629,7 @@ feedback de professor ou de cliente seria fabricar evidência.
       Limitações conhecidas
 
        - O seletor de perfil não é autenticação. Num site público, qualquer pessoa troca entre os quatro perfis. A única credencial real é a sessão de admin.
-       - A escrita do sistema vive em memória. O que se grava some no reinício, e pode não valer entre duas requisições. Lançamento e contestação ficam abertos a qualquer visitante, por decisão, e desde a semana do SR1 cada visitante escreve numa cópia própria.
+       - A escrita do sistema não tem banco. O que se grava fica num diário assinado no cookie do próprio navegador e some quando ele fecha. Até 03/10 ficava na memória do servidor, e na Vercel a página não enxergava o que a rota tinha gravado (ADR-048). Lançamento e contestação ficam abertos a qualquer visitante, por decisão, e cada visitante só vê o que ele mesmo escreveu.
        - Esconder o link do painel reduz tropeço, não é segurança. A proteção real é trocar a senha em produção.
        - A CSP usa unsafe-inline para script e estilo. O próximo passo é um nonce por requisição.
        - Não há proteção CSRF além do cookie sameSite=lax. Basta para formulário da mesma origem, não para uma API pública.
@@ -3317,7 +3327,8 @@ banca pergunte. Auditoria que só encontra acerto não auditou nada.
       cada push
 
   RESSALVA: Os oito indicadores do seed são de teste, não os cinco da portaria. A escrita
-  do protótipo vive em memória, numa cópia por visitante, e some no reinício.
+  do protótipo não tem banco: fica num diário assinado no cookie de cada visitante e some
+  quando o navegador fecha.
 
   [atendido] sr1-evidencias-tecnicas
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -3472,6 +3483,8 @@ Os porquês completos estão em `docs/decisoes.md`. Os títulos, aqui:
   - ADR-046 · Para o SR1: as oito telas no ar, cada visitante escreve na própria cópia, e
     junho fecha pela v3
   - ADR-047 · As orientações do SR1 chegaram, e o deck passou a seguir a rubrica
+  - ADR-048 · A escrita do protótipo vai num diário assinado no cookie, porque na Vercel a
+    rota e a página são funções diferentes
 
 ============================================================================================
 13.  COMO RODAR E COMO CONFERIR

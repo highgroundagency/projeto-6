@@ -72,7 +72,7 @@ conferência do dossiê. O end-to-end fica em `npm run e2e`.
 
 O que está coberto, contado em 28/09:
 
-- **677 testes de unidade** — aritmética de data no fuso do projeto, motor de releases,
+- **692 testes de unidade** — aritmética de data no fuso do projeto, motor de releases,
   config store, sessão do admin, completude do registro, motor de cálculo (55 casos), base
   sintética, a fronteira de `ml/data/` e os números ditos nos decks, conferidos contra os
   documentos de onde vêm.

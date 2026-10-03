@@ -56,7 +56,8 @@ pelo volume que se sonha ter é como comprar caminhão para carregar feira.
 | Configuração | Variáveis de ambiente, com `.env.example` versionado |
 | Serviços de apoio | Banco como recurso plugável: driver trocável em `src/lib/dados/` |
 | Build, release, run | Separados: `next build` congela o artefato, o deploy publica |
-| Processos | Sem estado; o que precisa durar vai para cookie assinado ou para o Git |
+| Processos | Nenhum estado que precise durar fica no processo: o que dura vai para cookie assinado ou para o Git. A escrita do protótipo fica num diário assinado (HMAC) no cookie do navegador, refeito a cada requisição, e some quando o navegador fecha (ADR-048) |
+| Vínculo de porta | O app sobe o próprio servidor HTTP numa porta (`next start`); na Vercel, a plataforma faz essa ligação |
 | Concorrência | Escala horizontal por instância, sem sessão pegajosa |
 | Descartabilidade | Partida rápida, desligamento sem ritual |
 | Paridade dev/prod | O mesmo build de produção é o que `verificar-vazamento` sobe |
@@ -85,8 +86,9 @@ razão principal da escolha.
   operação.
 - **Sem multi-região, sem CDN de dados, sem cache distribuído.** Nada disso se justifica na
   escala do caso, e ligá-los para exibição seria o oposto do que esta lente ensina.
-- **Rate limit e estado do ciclo vivem na memória do processo**, o que em serverless é
-  best-effort por instância. Ver `docs/seguranca.md`.
+- **O rate limit vive na memória do processo**, o que em serverless é best-effort por
+  instância. Ver `docs/seguranca.md`. A escrita do protótipo, inclusive o avanço do ciclo, não
+  fica no processo: vai no diário assinado do cookie do navegador (ADR-048).
 
 ## O que falta para virar produção
 

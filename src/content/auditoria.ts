@@ -310,7 +310,7 @@ export const REQUISITOS: readonly Requisito[] = [
       '.github/workflows/ci.yml: typecheck, testes, build, verificação de vazamento e e2e a cada push',
     ],
     ressalva:
-      'Os oito indicadores do seed são de teste, não os cinco da portaria. A escrita do protótipo vive em memória, numa cópia por visitante, e some no reinício.',
+      'Os oito indicadores do seed são de teste, não os cinco da portaria. A escrita do protótipo não tem banco: fica num diário assinado no cookie de cada visitante e some quando o navegador fecha.',
   },
   {
     id: 'sr1-evidencias-tecnicas',

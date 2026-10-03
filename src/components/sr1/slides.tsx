@@ -37,6 +37,7 @@ import {
   FONTES_SR1,
   FUNIL_DA_IDEACAO,
   LEGENDA_DA_MATRIZ,
+  DECISOES_DO_WIREFRAME_SR1,
   LEGENDAS_DO_WIREFRAME_SR1,
   MAPA_NO_SR1,
   NOME_DA_UNIDADE_DO_DECK,
@@ -133,7 +134,9 @@ export function SlidesSR1() {
           {INSTITUICAO.disciplina} · {INSTITUICAO.escola} · {INSTITUICAO.curso} ·{' '}
           {INSTITUICAO.periodo} · {INSTITUICAO.equipe}
         </p>
-        <p className="mt-1 text-base">{CLIENTE.orgao}</p>
+        <p className="mt-1 text-base">
+          {CLIENTE.orgao} · {CLIENTE.areaCurta}
+        </p>
         <ul className="mt-5 flex flex-wrap gap-x-5 gap-y-1 text-base">
           {EQUIPE.map((integrante) => (
             <li key={integrante.id}>{integrante.nome}</li>
@@ -325,14 +328,11 @@ export function SlidesSR1() {
               <Etiqueta tom={tomDoObjetivo(objetivo.estado)} className="mt-3 uppercase">
                 {objetivo.estado}
               </Etiqueta>
+              {objetivo.proximo ? <p className="mt-2 text-base">{objetivo.proximo}</p> : null}
             </li>
           ))}
         </ol>
-        <div className="mt-6 border-l border-linha-alta pl-4">
-          <p className="rotulo">{ESCOPO_SR1.rotulo}</p>
-          <p className="mt-1 text-base text-texto">{ESCOPO_SR1.dentro}</p>
-          <p className="mt-1 text-base">{ESCOPO_SR1.fora}</p>
-        </div>
+        <p className="mt-6 border-l border-linha-alta pl-4 text-base">{ESCOPO_SR1.fora}</p>
       </>
     ),
 
@@ -348,6 +348,7 @@ export function SlidesSR1() {
               <p className="rotulo mt-1">
                 {tecnica.minutos} {ROTULO_DOS_MINUTOS}
               </p>
+              <p className="mt-3 text-base">{tecnica.como}</p>
               <p className="mt-3 text-lg text-texto">{tecnica.produto}</p>
             </li>
           ))}
@@ -495,6 +496,7 @@ export function SlidesSR1() {
             <li key={id} className="wireframe-sr1">
               <Desenho className="w-full" />
               <p className="mt-2 text-base text-texto">{LEGENDAS_DO_WIREFRAME_SR1[indice]}</p>
+              <p className="mt-1 text-sm">{DECISOES_DO_WIREFRAME_SR1[indice]}</p>
             </li>
           ))}
         </ul>
@@ -549,11 +551,6 @@ export function SlidesSR1() {
                   <p className="mt-2 text-base text-texto">{diferencial.legenda}</p>
                 </>
               ) : null}
-              {'prova' in diferencial ? (
-                <p className="mt-3 border-l border-linha-alta pl-3 text-base">
-                  {diferencial.prova}
-                </p>
-              ) : null}
             </li>
           ))}
         </ol>
@@ -592,7 +589,9 @@ export function SlidesSR1() {
             </ul>
           </div>
           <div>
-            <p className="rotulo">{BACKLOG_SR1.rotulo}</p>
+            <p className="rotulo">
+              {BACKLOG_SR1.rotulo} <span className="normal-case">{BACKLOG_SR1.metodo}</span>
+            </p>
             <dl className="mt-2 space-y-1.5">
               {BACKLOG_SR1.itens.map((item) => (
                 <div key={item.rotulo} className="flex items-baseline gap-3">
@@ -605,6 +604,7 @@ export function SlidesSR1() {
                 </div>
               ))}
             </dl>
+            <p className="mt-2 text-base text-texto">{BACKLOG_SR1.primeiras}</p>
           </div>
         </div>
       </>
@@ -725,7 +725,8 @@ export function SlidesSR1() {
                 className="bloco-raso linha-sr1 grid grid-cols-[1fr_auto] gap-x-3 md:grid-cols-[14rem_5rem_6rem_1fr]"
               >
                 <span role="cell" className="text-base text-texto">
-                  {ciclo.rotulo.toLowerCase()}
+                  {/* Minúscula é a identidade; a sigla do marco fica como sigla. */}
+                  {ciclo.rotulo.toLowerCase().replace(/\bsr(\d)\b/g, 'SR$1')}
                 </span>
                 <span role="cell" className="numero text-base">
                   {formatarBR(ciclo.data).slice(0, 5)}

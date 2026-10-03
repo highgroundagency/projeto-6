@@ -1424,9 +1424,18 @@ html:fullscreen .ajuda-deck {
 
 /* O wireframe desenha com a hairline, que no escuro some numa tela
    compartilhada. Aqui o traço usa o cinza de texto: é remapeamento de token
-   dentro da caixa, não cor nova, e acompanha os dois temas. */
+   dentro da caixa, não cor nova, e acompanha os dois temas. As barras que
+   fazem papel de texto também usavam a hairline (1,28:1 no escuro) e sumiam
+   no PDF: ficam entre a hairline e o traço, mais fracas que ele. */
 .wireframe-sr1 {
   --color-linha-alta: var(--color-apagado);
+  --color-linha: color-mix(in srgb, var(--color-apagado) 60%, var(--color-fundo));
+}
+
+/* Um acento só, além do rodapé: as pílulas de quem falta, no painel da SEAB
+   (o terceiro desenho). Os outros três desenham o destaque em cinza. */
+.wireframe-sr1:not(:nth-child(3)) {
+  --color-acento: var(--color-apagado);
 }
 
 @media screen and (min-width: 1500px) and (min-height: 880px) {

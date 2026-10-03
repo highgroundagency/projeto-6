@@ -258,9 +258,9 @@ export async function TelaAnalytics() {
             >
               <span className="text-sm">{unidade.nome}</span>
               <span className="flex items-baseline gap-3 text-sm">
-                <Num>{(media * 100).toFixed(1)}%</Num>
+                <Num>{(media * 100).toFixed(1).replace('.', ',')}%</Num>
                 <span className="text-xs text-apagado">
-                  desvio <Num>{(desvio * 100).toFixed(1)}</Num> · <Num>{amostras}</Num> obs.
+                  desvio <Num>{(desvio * 100).toFixed(1).replace('.', ',')}</Num> · <Num>{amostras}</Num> obs.
                 </span>
                 <Etiqueta tom={media < 0.9 ? 'alerta' : 'neutro'}>
                   {media < 0.85 ? 'risco alto' : media < 0.95 ? 'atenção' : 'estável'}

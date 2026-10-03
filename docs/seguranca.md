@@ -107,7 +107,12 @@ O que importava era a **escrita em estado compartilhado**. Até a semana do SR1,
 `src/lib/sistema/estado.ts` guardava as alterações em variáveis de módulo, na memória do
 processo, e elas valiam para todos os visitantes daquela instância: o lançamento de um
 avaliador aparecia na tela do outro. **Antes do SR1, a escrita do protótipo passou a ser
-isolada por visitante:** cada visitante escreve numa cópia própria, em memória.
+isolada por visitante:** cada visitante escreve numa cópia própria. Desde 03/10 essa cópia
+sai de um diário no cookie `prumo_diario` do próprio navegador (ADR-048), e o cookie é
+**assinado** com HMAC-SHA256, com o segredo do painel em chave própria: quem edita o diário à
+mão perde a assinatura e volta para a base pura. Isso importa porque a credencial de avançar
+etapa fica na rota; um diário forjado seria um jeito de escrever pulando a rota. O diário
+também é validado por esquema, descompactado com teto de tamanho e limitado a cerca de 4 KB.
 
 Três ações escrevem, e elas não são equivalentes:
 
@@ -118,7 +123,8 @@ Três ações escrevem, e elas não são equivalentes:
 | Abrir contestação | Qualquer visitante | Mesma razão; entra na lista do ciclo |
 
 O risco residual é o de qualquer protótipo com escrita aberta: alguém enche de lançamentos
-a própria cópia. Some no reinício, aparece na trilha e não expõe ninguém.
+a própria cópia. Fica só no navegador dele, some quando ele fecha, aparece na trilha e não
+expõe ninguém. Quando o diário não cabe mais no cookie, a escrita é recusada com aviso.
 
 ## O link da vitrine pessoal como superfície de ataque
 
@@ -156,10 +162,10 @@ do site inteiro com data simulada. Régua igual à do resto:
 1. O seletor de perfil não é autenticação. Está rotulado como tal no código e na tela, mas
    num deploy público qualquer pessoa alterna entre os quatro perfis. A única credencial real
    do projeto é a sessão de admin, e ela não vem do seletor.
-2. A camada de escrita do sistema vive em memória: alterações se perdem no reinício e podem
-   não valer entre requisições em serverless. Lançamento e contestação seguem abertos a
-   qualquer visitante, por decisão, e desde a semana do SR1 caem numa cópia por visitante:
-   ver a tabela acima.
+2. A camada de escrita do sistema não tem banco: o que se escreve fica num diário assinado
+   no cookie do navegador e some quando ele fecha (ADR-048). Lançamento e contestação seguem
+   abertos a qualquer visitante, por decisão, e cada visitante só enxerga o que ele mesmo
+   escreveu: ver a tabela acima.
 3. Esconder o link do painel é redução de tropeço, não segurança. O repositório é público e
    este documento descreve o mecanismo; a proteção efetiva é `ADMIN_SENHA` trocada em produção.
 4. A CSP usa `'unsafe-inline'` em `script-src` e `style-src`. O próximo passo é nonce por

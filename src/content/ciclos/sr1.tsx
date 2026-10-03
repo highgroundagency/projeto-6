@@ -79,7 +79,7 @@ export const registro = {
     selo: 'rascunho',
     validadoPor: null,
     conteudo: [
-      'As perguntas 4 e 6 a 12 para a Secretaria continuam abertas. Sem elas, a regra não fica conferida até o SR1.',
+      'As perguntas 4 e 6 a 13 para a Secretaria continuam abertas. Sem elas, a regra não fica conferida até o SR1.',
     ],
   },
 
@@ -119,7 +119,8 @@ export const registro = {
       },
       {
         integrante: 'joao-pedro',
-        contribuicao: 'Vai mostrar as técnicas de ideação e explicar a demonstração ao vivo.',
+        contribuicao:
+          'Vai mostrar as técnicas de ideação e os protótipos, e explicar a demonstração ao vivo.',
       },
       {
         integrante: 'rafael',
@@ -129,7 +130,7 @@ export const registro = {
       {
         integrante: 'joao-henrique',
         contribuicao:
-          'Vai mostrar a solução, os protótipos e os diferenciais, e operar o sistema na demonstração.',
+          'Vai mostrar a solução e os diferenciais, e operar o sistema na demonstração.',
       },
       {
         integrante: 'fernando',
@@ -475,7 +476,7 @@ export const ITENS_OWASP = [
 
 export const LIMITACOES_DE_SEGURANCA = [
   'O seletor de perfil não é autenticação. Num site público, qualquer pessoa troca entre os quatro perfis. A única credencial real é a sessão de admin.',
-  'A escrita do sistema vive em memória. O que se grava some no reinício, e pode não valer entre duas requisições. Lançamento e contestação ficam abertos a qualquer visitante, por decisão, e desde a semana do SR1 cada visitante escreve numa cópia própria.',
+  'A escrita do sistema não tem banco. O que se grava fica num diário assinado no cookie do próprio navegador e some quando ele fecha. Até 03/10 ficava na memória do servidor, e na Vercel a página não enxergava o que a rota tinha gravado (ADR-048). Lançamento e contestação ficam abertos a qualquer visitante, por decisão, e cada visitante só vê o que ele mesmo escreveu.',
   'Esconder o link do painel reduz tropeço, não é segurança. A proteção real é trocar a senha em produção.',
   'A CSP usa unsafe-inline para script e estilo. O próximo passo é um nonce por requisição.',
   'Não há proteção CSRF além do cookie sameSite=lax. Basta para formulário da mesma origem, não para uma API pública.',
@@ -505,12 +506,13 @@ const BALANCO_DOS_COMPROMISSOS: Record<CicloDoCompromisso, Balanco> = {
   },
   s6: {
     estado: 'feito',
-    motivo: 'Quatro telas no ar desde 19/09. As oito, com a liberação desta semana.',
+    motivo:
+      'As três primeiras telas estão no ar desde 11/09, véspera do Kick-off. As oito, desde 25/09.',
     ajuste: 'Nenhum.',
   },
   sr1: {
     estado: 'não feito',
-    motivo: 'As perguntas 4 e 6 a 12 para a Secretaria continuam sem resposta.',
+    motivo: 'As perguntas 4 e 6 a 13 para a Secretaria continuam sem resposta.',
     ajuste:
       'Levar as perguntas por escrito antes do SR1. A conferência da conta fica na Semana 11.',
   },
@@ -764,7 +766,7 @@ export const documentos = [
     Conteudo: () => (
       <>
         <p>
-          A fonte é o arquivo docs/seguranca.md, escrito desde 16/08. Este documento transcreve
+          A fonte é o arquivo docs/seguranca.md, escrito desde 15/08. Este documento transcreve
           as tabelas dele para o site. Um teste confere que as contagens batem.
         </p>
         <div className="mt-4">

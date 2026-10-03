@@ -5,75 +5,88 @@ import type { Documento, RegistroSemana } from '@/lib/registro/tipos'
 /**
  * Semana 6: Pré-SR1. A semana vai de 26/09 a 02/10.
  *
- * PÚBLICA DESDE 19/09, pelo adiantamento de sete dias do motor de releases. E o
- * selo `rascunho` não aparece para ninguém (ADR-026): o visitante lê tudo aqui
- * como fato. Por isso a regra deste arquivo é dura. No passado só entra o que
- * já aconteceu, com data. O resto está escrito como plano, no presente ou no
- * futuro ("vamos fechar", "prepara").
+ * PÚBLICA PARA O VISITANTE DESDE 25/09. Pelo calendário seria 19/09, com o
+ * adiantamento de sete dias, mas a produção lia o adiantamento como zero até o
+ * deploy de 2aede44 (docs/releases.md). E o selo `rascunho` não aparece para
+ * ninguém (ADR-026): o visitante lê tudo aqui como fato. Por isso a regra deste
+ * arquivo é dura: só entra o que tem fonte no repositório, com data.
  *
- * Quando a semana acabar, alguém reescreve os blocos contra o que de fato
- * ocorreu e troca o selo por `validado`, com o nome de quem conferiu.
+ * REESCRITO E CONFERIDO EM 02/10, último dia da semana, a pedido do Gabriel. O
+ * que era plano ("vamos fechar o pacote", "vamos ensaiar") virou o que o
+ * repositório registra: a revisão do deck em 28/09 (ba7f393, ADR-047) e a
+ * Atividade 2 de Direito como documento do SR1. O ensaio e a conferência dos
+ * links no site publicado não têm registro, e por isso não entraram; quem
+ * ensaiar acrescenta a linha com a data e o tempo medido. Também mudaram: as
+ * oito telas (25/09, e não "com a liberação desta semana"), a data das análises
+ * de segurança e privacidade (15/08, commit 38cde3a), as decisões que
+ * descreviam o deck de 24/09 e a pergunta 13 nos bloqueios.
+ *
+ * Validados: objetivo, avanços, decisões, bloqueios, próximos passos e
+ * evidências. Em `rascunho`: o feedback, porque "nenhum" não se confere no
+ * repositório, e os responsáveis, que cada integrante confirma.
  */
 export const registro = {
   ciclo: 's6',
   marcador: 'PRUMO-MARCADOR-CICLO-s6',
 
   objetivo: {
-    selo: 'rascunho',
-    validadoPor: null,
+    selo: 'validado',
+    validadoPor: 'gabriel',
     conteudo:
       'Chegar ao SR1 com o protótipo navegável, o pacote de entrega fechado e a apresentação ensaiada pelos sete.',
   },
 
   avancos: {
-    selo: 'rascunho',
-    validadoPor: null,
+    selo: 'validado',
+    validadoPor: 'gabriel',
     conteudo: [
-      'Desde 19/09, quatro telas do sistema estão no ar: painel da SEAB, indicadores, lançamento e meu resultado.',
-      'Com a liberação desta semana, as oito telas ficam no ar. Entram a trilha de auditoria, o painel da gestão, analytics e contestação.',
-      'As análises de segurança e de privacidade existem desde 16/08. Agora a de segurança também está no site, no pacote do SR1.',
+      'Desde 25/09, as oito telas do sistema estão no ar. Naquele dia entraram juntas meu resultado, a trilha de auditoria, o painel da gestão, analytics e contestação.',
+      'As análises de segurança e de privacidade existem desde 15/08. Agora a de segurança também está no site, no pacote do SR1.',
       'Riscos, escopo revisado e backlog com estado viraram documentos desta semana. Antes, nenhum dos três estava no site.',
-      'Vamos fechar o pacote do SR1, conferindo cada link do mapa no site publicado.',
-      'Vamos montar e ensaiar a apresentação com os sete, de cronômetro na mão.',
       'As orientações do SR1 chegaram em 28/09: até 15 minutos, com seis critérios de conteúdo e a apresentação avaliada à parte. O deck foi refeito na ordem delas (ADR-047).',
+      'Em 28/09, o deck foi revisado como banca antes de ir para o Drive. As afirmações que o repositório não sustentava mudaram (ADR-047).',
+      'A Atividade 2 de Direito, com entrega em 28/09, virou documento do SR1: os requisitos de privacy by design, cada um com o estado no sistema.',
     ],
   },
 
   decisoes: {
-    selo: 'rascunho',
-    validadoPor: null,
+    selo: 'validado',
+    validadoPor: 'gabriel',
     conteudo: [
       {
-        decisao: 'A apresentação do SR1 abre pelo problema.',
+        decisao: 'A apresentação do SR1 segue a ordem das orientações e abre pelo problema.',
         porque:
-          'O problema é o que sustenta o projeto, como no Kick-off. A conta aberta vem logo depois, na demonstração.',
+          'O problema é o que sustenta o projeto, como no Kick-off, e a imersão no problema é o primeiro critério das orientações. A conta aberta aparece depois, na demonstração ao vivo.',
       },
       {
-        decisao: 'A arquitetura ganha um slide, com link para /arquitetura.',
+        decisao: 'A arquitetura não tem slide próprio no deck do SR1.',
         porque:
-          'O SR1 cobra evidência técnica. Os quatro níveis do C4 já estão no site, e o slide leva até eles.',
+          'Nenhum dos sete critérios das orientações de 28/09 é de arquitetura. O slide das disciplinas cita o C4 em quatro níveis, e o desenho fica em /arquitetura.',
       },
       {
-        decisao: 'O roteiro da apresentação sai do site.',
+        decisao: 'O roteiro da apresentação sai do registro da semana.',
         porque:
-          'Material de preparação não é entrega (ADR-040). O roteiro fica no repositório, em docs/pitch-sr1.md.',
+          'Material de preparação não é entrega (ADR-040). O roteiro fica em docs/pitch-sr1.md, e a fala de cada slide fica nas notas de /sr1.',
       },
     ],
   },
 
   bloqueios: {
-    selo: 'rascunho',
-    validadoPor: null,
+    selo: 'validado',
+    validadoPor: 'gabriel',
     conteudo: [
-      'As perguntas 4 e 6 a 12 para a Secretaria continuam abertas. Sem elas, os cortes das classes seguem como suposição.',
+      'As perguntas 4 e 6 a 13 para a Secretaria continuam abertas. Sem elas, os cortes das classes seguem como suposição, e falta a autorização por escrito para publicar a base por unidade.',
     ],
   },
 
+  /* "nenhum" fica em rascunho: a ausência de retorno não se confere no
+     repositório. As orientações de 28/09 são regra da avaliação, não retorno
+     sobre o projeto. */
   feedback: { selo: 'rascunho', validadoPor: null, conteudo: 'nenhum' },
 
   proximosPassos: {
-    selo: 'rascunho',
-    validadoPor: null,
+    selo: 'validado',
+    validadoPor: 'gabriel',
     conteudo: [
       'Apresentar o SR1.',
       'Anotar o retorno da banca no registro do SR1, dizendo de quem veio cada fala.',
@@ -81,6 +94,9 @@ export const registro = {
     ],
   },
 
+  /* Em rascunho até cada integrante confirmar a própria linha e passá-la para o
+     que de fato fez. A lista segue a frente de cada um (src/content/equipe.ts) e
+     a divisão da fala no deck do SR1 (src/content/apresentacao-sr1.ts). */
   responsaveis: {
     selo: 'rascunho',
     validadoPor: null,
@@ -108,15 +124,16 @@ export const registro = {
       },
       {
         integrante: 'rafael',
-        contribuicao: 'Prepara a parte da lente de ML na apresentação.',
+        contribuicao:
+          'Prepara os slides dos critérios da escolha, das quatro disciplinas e do balanço.',
       },
       { integrante: 'kerry', contribuicao: 'Apoia a síntese da pesquisa e o ensaio.' },
     ],
   },
 
   evidencias: {
-    selo: 'rascunho',
-    validadoPor: null,
+    selo: 'validado',
+    validadoPor: 'gabriel',
     conteudo: [
       { tipo: 'prototipo', rotulo: 'Protótipo navegável', url: '/sistema' },
       { tipo: 'documento', rotulo: 'Cronograma com responsável', url: '/#cronograma' },
@@ -143,8 +160,9 @@ export interface Risco {
  * O registro de riscos do Pré-SR1.
  *
  * Os nove primeiros vieram da auditoria de 24/09. Os três últimos, das
- * perguntas à banca e da ADR-043. "já acontece" quer dizer que o risco não é
- * hipótese: o fato já está no código ou no repositório.
+ * orientações de 28/09 (ADR-047), das perguntas à banca e da ADR-043. "já
+ * acontece" quer dizer que o risco não é hipótese: o fato já está no código ou
+ * no repositório.
  */
 export const RISCOS: readonly Risco[] = [
   {
@@ -178,7 +196,7 @@ export const RISCOS: readonly Risco[] = [
     probabilidade: 'já acontece',
     impacto: 'Alto: é uma regra da portaria, e a tela aceita pedido fora do prazo.',
     mitigacao:
-      'Dizer na tela que o prazo ainda não existe. Levar o prazo para a regra nas sprints.',
+      'A tela já diz que o prazo ainda não existe. Levar o prazo para a regra nas sprints.',
     dono: 'joao-henrique',
   },
   {
@@ -227,7 +245,7 @@ export const RISCOS: readonly Risco[] = [
     probabilidade: 'média',
     impacto: 'Alto: o que vem depois do corte não é avaliado.',
     mitigacao:
-      'O deck fecha em 11:50 de fala, com 3:10 de margem. Ensaiar os sete, com cronômetro e a demonstração inteira.',
+      'O deck fecha abaixo de 12 minutos de fala, com mais de 3 de margem. Ensaiar os sete, com cronômetro e a demonstração inteira.',
     dono: 'gabriel',
   },
   {
@@ -433,7 +451,7 @@ export const BACKLOG: readonly Historia[] = [
     historia: 'Administrador vê a linha do tempo de tudo o que aconteceu',
     moscow: 'M',
     estado: 'no_ar',
-    onde: 'Trilha de auditoria, no ar com a liberação desta semana',
+    onde: 'Trilha de auditoria, no ar desde 25/09',
   },
   {
     epico: 'Governança',
@@ -523,7 +541,11 @@ export const documentos = [
             ],
             [
               'Apresentação',
-              'Ensaiada pelos sete e cronometrada. Cabe no tempo que o professor confirmar',
+              'Ensaiada pelos sete e cronometrada. Fecha em até 13 minutos, dentro dos 15 das orientações de 28/09',
+            ],
+            [
+              'Slides no Drive',
+              'O PDF do deck na pasta da equipe, com cada slide numerado como atual/total',
             ],
           ]}
         />
@@ -550,7 +572,8 @@ export const documentos = [
           <Nota>
             “Já acontece” quer dizer que o risco não é hipótese: o fato já está no código ou no
             repositório. O dono segue a frente de cada um na equipe. As fontes são
-            docs/perguntas-para-a-sesau.md, docs/seguranca.md e as ADR-041 a ADR-044.
+            docs/perguntas-para-a-sesau.md, docs/perguntas-para-a-banca.md, docs/seguranca.md,
+            docs/privacidade.md e as ADR-041 a ADR-047.
           </Nota>
         </div>
       </>
@@ -593,7 +616,7 @@ export const documentos = [
                 ],
                 [
                   'A base por unidade da SESAU, só na lente de ML',
-                  'É dado da instituição, sem pessoa, com autorização',
+                  'É dado da instituição, sem nome, CPF, matrícula, e-mail ou telefone de ninguém, com autorização',
                   'ADR-043 e ADR-044',
                 ],
                 [
@@ -611,7 +634,7 @@ export const documentos = [
                 ['UPA e policlínica como tipos de unidade', 'Não estão na portaria', 'ADR-042'],
                 [
                   'O método antigo como regra dos meses novos',
-                  'A planilha mostrou que ele estava errado. Ele fica só para os meses já fechados',
+                  'A planilha mostrou que ele estava errado. Ele fica só para os meses até maio',
                   'ADR-041',
                 ],
                 [

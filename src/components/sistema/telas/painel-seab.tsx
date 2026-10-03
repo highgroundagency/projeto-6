@@ -42,9 +42,10 @@ export async function TelaPainelSeab({ ctx }: PropsTela) {
    *
    * Ver em que fase o ciclo está é informação do MVP; movê-lo não é. Até o SR1
    * o estado era um só para todos os visitantes, e um clique mudava a
-   * demonstração dos outros. Hoje o avanço cai na cópia de quem clicou
-   * (`sistema/estado.ts`), mas a credencial ficou: avançar etapa é da SEAB, e
-   * quem não é admin não vê o formulário nem qualquer menção a ele.
+   * demonstração dos outros. Hoje o avanço cai na cópia de quem clicou, no
+   * diário do cookie dele (`sistema/estado.ts`), mas a credencial ficou:
+   * avançar etapa é da SEAB, e quem não é admin não vê o formulário nem
+   * qualquer menção a ele.
    */
   const podeAgir = ctx.perfil === 'seab'
 

@@ -1203,9 +1203,11 @@ saem, porque a base nova é um retrato de um ciclo, não uma série.
 
 **Consequência.** A classificação e a regressão têm métrica alta porque o resultado geral é
 uma soma ponderada das mesmas notas, e os cadernos dizem isso em vez de vender previsão. A
-limpeza achou seis linhas de NDI e SAE em que a planilha soma o indicador 3 com peso 80% em
-vez de 20%; elas saem da modelagem. O slide 14 do Kick-off deixou de ler o JSON e guarda os
-números que mostrou naquele dia, para não passar a contradizer a própria frase.
+limpeza achou seis linhas de NDI e SAE que seguem outra conta: o resultado lançado é a soma dos
+pontos dividida por 1,7, e em cinco delas a planilha soma o indicador 3 com peso 80% em vez de
+20% (caderno 07, `linhas_fora_da_regra`); elas saem da modelagem. O slide 14 do Kick-off
+deixou de ler o JSON e guarda os números que mostrou naquele dia, para não passar a
+contradizer a própria frase.
 
 **O que se perdeu.** O vínculo com `src/lib/seed/`: o cálculo do app e a lente de ML agora
 falam de bases diferentes.
@@ -1347,7 +1349,8 @@ Pela rubrica, essas ausências custavam ponto em quatro dos seis critérios de c
    alternativas", o número vem da fonte, por extenso.
 4. **A versão de cinco minutos saiu.** Ela existia porque o tempo não estava confirmado. Agora
    está, e o deck fecha em 11:50 de fala, com 3:10 de margem para as trocas de quem fala, a
-   demonstração ao vivo e o nervoso do dia. `?versao=curta` cai no deck inteiro.
+   demonstração ao vivo e o nervoso do dia (11:59 e 3:01 depois da revisão de 03/10, item 9).
+   `?versao=curta` cai no deck inteiro.
 5. **Legível numa chamada de vídeo.** O SR1 herdou a escala compacta da AV1 de ML. Os ordinais
    saíram da cor da hairline (1,8:1) para o cinza de texto. O rótulo passou a 13px, o rodapé a
    14px e a posição atual/total a 16px, em cor de texto. O traço dos wireframes passou a usar o
@@ -1373,6 +1376,20 @@ Pela rubrica, essas ausências custavam ponto em quatro dos seis critérios de c
    andamento ganhou dono. A matriz CSD do Kick-off voltou à versão de 12/09, que tinha sido
    reescrita no lugar; a de 25/09 continua em `CSD_EM_25_09`. O slide 8 e o 19 ganharam cinco
    segundos cada, e o deck passou de 11:35 para 11:50 de fala.
+9. **A segunda revisão, de 03/10, véspera do SR1.** Quatro revisões independentes leram o PDF
+   como a banca, um critério por vez, e cada achado foi conferido no repositório antes de
+   entrar. O slide 3 diz que as seis unidades seguem "uma conta que a portaria não traz", e não
+   que erram, porque ainda não sabemos se é erro. Cada objetivo do slide 8 diz o próximo passo,
+   e o escopo usa "dado pessoal real", o mesmo termo da LGPD do slide 11. Cada técnica do slide
+   9 diz como funciona. A aderência ganhou o porquê no slide 10. O cartão de Direito ganhou a
+   base legal e a Atividade 2. O slide 15 passou a ter o mesmo trio do benchmarking do slide 7:
+   conta aberta, regra com versão e registro de quem mudou. Os wireframes dizem a decisão que
+   cada um fixa, e as barras deixaram de sumir no escuro. O slide 19 diz, calculado, quem fica
+   fora da tabela e por quê. O slide 20 compara os 55% com os 61% que o plano pedia. O
+   fechamento diz os próximos passos com data. Nomes próprios e siglas voltaram à forma certa,
+   e o sistema passou a escrever número com vírgula. O slide 13 passou para o João Pedro, que
+   segue no 14, e o João Henrique ganha o tempo de abrir o sistema. O deck foi de 11:50 para
+   11:59 de fala. A mesma revisão achou o defeito da demonstração ao vivo (ADR-048).
 
 **Consequência.** Cada critério da rubrica tem slide próprio, e a banca confere a cobertura
 pelo rodapé. A relação entre problema, solução e plano, que as orientações pedem, está dita em
@@ -1386,3 +1403,48 @@ pessoas. Isso é verdade no checklist, e o tratamento está no mesmo slide. Algu
 equipe resolve, e continuam abertas: salvar o PDF no Drive e preencher a variável na Vercel,
 publicar o registro da sessão de ideação, validar os registros das semanas 5 e 6 e ensaiar com
 cronômetro.
+
+## ADR-048 · A escrita do protótipo vai num diário assinado no cookie, porque na Vercel a rota e a página são funções diferentes
+
+**Contexto.** Desde 25/09 (ADR-046) cada visitante escreve numa cópia própria, guardada num `Map`
+do módulo `src/lib/sistema/estado.ts` e achada por um id aleatório no cookie. A ADR-046 já
+admitia que, em serverless, a cópia "pode nem valer entre duas requisições". Na revisão de
+03/10, véspera do SR1, ficou claro que o caminho da demonstração ao vivo nunca tinha rodado em
+produção. O build da Vercel (`vercel build`, em `.vercel/output/functions`) mostra o porquê: as
+rotas `/api/sistema/lancamento`, `/api/sistema/ciclo` e `/api/sistema/contestacao` apontam para
+um grupo de funções, e a página `/sistema`, para outro. A memória de um não chega ao outro.
+
+Reproduzimos com dois `next start`, um só para `/api` e outro só para as páginas, atrás de um
+proxy. A versão que estava em produção (8a36db8) falha os dois testes da demonstração: aparece
+"Lançamento registrado.", e o campo volta vazio (esperado 170, recebido vazio). Os testes de
+ponta a ponta não pegavam porque `next start` é um processo só.
+
+**Decisão.** A cópia passa a ser refeita a cada requisição a partir de um **diário**: a lista, em
+ordem, das escritas que mudaram a cópia (lançar, avançar etapa e contestar, inclusive a
+tentativa recusada que fica na trilha), cada uma com a hora gravada. O diário viaja no cookie
+`prumo_diario` do próprio navegador (`src/lib/sistema/visitante.ts`).
+
+1. **Assinado** com HMAC-SHA256, com o segredo do painel numa chave própria (`:diario`). Um
+   token de um não serve no lugar do outro, e um diário editado à mão volta para a base pura.
+   Isso importa porque a credencial de avançar etapa fica na rota, e um diário forjado seria
+   escrita pulando a rota.
+2. **Compactado** (deflate) e **validado** por esquema, com teto de descompactação.
+3. **Com teto** de 3.800 caracteres. A demonstração inteira usa menos da metade. Quando o diário
+   não cabe mais, a escrita é recusada com aviso, nunca perdida calada.
+4. **Sem prazo**: é cookie de sessão. A cópia some quando o navegador fecha.
+5. **Mesma cópia em qualquer lugar.** O motor é função pura e a hora vem do diário, então refazer
+   dá sempre a mesma cópia, com os mesmos ids. `estadoDo(sessao)` substitui
+   `estadoDo(visitante)`, e as telas não mudaram: o contrato de `RepositorioDados` é o mesmo.
+
+**Como se prova.** Um teste refaz a demonstração do SR1 só com o diário, como faz a página na
+Vercel, e compara a cópia, os ids e as notas. A suíte de ponta a ponta passou inteira com rotas e
+páginas em processos separados atrás do proxy.
+
+**Consequência.** Qualquer instância de qualquer função enxerga a mesma cópia, e a demonstração do
+slide 14 não depende de sorte. O "pode não valer entre requisições" da ADR-046 deixa de valer, e
+o teto de 100 visitantes em memória saiu: não há mais memória por visitante no servidor.
+
+**O que se perdeu.** O cookie cresce com o que se escreve, e uma sessão longa chega ao teto. Duas
+abas escrevendo ao mesmo tempo podem perder uma escrita, e vale a última. O diário depende de
+`ADMIN_COOKIE_SECRET`, que produção já tem; sem o segredo, a escrita não grava. Durar de verdade,
+para todo mundo, continua sendo papel do banco (ADR-011 e ADR-012).

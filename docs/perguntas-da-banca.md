@@ -31,7 +31,7 @@ A Secretaria de Saúde do Recife (SESAU). Dentro dela, a SEAB e a SECOGE. Falamo
 Mapeamos cinco etapas, e cada uma tem um furo: o número chega sem conferência, alguém copia à mão para a planilha mestre, a regra fica escondida na fórmula da célula, a conferência não deixa rastro, e a contestação vira troca de e-mail. O pior: ninguém consegue refazer o caminho de um número depois. Em 22/09 a própria Secretaria resumiu: "é tudo manual, via procv e afins".
 
 **Como vocês sabem que o problema existe, e não é impressão?**
-Quatro fontes, com data. A portaria oficial, publicada no Diário Oficial do Recife em 21/09/2024. O caso escrito pela escola com o órgão. A reunião de 22 de agosto, que virou ata no site. E a planilha que a Secretaria usa hoje, enviada em 22/09.
+Cinco fontes, com data, as do slide 4. A portaria oficial, publicada no Diário Oficial do Recife em 21/09/2024. O caso escrito pela escola com o órgão. A reunião de 22 de agosto, que virou ata no site. A planilha que a Secretaria usa hoje, enviada em 22/09. E a base de desempenho por unidade, em 23/09.
 
 **⚠ O que a planilha deles mostrou?**
 Que a conta de hoje não é uma só. A base por unidade que a lente de ML lê tem 244 linhas: 48 de distrito e 196 de unidade. Das 196, 190 seguem a régua da portaria. As outras 6, todas de NDI e SAE, seguem outra conta: o resultado é a soma dos pontos dividida por 1,7. E as linhas de distrito usam uma função que só existe no Google Planilhas: abertas no Excel, não recalculam. Os números estão nos slides de `/ml`, lidos do caderno 07.
@@ -40,7 +40,7 @@ Que a conta de hoje não é uma só. A base por unidade que a lente de ML lê te
 Cinco indicadores, com peso que muda conforme a função. Ciclo mensal, prazos para enviar e para recorrer. Ela confirmou o nosso desenho e corrigiu dois pontos: a média é das notas, não dos valores, e o indicador sem número sai da conta e leva o peso junto. Os dois estão no motor desde 23/09, na versão 3 da regra.
 
 **⚠ Vocês já conferiram se a conta de vocês bate com a conta real da Secretaria?**
-Em parte, e é a principal coisa que falta. Lemos a planilha deles fórmula a fórmula em 22/09, e o método da versão 3 saiu dela. Mas, até 25/09, nenhum teste confere o nosso motor contra linhas da planilha. Os oito indicadores do sistema ainda são de teste, e os cortes das classes e os percentuais do bônus são suposição nossa. Conferir a regra com a Secretaria foi compromisso do Kick-off para o SR1. As perguntas que decidem isso seguem abertas: 4 e 6 a 12 de `docs/perguntas-para-a-sesau.md`.
+Em parte, e é a principal coisa que falta. Lemos a planilha deles fórmula a fórmula em 22/09, e o método da versão 3 saiu dela. Mas, até 25/09, nenhum teste confere o nosso motor contra linhas da planilha. Os oito indicadores do sistema ainda são de teste, e os cortes das classes e os percentuais do bônus são suposição nossa. Conferir a regra com a Secretaria foi compromisso do Kick-off para o SR1. As perguntas que decidem isso seguem abertas: 4 e 6 a 13 de `docs/perguntas-para-a-sesau.md`.
 
 **⚠ Qual o tamanho do problema? Quantos gestores, quanto dinheiro?**
 Dinheiro e número de gestores, não temos, e não vamos chutar. O que sabemos: são cinco indicadores, a conta repete todo mês, e a base por unidade que a Secretaria mandou tem 196 unidades em oito distritos. A base do sistema é pequena de propósito: três distritos e doze unidades, para provar que a conta fecha.
@@ -54,13 +54,13 @@ Os tipos, sim. Os indicadores, não. Desde 23/09 o sistema usa os sete tipos da 
 Comparamos cinco tipos de ferramenta: painéis públicos, sistemas de metas do SUS, duas ferramentas de OKR e a planilha de hoje. Cada uma resolve um pedaço. Nenhuma junta as três coisas que este caso precisa: regra com versão, conta aberta e registro de quem mudou.
 
 **⚠ Vocês entrevistaram a analista da comissão para fazer as personas?**
-Não. As três personas saíram dos papéis descritos no caso e são personagens fictícios. A conversa foi com o representante do órgão. A entrevista com quem opera o processo está marcada para a Semana 11. Até lá, persona é hipótese declarada, não retrato de alguém.
+Não. As três personas saíram dos papéis descritos no caso e são personagens fictícios. A conversa foi com o representante do órgão. A entrevista com quem opera o processo está planejada para a Semana 11, e a data ainda vai ser pedida à Secretaria. Até lá, persona é hipótese declarada, não retrato de alguém.
 
 **⚠ Por que o benchmarking não cita nenhum produto pelo nome?**
 Porque comparamos categorias de ferramenta, não produtos. Nomear produto por produto exigiria um levantamento que não fizemos. Isso está escrito como bloqueio no site, não escondido.
 
 **Quando a matriz CSD foi feita?**
-Na semana do Kick-off, e o documento diz essa data. O conteúdo já existia espalhado pelo projeto; faltava juntar. Em 23/09 ela foi atualizada com o que a planilha respondeu: duas suposições viraram certeza, e a dúvida do art. 8º foi respondida.
+Na semana do Kick-off, e o documento diz essa data. O conteúdo já existia espalhado pelo projeto; faltava juntar. Em 25/09 ela foi atualizada com a planilha e a base: a dúvida do art. 8º foi respondida, uma suposição virou certeza e outra caiu.
 
 **Qual a diferença entre suposição e dúvida na matriz?**
 Suposição é o que assumimos para conseguir andar, e está declarado até dentro do código. Exemplo: que a nota do distrito é a média simples das unidades. Dúvida é o que ainda vamos perguntar à Secretaria. Exemplo: por que existe um peso em vigor diferente do peso da portaria.
@@ -198,7 +198,7 @@ Bastante, e está tudo escrito: o registro de uso de IA tinha 61 linhas até 23/
 Tudo declarado. As respostas da Secretaria que decidem a régua: os cortes das classes, o decreto dos percentuais e o Indicador 3 bimestral. Os cinco indicadores reais e o porte. O teste do motor contra a planilha deles. A autorização por escrito para publicar a base. O ensaio do SR1 com cronômetro. A foto da dinâmica de ideação, o benchmarking sem produtos e o link do Drive. A lista de riscos está publicada no registro.
 
 **Como vão validar com o cliente?**
-Semana 11, dia 21 de novembro. Entrevista de 45 minutos, com 15 de demonstração em que a pessoa faz quatro tarefas sozinha. Depois, um questionário. Os critérios de sucesso foram fixados antes de coletar.
+Na Semana 11, 21 de novembro no nosso cronograma, com a data ainda a confirmar com a Secretaria. Entrevista de 45 minutos, com 15 de demonstração em que a pessoa faz quatro tarefas sozinha. Depois, um questionário. Os critérios de sucesso foram fixados antes de coletar.
 
 **⚠ E se a Secretaria não abrir agenda?**
 O risco está na lista de riscos do registro, e o único mitigador é marcar com antecedência. O canal já funcionou três vezes: a reunião de agosto, a portaria em 5 de setembro e a planilha em 22 de setembro.
@@ -218,7 +218,7 @@ Não, por três coisas que planilha não faz. A regra é guardada com versão. T
 Plano de manutenção escrito não temos, e seria fácil inventar um agora. O que existe: repositório público, cada decisão com o porquê, testes que quebram quando alguém erra, e a lista do que falta para virar produção. Já houve uma tentativa anterior de automatizar essa conta e ela parou. É esse risco que o registro tenta reduzir.
 
 **⚠ Vocês testaram com usuário de verdade?**
-Com quem opera o processo na Secretaria, ainda não. Está marcado para a Semana 11. Já houve retorno de quem usou o site, e ele mudou o produto duas vezes: a navegação foi refeita e a linguagem foi simplificada.
+Com quem opera o processo na Secretaria, ainda não. Está planejado para a Semana 11, com a data ainda a pedir. Já houve retorno de quem usou o site, e ele mudou o produto duas vezes: a navegação foi refeita e a linguagem foi simplificada.
 
 **⚠ Qual a chance real de a prefeitura usar isso?**
 Não temos promessa de adoção, e não vamos fingir. O que temos é conversa real: a reunião de agosto mudou o sistema, e em setembro eles mandaram a portaria e, duas vezes, a planilha que usam. Para virar uso de verdade falta banco ligado, login institucional e a conferência da nossa conta com a deles.
