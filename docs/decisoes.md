@@ -1493,3 +1493,44 @@ Entram na ordem das sprints junto com o resto, quando a Semana 7 reordenar o bac
 **Consequência.** O avanço do backlog continua 17 de 26, o número do SR1, e o deck e o PDF não
 mudaram. A data "16/08" que aparece em várias linhas é a do commit mais antigo que o Git guarda:
 a função pode ser mais velha, nunca mais nova.
+
+## ADR-050 · A pasta do Drive é uma cópia do site, gerada pelo repositório
+
+**Contexto.** A equipe tem uma pasta no Google Drive, aberta para edição, e o professor está
+criando a da turma. Ela precisa ter as entregas. O site continua sendo a entrega (regra 5,
+ADR-019): documento é TSX, lido na própria página. Copiar cada documento à mão, toda semana,
+seria trabalho repetido e um segundo lugar para o texto divergir do site.
+
+**Decisão.** `npm run drive` gera a cópia a partir do mesmo conteúdo que o site renderiza:
+
+1. **Só o que o visitante vê.** Os ciclos saem do motor de releases, com as travas
+   versionadas, na data de hoje em Recife. A janela de vitrine não conta: ela abre o site
+   inteiro por um prazo, e a pasta receberia semanas que ainda não aconteceram.
+2. **Uma pasta por ciclo, numerada na ordem do cronograma**, de `01 Semana 1: Partida` a
+   `15 SR2: Final`. Os imprensados não têm pasta. Dentro, `00 Diário de bordo` traz os oito
+   blocos do cartão da semana, e os documentos vêm numerados na ordem do site. Cada arquivo
+   abre com o link para o original.
+3. **HTML que o Google converte em Google Doc.** Sem classe e sem SVG. Desenho não passa para
+   o Docs, e o documento que tinha um avisa que ele está no original.
+4. **Os slides vão em PDF, na pasta da semana em que foram apresentados.** Kick-off em
+   `05 Kick-off`. SR1 e AV1 de ML em `08 SR1`: a AV1 foi em 30/09, na semana do SR1, e é o
+   registro do SR1 que aponta para `/ml`. Sem número no nome, ficam no fim da pasta.
+5. **O que mudou ganha versão nova, e nada se apaga.** `--desde <commit>` gera de novo a cópia
+   daquele commit, numa worktree temporária e com o script atual, e marca cada arquivo como
+   novo, mudou ou igual. O arquivo que mudou entra como Google Doc novo, e o antigo vai para
+   `Versões anteriores`, dentro da pasta do ciclo. O commit da última cópia fica no título do
+   `Leia-me`, na raiz da pasta.
+
+**Os IDs das pastas ficam fora do repositório.** A pasta da equipe é editável por qualquer
+pessoa com o link, e o repositório é público: um ID versionado aqui seria a chave da pasta.
+
+**Quem sobe.** Uma rotina do Claude Code, todo sábado de manhã, depois da liberação das 00:00:
+roda o script com `--desde`, sobe pelo conector do Google Drive o que é novo ou mudou e
+atualiza o título do Leia-me. Os PDFs ela não sobe: o conector recebe o arquivo inteiro dentro
+de uma chamada, e um deck de mais de 200 KB não cabe. Quando um PDF falta ou muda, a rotina
+avisa, e alguém da equipe arrasta o arquivo para a pasta.
+
+**Consequência.** O Drive nunca vale mais que o site, e cada arquivo diz isso no topo. Mudar o
+formato da cópia não gera versão nova de nada, porque as duas pontas da comparação saem do
+mesmo script. Se a disciplina pedir a pasta do professor, a mesma cópia sobe lá: muda só o
+destino.

@@ -3519,6 +3519,7 @@ Os porquês completos estão em `docs/decisoes.md`. Os títulos, aqui:
   - ADR-048 · A escrita do protótipo vai num diário assinado no cookie, porque na Vercel a
     rota e a página são funções diferentes
   - ADR-049 · O que o sistema fazia sem história virou história, fora da conta das 26
+  - ADR-050 · A pasta do Drive é uma cópia do site, gerada pelo repositório
 
 ============================================================================================
 13.  COMO RODAR E COMO CONFERIR
@@ -3539,6 +3540,7 @@ Os porquês completos estão em `docs/decisoes.md`. Os títulos, aqui:
   npm run pitch-pdf              tsx scripts/pitch-pdf.ts
   npm run dossie                 tsx --tsconfig scripts/tsconfig.dossie.json scripts/dossie.ts
   npm run conferir-dossie        tsx --tsconfig scripts/tsconfig.dossie.json scripts/dossie.ts --conferir
+  npm run drive                  tsx --tsconfig scripts/tsconfig.dossie.json scripts/drive.ts
   npm run verificar              npm run typecheck && npm run test && npm run build && npm run verificar-vazamento && npm run conferir-dossie
 
 

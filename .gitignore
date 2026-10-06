@@ -59,3 +59,6 @@ __pycache__/
 
 # Worktrees dos agentes do Claude Code: cópias locais, nunca versionadas.
 /.claude/worktrees/
+
+# Cópia para a pasta do Drive, gerada por `npm run drive` (ADR-050)
+/drive/
