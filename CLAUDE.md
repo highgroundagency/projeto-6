@@ -152,6 +152,7 @@ execução.
 | `npm run verificar-vazamento` | Prova que conteúdo futuro não vaza (exige `npm run build` antes) |
 | `npm run roteiro` | Regenera a seção slide a slide de `docs/pitch-kickoff.md`, `docs/ml-av1.md` e `docs/pitch-sr1.md` a partir do conteúdo dos decks |
 | `npm run pitch-pdf` | Gera `docs/pitch-kickoff.pdf` e as capturas de `docs/pitch/` a partir de `/pitch`; com `-- ml`, `docs/ml-av1.pdf` e `docs/ml-av1/` a partir de `/ml`; com `-- sr1`, `docs/sr1.pdf` e `docs/sr1/` a partir de `/sr1` (exige `npm run build` antes) |
+| `npm run drive` | Gera em `drive/` a cópia para a pasta do Google Drive, só do que o visitante vê; com `-- --desde <commit>`, marca o que mudou desde a última cópia (ADR-050) |
 | `npm run e2e` | Playwright |
 | `npm run testar-rls` | Políticas do schema guardado contra um Postgres real (exige `DATABASE_URL_TESTE`) |
 | `npm run semear` | Semeia a base sintética num Postgres com o schema aplicado (exige `DATABASE_URL`) |

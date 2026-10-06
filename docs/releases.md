@@ -147,3 +147,16 @@ npm run verificar-vazamento
 O script sobe o servidor de produção e confere que nenhum marcador de ciclo não liberado
 aparece no HTML, no payload RSC ou em `.next/static`, que cada rota de funcionalidade não
 liberada responde 404, e que o admin continua vendo tudo.
+
+## A cópia na pasta do Drive
+
+```bash
+npm run drive                      # o que o visitante vê hoje
+npm run drive -- --desde <commit>  # e o que mudou desde a última cópia
+```
+
+Escreve em `drive/`, fora do Git, um HTML por arquivo e o `manifesto.json`: a pasta de cada
+ciclo, o nome de cada Google Doc, os slides em PDF da semana, o hash e, com `--desde`, o estado
+de cada um. A pasta do Drive segue o mesmo release do site, então um ciclo só aparece lá depois
+de liberado aqui. O commit da última cópia fica no título do `Leia-me` da pasta, e os IDs das
+pastas não entram no repositório. O porquê está na ADR-050.
