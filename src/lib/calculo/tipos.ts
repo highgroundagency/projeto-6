@@ -399,6 +399,12 @@ export type TipoEvento =
   | 'avaliacao_calculada'
   | 'contestacao_aberta'
   | 'contestacao_respondida'
+  /**
+   * Cada download do CSV do painel da gestão: quem, quando, qual recorte e
+   * quantas linhas (risco 7 da Atividade 2 de Direito). Só existe no app, como
+   * `lancamento_recusado`.
+   */
+  | 'exportacao_gerada'
 
 /** Trilha append-only: nada se apaga, tudo guarda o antes e o depois. */
 export interface EventoAuditoria {
@@ -424,4 +430,6 @@ export interface Contestacao {
   readonly abertaEm: string
   readonly status: StatusContestacao
   readonly resposta: string | null
+  /** Quando a SEAB respondeu. Ausente nos pedidos da base, que não guardam a hora. */
+  readonly respondidaEm?: string
 }

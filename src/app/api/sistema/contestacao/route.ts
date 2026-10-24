@@ -58,7 +58,9 @@ export async function POST(requisicao: NextRequest) {
   if (!panorama.gerentePorId(dados.gerenteId) || !ciclo) {
     return redirecionar(deVolta(undefined, { erro: 'Gerente ou ciclo desconhecido.' }))
   }
-  // Contesta-se um RESULTADO, e resultado só existe em mês fechado.
+  // Contesta-se um RESULTADO PUBLICADO, dentro do prazo do art. 9º. As duas
+  // coisas são cobradas na camada de escrita (`sistema/estado.ts`), que é o
+  // caminho de qualquer rota: aqui só se recusa cedo o que nem tem nota.
   if (ciclo.estado !== 'homologado' && ciclo.estado !== 'publicado') {
     return redirecionar(
       deVolta(dados.gerenteId, { erro: 'Só dá para contestar um mês já fechado.' }),

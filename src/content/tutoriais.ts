@@ -89,7 +89,7 @@ export const TUTORIAIS: Record<PerfilId, Tutorial> = {
       {
         titulo: 'Veja o resumo geral',
         oQueFazer:
-          'Escolha o mês e o distrito, ligue "esconder os nomes" se for apresentar em público, e baixe a planilha se precisar.',
+          'Escolha o mês e o distrito e baixe a planilha se precisar. O ranking já abre sem nomes, pronto para projetar; "mostrar os nomes" é escolha sua, e cada planilha baixada fica no histórico.',
         porque:
           'O resumo é o que vai para a reunião de gestão. A nota de cada distrito é a média das unidades dele, que é a nota do gerente distrital.',
         tela: 'painel-gestao',
@@ -107,9 +107,9 @@ export const TUTORIAIS: Record<PerfilId, Tutorial> = {
       {
         titulo: 'Acompanhe quem discordou',
         oQueFazer:
-          'Aqui ficam os pedidos de revisão, com a situação e a resposta de cada um. No protótipo as respostas vêm da base de exemplo; o formulário de responder entra com a persistência real.',
+          'Aqui ficam os pedidos de revisão, com a situação, o prazo e a resposta de cada um. Os que esperam resposta aparecem no alto: escreva a decisão, acate ou recuse, e ela chega ao gerente na hora.',
         porque:
-          'Pedido sem resposta escrita é caixa de sugestões. A resposta fica guardada junto do pedido, para sempre.',
+          'Pedido sem resposta escrita é caixa de sugestões. A portaria dá 5 dias úteis para responder, e a resposta fica guardada junto do pedido, para sempre.',
         tela: 'contestacao',
         alvo: 'cont-lista',
       },
@@ -211,9 +211,9 @@ export const TUTORIAIS: Record<PerfilId, Tutorial> = {
       {
         titulo: 'Discorde, se for o caso',
         oQueFazer:
-          'Abra uma contestação, diga qual indicador (ou a nota toda) e escreva o motivo.',
+          'Abra uma contestação, diga qual indicador (ou a nota toda) e escreva o motivo. Cada mês mostra até quando ainda aceita pedido.',
         porque:
-          'Discordar deixa de ser telefonema e vira pedido registrado, com data. O prazo da portaria e a resposta por escrito ainda vão entrar no sistema.',
+          'Discordar deixa de ser telefonema e vira pedido registrado, com data. A portaria dá 10 dias depois da publicação para pedir e 5 dias úteis para a SEAB responder, e o sistema cobra os dois.',
         tela: 'contestacao',
         alvo: 'cont-abrir',
       },
@@ -273,7 +273,7 @@ export const TUTORIAIS: Record<PerfilId, Tutorial> = {
         oQueFazer:
           'Clique em "abrir contestação", diga qual indicador (ou a nota toda) e escreva o motivo.',
         porque:
-          'Discordar deixa de ser telefonema e vira pedido registrado, com data. É um direito seu. O prazo da portaria e a resposta por escrito ainda vão entrar no sistema.',
+          'Discordar deixa de ser telefonema e vira pedido registrado, com data. É um direito seu: são 10 dias depois da publicação do mês, e a resposta da SEAB chega por escrito, aqui mesmo.',
         tela: 'contestacao',
         alvo: 'cont-abrir',
       },

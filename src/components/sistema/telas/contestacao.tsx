@@ -1,4 +1,4 @@
-import { MessageSquarePlus, MessagesSquare } from 'lucide-react'
+import { MessageSquarePlus, MessagesSquare, Reply } from 'lucide-react'
 import { Botao } from '@/components/base/botao'
 import { Num } from '@/components/base/num'
 import { Etiqueta } from '@/components/base/selo'
@@ -7,6 +7,13 @@ import { mensagemDe, type PropsTela } from '@/components/sistema/telas/tipos'
 import type { StatusContestacao } from '@/lib/calculo/tipos'
 import { repositorio } from '@/lib/dados'
 import { carregarDados } from '@/lib/dados/consultas'
+import { formatarBR, hojeEmRecife } from '@/lib/datas'
+import {
+  DIAS_PARA_CONTESTAR,
+  DIAS_UTEIS_PARA_RESPONDER,
+  prazoParaResponder,
+  situacaoParaContestar,
+} from '@/lib/sistema/prazos'
 
 const TOM: Record<StatusContestacao, 'neutro' | 'acento' | 'ok' | 'alerta'> = {
   aberta: 'acento',
@@ -47,6 +54,20 @@ export async function TelaContestacao({ ctx }: PropsTela) {
   const todas = await repositorio().contestacoes()
   const minhas = todas.filter((c) => c.gerenteId === gerente.id)
   const podeAbrir = ctx.perfil !== 'administrador'
+  const respondeAqui = ctx.perfil === 'seab'
+  const aguardando = todas.filter((c) => c.status === 'aberta' || c.status === 'em_analise')
+
+  // O prazo de cada mês, dito na opção do seletor. A tela só informa: quem
+  // cobra é a camada de escrita, com a hora do pedido.
+  const publicacoes = await repositorio().publicacoes()
+  const hoje = hojeEmRecife()
+  const situacaoDoMes = (cicloId: string): string => {
+    const prazo = situacaoParaContestar(publicacoes[cicloId] ?? null, hoje)
+    if (prazo.aberto) return `prazo até ${formatarBR(prazo.ate)}`
+    return prazo.motivo === 'nao_publicado' ? 'ainda não publicado' : 'prazo encerrado'
+  }
+  const prazoDaResposta = (abertaEm: string) =>
+    formatarBR(prazoParaResponder(hojeEmRecife(new Date(abertaEm))))
 
   return (
     <>
@@ -61,22 +82,22 @@ export async function TelaContestacao({ ctx }: PropsTela) {
         </div>
       ) : null}
 
-      {/* O que a tela NÃO faz, dito antes do formulário. A portaria (art. 9º)
-          dá 10 dias corridos da publicação para recorrer e 5 dias úteis para a
-          comissão responder. Nada disso está implementado ainda: o pedido entra
-          em qualquer mês fechado, a qualquer tempo, e ninguém responde por aqui. */}
+      {/* O art. 9º, cobrado desde a Sprint 2: 10 dias corridos da publicação
+          para pedir, 5 dias úteis do pedido para a SEAB responder. Feriado não
+          entra na conta, e a tela diz isso (ver `sistema/prazos.ts`). */}
       <div className="mb-5">
         <Aviso>
-          O prazo do art. 9º da portaria ainda não está no sistema. Pela portaria, o recurso
-          vai em até 10 dias corridos da publicação. Aqui o pedido entra em qualquer mês
-          fechado, a qualquer tempo. Responder por escrito também ainda não foi construído: as
-          respostas da lista são da base de teste.
+          Pelo art. 9º da portaria, o pedido vai em até {DIAS_PARA_CONTESTAR} dias corridos da
+          publicação do mês, e a SEAB responde por escrito em até {DIAS_UTEIS_PARA_RESPONDER}{' '}
+          dias úteis. Fora do prazo, o sistema não aceita o pedido. Os feriados ainda não entram
+          na conta dos dias úteis.
         </Aviso>
       </div>
 
       <Painel
         alvo="cont-abrir"
-        titulo="Pedir revisão da nota" icone={MessageSquarePlus}
+        titulo="Pedir revisão da nota"
+        icone={MessageSquarePlus}
         descricao="O pedido não muda a nota na hora. Ele fica registrado, com data, na lista abaixo e no histórico. Neste protótipo você escolhe um gerente de exemplo, e o pedido fica só na sua sessão de teste."
       >
         <form action="/api/sistema/contestacao" method="post" className="space-y-3">
@@ -111,7 +132,7 @@ export async function TelaContestacao({ ctx }: PropsTela) {
               >
                 {fechados.map((c) => (
                   <option key={c.id} value={c.id}>
-                    {c.competencia}
+                    {c.competencia}: {situacaoDoMes(c.id)}
                   </option>
                 ))}
               </select>
@@ -173,9 +194,78 @@ export async function TelaContestacao({ ctx }: PropsTela) {
         </form>
       </Painel>
 
+      {respondeAqui ? (
+        <Painel
+          alvo="cont-responder"
+          titulo="Pedidos à espera de resposta"
+          icone={Reply}
+          descricao={`Todos os pedidos ainda sem resposta, de qualquer gerente. A resposta é por escrito, fica com o pedido e entra no histórico. ${aguardando.length} na fila.`}
+        >
+          {aguardando.length === 0 ? (
+            <p className="text-sm text-apagado">Nenhum pedido esperando resposta.</p>
+          ) : (
+            <ul className="divide-y divide-linha border-y border-linha">
+              {aguardando.map((pedido) => (
+                <li key={pedido.id} className="py-3">
+                  <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+                    <span className="text-sm">
+                      {dados.gerentePorId(pedido.gerenteId)?.nome ?? pedido.gerenteId}
+                    </span>
+                    <Num className="text-xs">
+                      mês {dados.cicloPorId(pedido.cicloId)?.competencia}
+                    </Num>
+                    <Num className="text-xs text-apagado">
+                      responder até {prazoDaResposta(pedido.abertaEm)}
+                    </Num>
+                  </div>
+                  <p className="mt-1 text-sm">{pedido.motivo}</p>
+                  <form
+                    action="/api/sistema/contestacao/responder"
+                    method="post"
+                    className="mt-2 space-y-2"
+                  >
+                    <input type="hidden" name="contestacaoId" value={pedido.id} />
+                    <input type="hidden" name="gerenteId" value={pedido.gerenteId} />
+                    <div>
+                      <label htmlFor={`texto-${pedido.id}`} className="rotulo">
+                        Resposta
+                      </label>
+                      <textarea
+                        id={`texto-${pedido.id}`}
+                        name="texto"
+                        required
+                        minLength={20}
+                        maxLength={1000}
+                        rows={3}
+                        placeholder="Explique a decisão para quem pediu a revisão."
+                        className="mt-1 w-full border border-linha px-2 py-1.5 text-sm"
+                      />
+                    </div>
+                    <div className="flex flex-wrap items-center gap-3">
+                      <label className="flex items-center gap-2 text-sm">
+                        <input type="radio" name="decisao" value="acatada" required />
+                        acatar
+                      </label>
+                      <label className="flex items-center gap-2 text-sm">
+                        <input type="radio" name="decisao" value="recusada" />
+                        recusar
+                      </label>
+                      <Botao type="submit" variante="contorno">
+                        Responder
+                      </Botao>
+                    </div>
+                  </form>
+                </li>
+              ))}
+            </ul>
+          )}
+        </Painel>
+      ) : null}
+
       <Painel
         alvo="cont-lista"
-        titulo={`Contestações de ${gerente.nome}`} icone={MessagesSquare}
+        titulo={`Contestações de ${gerente.nome}`}
+        icone={MessagesSquare}
         descricao={`Os pedidos deste gerente, com a situação de cada um. ${minhas.length} de ${todas.length} no sistema.`}
       >
         {minhas.length === 0 ? (
@@ -194,6 +284,11 @@ export async function TelaContestacao({ ctx }: PropsTela) {
                   <Etiqueta tom={TOM[contestacao.status]}>
                     {ROTULO[contestacao.status]}
                   </Etiqueta>
+                  {contestacao.status === 'aberta' || contestacao.status === 'em_analise' ? (
+                    <Num className="text-xs text-apagado">
+                      a SEAB responde até {prazoDaResposta(contestacao.abertaEm)}
+                    </Num>
+                  ) : null}
                 </div>
                 <p className="mt-1 text-sm">{contestacao.motivo}</p>
                 {contestacao.indicadorId ? (
@@ -203,7 +298,12 @@ export async function TelaContestacao({ ctx }: PropsTela) {
                 ) : null}
                 {contestacao.resposta ? (
                   <p className="mt-2 border-l-2 border-acento bg-superficie px-3 py-2 text-sm">
-                    <span className="rotulo block">Resposta da SEAB</span>
+                    <span className="rotulo block">
+                      Resposta da SEAB
+                      {contestacao.respondidaEm
+                        ? `, em ${formatarBR(hojeEmRecife(new Date(contestacao.respondidaEm)))}`
+                        : ''}
+                    </span>
                     {contestacao.resposta}
                   </p>
                 ) : null}

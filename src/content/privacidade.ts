@@ -79,7 +79,8 @@ export const DADOS_PESSOAIS: readonly DadoPessoal[] = [
   {
     dado: 'Nome completo do gestor avaliado',
     classe: 'comum',
-    porque: 'Identifica diretamente a pessoa natural (art. 5º, I), sem revelar categoria sensível.',
+    porque:
+      'Identifica diretamente a pessoa natural (art. 5º, I), sem revelar categoria sensível.',
   },
   {
     dado: 'Matrícula funcional',
@@ -117,7 +118,8 @@ export const DADOS_PESSOAIS: readonly DadoPessoal[] = [
   {
     dado: 'Histórico de avaliações ao longo do tempo',
     classe: 'comum',
-    porque: 'Série temporal (art. 5º, I). Acumulada, permite traçar perfil: exige prazo de guarda.',
+    porque:
+      'Série temporal (art. 5º, I). Acumulada, permite traçar perfil: exige prazo de guarda.',
   },
   {
     dado: 'Quem lançou cada indicador',
@@ -191,7 +193,12 @@ export type PrincipioPbD = (typeof PRINCIPIOS_PBD)[number]
  * - na implantação: depende de infraestrutura real (banco, rotina agendada,
  *   migração), fora do escopo acadêmico do MVP.
  */
-export const ESTADOS_DO_REQUISITO = ['no MVP', 'em parte', 'no backlog', 'na implantação'] as const
+export const ESTADOS_DO_REQUISITO = [
+  'no MVP',
+  'em parte',
+  'no backlog',
+  'na implantação',
+] as const
 export type EstadoDoRequisito = (typeof ESTADOS_DO_REQUISITO)[number]
 
 export interface RequisitoDePrivacidade {
@@ -203,6 +210,12 @@ export interface RequisitoDePrivacidade {
   readonly criterio: string
   readonly estado: EstadoDoRequisito
   readonly hoje: string
+  /**
+   * O estado e o texto que o documento e o deck do SR1 mostraram, quando o
+   * requisito mudou depois. O SR1 é entrega fechada: ele guarda o que disse
+   * naquele dia, como o slide 14 do Kick-off guarda os seis meses que mostrou.
+   */
+  readonly noSr1?: { readonly estado: EstadoDoRequisito; readonly hoje: string }
 }
 
 export const REQUISITOS_DE_PRIVACIDADE: readonly RequisitoDePrivacidade[] = [
@@ -275,7 +288,8 @@ export const REQUISITOS_DE_PRIVACIDADE: readonly RequisitoDePrivacidade[] = [
   },
   {
     dados: 'Texto livre da contestação',
-    risco: 'O servidor escreve, por conta própria, dado sensível (saúde, sindicato) no texto aberto.',
+    risco:
+      'O servidor escreve, por conta própria, dado sensível (saúde, sindicato) no texto aberto.',
     porque:
       'Tratamento além do necessário (art. 6º, III), que atrai o regime de dado sensível (art. 11, § 1º) sem as salvaguardas dele.',
     principio: 'privacidade como padrão',
@@ -296,8 +310,12 @@ export const REQUISITOS_DE_PRIVACIDADE: readonly RequisitoDePrivacidade[] = [
       'Exportação restrita por perfil, com preferência por dado agregado, e registro de cada exportação (usuário, data, recorte e número de linhas).',
     criterio:
       'Perfil sem permissão não exporta, e toda exportação gera um evento que não se apaga na trilha de auditoria.',
-    estado: 'em parte',
-    hoje: 'Só os perfis do painel da gestão exportam, e há a opção anônima. A exportação ainda não gera evento na trilha.',
+    estado: 'no MVP',
+    hoje: 'Só os perfis do painel da gestão exportam, e o CSV sai sem nomes por padrão. Cada exportação vira um evento na trilha, com perfil, data, recorte e número de linhas, e se o registro falhar o arquivo não sai.',
+    noSr1: {
+      estado: 'em parte',
+      hoje: 'Só os perfis do painel da gestão exportam, e há a opção anônima. A exportação ainda não gera evento na trilha.',
+    },
   },
   {
     dados: 'Notas individuais',
@@ -309,8 +327,12 @@ export const REQUISITOS_DE_PRIVACIDADE: readonly RequisitoDePrivacidade[] = [
       'Proibida a nota com nome entre pares. Ranking só agregado, com a anonimização ligada por padrão para projetar em reunião.',
     criterio:
       'Nenhum perfil vê a nota com nome de um par. O painel projeta agregados sem nomes.',
-    estado: 'em parte',
-    hoje: 'O gerente de unidade não abre o ranking, e o ranking tem modo anônimo. O modo anônimo ainda não vem ligado por padrão.',
+    estado: 'no MVP',
+    hoje: 'O gerente de unidade não abre o ranking, e o ranking abre sem nomes. Mostrar os nomes é uma escolha de quem está na tela, e o CSV acompanha.',
+    noSr1: {
+      estado: 'em parte',
+      hoje: 'O gerente de unidade não abre o ranking, e o ranking tem modo anônimo. O modo anônimo ainda não vem ligado por padrão.',
+    },
   },
   {
     dados: 'Registros de auditoria',
@@ -328,7 +350,8 @@ export const REQUISITOS_DE_PRIVACIDADE: readonly RequisitoDePrivacidade[] = [
   {
     dados: 'Todos os dados de avaliação',
     risco: 'A CAM e as áreas técnicas acessam além da atribuição legal de cada uma.',
-    porque: 'Privilégio em excesso contraria a necessidade (art. 6º, III) e a finalidade (art. 6º, I).',
+    porque:
+      'Privilégio em excesso contraria a necessidade (art. 6º, III) e a finalidade (art. 6º, I).',
     principio: 'privacidade embutida no design',
     requisito:
       'Menor privilégio pela atribuição legal: a CAM acessa o necessário para apurar, e a área técnica só os próprios indicadores, sem ver notas.',
@@ -398,8 +421,12 @@ export const REQUISITOS_DE_PRIVACIDADE: readonly RequisitoDePrivacidade[] = [
       'Painéis só agregados, com supressão automática de recortes abaixo de um número mínimo de pessoas.',
     criterio:
       'Nenhuma combinação de filtros isola uma pessoa, e recortes abaixo do mínimo aparecem suprimidos.',
-    estado: 'no backlog',
-    hoje: 'Ainda não há número mínimo. O mesmo cuidado vale para a base por unidade da lente de ML, discutido no documento de Direito.',
+    estado: 'em parte',
+    hoje: 'O ranking e o CSV sem nomes suprimem o tipo de unidade que aparece menos de 3 vezes no recorte, e um recorte com menos de 3 unidades não mostra ranking. A análise e a base por unidade da lente de ML ainda não têm o mínimo.',
+    noSr1: {
+      estado: 'no backlog',
+      hoje: 'Ainda não há número mínimo. O mesmo cuidado vale para a base por unidade da lente de ML, discutido no documento de Direito.',
+    },
   },
 ]
 
@@ -412,8 +439,12 @@ export interface ItemDePrivacidade {
   readonly detalhe: string
   /** Números dos riscos, na ordem de REQUISITOS_DE_PRIVACIDADE (1 a 15). Vazio = todos. */
   readonly riscos: readonly number[]
-  readonly estado: 'feito' | 'em parte' | 'a fazer'
+  readonly estado: EstadoDoItem
+  /** O estado que o SR1 mostrou, quando o item andou depois. */
+  readonly estadoNoSr1?: EstadoDoItem
 }
+
+export type EstadoDoItem = 'feito' | 'em parte' | 'a fazer'
 
 export const BACKLOG_DE_PRIVACIDADE: readonly ItemDePrivacidade[] = [
   {
@@ -432,21 +463,25 @@ export const BACKLOG_DE_PRIVACIDADE: readonly ItemDePrivacidade[] = [
   },
   {
     item: 'Proteção do texto da contestação',
-    detalhe: 'Aviso contra dado sensível, cifragem no armazenamento e leitura só pelo autor e pela CAM.',
+    detalhe:
+      'Aviso contra dado sensível, cifragem no armazenamento e leitura só pelo autor e pela CAM.',
     riscos: [6],
     estado: 'em parte',
   },
   {
     item: 'Registro das exportações',
-    detalhe: 'Um evento que não se apaga, com usuário, data, recorte e volume, a cada exportação.',
+    detalhe:
+      'Um evento que não se apaga, com usuário, data, recorte e volume, a cada exportação.',
     riscos: [7],
-    estado: 'a fazer',
+    estado: 'feito',
+    estadoNoSr1: 'a fazer',
   },
   {
     item: 'Supressão de recortes pequenos',
     detalhe: 'Número mínimo de pessoas, configurável, nos painéis agregados.',
     riscos: [15],
-    estado: 'a fazer',
+    estado: 'em parte',
+    estadoNoSr1: 'a fazer',
   },
   {
     item: 'Encarregado e canal do titular',
@@ -481,4 +516,23 @@ export function contarRequisitos(estado: EstadoDoRequisito): number {
   return REQUISITOS_DE_PRIVACIDADE.filter((r) => r.estado === estado).length
 }
 
-export const DADOS_SENSIVEIS = DADOS_PESSOAIS.filter((d) => d.classe !== 'comum' && d.classe !== 'comum, com ressalva')
+/** O requisito como o SR1 mostrou: o que mudou depois volta ao estado daquele dia. */
+export function requisitoNoSr1(r: RequisitoDePrivacidade): {
+  readonly estado: EstadoDoRequisito
+  readonly hoje: string
+} {
+  return r.noSr1 ?? { estado: r.estado, hoje: r.hoje }
+}
+
+/** As contagens do SR1, congeladas no que o documento e o deck disseram. */
+export function contarRequisitosNoSr1(estado: EstadoDoRequisito): number {
+  return REQUISITOS_DE_PRIVACIDADE.filter((r) => requisitoNoSr1(r).estado === estado).length
+}
+
+export function estadoDoItemNoSr1(item: ItemDePrivacidade): EstadoDoItem {
+  return item.estadoNoSr1 ?? item.estado
+}
+
+export const DADOS_SENSIVEIS = DADOS_PESSOAIS.filter(
+  (d) => d.classe !== 'comum' && d.classe !== 'comum, com ressalva',
+)

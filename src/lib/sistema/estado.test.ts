@@ -3,6 +3,7 @@ import { BASE } from '@/lib/seed'
 import type { Lancamento } from '@/lib/calculo/tipos'
 import { driverSeed } from '@/lib/dados/driver-seed'
 import { LIMITE_DE_REGISTROS, estadoDo, novaSessao, type Sessao } from './estado'
+import { prazoParaContestar } from './prazos'
 
 /**
  * A escrita do protótipo é de quem escreve (auditoria do SR1, lacuna 10).
@@ -107,10 +108,10 @@ describe('uma cópia por visitante', () => {
     const resultado = estadoDo(ana).abrirContestacao(
       {
         gerenteId: 'ger-usf-canario',
-        cicloId: 'ciclo-2026-06',
+        cicloId: 'ciclo-2026-04',
         indicadorId: null,
-        motivo: 'A nota de junho não bate com o que mandamos.',
-        abertaEm: '2026-07-02T09:00:00.000Z',
+        motivo: 'A nota de abril não bate com o que mandamos.',
+        abertaEm: '2026-05-02T12:00:00.000Z',
       },
       'gerente_unidade',
     )
@@ -317,5 +318,165 @@ describe('o driver lê a sessão a cada chamada e grava o diário', () => {
     const resultado = await cheio.avancarCiclo(ABERTO, 'seab', '2026-07-21T10:00:00.000Z')
     expect(resultado.ok).toBe(false)
     expect(resultado.mensagem).toContain('limite')
+  })
+})
+
+/**
+ * O art. 9º no caminho de escrita (Sprint 2). Abril foi publicado em 27/04 na
+ * base de teste: o prazo vai até 07/05. Junho está homologado, sem publicação.
+ */
+describe('o prazo do art. 9º', () => {
+  const pedido = (cicloId: string, abertaEm: string) => ({
+    gerenteId: 'ger-usf-canario',
+    cicloId,
+    indicadorId: null,
+    motivo: 'Pedimos revisão do mês.',
+    abertaEm,
+  })
+
+  it('aceita até o último dia e recusa no dia seguinte', () => {
+    const noUltimoDia = estadoDo(novo()).abrirContestacao(
+      pedido('ciclo-2026-04', '2026-05-07T20:00:00.000Z'),
+    )
+    expect(noUltimoDia.ok, noUltimoDia.mensagem).toBe(true)
+    expect(noUltimoDia.mensagem).toContain('A SEAB tem até 14/05/2026')
+
+    const depois = estadoDo(novo()).abrirContestacao(
+      pedido('ciclo-2026-04', '2026-05-08T12:00:00.000Z'),
+    )
+    expect(depois.ok).toBe(false)
+    expect(depois.mensagem).toContain('acabou em 07/05/2026')
+  })
+
+  it('o dia é o do Recife, não o de Greenwich', () => {
+    // 08/05 às 02h em UTC ainda é 07/05 às 23h no Recife.
+    expect(
+      estadoDo(novo()).abrirContestacao(pedido('ciclo-2026-04', '2026-05-08T02:00:00.000Z')).ok,
+    ).toBe(true)
+  })
+
+  it('mês homologado e não publicado ainda não aceita contestação', () => {
+    const resultado = estadoDo(novo()).abrirContestacao(
+      pedido('ciclo-2026-06', '2026-07-02T12:00:00.000Z'),
+    )
+    expect(resultado.ok).toBe(false)
+    expect(resultado.mensagem).toContain('ainda não foi publicado')
+  })
+
+  it('a publicação feita na cópia abre o prazo de quem publicou, e só dele', () => {
+    const seab = novo()
+    for (const agora of ['2026-08-03', '2026-08-04', '2026-08-05']) {
+      expect(estadoDo(seab).avancarCiclo(ABERTO, 'seab', `${agora}T12:00:00.000Z`).ok).toBe(
+        true,
+      )
+    }
+    expect(estadoDo(seab).publicadoEm(ABERTO)).toBe('2026-08-05')
+    expect(prazoParaContestar('2026-08-05')).toBe('2026-08-15')
+
+    const julho = pedido(ABERTO, '2026-08-10T12:00:00.000Z')
+    expect(estadoDo(seab).abrirContestacao(julho).ok).toBe(true)
+    expect(estadoDo(novo()).abrirContestacao(julho).ok).toBe(false)
+    // E a outra instância chega ao mesmo lugar só com o diário.
+    expect(emOutraInstancia(seab).contestacoes()[0].cicloId).toBe(ABERTO)
+  })
+
+  it('as contestações da base de teste respeitam o prazo', () => {
+    const estado = estadoDo(null)
+    for (const c of BASE.contestacoes) {
+      const publicado = estado.publicadoEm(c.cicloId)
+      expect(publicado, c.id).not.toBeNull()
+      expect(c.abertaEm.slice(0, 10) <= prazoParaContestar(publicado!), c.id).toBe(true)
+    }
+  })
+})
+
+describe('a resposta da SEAB', () => {
+  const resposta = (agora: string, decisao: 'acatada' | 'recusada' = 'acatada') => ({
+    contestacaoId: 'cont-1',
+    decisao,
+    texto: 'Revisamos o denominador e excluímos as famílias transferidas.',
+    autor: 'seab',
+    agora,
+  })
+
+  it('responde, o gerente lê, e a trilha guarda o antes e o depois', () => {
+    const seab = novo()
+    const r = estadoDo(seab).responderContestacao(resposta('2026-05-08T12:00:00.000Z'))
+    expect(r.ok, r.mensagem).toBe(true)
+
+    const pedido = emOutraInstancia(seab)
+      .contestacoes()
+      .find((c) => c.id === 'cont-1')
+    expect(pedido?.status).toBe('acatada')
+    expect(pedido?.resposta).toContain('denominador')
+    expect(pedido?.respondidaEm).toBe('2026-05-08T12:00:00.000Z')
+
+    const evento = estadoDo(seab).eventos()[0]
+    expect(evento.tipo).toBe('contestacao_respondida')
+    expect(evento.antes).toEqual({ status: 'em_analise' })
+    // Aberta num domingo (03/05): 5 dias úteis vão até a sexta, 08/05.
+    expect(evento.depois).toMatchObject({
+      status: 'acatada',
+      prazoParaResponder: '2026-05-08',
+      noPrazo: true,
+    })
+
+    // A base dos outros continua sem resposta.
+    expect(
+      estadoDo(novo())
+        .contestacoes()
+        .find((c) => c.id === 'cont-1')?.status,
+    ).toBe('em_analise')
+  })
+
+  it('a resposta atrasada entra, mas a trilha diz que foi fora do prazo', () => {
+    const seab = novo()
+    expect(estadoDo(seab).responderContestacao(resposta('2026-05-11T12:00:00.000Z')).ok).toBe(
+      true,
+    )
+    const evento = estadoDo(seab).eventos()[0]
+    expect(evento.depois).toMatchObject({ noPrazo: false })
+    expect(evento.descricao).toContain('fora do prazo de 5 dias úteis')
+  })
+
+  it('uma resposta só por pedido', () => {
+    const seab = novo()
+    expect(estadoDo(seab).responderContestacao(resposta('2026-05-08T12:00:00.000Z')).ok).toBe(
+      true,
+    )
+    const deNovo = estadoDo(seab).responderContestacao(
+      resposta('2026-05-08T13:00:00.000Z', 'recusada'),
+    )
+    expect(deNovo.ok).toBe(false)
+    expect(seab.diario).toHaveLength(1)
+    // Pedido já fechado na base também não reabre.
+    expect(
+      estadoDo(novo()).responderContestacao({
+        ...resposta('2026-05-08T12:00:00.000Z'),
+        contestacaoId: 'cont-2',
+      }).ok,
+    ).toBe(false)
+  })
+})
+
+describe('a exportação na trilha', () => {
+  it('cada CSV vira um evento com recorte e volume', () => {
+    const gestor = novo()
+    const r = estadoDo(gestor).registrarExportacao(
+      {
+        cicloId: 'ciclo-2026-06',
+        distritoId: 'ds-leste',
+        anonimo: true,
+        linhas: 4,
+        autor: 'gerente_distrital',
+        agora: '2026-07-20T12:00:00.000Z',
+      },
+      'gerente_distrital',
+    )
+    expect(r.ok).toBe(true)
+    const evento = emOutraInstancia(gestor).eventos()[0]
+    expect(evento.tipo).toBe('exportacao_gerada')
+    expect(evento.depois).toEqual({ distritoId: 'ds-leste', anonimo: true, linhas: 4 })
+    expect(evento.descricao).toContain('sem nomes')
   })
 })

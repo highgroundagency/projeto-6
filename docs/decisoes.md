@@ -1493,3 +1493,44 @@ Entram na ordem das sprints junto com o resto, quando a Semana 7 reordenar o bac
 **Consequência.** O avanço do backlog continua 17 de 26, o número do SR1, e o deck e o PDF não
 mudaram. A data "16/08" que aparece em várias linhas é a do commit mais antigo que o Git guarda:
 a função pode ser mais velha, nunca mais nova.
+
+## ADR-050 · O prazo da portaria, a resposta da SEAB e a exportação com rastro saem da tela e entram na regra
+
+**Contexto.** Depois do SR1, cinco coisas que o próprio repositório declarava como pendentes
+continuavam só no texto. A tela da contestação dizia que "o prazo do art. 9º ainda não está no
+sistema": o pedido entrava em qualquer mês fechado, a qualquer tempo. A SEAB não tinha onde
+responder, e as respostas da lista vinham da base de teste. O CSV saía sem deixar rastro (risco 7
+da Atividade 2 de Direito). O ranking só escondia os nomes se alguém lembrasse de marcar (risco
+8). E, sem nome, a sigla do tipo ainda entregava a unidade única do tipo no recorte (risco 15).
+
+**Decisão.** As cinco viram regra, no caminho de escrita, e não aviso na tela:
+
+1. **Prazo para contestar.** 10 dias corridos depois da publicação do mês (art. 9º). Mês
+   homologado e ainda não publicado não aceita pedido, porque o prazo da portaria começa na
+   publicação. A conta é função pura (`src/lib/sistema/prazos.ts`), o "hoje" é a data civil do
+   Recife da hora do pedido, e quem cobra é `sistema/estado.ts`, que é o caminho de qualquer rota.
+2. **Resposta da SEAB.** 5 dias úteis depois do pedido, de segunda a sexta. Feriado não entra na
+   conta, e a tela diz isso: o calendário do município não está no repositório, e inventar um seria
+   pior que declarar a falta. A resposta é uma só por pedido e vai para a trilha com o antes, o
+   depois e se saiu no prazo. A resposta atrasada entra, marcada: recusar seria tirar do gerente a
+   resposta a que ele tem direito.
+3. **Exportação com rastro.** Cada CSV vira um evento `exportacao_gerada` com perfil, recorte,
+   modo e número de linhas. Se o registro falhar, o arquivo não sai.
+4. **Ranking sem nomes por padrão.** O parâmetro inverteu: `gest_nomes=1` mostra os nomes, e a
+   ausência dele esconde. O CSV acompanha a tela.
+5. **Número mínimo do recorte: 3.** Sem nomes, tipo com menos de 3 unidades no recorte perde a
+   sigla, e recorte com menos de 3 unidades não mostra ranking nem exporta. O número é arbitrado:
+   a portaria não fixa um, e o documento de Direito pede que exista, não que seja este.
+
+Tudo continua na cópia de quem escreve (ADR-046, ADR-048): a publicação que a SEAB faz ao vivo abre
+o prazo dela, e de mais ninguém.
+
+**O SR1 não muda.** Os requisitos 7, 8 e 15 andaram, e dois itens do backlog de privacidade
+também. O documento e o deck do SR1 contavam esses estados ao vivo; agora contam pelo campo
+`noSr1`, que guarda o que disseram em 03/10, e um teste confere as contagens daquele dia. É o mesmo
+critério do slide 14 do Kick-off.
+
+**Consequência.** Na base de teste de hoje, nenhum mês aceita contestação até a SEAB publicar
+julho: abril venceu em 07/05, e maio e junho estão homologados. As três contestações da base
+respeitam o prazo, e há teste para isso. Contar feriado e levar o mínimo do recorte para a
+análise e para a lente de ML ficam para depois.

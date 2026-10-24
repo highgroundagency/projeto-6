@@ -4,7 +4,9 @@ import { estadoDo, type EstadoDoVisitante, type Sessao } from '@/lib/sistema/est
 import { MENSAGEM_DIARIO_CHEIO, gravarSessao, sessaoAtual } from '@/lib/sistema/visitante'
 import type {
   EntradaContestacao,
+  EntradaExportacao,
   EntradaLancamento,
+  EntradaResposta,
   FiltroAvaliacao,
   FiltroAvaliacaoDistrital,
   Panorama,
@@ -93,6 +95,16 @@ export function driverSeed(
       return gerenteId ? todas.filter((c) => c.gerenteId === gerenteId) : todas
     },
 
+    async publicacoes() {
+      const atual = await estado()
+      return Object.fromEntries(
+        atual.ciclos().flatMap((ciclo) => {
+          const data = atual.publicadoEm(ciclo.id)
+          return data ? [[ciclo.id, data]] : []
+        }),
+      )
+    },
+
     async eventos(limite = 200) {
       return (await estado()).eventos().slice(0, limite)
     },
@@ -127,6 +139,16 @@ export function driverSeed(
       return escrever((estado) =>
         estado.abrirContestacao({ ...dados, abertaEm: agora }, perfil),
       )
+    },
+
+    async responderContestacao(entrada: EntradaResposta, agora: string): Promise<Resultado> {
+      const { perfil, ...resposta } = entrada
+      return escrever((estado) => estado.responderContestacao({ ...resposta, agora }, perfil))
+    },
+
+    async registrarExportacao(entrada: EntradaExportacao, agora: string): Promise<Resultado> {
+      const { perfil, ...exportacao } = entrada
+      return escrever((estado) => estado.registrarExportacao({ ...exportacao, agora }, perfil))
     },
   }
 }

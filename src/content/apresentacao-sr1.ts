@@ -25,7 +25,9 @@ import {
   BACKLOG_DE_PRIVACIDADE,
   DADOS_PESSOAIS,
   REQUISITOS_DE_PRIVACIDADE,
-  contarRequisitos,
+  contarRequisitosNoSr1,
+  estadoDoItemNoSr1,
+  type EstadoDoItem,
 } from '@/content/privacidade'
 import { ENDERECO_SITE, OBJETIVOS_ESPECIFICOS, OBJETIVO_GERAL_CURTO } from '@/content/produto'
 import { calcularAvaliacao } from '@/lib/calculo/motor'
@@ -83,7 +85,8 @@ export const UNIDADE_DO_DECK = 'usf-canario'
 function avaliar(cicloId: string, regraId: string): Avaliacao {
   const unidade = BASE.unidades.find((u) => u.id === UNIDADE_DO_DECK)
   const regra = BASE.regras.find((r) => r.id === regraId)
-  if (!unidade || !regra) throw new Error(`Sem unidade ou regra: ${UNIDADE_DO_DECK}, ${regraId}`)
+  if (!unidade || !regra)
+    throw new Error(`Sem unidade ou regra: ${UNIDADE_DO_DECK}, ${regraId}`)
   return calcularAvaliacao({
     unidade,
     cicloId,
@@ -214,12 +217,16 @@ const NOME_SR1_DA_EVIDENCIA: Record<string, { tela: string; fala: string }> = {
 }
 
 function donoDa(ciclo: CicloId, evidencia: string): IntegranteId | null {
-  return CHECKLIST.find((i) => i.ciclo === ciclo && i.evidencia === evidencia)?.responsavel ?? null
+  return (
+    CHECKLIST.find((i) => i.ciclo === ciclo && i.evidencia === evidencia)?.responsavel ?? null
+  )
 }
 
 /** "a, b e c": a lista dita em português. */
 function listaFalada(itens: readonly string[]): string {
-  return itens.length < 2 ? itens.join('') : `${itens.slice(0, -1).join(', ')} e ${itens.at(-1)}`
+  return itens.length < 2
+    ? itens.join('')
+    : `${itens.slice(0, -1).join(', ')} e ${itens.at(-1)}`
 }
 
 interface GrupoEmAndamento {
@@ -350,8 +357,8 @@ export const AVANCO = [
 ] as const
 
 /** Quantos itens do backlog de privacidade estão num estado: a resposta do slide 11 conta daqui. */
-function itensDoBacklog(estado: (typeof BACKLOG_DE_PRIVACIDADE)[number]['estado']): number {
-  return BACKLOG_DE_PRIVACIDADE.filter((i) => i.estado === estado).length
+function itensDoBacklog(estado: EstadoDoItem): number {
+  return BACKLOG_DE_PRIVACIDADE.filter((i) => estadoDoItemNoSr1(i) === estado).length
 }
 
 /** Número por extenso, como se diz no palco: "cinco fontes", "oito alternativas". */
@@ -362,9 +369,27 @@ function dataFalada(id: CicloId): string {
 
 export function porExtenso(n: number): string {
   const nomes = [
-    'zero', 'um', 'dois', 'três', 'quatro', 'cinco', 'seis', 'sete', 'oito', 'nove', 'dez',
-    'onze', 'doze', 'treze', 'catorze', 'quinze', 'dezesseis', 'dezessete', 'dezoito',
-    'dezenove', 'vinte',
+    'zero',
+    'um',
+    'dois',
+    'três',
+    'quatro',
+    'cinco',
+    'seis',
+    'sete',
+    'oito',
+    'nove',
+    'dez',
+    'onze',
+    'doze',
+    'treze',
+    'catorze',
+    'quinze',
+    'dezesseis',
+    'dezessete',
+    'dezoito',
+    'dezenove',
+    'vinte',
   ]
   return nomes[n] ?? String(n)
 }
@@ -414,7 +439,9 @@ export const ESTADO_DOS_OBJETIVOS: Record<
 }
 
 /** Slide 8: o próximo passo de cada objetivo, ou o que já está no ar. Vazio quando o estado basta. */
-export const PROXIMO_DO_OBJETIVO: Partial<Record<(typeof OBJETIVOS_ESPECIFICOS)[number]['resumo'], string>> = {
+export const PROXIMO_DO_OBJETIVO: Partial<
+  Record<(typeof OBJETIVOS_ESPECIFICOS)[number]['resumo'], string>
+> = {
   'a regra como dado': 'falta: cadastrar pela tela',
   'a conta sempre aberta': 'falta: a conta no ranking',
   'nada muda sem registro': 'trilha já no ar',
@@ -456,7 +483,8 @@ export const ESTADO_DOS_COMPROMISSOS: Record<
   },
   sr1: {
     estado: 'feito',
-    porque: 'a regra 3 foi conferida com a planilha que a própria Secretaria usa, enviada em 22/09',
+    porque:
+      'a regra 3 foi conferida com a planilha que a própria Secretaria usa, enviada em 22/09',
     agora: 'conferida com a planilha da Secretaria (22/09)',
   },
 }
@@ -591,7 +619,8 @@ export const SLIDES_SR1 = [
     parte: 'imersao',
     titulo: 'o que pesquisamos e o que aprendemos',
     apoio: `${porExtenso(FONTES_SR1.length)} fontes, cada uma com data. a reunião e a planilha corrigiram ${porExtenso(APRENDIZADOS_SR1.itens.length)} pontos do nosso modelo.`,
-    visual: 'As cinco fontes em ordem de chegada, com a planilha em destaque, e os três aprendizados.',
+    visual:
+      'As cinco fontes em ordem de chegada, com a planilha em destaque, e os três aprendizados.',
     segundos: 40,
     quemFala: 'matheus',
     notas: [
@@ -611,7 +640,8 @@ export const SLIDES_SR1 = [
     parte: 'imersao',
     titulo: 'o que sabemos, supomos e falta saber',
     apoio: 'a matriz CSD, atualizada em 25/09 com a planilha e a base da Secretaria.',
-    visual: 'As três colunas da matriz, com a contagem e dois exemplos de cada, e o que a pesquisa respondeu.',
+    visual:
+      'As três colunas da matriz, com a contagem e dois exemplos de cada, e o que a pesquisa respondeu.',
     segundos: 25,
     quemFala: 'matheus',
     notas: [
@@ -629,7 +659,8 @@ export const SLIDES_SR1 = [
     parte: 'imersao',
     titulo: 'quem usa: personas e mapa de empatia',
     apoio: 'personas do caso e o mapa da analista que fecha a conta.',
-    visual: 'As três personas, três quadrantes do mapa de empatia e os quatro papéis que elas viraram.',
+    visual:
+      'As três personas, três quadrantes do mapa de empatia e os quatro papéis que elas viraram.',
     segundos: 35,
     quemFala: 'matheus',
     notas: [
@@ -649,7 +680,8 @@ export const SLIDES_SR1 = [
     parte: 'imersao',
     titulo: 'o que já existe: benchmarking e SWOT',
     apoio: 'nenhuma solução junta regra com versão, conta aberta e registro de quem mudou.',
-    visual: 'As cinco soluções estudadas com o que falta a cada uma, e os quatro quadrantes da SWOT.',
+    visual:
+      'As cinco soluções estudadas com o que falta a cada uma, e os quatro quadrantes da SWOT.',
     segundos: 35,
     quemFala: 'kerry',
     notas: [
@@ -667,7 +699,8 @@ export const SLIDES_SR1 = [
     parte: 'imersao',
     titulo: 'os objetivos e o que já alcançamos',
     apoio: `objetivo geral: ${OBJETIVO_GERAL_CURTO}`,
-    visual: 'Os cinco objetivos específicos com o prazo, o estado de hoje e o que falta, e o fora do escopo em uma linha.',
+    visual:
+      'Os cinco objetivos específicos com o prazo, o estado de hoje e o que falta, e o fora do escopo em uma linha.',
     segundos: 35,
     quemFala: 'kerry',
     notas: [
@@ -693,7 +726,8 @@ export const SLIDES_SR1 = [
     parte: 'ideacao',
     titulo: 'como geramos as ideias',
     apoio: `${porExtenso(TECNICAS_DE_IDEACAO.length)} técnicas na semana 3, com uma regra: somar antes de criticar.`,
-    visual: 'As três técnicas, com o tempo, como cada uma funciona e o que produziu, e o funil até a escolhida.',
+    visual:
+      'As três técnicas, com o tempo, como cada uma funciona e o que produziu, e o funil até a escolhida.',
     segundos: 30,
     quemFala: 'joao-pedro',
     notas: [
@@ -711,8 +745,10 @@ export const SLIDES_SR1 = [
     numero: 10,
     parte: 'ideacao',
     titulo: 'os critérios e a ideia escolhida',
-    apoio: 'nota de 1 a 5 em impacto, esforço (5 = mais trabalho) e aderência ao órgão público.',
-    visual: 'As oito alternativas com as três notas e o destino de cada uma, a escolhida em destaque.',
+    apoio:
+      'nota de 1 a 5 em impacto, esforço (5 = mais trabalho) e aderência ao órgão público.',
+    visual:
+      'As oito alternativas com as três notas e o destino de cada uma, a escolhida em destaque.',
     segundos: 30,
     quemFala: 'rafael',
     notas: [
@@ -732,7 +768,8 @@ export const SLIDES_SR1 = [
     parte: 'ideacao',
     titulo: 'o que cada disciplina pôs no produto',
     apoio: 'como cada lente moldou a ideia escolhida: as três da matriz e direito.',
-    visual: 'Quatro cartões, um por disciplina, com as decisões concretas de cada uma; o de direito traz a base legal e a Atividade 2.',
+    visual:
+      'Quatro cartões, um por disciplina, com as decisões concretas de cada uma; o de direito traz a base legal e a Atividade 2.',
     segundos: 44,
     quemFala: 'rafael',
     notas: [
@@ -750,10 +787,10 @@ export const SLIDES_SR1 = [
       'O banco já está projetado, com as regras de acesso testadas num Postgres de verdade, mas ainda com os papéis de antes da reunião de 22 de agosto, e está desligado: o sistema roda em memória para qualquer pessoa clonar e rodar sem senha.',
       'O desenho do sistema em quatro níveis (C4) está na página de arquitetura do site.',
       'A base legal é o artigo 7º, inciso III, lido com o artigo 23: o Poder Público executando uma política pública. Não é consentimento, que seria frágil numa relação de trabalho.',
-      `Dos ${REQUISITOS_DE_PRIVACIDADE.length} requisitos de privacidade, ${contarRequisitos('no MVP')} já valem no sistema, ${contarRequisitos('em parte')} valem em parte, ${contarRequisitos('no backlog')} estão no backlog e ${contarRequisitos('na implantação')} dependem de infraestrutura real. A tabela está no documento de privacy by design do SR1, no site.`,
+      `Dos ${REQUISITOS_DE_PRIVACIDADE.length} requisitos de privacidade, ${contarRequisitosNoSr1('no MVP')} já valem no sistema, ${contarRequisitosNoSr1('em parte')} valem em parte, ${contarRequisitosNoSr1('no backlog')} estão no backlog e ${contarRequisitosNoSr1('na implantação')} dependem de infraestrutura real. A tabela está no documento de privacy by design do SR1, no site.`,
       'Um exemplo de dado sensível por inferência: a licença médica que justifica uma meta perdida revela saúde. No sistema, o único lugar em que isso pode entrar é o texto da contestação, e o formulário avisa para não escrever.',
       'O PDF da Atividade 2 cita a Portaria 05 de 2023, que foi revogada pela 001 de 2024. O site já cita a vigente.',
-      `O backlog de privacidade tem ${BACKLOG_DE_PRIVACIDADE.length} itens, e cada um cobre um ou mais riscos: ${itensDoBacklog('feito')} feito, ${itensDoBacklog('em parte')} em parte e ${itensDoBacklog('a fazer')} a fazer. Os ${contarRequisitos('no backlog')} requisitos no backlog são os que ainda não têm nada no sistema.`,
+      `O backlog de privacidade tem ${BACKLOG_DE_PRIVACIDADE.length} itens, e cada um cobre um ou mais riscos: ${itensDoBacklog('feito')} feito, ${itensDoBacklog('em parte')} em parte e ${itensDoBacklog('a fazer')} a fazer. Os ${contarRequisitosNoSr1('no backlog')} requisitos no backlog são os que ainda não têm nada no sistema.`,
       'O artigo 20 vale mesmo com a CAM decidindo? A nota sai de uma conta automática, e quem recebe precisa conseguir conferir. Na Atividade 2, a conta aberta atende aos direitos do titular do artigo 18, e o artigo 20 aparece no modelo: nenhuma saída de modelo entra na nota, e a decisão continua humana e contestável.',
     ],
   },
@@ -765,7 +802,8 @@ export const SLIDES_SR1 = [
     parte: 'solucao',
     titulo: 'a solução: do número à nota, com a conta aberta',
     apoio: 'um sistema web que faz a conta da portaria e mostra de onde veio cada número.',
-    visual: 'O caminho de um mês em quatro passos, com o papel de quem faz cada um, e as contagens do sistema.',
+    visual:
+      'O caminho de um mês em quatro passos, com o papel de quem faz cada um, e as contagens do sistema.',
     segundos: 35,
     quemFala: 'joao-henrique',
     notas: [
@@ -782,7 +820,8 @@ export const SLIDES_SR1 = [
     numero: 13,
     parte: 'solucao',
     titulo: 'os protótipos de baixa fidelidade',
-    apoio: 'quatro desenhos de três telas centrais, propositalmente sem texto. os nomes são os do menu.',
+    apoio:
+      'quatro desenhos de três telas centrais, propositalmente sem texto. os nomes são os do menu.',
     visual: 'Os quatro wireframes, um por tela, com a legenda de cada.',
     segundos: 20,
     // Quem fala o 13 segue no 14: o João Henrique ganha os 20 segundos para
@@ -804,7 +843,8 @@ export const SLIDES_SR1 = [
     parte: 'solucao',
     titulo: 'o sistema funcionando, ao vivo',
     apoio: 'dados de teste: nenhuma pessoa real.',
-    visual: 'O sistema ao vivo, lançando julho. De reserva, a nota de junho com a conta aberta, calculada na hora.',
+    visual:
+      'O sistema ao vivo, lançando julho. De reserva, a nota de junho com a conta aberta, calculada na hora.',
     segundos: 70,
     quemFala: 'joao-pedro',
     notas: [
@@ -829,7 +869,8 @@ export const SLIDES_SR1 = [
     parte: 'solucao',
     titulo: 'por que esta solução: três diferenciais',
     apoio: 'o que nenhuma das soluções estudadas junta.',
-    visual: 'Os três diferenciais, cada um com o problema de hoje que resolve, e maio que não muda.',
+    visual:
+      'Os três diferenciais, cada um com o problema de hoje que resolve, e maio que não muda.',
     segundos: 30,
     quemFala: 'joao-henrique',
     notas: [
@@ -855,7 +896,8 @@ export const SLIDES_SR1 = [
     parte: 'processo',
     titulo: 'o ciclo de vida do projeto',
     apoio: 'o semestre em fases, com um registro por semana no site.',
-    visual: 'As fases do semestre com as datas do cronograma, o SR1 em destaque, a rotina da semana e o backlog priorizado.',
+    visual:
+      'As fases do semestre com as datas do cronograma, o SR1 em destaque, a rotina da semana e o backlog priorizado.',
     segundos: 35,
     quemFala: 'fernando',
     notas: [
@@ -888,7 +930,8 @@ export const SLIDES_SR1 = [
     parte: 'processo',
     titulo: 'ferramentas, o site e o Drive',
     apoio: 'onde o trabalho acontece e onde cada entrega fica.',
-    visual: 'As ferramentas com o uso de cada uma, as oito seções do site no lugar do Google Site e o que a pasta do Drive guarda.',
+    visual:
+      'As ferramentas com o uso de cada uma, as oito seções do site no lugar do Google Site e o que a pasta do Drive guarda.',
     segundos: 30,
     quemFala: 'fernando',
     notas: [
@@ -909,7 +952,8 @@ export const SLIDES_SR1 = [
     parte: 'planejado',
     titulo: 'planejado x realizado: as entregas',
     apoio: APOIO_DO_PLANEJADO,
-    visual: 'A tabela das fases até o SR1, com entregas, responsáveis e o que está em andamento.',
+    visual:
+      'A tabela das fases até o SR1, com entregas, responsáveis e o que está em andamento.',
     segundos: 35,
     quemFala: 'gabriel',
     notas: [
@@ -930,7 +974,8 @@ export const SLIDES_SR1 = [
     parte: 'planejado',
     titulo: 'o avanço e o estágio de hoje',
     apoio: 'estágio: protótipo navegável, no ar.',
-    visual: 'Três percentuais de avanço com a conta de cada um, e os três compromissos do Kick-off com o estado.',
+    visual:
+      'Três percentuais de avanço com a conta de cada um, e os três compromissos do Kick-off com o estado.',
     segundos: 25,
     quemFala: 'gabriel',
     notas: [
@@ -950,7 +995,8 @@ export const SLIDES_SR1 = [
     parte: 'balanco',
     titulo: 'pontos fortes, melhorias e riscos',
     apoio: 'do projeto e da equipe. a seta diz como tratamos.',
-    visual: 'Três colunas: pontos fortes, pontos de melhoria com o tratamento, e os três riscos maiores com o tratamento.',
+    visual:
+      'Três colunas: pontos fortes, pontos de melhoria com o tratamento, e os três riscos maiores com o tratamento.',
     segundos: 40,
     quemFala: 'rafael',
     notas: [
@@ -972,7 +1018,8 @@ export const SLIDES_SR1 = [
     parte: 'encerramento',
     titulo: 'conclusão e próximos passos',
     apoio: 'do problema ao plano.',
-    visual: 'A linha do problema à solução e ao plano, as paradas até o SR2 com a data de cada uma, o endereço do site e a pergunta para a banca.',
+    visual:
+      'A linha do problema à solução e ao plano, as paradas até o SR2 com a data de cada uma, o endereço do site e a pergunta para a banca.',
     segundos: 30,
     quemFala: 'kerry',
     notas: [
@@ -1072,7 +1119,10 @@ export const CSD_RESPONDIDO = {
   texto: 'a dúvida do indicador sem número virou certeza; a planilha corrigiu o modelo',
 } as const
 
-export const COLUNAS_DAS_FONTES = { fontes: 'as fontes', aprendizados: 'o que aprendemos' } as const
+export const COLUNAS_DAS_FONTES = {
+  fontes: 'as fontes',
+  aprendizados: 'o que aprendemos',
+} as const
 
 /** Slide 5: as personas são as do Kick-off; o mapa, o da Semana 2. */
 /**
@@ -1080,8 +1130,13 @@ export const COLUNAS_DAS_FONTES = { fontes: 'as fontes', aprendizados: 'o que ap
  * com a coordenação da SEAB, que fecha o mês e não recebe nada: aqui ela é a
  * coordenadora avaliada, como no documento da Semana 2.
  */
-const NOME_SR1_DA_PERSONA: Record<string, string> = { 'a coordenadora': 'a coordenadora avaliada' }
-export const PESSOAS_SR1 = PESSOAS.map((p) => ({ ...p, quem: NOME_SR1_DA_PERSONA[p.quem] ?? p.quem }))
+const NOME_SR1_DA_PERSONA: Record<string, string> = {
+  'a coordenadora': 'a coordenadora avaliada',
+}
+export const PESSOAS_SR1 = PESSOAS.map((p) => ({
+  ...p,
+  quem: NOME_SR1_DA_PERSONA[p.quem] ?? p.quem,
+}))
 
 export const ROTULO_DAS_PERSONAS = 'personas'
 export const MAPA_NO_SR1 = MAPA_DE_EMPATIA.filter((q) =>
@@ -1177,7 +1232,8 @@ export const ALTERNATIVAS_SR1 = ALTERNATIVAS.map((a) => ({
 }))
 export const LEGENDA_DA_MATRIZ = {
   rotulo: 'por quê',
-  texto: 'impacto: ataca a causa · esforço: alto, mas cabe em fatias · aderência: portaria nova não muda mês fechado',
+  texto:
+    'impacto: ataca a causa · esforço: alto, mas cabe em fatias · aderência: portaria nova não muda mês fechado',
 } as const
 
 /** Slide 10: o que cada disciplina decidiu no produto. */
@@ -1306,7 +1362,11 @@ export const FASES_DO_SEMESTRE: readonly {
   { nome: 'kick-off', ciclos: ['ko'], faz: 'pitch e wireframes' },
   { nome: 'protótipo', ciclos: ['s5', 's6'], faz: 'arquitetura e 8 telas' },
   { nome: 'SR1', ciclos: ['sr1'], faz: 'hoje', atual: true },
-  { nome: 'sprints 1 a 4', ciclos: ['s7', 's8', 's9', 's10'], faz: 'indicadores oficiais e contestação' },
+  {
+    nome: 'sprints 1 a 4',
+    ciclos: ['s7', 's8', 's9', 's10'],
+    faz: 'indicadores oficiais e contestação',
+  },
   { nome: 'validação', ciclos: ['s11'], faz: 'a Secretaria confere' },
   { nome: 'SR2', ciclos: ['s12', 'sr2'], faz: 'entrega final' },
 ]
@@ -1435,7 +1495,11 @@ export const BALANCO_SR1 = {
 } as const
 
 /** Slide 20: as paradas até o SR2, lidas do cronograma, e o que cada uma entrega. */
-export const PARADAS_ATE_O_SR2: readonly { ciclo: CicloId; entrega: string; destaque?: true }[] = [
+export const PARADAS_ATE_O_SR2: readonly {
+  ciclo: CicloId
+  entrega: string
+  destaque?: true
+}[] = [
   { ciclo: 's7', entrega: 'o retorno do SR1 aplicado' },
   { ciclo: 's8', entrega: 'os indicadores da portaria' },
   { ciclo: 's9', entrega: 'porte e prazo de contestação' },
@@ -1521,7 +1585,12 @@ export function textoNaTela(id: SlideSR1Id): readonly string[] {
     case 'objetivos':
       return [
         ...base,
-        ...OBJETIVOS_NO_SR1.flatMap((o) => [o.resumo, o.quando, o.estado, ...(o.proximo ? [o.proximo] : [])]),
+        ...OBJETIVOS_NO_SR1.flatMap((o) => [
+          o.resumo,
+          o.quando,
+          o.estado,
+          ...(o.proximo ? [o.proximo] : []),
+        ]),
         ESCOPO_SR1.fora,
       ]
     case 'tecnicas':
@@ -1603,7 +1672,10 @@ export function textoNaTela(id: SlideSR1Id): readonly string[] {
           ...l.responsaveis.map((r) => nomeCurto(r)),
         ]),
         ROTULO_EM_ANDAMENTO,
-        ...EM_ANDAMENTO_SR1.flatMap((g) => [...g.itens, ...(g.dono ? [nomeCurto(g.dono)] : [])]),
+        ...EM_ANDAMENTO_SR1.flatMap((g) => [
+          ...g.itens,
+          ...(g.dono ? [nomeCurto(g.dono)] : []),
+        ]),
       ]
     case 'avanco':
       return [

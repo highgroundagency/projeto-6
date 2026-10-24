@@ -10,20 +10,24 @@ import {
   avaliacoesDoCiclo,
   carregarDados,
 } from '@/lib/dados/consultas'
+import {
+  MINIMO_DO_RECORTE,
+  recortePequenoDemais,
+  tiposSuprimidos,
+} from '@/lib/sistema/anonimato'
 import { ancoraDaTela } from '@/lib/sistema/parametros'
 
 export async function TelaGestao({ ctx }: PropsTela) {
-  const {
-    gest_ciclo: cicloParam,
-    gest_distrito: distritoParam,
-    gest_anonimo: anonimo,
-  } = ctx.params
+  const { gest_ciclo: cicloParam, gest_distrito: distritoParam, gest_nomes: nomes } = ctx.params
 
   const dados = await carregarDados()
   const fechados = dados.ciclosFechados()
   const ciclo =
     fechados.find((c) => c.id === cicloParam) ?? dados.cicloMaisRecenteFechado() ?? fechados[0]
-  const anonimizado = anonimo === '1'
+  // Sem nomes POR PADRÃO (risco 8 da Atividade 2 de Direito): quem projeta o
+  // painel numa reunião não precisa lembrar de esconder nada. Mostrar os nomes
+  // é a escolha que se faz de propósito.
+  const anonimizado = nomes !== '1'
 
   // O RECORTE do gerente distrital (reunião de 22/08): ele enxerga o próprio
   // distrito, não a rede inteira. Com o login simulado, o "próprio" é o
@@ -52,9 +56,16 @@ export async function TelaGestao({ ctx }: PropsTela) {
       : 0
   const comAviso = avaliacoes.filter((a) => a.avisos.length > 0).length
 
+  // O número mínimo do recorte só age sem nomes: com nomes, quem é quem já está
+  // dito, e a escolha de mostrar foi feita por quem marcou a caixa.
+  const suprimidos = anonimizado
+    ? tiposSuprimidos(avaliacoes.map((a) => unidadeDe(a.unidadeId)?.tipoId ?? ''))
+    : new Set<string>()
+  const rankingSuprimido = anonimizado && recortePequenoDemais(avaliacoes.length)
+
   const exportar = `/api/sistema/exportar?ciclo=${ciclo.id}${
     distrito ? `&distrito=${distrito.id}` : ''
-  }${anonimizado ? '&anonimo=1' : ''}`
+  }${anonimizado ? '' : '&nomes=1'}`
 
   return (
     <>
@@ -65,7 +76,10 @@ export async function TelaGestao({ ctx }: PropsTela) {
         </Etiqueta>
         {/* Âncora comum, não `next/link`: o CSV é um download, e o roteador do
             Next não tem o que fazer com uma resposta que não é uma página. */}
-        <a className={estiloBotao({ variante: 'contorno', tamanho: 'pequeno' })} href={exportar}>
+        <a
+          className={estiloBotao({ variante: 'contorno', tamanho: 'pequeno' })}
+          href={exportar}
+        >
           Exportar CSV
         </a>
       </AcoesDaTela>
@@ -88,7 +102,7 @@ export async function TelaGestao({ ctx }: PropsTela) {
           <input type="hidden" name="abrir" value="painel-gestao" />
           <Preservar
             params={ctx.params}
-            exceto={['gest_ciclo', 'gest_distrito', 'gest_anonimo']}
+            exceto={['gest_ciclo', 'gest_distrito', 'gest_nomes']}
           />
 
           <div>
@@ -132,12 +146,12 @@ export async function TelaGestao({ ctx }: PropsTela) {
           <label className="flex items-center gap-2 text-sm">
             <input
               type="checkbox"
-              name="gest_anonimo"
+              name="gest_nomes"
               value="1"
-              defaultChecked={anonimizado}
+              defaultChecked={!anonimizado}
               className="size-4 accent-[color:var(--color-acento)]"
             />
-            Esconder os nomes
+            Mostrar os nomes
           </label>
 
           <Botao type="submit" variante="contorno">
@@ -162,7 +176,8 @@ export async function TelaGestao({ ctx }: PropsTela) {
       {!distrito ? (
         <Painel
           alvo="gest-distritos"
-          titulo="Nota por distrito" icone={Network}
+          titulo="Nota por distrito"
+          icone={Network}
           descricao="A média das unidades de cada distrito, que é a nota do gerente distrital."
         >
           <ul className="grid gap-3 sm:grid-cols-3">
@@ -186,77 +201,93 @@ export async function TelaGestao({ ctx }: PropsTela) {
 
       <Painel
         alvo="gest-ranking"
-        titulo="Ranking das unidades" icone={Trophy}
+        titulo="Ranking das unidades"
+        icone={Trophy}
         descricao={
           anonimizado
-            ? 'Nomes escondidos: dá para comparar as unidades sem expor quem é quem.'
-            : 'Da maior nota para a menor, no recorte escolhido.'
+            ? `Sem nomes, como vem por padrão. Tipo com menos de ${MINIMO_DO_RECORTE} unidades no recorte aparece suprimido: com a sigla, daria para saber de quem é a nota.`
+            : 'Com nomes, porque você marcou a caixa. Da maior nota para a menor, no recorte escolhido.'
         }
       >
-        <div className="overflow-x-auto border border-linha">
-          <table className="w-full min-w-[38rem] border-collapse text-sm">
-            <thead>
-              <tr className="border-b border-linha bg-superficie">
-                {[
-                  '#',
-                  anonimizado ? 'Identificação' : 'Unidade',
-                  'Tipo',
-                  'Distrito',
-                  'Score',
-                  'Faixa',
-                  'Avisos',
-                ].map((c) => (
-                  <th key={c} className="rotulo px-3 py-2 text-left">
-                    {c}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {ranking.map((avaliacao, i) => {
-                const unidade = unidadeDe(avaliacao.unidadeId)
-                const tipo = unidade ? dados.tipoUnidadePorId(unidade.tipoId) : undefined
-                const distritoDaUnidade = unidade
-                  ? dados.distritoPorId(unidade.distritoId)
-                  : undefined
-                return (
-                  <tr key={avaliacao.unidadeId} className="border-b border-linha last:border-0">
-                    <td className="numero px-3 py-1.5">{i + 1}</td>
-                    <td className="px-3 py-1.5">
-                      {anonimizado ? (
-                        <Num className="text-apagado">
-                          unidade {String(i + 1).padStart(2, '0')}
-                        </Num>
-                      ) : (
-                        unidade?.nome
-                      )}
-                    </td>
-                    <td className="px-3 py-1.5 text-apagado">{tipo?.sigla ?? ''}</td>
-                    <td className="px-3 py-1.5 text-apagado">
-                      {anonimizado ? 'oculto' : (distritoDaUnidade?.nome ?? '')}
-                    </td>
-                    <td className="numero px-3 py-1.5 font-semibold">
-                      {avaliacao.score.toFixed(2).replace('.', ',')}
-                    </td>
-                    <td className="px-3 py-1.5">{avaliacao.faixa?.rotulo ?? 'sem faixa'}</td>
-                    <td className="px-3 py-1.5">
-                      {avaliacao.avisos.length > 0 ? (
-                        <Etiqueta tom="alerta">{avaliacao.avisos.length}</Etiqueta>
-                      ) : (
-                        <span className="text-apagado">nenhum</span>
-                      )}
-                    </td>
-                  </tr>
-                )
-              })}
-            </tbody>
-          </table>
-        </div>
+        {rankingSuprimido ? (
+          <Aviso>
+            Este recorte tem menos de {MINIMO_DO_RECORTE} unidades. Sem nomes, ainda daria para
+            saber quem é quem, então o ranking não aparece.
+          </Aviso>
+        ) : (
+          <div className="overflow-x-auto border border-linha">
+            <table className="w-full min-w-[38rem] border-collapse text-sm">
+              <thead>
+                <tr className="border-b border-linha bg-superficie">
+                  {[
+                    '#',
+                    anonimizado ? 'Identificação' : 'Unidade',
+                    'Tipo',
+                    'Distrito',
+                    'Score',
+                    'Faixa',
+                    'Avisos',
+                  ].map((c) => (
+                    <th key={c} className="rotulo px-3 py-2 text-left">
+                      {c}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {ranking.map((avaliacao, i) => {
+                  const unidade = unidadeDe(avaliacao.unidadeId)
+                  const tipo = unidade ? dados.tipoUnidadePorId(unidade.tipoId) : undefined
+                  const distritoDaUnidade = unidade
+                    ? dados.distritoPorId(unidade.distritoId)
+                    : undefined
+                  return (
+                    <tr
+                      key={avaliacao.unidadeId}
+                      className="border-b border-linha last:border-0"
+                    >
+                      <td className="numero px-3 py-1.5">{i + 1}</td>
+                      <td className="px-3 py-1.5">
+                        {anonimizado ? (
+                          <Num className="text-apagado">
+                            unidade {String(i + 1).padStart(2, '0')}
+                          </Num>
+                        ) : (
+                          unidade?.nome
+                        )}
+                      </td>
+                      <td className="px-3 py-1.5 text-apagado">
+                        {unidade && suprimidos.has(unidade.tipoId)
+                          ? 'suprimido'
+                          : (tipo?.sigla ?? '')}
+                      </td>
+                      <td className="px-3 py-1.5 text-apagado">
+                        {anonimizado ? 'oculto' : (distritoDaUnidade?.nome ?? '')}
+                      </td>
+                      <td className="numero px-3 py-1.5 font-semibold">
+                        {avaliacao.score.toFixed(2).replace('.', ',')}
+                      </td>
+                      <td className="px-3 py-1.5">{avaliacao.faixa?.rotulo ?? 'sem faixa'}</td>
+                      <td className="px-3 py-1.5">
+                        {avaliacao.avisos.length > 0 ? (
+                          <Etiqueta tom="alerta">{avaliacao.avisos.length}</Etiqueta>
+                        ) : (
+                          <span className="text-apagado">nenhum</span>
+                        )}
+                      </td>
+                    </tr>
+                  )
+                })}
+              </tbody>
+            </table>
+          </div>
+        )}
 
         <div className="mt-3">
           <Aviso>
-            O ranking serve para a gestão enxergar o conjunto, não para expor pessoas. Esconder
-            os nomes deixa projetar este painel numa reunião sem constranger ninguém.
+            O ranking serve para a gestão enxergar o conjunto, não para expor pessoas. Por isso
+            ele abre sem nomes, e dá para projetar este painel numa reunião sem constranger
+            ninguém. Cada exportação do CSV fica registrada na trilha de auditoria.
           </Aviso>
         </div>
       </Painel>

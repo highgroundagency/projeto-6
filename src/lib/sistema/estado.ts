@@ -1,5 +1,6 @@
 import 'server-only'
 import { BASE } from '@/lib/seed'
+import { formatarBR, hojeEmRecife, type DataISO } from '@/lib/datas'
 import { calcularAvaliacao, calcularAvaliacaoDistrital } from '@/lib/calculo/motor'
 import {
   ORDEM_ESTADOS,
@@ -11,14 +12,16 @@ import {
   type EstadoCiclo,
   type EventoAuditoria,
   type Lancamento,
+  type StatusContestacao,
 } from '@/lib/calculo/tipos'
+import { prazoParaResponder, situacaoParaContestar } from './prazos'
 
 /**
  * Camada de escrita do protótipo (F2): UMA CÓPIA POR VISITANTE, REFEITA A
  * CADA REQUISIÇÃO A PARTIR DO DIÁRIO DELE.
  *
  * A base é somente leitura e vive em memória. O que a interface escreve
- * (lançamento, avanço de etapa, contestação) entra no DIÁRIO de quem escreveu:
+ * (lançamento, avanço de etapa, contestação, resposta, exportação) entra no DIÁRIO de quem escreveu:
  * a lista, em ordem, de cada escrita que mudou a cópia, inclusive a tentativa
  * recusada que fica no histórico. O diário viaja num cookie assinado do próprio
  * navegador (`visitante.ts`), e `estadoDo` refaz a cópia aplicando cada escrita
@@ -57,6 +60,8 @@ interface Copia {
   readonly avaliacoesNovas: Avaliacao[]
   readonly avaliacoesDistritaisNovas: AvaliacaoDistrital[]
   readonly contestacoesNovas: Contestacao[]
+  /** A resposta da SEAB, por id de contestação: vale também para as da base. */
+  readonly respostas: Map<string, Pick<Contestacao, 'status' | 'resposta' | 'respondidaEm'>>
   sequencia: number
 }
 
@@ -68,6 +73,7 @@ function copiaVazia(): Copia {
     avaliacoesNovas: [],
     avaliacoesDistritaisNovas: [],
     contestacoesNovas: [],
+    respostas: new Map(),
     sequencia: 0,
   }
 }
@@ -91,6 +97,36 @@ export type Operacao =
       readonly dados: Omit<Contestacao, 'id' | 'status' | 'resposta'>
       readonly perfil: string
     }
+  | {
+      readonly tipo: 'responder'
+      readonly resposta: RespostaDaSeab
+      readonly perfil: string
+    }
+  | {
+      readonly tipo: 'exportar'
+      readonly exportacao: Exportacao
+      readonly perfil: string
+    }
+
+/** O que a SEAB decide sobre um pedido de revisão. */
+export interface RespostaDaSeab {
+  readonly contestacaoId: string
+  readonly decisao: Extract<StatusContestacao, 'acatada' | 'recusada'>
+  readonly texto: string
+  readonly autor: string
+  readonly agora: string
+}
+
+/** Um download do CSV do painel da gestão, como entra na trilha. */
+export interface Exportacao {
+  readonly cicloId: string
+  /** `null` é a rede inteira. */
+  readonly distritoId: string | null
+  readonly anonimo: boolean
+  readonly linhas: number
+  readonly autor: string
+  readonly agora: string
+}
 
 /**
  * O que um visitante já escreveu, na ordem. `estadoDo` refaz a cópia a partir
@@ -130,6 +166,27 @@ function registrar(copia: Copia, evento: Omit<EventoAuditoria, 'id'>): void {
   copia.eventosNovos.unshift({ id: proximoId(copia, 'ev'), ...evento })
 }
 
+/** Data civil, no Recife, de um instante ISO. */
+function dataDe(instante: string): DataISO {
+  return hojeEmRecife(new Date(instante))
+}
+
+function ehPublicacao(evento: EventoAuditoria, cicloId: string): boolean {
+  return (
+    evento.tipo === 'ciclo_estado_alterado' &&
+    evento.entidade === cicloId &&
+    evento.depois?.estado === 'publicado'
+  )
+}
+
+/** Quando cada mês da base foi publicado. A base não muda: calcula-se uma vez. */
+const PUBLICACOES_DA_BASE = new Map(
+  BASE.ciclos.flatMap((ciclo) => {
+    const evento = BASE.eventos.find((e) => ehPublicacao(e, ciclo.id))
+    return evento ? [[ciclo.id, dataDe(evento.quando)] as const] : []
+  }),
+)
+
 export function proximoEstado(atual: EstadoCiclo): EstadoCiclo | null {
   const indice = ORDEM_ESTADOS.indexOf(atual)
   return indice >= 0 && indice < ORDEM_ESTADOS.length - 1 ? ORDEM_ESTADOS[indice + 1] : null
@@ -144,6 +201,8 @@ export interface EstadoDoVisitante {
   avaliacoes(): Avaliacao[]
   avaliacoesDistritais(): AvaliacaoDistrital[]
   contestacoes(): Contestacao[]
+  /** Data da publicação do mês, ou `null` se ele ainda não foi publicado. */
+  publicadoEm(cicloId: string): DataISO | null
   lancamentoVigente(
     cicloId: string,
     subindicadorId: string,
@@ -159,6 +218,8 @@ export interface EstadoDoVisitante {
     dados: Omit<Contestacao, 'id' | 'status' | 'resposta'>,
     perfil?: string,
   ): ResultadoTransicao
+  responderContestacao(resposta: RespostaDaSeab, perfil?: string): ResultadoTransicao
+  registrarExportacao(exportacao: Exportacao, perfil: string): ResultadoTransicao
 }
 
 /**
@@ -177,6 +238,21 @@ export function estadoDo(sessao: Sessao | null): EstadoDoVisitante {
     }))
 
   const ciclo = (id: string) => ciclos().find((c) => c.id === id)
+
+  /** A publicação desta cópia vence a da base: é a mais recente. */
+  const publicadoEm = (cicloId: string): DataISO | null => {
+    if (ciclo(cicloId)?.estado !== 'publicado') return null
+    const daCopia = copia.eventosNovos.find((e) => ehPublicacao(e, cicloId))
+    return daCopia ? dataDe(daCopia.quando) : (PUBLICACOES_DA_BASE.get(cicloId) ?? null)
+  }
+
+  const contestacoes = (): Contestacao[] =>
+    [...copia.contestacoesNovas, ...BASE.contestacoes]
+      .map((c) => {
+        const resposta = copia.respostas.get(c.id)
+        return resposta ? { ...c, ...resposta } : c
+      })
+      .sort((a, b) => (a.abertaEm < b.abertaEm ? 1 : -1))
 
   const lancamentos = (): Lancamento[] => [...BASE.lancamentos, ...copia.lancamentosNovos]
 
@@ -383,6 +459,21 @@ export function estadoDo(sessao: Sessao | null): EstadoDoVisitante {
     dados: Omit<Contestacao, 'id' | 'status' | 'resposta'>,
     perfil: string,
   ): ResultadoTransicao {
+    // O prazo do art. 9º é cobrado AQUI, no caminho de escrita, e não só na
+    // tela: a regra vale para qualquer rota que grave uma contestação.
+    const alvo = ciclo(dados.cicloId)
+    if (!alvo) return { ok: false, mensagem: 'Ciclo não encontrado.' }
+    const prazo = situacaoParaContestar(publicadoEm(alvo.id), dataDe(dados.abertaEm))
+    if (!prazo.aberto) {
+      return {
+        ok: false,
+        mensagem:
+          prazo.motivo === 'nao_publicado'
+            ? `O mês ${alvo.competencia} ainda não foi publicado. Pelo art. 9º, o prazo para contestar começa na publicação.`
+            : `O prazo para contestar o mês ${alvo.competencia} acabou em ${formatarBR(prazo.ate)}. Pelo art. 9º, são 10 dias corridos depois da publicação.`,
+      }
+    }
+
     const cheio = semEspaco(copia)
     if (cheio) return cheio
 
@@ -404,14 +495,85 @@ export function estadoDo(sessao: Sessao | null): EstadoDoVisitante {
       entidade: contestacao.id,
       descricao: `Contestação aberta por ${dados.gerenteId} sobre o ciclo ${dados.cicloId}.`,
       antes: null,
-      depois: { status: 'aberta', indicadorId: dados.indicadorId },
+      depois: {
+        status: 'aberta',
+        indicadorId: dados.indicadorId,
+        prazoParaContestar: prazo.ate,
+        prazoParaResponder: prazoParaResponder(dataDe(dados.abertaEm)),
+      },
     })
 
     return {
       ok: true,
-      mensagem:
-        'Contestação registrada. Ela está na lista abaixo e no histórico. Neste protótipo, ninguém responde ainda.',
+      mensagem: `Contestação registrada. Ela está na lista abaixo e no histórico. A SEAB tem até ${formatarBR(prazoParaResponder(dataDe(dados.abertaEm)))} para responder.`,
     }
+  }
+
+  /**
+   * A SEAB responde por escrito, e a decisão entra na trilha com o antes e o
+   * depois. Uma resposta só por pedido: mudar de ideia depois seria reescrever
+   * o que o gerente já leu. O perfil é conferido por quem chama.
+   */
+  function responder(resposta: RespostaDaSeab, perfil: string): ResultadoTransicao {
+    const pedido = contestacoes().find((c) => c.id === resposta.contestacaoId)
+    if (!pedido) return { ok: false, mensagem: 'Contestação não encontrada.' }
+    if (pedido.status !== 'aberta' && pedido.status !== 'em_analise') {
+      return { ok: false, mensagem: 'Esta contestação já foi respondida.' }
+    }
+
+    const cheio = semEspaco(copia)
+    if (cheio) return cheio
+
+    const prazo = prazoParaResponder(dataDe(pedido.abertaEm))
+    const noPrazo = dataDe(resposta.agora) <= prazo
+    copia.respostas.set(pedido.id, {
+      status: resposta.decisao,
+      resposta: resposta.texto,
+      respondidaEm: resposta.agora,
+    })
+
+    registrar(copia, {
+      quando: resposta.agora,
+      autor: resposta.autor,
+      perfil,
+      tipo: 'contestacao_respondida',
+      entidade: pedido.id,
+      descricao: `Contestação de ${pedido.gerenteId} sobre o ciclo ${pedido.cicloId} ${resposta.decisao}${noPrazo ? '' : ', fora do prazo de 5 dias úteis'}.`,
+      antes: { status: pedido.status },
+      depois: { status: resposta.decisao, prazoParaResponder: prazo, noPrazo },
+    })
+
+    return {
+      ok: true,
+      mensagem: `Resposta registrada: contestação ${resposta.decisao}. O gerente já vê o texto na lista dele.`,
+    }
+  }
+
+  /**
+   * Toda exportação vira evento na trilha, que não se apaga. Quem chama só
+   * entrega o arquivo se o registro deu certo: download sem rastro é a cópia
+   * solta que o risco 7 da Atividade 2 de Direito descreve.
+   */
+  function exportar(exportacao: Exportacao, perfil: string): ResultadoTransicao {
+    const cheio = semEspaco(copia)
+    if (cheio) return cheio
+
+    const recorte = exportacao.distritoId ?? 'toda a rede'
+    registrar(copia, {
+      quando: exportacao.agora,
+      autor: exportacao.autor,
+      perfil,
+      tipo: 'exportacao_gerada',
+      entidade: exportacao.cicloId,
+      descricao: `CSV do ciclo ${exportacao.cicloId} exportado (${recorte}, ${exportacao.anonimo ? 'sem nomes' : 'com nomes'}, ${exportacao.linhas} linhas).`,
+      antes: null,
+      depois: {
+        distritoId: exportacao.distritoId,
+        anonimo: exportacao.anonimo,
+        linhas: exportacao.linhas,
+      },
+    })
+    return { ok: true, mensagem: 'Exportação registrada na trilha.' }
   }
 
   /** Aplica uma escrita à cópia, pelas regras de sempre. */
@@ -423,6 +585,10 @@ export function estadoDo(sessao: Sessao | null): EstadoDoVisitante {
         return lancar(operacao.lancamento, operacao.agora, operacao.perfil)
       case 'contestar':
         return contestar(operacao.dados, operacao.perfil)
+      case 'responder':
+        return responder(operacao.resposta, operacao.perfil)
+      case 'exportar':
+        return exportar(operacao.exportacao, operacao.perfil)
     }
   }
 
@@ -457,10 +623,8 @@ export function estadoDo(sessao: Sessao | null): EstadoDoVisitante {
       ...copia.avaliacoesDistritaisNovas,
     ],
 
-    contestacoes: () =>
-      [...copia.contestacoesNovas, ...BASE.contestacoes].sort((a, b) =>
-        a.abertaEm < b.abertaEm ? 1 : -1,
-      ),
+    contestacoes,
+    publicadoEm,
 
     avancarCiclo: (cicloId, autor, agora) =>
       escrever({ tipo: 'avancar', cicloId, autor, agora }),
@@ -470,5 +634,11 @@ export function estadoDo(sessao: Sessao | null): EstadoDoVisitante {
 
     abrirContestacao: (dados, perfil = 'gerente_unidade') =>
       escrever({ tipo: 'contestar', dados, perfil }),
+
+    responderContestacao: (resposta, perfil = 'seab') =>
+      escrever({ tipo: 'responder', resposta, perfil }),
+
+    registrarExportacao: (exportacao, perfil) =>
+      escrever({ tipo: 'exportar', exportacao, perfil }),
   }
 }

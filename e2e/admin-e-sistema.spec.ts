@@ -137,9 +137,10 @@ test.describe('gate das funcionalidades', () => {
     // E o portão não fecha tudo: o que já tinha saído naquela data responde.
     for (const rota of abertas) {
       const resposta = await page.request.get(rota, { headers: cabecalhos, maxRedirects: 0 })
-      expect(resposta.status(), `${rota} deveria redirecionar em ${data}`).toBeGreaterThanOrEqual(
-        300,
-      )
+      expect(
+        resposta.status(),
+        `${rota} deveria redirecionar em ${data}`,
+      ).toBeGreaterThanOrEqual(300)
       expect(resposta.status()).toBeLessThan(400)
     }
   })
@@ -246,18 +247,18 @@ test.describe('o sistema, visto pelo admin', () => {
 
   test('pular de uma tela para outra não descarta o que já foi escolhido', async ({ page }) => {
     await page.goto('/sistema?abrir=painel-gestao')
-    await page.getByLabel('Esconder os nomes').check()
+    await page.getByLabel('Mostrar os nomes').check()
     await page.getByRole('button', { name: 'Aplicar' }).click()
-    await expect(page).toHaveURL(/gest_anonimo=1/)
+    await expect(page).toHaveURL(/gest_nomes=1/)
 
     await page
       .getByRole('navigation', { name: 'Telas do sistema' })
       .getByRole('link', { name: 'Auditoria' })
       .click()
 
-    // O `gest_anonimo` sobrevive à navegação: as oito telas dividem uma query
+    // O `gest_nomes` sobrevive à navegação: as oito telas dividem uma query
     // string só, e o estado de uma não pode ser zerado pela vizinha.
-    await expect(page).toHaveURL(/gest_anonimo=1/)
+    await expect(page).toHaveURL(/gest_nomes=1/)
   })
 
   test('o sumário fica visível enquanto se rola uma tela longa', async ({ page }) => {
@@ -337,7 +338,9 @@ test.describe('o sistema, visto pelo admin', () => {
       '/sistema?abrir=meu-resultado&res_gerente=ger-usf-canario&res_ciclo=ciclo-2026-05',
     )
     // O número do Kick-off: USF Canário, maio, pela v2.
-    await expect(page.locator('#alvo-res-score').getByText('86,67', { exact: true })).toBeVisible()
+    await expect(
+      page.locator('#alvo-res-score').getByText('86,67', { exact: true }),
+    ).toBeVisible()
     await page.getByText('Memória de cálculo', { exact: true }).click()
     await expect(page.getByRole('columnheader', { name: 'Atingimento' })).toBeVisible()
     await expect(page.getByText(/score = \(Σ pontos × peso\)/)).toBeVisible()
@@ -377,20 +380,70 @@ test.describe('o sistema, visto pelo admin', () => {
     expect(resposta.headers()['location']).toContain('erro=')
   })
 
-  test('o painel da gestão anonimiza e exporta', async ({ page }) => {
+  test('o painel da gestão abre sem nomes, e cada CSV entra na trilha', async ({ page }) => {
     await page.goto('/sistema?abrir=painel-gestao')
     await expect(page.getByRole('heading', { name: 'Ranking das unidades' })).toBeVisible()
-
-    await page.getByLabel('Esconder os nomes').check()
-    await page.getByRole('button', { name: 'Aplicar' }).click()
+    // Sem nomes POR PADRÃO (Sprint 2): quem projeta não precisa lembrar de esconder.
     await expect(page.getByText('unidade 01')).toBeVisible()
+    await expect(page.getByLabel('Mostrar os nomes')).not.toBeChecked()
 
-    const csv = await page.request.get('/api/sistema/exportar?ciclo=ciclo-2026-04&anonimo=1', {
+    const csv = await page.request.get('/api/sistema/exportar?ciclo=ciclo-2026-04', {
       headers: await comSessao(page),
     })
     expect(csv.status()).toBe(200)
     expect(csv.headers()['content-type']).toContain('text/csv')
-    expect(await csv.text()).toContain('posicao')
+    const texto = await csv.text()
+    expect(texto).toContain('posicao')
+    // Tipo com menos de 3 unidades no recorte some da coluna.
+    expect(texto).toContain('suprimido')
+
+    await page.goto('/sistema?abrir=auditoria&aud_tipo=exportacao_gerada')
+    await expect(page.getByText(/CSV do ciclo ciclo-2026-04 exportado/)).toBeVisible()
+  })
+
+  test('recorte pequeno demais não sai sem nomes', async ({ page }) => {
+    await page.goto('/sistema')
+    const resposta = await page.request.get(
+      '/api/sistema/exportar?ciclo=ciclo-2026-04&distrito=distrito-que-nao-existe',
+      { headers: await comSessao(page) },
+    )
+    expect(resposta.status()).toBe(409)
+  })
+
+  test('o prazo do art. 9º recusa mês vencido e mês não publicado', async ({ page }) => {
+    await page.goto('/sistema?abrir=contestacao')
+    const headers = await comSessao(page)
+    const destino = (r: import('@playwright/test').APIResponse) =>
+      decodeURIComponent((r.headers()['location'] ?? '').replace(/\+/g, ' '))
+    const contestar = (cicloId: string) =>
+      page.request.post('/api/sistema/contestacao', {
+        headers,
+        form: {
+          gerenteId: 'ger-usf-canario',
+          cicloId,
+          motivo: 'Pedimos revisão do mês, a base extraída não bate.',
+        },
+        maxRedirects: 0,
+      })
+
+    const vencido = await contestar('ciclo-2026-04')
+    expect(destino(vencido)).toContain('acabou em 07/05/2026')
+    const naoPublicado = await contestar('ciclo-2026-06')
+    expect(destino(naoPublicado)).toContain('ainda não foi publicado')
+  })
+
+  test('a SEAB responde a contestação, e o gerente lê a resposta', async ({ page }) => {
+    await page.goto('/sistema?abrir=contestacao')
+    const fila = page.locator('#alvo-cont-responder')
+    await expect(fila.getByText('Pedidos à espera de resposta')).toBeVisible()
+    await fila
+      .getByLabel('Resposta', { exact: true })
+      .first()
+      .fill('Revisamos o denominador e excluímos as famílias transferidas no mês.')
+    await fila.getByLabel('acatar').first().check()
+    await fila.getByRole('button', { name: 'Responder' }).first().click()
+    await expect(page.getByText(/Resposta registrada/)).toBeVisible()
+    await expect(page.getByText(/Resposta da SEAB, em/)).toBeVisible()
   })
 
   test('/status responde com o health check', async ({ page }) => {

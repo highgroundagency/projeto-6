@@ -27,6 +27,7 @@ const ROTULO_TIPO: Record<TipoEvento, string> = {
   avaliacao_calculada: 'avaliação',
   contestacao_aberta: 'contestação aberta',
   contestacao_respondida: 'contestação respondida',
+  exportacao_gerada: 'exportação',
 }
 
 const LIMITE = 120

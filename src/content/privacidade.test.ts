@@ -12,6 +12,8 @@ import {
   NOTA_DA_PORTARIA,
   PRINCIPIOS_PBD,
   REQUISITOS_DE_PRIVACIDADE,
+  contarRequisitosNoSr1,
+  estadoDoItemNoSr1,
 } from './privacidade'
 
 /**
@@ -52,7 +54,9 @@ describe('a Atividade 2 de Direito, como dado', () => {
   it('cita a portaria vigente, não a revogada que o PDF cita', () => {
     expect(NORMAS_DA_POLITICA.join(' ')).toContain('001/2024')
     expect(NORMAS_DA_POLITICA.join(' ')).not.toContain('05/2023')
-    expect(ler('docs/portaria-001-2024.md')).toMatch(/Revoga a Portaria Conjunta SESAU\/SEPLAGTD nº 05/)
+    expect(ler('docs/portaria-001-2024.md')).toMatch(
+      /Revoga a Portaria Conjunta SESAU\/SEPLAGTD nº 05/,
+    )
   })
 
   it('o estado de cada requisito bate com o código', () => {
@@ -63,11 +67,37 @@ describe('a Atividade 2 de Direito, como dado', () => {
     expect(ler('src/components/sistema/telas/contestacao.tsx')).toContain(
       'Não escreva aqui dado de saúde',
     )
-    // Requisito 8: o ranking tem modo anônimo, ainda desligado por padrão.
-    expect(ler('src/components/sistema/telas/gestao.tsx')).toContain("anonimo === '1'")
+    // Requisito 7: toda exportação passa pela trilha antes de sair.
+    expect(REQUISITOS_DE_PRIVACIDADE[6].estado).toBe('no MVP')
+    expect(ler('src/app/api/sistema/exportar/route.ts')).toContain('registrarExportacao')
+    // Requisito 8: o ranking abre sem nomes, e mostrar os nomes é escolha explícita.
+    expect(REQUISITOS_DE_PRIVACIDADE[7].estado).toBe('no MVP')
+    expect(ler('src/components/sistema/telas/gestao.tsx')).toContain("nomes !== '1'")
+    // Requisito 15: o mínimo existe no ranking e no CSV, ainda não na análise.
+    expect(REQUISITOS_DE_PRIVACIDADE[14].estado).toBe('em parte')
+    expect(ler('src/components/sistema/telas/gestao.tsx')).toContain('tiposSuprimidos')
     // Requisito 11: nenhuma integração externa, nem chamada de rede no código.
     for (const arquivo of ['src/lib/dados/consultas.ts', 'src/lib/sistema/estado.ts']) {
       expect(ler(arquivo), arquivo).not.toMatch(/\bfetch\(/)
+    }
+  })
+
+  it('o SR1 guarda as contagens que mostrou, mesmo depois que o sistema andou', () => {
+    // O deck e o documento do SR1 disseram 2, 8, 2 e 3; o backlog, 1, 3 e 4.
+    expect(contarRequisitosNoSr1('no MVP')).toBe(2)
+    expect(contarRequisitosNoSr1('em parte')).toBe(8)
+    expect(contarRequisitosNoSr1('no backlog')).toBe(2)
+    expect(contarRequisitosNoSr1('na implantação')).toBe(3)
+    const itens = (estado: string) =>
+      BACKLOG_DE_PRIVACIDADE.filter((i) => estadoDoItemNoSr1(i) === estado).length
+    expect([itens('feito'), itens('em parte'), itens('a fazer')]).toEqual([1, 3, 4])
+    // E o congelamento só guarda o que de fato mudou.
+    for (const r of REQUISITOS_DE_PRIVACIDADE) {
+      if (r.noSr1)
+        expect(r.noSr1.estado === r.estado && r.noSr1.hoje === r.hoje, r.risco).toBe(false)
+    }
+    for (const i of BACKLOG_DE_PRIVACIDADE) {
+      if (i.estadoNoSr1) expect(i.estadoNoSr1, i.item).not.toBe(i.estado)
     }
   })
 

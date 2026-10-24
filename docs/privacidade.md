@@ -56,7 +56,7 @@ inviabilizar a política. O fundamento correto é a execução da política púb
 | --- | --- |
 | Finalidade | Cada indicador declara fonte e periodicidade; nada é coletado "por precaução" |
 | Adequação | Só entram dados que alimentam o cálculo da gratificação |
-| Necessidade | O gestor vê o **próprio** resultado; o painel agregado tem modo anônimo |
+| Necessidade | O gestor vê o **próprio** resultado; o ranking do painel agregado abre sem nomes |
 | Livre acesso | A memória de cálculo expõe o caminho completo do número ao próprio avaliado |
 | Qualidade dos dados | Validação por zod na entrada e alerta de valor fora do padrão |
 | Transparência | Regra de pontuação versionada e visível; trilha de auditoria consultável |
@@ -70,7 +70,7 @@ inviabilizar a política. O fundamento correto é a execução da política púb
 | Princípio | Onde |
 | --- | --- |
 | Minimização | `src/lib/calculo/tipos.ts` — a entidade `Gestor` tem nome, cargo e área; não tem CPF, matrícula, endereço ou data de nascimento |
-| Anonimização por padrão onde é possível | `src/components/sistema/telas/gestao.tsx` — ranking com modo anônimo; `src/app/api/sistema/exportar/route.ts` propaga a anonimização para o CSV |
+| Anonimização por padrão onde é possível | `src/components/sistema/telas/gestao.tsx` — ranking sem nomes por padrão, com a sigla suprimida no recorte com menos de 3 unidades do tipo (`src/lib/sistema/anonimato.ts`); `src/app/api/sistema/exportar/route.ts` propaga as duas coisas para o CSV e registra cada exportação na trilha (ADR-050) |
 | Acesso do titular embutido, não anexado | `src/components/sistema/memoria.tsx` — o titular vê a memória completa na própria tela, sem pedir |
 | Segurança desde a origem | `src/middleware.ts` + `src/lib/admin/guard.ts` — proteção em duas camadas |
 | Integridade verificável | `src/lib/sistema/estado.ts` — toda escrita gera evento com antes e depois |
@@ -82,7 +82,7 @@ inviabilizar a política. O fundamento correto é a execução da política púb
 | --- | --- |
 | Confirmação e acesso | Tela "Meu resultado": score, faixa, histórico e memória de cálculo do próprio avaliado |
 | Correção | Contestação registrada, com resposta da comissão; correção de lançamento gera novo evento sem apagar o anterior |
-| Anonimização, bloqueio ou eliminação de dado desnecessário | Ranking anonimizável; em produção, dado fora da finalidade não deve entrar |
+| Anonimização, bloqueio ou eliminação de dado desnecessário | Ranking sem nomes por padrão; em produção, dado fora da finalidade não deve entrar |
 | Portabilidade | Exportação em CSV (hoje no painel da gestão; em produção, também para o próprio titular) |
 | Informação sobre compartilhamento | Não há compartilhamento com terceiros no MVP |
 | Revisão de decisão automatizada (art. 20) | **Central neste projeto**: o cálculo é determinístico e a memória mostra cada passo. Os alertas de ML **sinalizam e nunca bloqueiam** — a decisão continua humana e contestável |

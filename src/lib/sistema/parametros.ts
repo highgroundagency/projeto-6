@@ -33,7 +33,7 @@ export const PARAMETROS_SISTEMA = [
   'aud_ciclo',
   'gest_ciclo',
   'gest_distrito',
-  'gest_anonimo',
+  'gest_nomes',
   'cont_gerente',
   'cont_ciclo',
 ] as const

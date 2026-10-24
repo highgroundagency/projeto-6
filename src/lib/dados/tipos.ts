@@ -67,6 +67,23 @@ export interface EntradaContestacao {
   perfil: string
 }
 
+export interface EntradaResposta {
+  contestacaoId: string
+  decisao: 'acatada' | 'recusada'
+  texto: string
+  autor: string
+  perfil: string
+}
+
+export interface EntradaExportacao {
+  cicloId: string
+  distritoId: string | null
+  anonimo: boolean
+  linhas: number
+  autor: string
+  perfil: string
+}
+
 export interface Resultado {
   ok: boolean
   mensagem: string
@@ -83,9 +100,14 @@ export interface RepositorioDados {
   avaliacoes(filtro?: FiltroAvaliacao): Promise<Avaliacao[]>
   avaliacoesDistritais(filtro?: FiltroAvaliacaoDistrital): Promise<AvaliacaoDistrital[]>
   contestacoes(gerenteId?: string): Promise<Contestacao[]>
+  /** Data da publicação de cada mês publicado (`YYYY-MM-DD`), por id do ciclo. */
+  publicacoes(): Promise<Record<string, string>>
   eventos(limite?: number): Promise<EventoAuditoria[]>
 
   registrarLancamento(entrada: EntradaLancamento, agora: string): Promise<Resultado>
   avancarCiclo(cicloId: string, autor: string, agora: string): Promise<Resultado>
   abrirContestacao(entrada: EntradaContestacao, agora: string): Promise<Resultado>
+  responderContestacao(entrada: EntradaResposta, agora: string): Promise<Resultado>
+  /** Registra a exportação na trilha. Quem chama só entrega o arquivo se der certo. */
+  registrarExportacao(entrada: EntradaExportacao, agora: string): Promise<Resultado>
 }

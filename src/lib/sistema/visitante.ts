@@ -81,6 +81,29 @@ const operacaoSchema = z.discriminatedUnion('tipo', [
     }),
     perfil: texto(40),
   }),
+  z.object({
+    tipo: z.literal('responder'),
+    resposta: z.object({
+      contestacaoId: texto(80),
+      decisao: z.enum(['acatada', 'recusada']),
+      texto: texto(1000),
+      autor: texto(120),
+      agora: texto(40),
+    }),
+    perfil: texto(40),
+  }),
+  z.object({
+    tipo: z.literal('exportar'),
+    exportacao: z.object({
+      cicloId: texto(80),
+      distritoId: texto(80).nullable(),
+      anonimo: z.boolean(),
+      linhas: z.number().int().min(0),
+      autor: texto(120),
+      agora: texto(40),
+    }),
+    perfil: texto(40),
+  }),
 ])
 
 const diarioSchema = z.object({

@@ -12,7 +12,9 @@ import {
   NOTA_DA_IMPLANTACAO,
   NOTA_DA_PORTARIA,
   REQUISITOS_DE_PRIVACIDADE,
-  contarRequisitos,
+  contarRequisitosNoSr1,
+  estadoDoItemNoSr1,
+  requisitoNoSr1,
 } from '@/content/privacidade'
 import { OBJETIVOS_ESPECIFICOS, URL_REPOSITORIO } from '@/content/produto'
 import { cicloPorId } from '@/lib/cronograma'
@@ -110,7 +112,8 @@ export const registro = {
       },
       {
         integrante: 'matheus',
-        contribuicao: 'Vai mostrar a pesquisa, a matriz CSD e as personas com o mapa de empatia.',
+        contribuicao:
+          'Vai mostrar a pesquisa, a matriz CSD e as personas com o mapa de empatia.',
       },
       {
         integrante: 'kerry',
@@ -134,7 +137,8 @@ export const registro = {
       },
       {
         integrante: 'fernando',
-        contribuicao: 'Vai mostrar o ciclo de vida, os papéis e as ferramentas, com o site e o Drive.',
+        contribuicao:
+          'Vai mostrar o ciclo de vida, os papéis e as ferramentas, com o site e o Drive.',
       },
     ],
   },
@@ -620,7 +624,8 @@ export const HISTORIAS_DA_CONSTRUCAO: readonly HistoriaDaConstrucao[] = [
     historia:
       'Como SEAB, quero ver as unidades da maior nota para a menor, na rede ou num distrito, para enxergar o conjunto',
     estado: 'no_ar',
-    origem: 'Já estava no sistema em 16/08, por área. Por unidade e com o filtro de distrito, desde 25/08',
+    origem:
+      'Já estava no sistema em 16/08, por área. Por unidade e com o filtro de distrito, desde 25/08',
     onde: 'Painel da gestão: o ranking das unidades',
   },
   {
@@ -636,7 +641,8 @@ export const HISTORIAS_DA_CONSTRUCAO: readonly HistoriaDaConstrucao[] = [
     historia:
       'Como gerente distrital, quero ver o painel e baixar a planilha só do meu distrito, para não ver o recorte dos outros',
     estado: 'em_parte',
-    origem: 'Reunião com o cliente, em 22/08. Na tela desde 25/08, e na planilha, conferido no servidor, desde 26/08',
+    origem:
+      'Reunião com o cliente, em 22/08. Na tela desde 25/08, e na planilha, conferido no servidor, desde 26/08',
     onde: 'Painel da gestão, no perfil distrital: não há a opção da rede toda, nem na planilha. Mas o perfil ainda não traz o distrito, e dá para escolher qualquer um',
   },
   {
@@ -668,7 +674,8 @@ export const HISTORIAS_DA_CONSTRUCAO: readonly HistoriaDaConstrucao[] = [
     historia:
       'Como SEAB, quero ver o que os modelos treinados dizem, com a linha de base ao lado, para não confiar num número sem comparação',
     estado: 'em_parte',
-    origem: 'Já estava no sistema em 16/08. Desde 23/09, os modelos leem a base por unidade da Secretaria (ADR-043)',
+    origem:
+      'Já estava no sistema em 16/08. Desde 23/09, os modelos leem a base por unidade da Secretaria (ADR-043)',
     onde: 'Analytics: os três modelos, com método e métrica. Classificação e regressão mostram o valor da linha de base, e o agrupamento, só o nome da referência',
   },
   {
@@ -704,7 +711,8 @@ export const HISTORIAS_DO_PROTOTIPO: readonly HistoriaDaConstrucao[] = [
     historia:
       'Como quem avalia o protótipo, quero trocar de perfil sem login, para ver o sistema pelos olhos de cada papel',
     estado: 'no_ar',
-    origem: 'Já estava no sistema em 16/08. O login da prefeitura ficou fora do escopo na Semana 4',
+    origem:
+      'Já estava no sistema em 16/08. O login da prefeitura ficou fora do escopo na Semana 4',
     onde: 'Seletor de perfil, no topo do sistema',
   },
   {
@@ -712,7 +720,8 @@ export const HISTORIAS_DO_PROTOTIPO: readonly HistoriaDaConstrucao[] = [
     historia:
       'Como quem avalia o protótipo, quero testar numa cópia só minha, para não mudar a demonstração dos outros',
     estado: 'no_ar',
-    origem: 'ADR-046, em 25/09: o lançamento de um avaliador aparecia na tela do outro. Refeito em 03/10 (ADR-048)',
+    origem:
+      'ADR-046, em 25/09: o lançamento de um avaliador aparecia na tela do outro. Refeito em 03/10 (ADR-048)',
     onde: 'Lançamento e contestação ficam só no navegador de quem fez, e somem quando ele fecha',
   },
 ]
@@ -1094,9 +1103,9 @@ export const documentos = [
         <p className="text-sm leading-relaxed">
           A Atividade 2 de {ATIVIDADE_2.disciplina} ({ATIVIDADE_2.peso}), entregue em{' '}
           {formatarBR(ATIVIDADE_2.entrega)}, levantou os requisitos de privacidade da plataforma
-          antes do código: que dado pessoal ela trataria, o que pode dar errado com cada um e que
-          controle evita o risco. Cada requisito nomeia o princípio de privacy by design que o
-          sustenta e traz um critério de verificação que dá para testar. Este documento
+          antes do código: que dado pessoal ela trataria, o que pode dar errado com cada um e
+          que controle evita o risco. Cada requisito nomeia o princípio de privacy by design que
+          o sustenta e traz um critério de verificação que dá para testar. Este documento
           transcreve o catálogo e acrescenta uma coluna que o original não tem: onde cada
           requisito está hoje no sistema.
         </p>
@@ -1148,15 +1157,15 @@ export const documentos = [
 
         <Secao
           titulo="Onde cada requisito está hoje"
-          descricao={`${contarRequisitos('no MVP')} já valem no sistema, ${contarRequisitos('em parte')} valem em parte, ${contarRequisitos('no backlog')} estão no backlog e ${contarRequisitos('na implantação')} dependem de infraestrutura real.`}
+          descricao={`${contarRequisitosNoSr1('no MVP')} já valem no sistema, ${contarRequisitosNoSr1('em parte')} valem em parte, ${contarRequisitosNoSr1('no backlog')} estão no backlog e ${contarRequisitosNoSr1('na implantação')} dependem de infraestrutura real.`}
         >
           <Tabela
             colunas={['Nº', 'Princípio', 'Estado', 'O que existe e o que falta']}
             linhas={REQUISITOS_DE_PRIVACIDADE.map((r, i) => [
               String(i + 1),
               r.principio,
-              r.estado,
-              r.hoje,
+              requisitoNoSr1(r).estado,
+              requisitoNoSr1(r).hoje,
             ])}
           />
         </Secao>
@@ -1171,7 +1180,7 @@ export const documentos = [
               b.item,
               b.detalhe,
               b.riscos.length ? b.riscos.join(', ') : 'todos',
-              b.estado,
+              estadoDoItemNoSr1(b),
             ])}
           />
           <div className="mt-3">
@@ -1230,9 +1239,12 @@ export const documentos = [
           <Nota>
             Estas histórias ficam fora da conta das {BACKLOG.length}. O avanço continua o que
             mostramos no SR1: {HISTORIAS_DO_BACKLOG_NO_AR} de {BACKLOG.length} no ar. Nenhuma
-            delas toma o lugar das {BACKLOG.length - HISTORIAS_DO_BACKLOG_NO_AR} que faltam. Essas
-            seguem no{' '}
-            <a href="#doc-s6-backlog" className="underline underline-offset-4 hover:text-acento">
+            delas toma o lugar das {BACKLOG.length - HISTORIAS_DO_BACKLOG_NO_AR} que faltam.
+            Essas seguem no{' '}
+            <a
+              href="#doc-s6-backlog"
+              className="underline underline-offset-4 hover:text-acento"
+            >
               backlog com estado →
             </a>
             , e entram nas sprints.

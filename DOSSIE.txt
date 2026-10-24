@@ -2688,8 +2688,9 @@ própria. Passos que apontam para tela ainda não liberada são descartados.
       tela: meu-resultado · alvo: res-memoria
 
   06. Veja o resumo geral
-      o que fazer: Escolha o mês e o distrito, ligue "esconder os nomes" se for apresentar
-      em público, e baixe a planilha se precisar.
+      o que fazer: Escolha o mês e o distrito e baixe a planilha se precisar. O ranking já
+      abre sem nomes, pronto para projetar; "mostrar os nomes" é escolha sua, e cada
+      planilha baixada fica no histórico.
       por quê: O resumo é o que vai para a reunião de gestão. A nota de cada distrito é a
       média das unidades dele, que é a nota do gerente distrital.
       tela: painel-gestao · alvo: gest-ranking
@@ -2702,11 +2703,11 @@ própria. Passos que apontam para tela ainda não liberada são descartados.
       tela: analytics · alvo: ana-risco
 
   08. Acompanhe quem discordou
-      o que fazer: Aqui ficam os pedidos de revisão, com a situação e a resposta de cada
-      um. No protótipo as respostas vêm da base de exemplo; o formulário de responder entra
-      com a persistência real.
-      por quê: Pedido sem resposta escrita é caixa de sugestões. A resposta fica guardada
-      junto do pedido, para sempre.
+      o que fazer: Aqui ficam os pedidos de revisão, com a situação, o prazo e a resposta
+      de cada um. Os que esperam resposta aparecem no alto: escreva a decisão, acate ou
+      recuse, e ela chega ao gerente na hora.
+      por quê: Pedido sem resposta escrita é caixa de sugestões. A portaria dá 5 dias úteis
+      para responder, e a resposta fica guardada junto do pedido, para sempre.
       tela: contestacao · alvo: cont-lista
 
   09. Mostre o que aconteceu
@@ -2787,9 +2788,10 @@ própria. Passos que apontam para tela ainda não liberada são descartados.
 
   04. Discorde, se for o caso
       o que fazer: Abra uma contestação, diga qual indicador (ou a nota toda) e escreva o
-      motivo.
-      por quê: Discordar deixa de ser telefonema e vira pedido registrado, com data. O
-      prazo da portaria e a resposta por escrito ainda vão entrar no sistema.
+      motivo. Cada mês mostra até quando ainda aceita pedido.
+      por quê: Discordar deixa de ser telefonema e vira pedido registrado, com data. A
+      portaria dá 10 dias depois da publicação para pedir e 5 dias úteis para a SEAB
+      responder, e o sistema cobra os dois.
       tela: contestacao · alvo: cont-abrir
 
 
@@ -2840,8 +2842,8 @@ própria. Passos que apontam para tela ainda não liberada são descartados.
       o que fazer: Clique em "abrir contestação", diga qual indicador (ou a nota toda) e
       escreva o motivo.
       por quê: Discordar deixa de ser telefonema e vira pedido registrado, com data. É um
-      direito seu. O prazo da portaria e a resposta por escrito ainda vão entrar no
-      sistema.
+      direito seu: são 10 dias depois da publicação do mês, e a resposta da SEAB chega por
+      escrito, aqui mesmo.
       tela: contestacao · alvo: cont-abrir
 
 
@@ -3519,6 +3521,8 @@ Os porquês completos estão em `docs/decisoes.md`. Os títulos, aqui:
   - ADR-048 · A escrita do protótipo vai num diário assinado no cookie, porque na Vercel a
     rota e a página são funções diferentes
   - ADR-049 · O que o sistema fazia sem história virou história, fora da conta das 26
+  - ADR-050 · O prazo da portaria, a resposta da SEAB e a exportação com rastro saem da
+    tela e entram na regra
 
 ============================================================================================
 13.  COMO RODAR E COMO CONFERIR

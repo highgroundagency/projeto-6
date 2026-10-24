@@ -34,7 +34,10 @@ const { novaSessao } = await import('./estado')
 
 const SEGREDO = 'segredo-de-teste-com-mais-de-16'
 
-/** A demonstração do SR1 inteira: um lançamento, três avanços e uma contestação longa. */
+/**
+ * A demonstração da Sprint 2 inteira: um lançamento, os três avanços até a
+ * publicação, uma contestação longa, a resposta longa da SEAB e um CSV.
+ */
 const DEMONSTRACAO: Operacao[] = [
   {
     tipo: 'lancar',
@@ -75,12 +78,37 @@ const DEMONSTRACAO: Operacao[] = [
     tipo: 'contestar',
     dados: {
       gerenteId: 'ger-usf-canario',
-      cicloId: 'ciclo-2026-06',
+      cicloId: 'ciclo-2026-07',
       indicadorId: null,
-      motivo: 'A nota de junho não bate com o que a unidade mandou. '.repeat(18).slice(0, 1000),
+      motivo: 'A nota de julho não bate com o que a unidade mandou. '.repeat(18).slice(0, 1000),
       abertaEm: '2026-10-03T12:04:00.000Z',
     },
     perfil: 'gerente_unidade',
+  },
+  {
+    tipo: 'responder',
+    resposta: {
+      contestacaoId: 'cont-app-0010',
+      decisao: 'recusada',
+      texto: 'Conferimos o relatório do e-SUS e a nota segue a portaria. '
+        .repeat(17)
+        .slice(0, 1000),
+      autor: 'seab',
+      agora: '2026-10-03T12:05:00.000Z',
+    },
+    perfil: 'seab',
+  },
+  {
+    tipo: 'exportar',
+    exportacao: {
+      cicloId: 'ciclo-2026-07',
+      distritoId: null,
+      anonimo: true,
+      linhas: 12,
+      autor: 'seab',
+      agora: '2026-10-03T12:06:00.000Z',
+    },
+    perfil: 'seab',
   },
 ]
 
