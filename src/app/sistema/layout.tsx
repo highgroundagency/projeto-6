@@ -4,6 +4,7 @@ import { MarcaPrumo } from '@/components/base/marca'
 import { Rodape } from '@/components/base/rodape'
 import { BotaoTema } from '@/components/base/botao-tema'
 import { SeletorDePerfil } from '@/components/sistema/seletor-perfil'
+import { PERFIS } from '@/lib/features'
 import { identidadeAtual } from '@/lib/sistema'
 import { temaAtual } from '@/lib/tema'
 import { obterVisao } from '@/lib/visao'
@@ -43,11 +44,39 @@ export default async function LayoutSistema({ children }: { children: React.Reac
             </Link>
           </div>
 
-          {/* Login simulado (§8.1): preferência de navegação, não autenticação.
-              O RBAC real está em supabase/migrations/ como políticas de RLS —
-              escrito e testado, mas não ligado ao app (ADR-011). */}
+          {/* Com login, a conta manda e o seletor some: o perfil vem do banco.
+              Sem login, o seletor continua para navegar as visões, só leitura
+              (ADR-051). */}
           <div className="flex flex-wrap items-center gap-3">
-            <SeletorDePerfil perfil={identidade.perfil} />
+            {identidade.autenticada ? (
+              <form
+                action="/api/sistema/sair"
+                method="post"
+                className="flex flex-wrap items-center gap-2"
+              >
+                <span className="text-sm">
+                  <span className="rotulo">Conectado como</span>{' '}
+                  <strong className="font-semibold">{identidade.login}</strong>
+                  <span className="text-apagado">: {PERFIS[identidade.perfil].rotulo}</span>
+                </span>
+                <button
+                  type="submit"
+                  className="rounded-full border border-linha-alta px-3 py-1 text-xs hover:bg-superficie hover:text-texto"
+                >
+                  Sair
+                </button>
+              </form>
+            ) : (
+              <>
+                <SeletorDePerfil perfil={identidade.perfil} />
+                <Link
+                  href="/sistema/entrar"
+                  className="rounded-full border border-linha-alta px-3 py-1 text-xs hover:bg-superficie hover:text-texto"
+                >
+                  Entrar
+                </Link>
+              </>
+            )}
             <BotaoTema tema={tema} voltarPara="/sistema" />
           </div>
         </div>

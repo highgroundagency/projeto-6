@@ -38,16 +38,15 @@ export async function TelaPainelSeab({ ctx }: PropsTela) {
   const seguinte = dados.proximoEstado(emAndamento.estado)
 
   /**
-   * O controle de transição só existe para quem tem sessão de admin (ADR-015).
+   * O controle de transição só existe para a CONTA da SEAB (ADR-051).
    *
-   * Ver em que fase o ciclo está é informação do MVP; movê-lo não é. Até o SR1
-   * o estado era um só para todos os visitantes, e um clique mudava a
-   * demonstração dos outros. Hoje o avanço cai na cópia de quem clicou, no
-   * diário do cookie dele (`sistema/estado.ts`), mas a credencial ficou:
-   * avançar etapa é da SEAB, e quem não é admin não vê o formulário nem
-   * qualquer menção a ele.
+   * Ver em que fase o ciclo está é informação do MVP; movê-lo não é. Com o
+   * banco ligado, o avanço vale para todos, como no processo real, e por isso
+   * pede login de verdade: o perfil escolhido no seletor de visitante não
+   * serve, e a senha do painel administrativo, que é pública no briefing,
+   * também não.
    */
-  const podeAgir = ctx.perfil === 'seab'
+  const podeAgir = ctx.autenticada && ctx.perfil === 'seab'
 
   return (
     <>
@@ -101,7 +100,7 @@ export async function TelaPainelSeab({ ctx }: PropsTela) {
           <p className="mt-4 border-t border-linha pt-4 text-sm text-apagado">
             Este mês já foi publicado: não há mais etapa para avançar.
           </p>
-        ) : ctx.admin ? (
+        ) : podeAgir ? (
           <form
             action="/api/sistema/ciclo"
             method="post"
@@ -117,24 +116,27 @@ export async function TelaPainelSeab({ ctx }: PropsTela) {
                 type="checkbox"
                 name="confirmo"
                 required
-                disabled={!podeAgir}
                 className="mt-0.5 size-4 accent-[color:var(--color-acento)]"
               />
               <span>
                 Confirmo o avanço. Ele fica gravado no histórico, com a etapa anterior e a nova,
-                e não tem botão de desfazer. Vale só para esta sessão de teste: a tela dos
-                outros não muda.
+                e não tem botão de desfazer. Vale para todo mundo: o mês muda de etapa no
+                banco de dados, para todos os perfis.
               </span>
             </label>
-            <Botao type="submit" variante="primario" className="mt-3" disabled={!podeAgir}>
+            <Botao type="submit" variante="primario" className="mt-3">
               {seguinte === 'homologado'
                 ? 'Homologar ciclo'
                 : `Avançar para ${ROTULO_ESTADO[seguinte]}`}
             </Botao>
-            {!podeAgir ? (
-              <p className="mt-2 text-xs text-apagado">Só a SEAB avança a etapa.</p>
-            ) : null}
           </form>
+        ) : !ctx.autenticada ? (
+          <p className="mt-4 border-t border-linha pt-4 text-sm text-apagado">
+            Avançar a etapa é da SEAB, com a conta dela.{' '}
+            <a href="/sistema/entrar" className="underline underline-offset-4 hover:text-texto">
+              Entrar
+            </a>
+          </p>
         ) : null}
       </Painel>
 

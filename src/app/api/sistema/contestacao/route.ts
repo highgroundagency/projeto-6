@@ -3,7 +3,7 @@ import { z } from 'zod'
 import { repositorio } from '@/lib/dados'
 import { carregarDados } from '@/lib/dados/consultas'
 import { comParametros, redirecionar } from '@/lib/http'
-import { exigirPerfil, perfilAtual } from '@/lib/sistema'
+import { exigirPerfil, identidadeQueEscreve, SO_LEITURA } from '@/lib/sistema'
 import { ancoraDaTela } from '@/lib/sistema/parametros'
 
 /** Volta para a sanfona da contestação, já aberta e no gerente certo. */
@@ -29,7 +29,9 @@ export async function POST(requisicao: NextRequest) {
   await exigirPerfil('contestacao')
 
   const formulario = await requisicao.formData()
-  const perfil = await perfilAtual()
+  const identidade = await identidadeQueEscreve()
+  if (!identidade) return redirecionar(deVolta(undefined, { erro: SO_LEITURA }))
+  const perfil = identidade.perfil
 
   if (perfil === 'administrador') {
     return redirecionar(deVolta(undefined, { erro: 'Este perfil não abre contestação.' }))
@@ -58,6 +60,15 @@ export async function POST(requisicao: NextRequest) {
   if (!panorama.gerentePorId(dados.gerenteId) || !ciclo) {
     return redirecionar(deVolta(undefined, { erro: 'Gerente ou ciclo desconhecido.' }))
   }
+  // Contestação é pedido do próprio gerente: a conta só contesta a própria
+  // nota. A SEAB pode registrar por um gerente (o pedido que chegou por ofício).
+  if (perfil !== 'seab' && dados.gerenteId !== identidade.gerenteId) {
+    return redirecionar(
+      deVolta(identidade.gerenteId ?? undefined, {
+        erro: 'Esta conta só contesta a própria nota.',
+      }),
+    )
+  }
   // Contesta-se um RESULTADO, e resultado só existe em mês fechado.
   if (ciclo.estado !== 'homologado' && ciclo.estado !== 'publicado') {
     return redirecionar(
@@ -68,8 +79,8 @@ export async function POST(requisicao: NextRequest) {
     return redirecionar(deVolta(dados.gerenteId, { erro: 'Indicador desconhecido.' }))
   }
 
-  // A contestação cai na cópia de quem a abriu, como o lançamento: o driver
-  // grava o diário dela no cookie.
+  // A contestação vai para o banco, como o lançamento, e o gatilho
+  // `contestacao_auditada` a põe na trilha.
   const resultado = await repositorio().abrirContestacao(
     {
       gerenteId: dados.gerenteId,

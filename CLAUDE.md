@@ -112,17 +112,25 @@ src/
     ├── visao.ts         resolve admin, data simulada e ciclos visíveis
     ├── features.ts      tela → ciclo que a libera, e quais perfis a enxergam
     ├── decks.ts         que apresentação o topo do site oferece hoje, e onde ela mora
-    ├── admin/           sessão, senha, rate limit, guard
+    ├── admin/           sessão, senha, rate limit, guard (do painel)
+    ├── auth/            login do /sistema: scrypt, sessão AES-256-GCM, contas (ADR-051)
     ├── calculo/         motor da gratificação (puro) e tipos
     ├── config/          config store com drivers
-    ├── dados/           repositório (driver único: seed) e mapeadores
+    ├── dados/           repositório: driver PostgreSQL (o ligado) e seed; postgres/ tem
+    │                    migração, carga inicial e a tradução linha ↔ domínio
     ├── seed/            base sintética com semente fixa
     ├── supabase/        testes das políticas de RLS do schema guardado
     └── sistema/         identidade simulada, parâmetros da URL, escrita do protótipo
 
+db/
+└── migrations/          schema LIGADO ao app (domínio atual) e as quatro travas em gatilho
+
 supabase/
-├── migrations/          schema, gatilhos e políticas de RLS — versionado, NÃO ligado ao app
+├── migrations/          schema do domínio anterior, com RLS por perfil — guardado, NÃO ligado
 └── testes/              stubs para rodar as migrações num Postgres comum
+
+docker-compose.yml       banco e site no Docker: `docker compose up -d --build`, sem Node na máquina
+Dockerfile               a imagem do site; na subida, migra e (com banco vazio) semeia
 
 ml/                      lente de machine learning — treina offline, o app lê o JSON
 ├── data/                a planilha de desempenho por unidade que os cadernos leem
@@ -133,14 +141,20 @@ ml/                      lente de machine learning — treina offline, o app lê
 
 ## Onde os dados vivem
 
-**Em memória.** O app não usa banco: `git clone && npm run dev` funciona sem nenhuma
-credencial. As telas falam com `src/lib/dados/`, nunca com o seed direto — é o que mantém a
-porta aberta para uma fonte persistente sem reescrever tela.
+**No PostgreSQL** (ADR-050). `docker compose up -d --build` sobe banco e site juntos, sem Node
+na máquina. Para `npm run dev`: `docker compose up -d postgres && npm run db:preparar`, com a
+`DATABASE_URL` do `.env.example` no `.env.local`. As telas falam com
+`src/lib/dados/`, nunca com o banco nem com o seed direto, e o driver ligado é
+`driver-postgres.ts`. Sem `DATABASE_URL`, o `/sistema` avisa que falta banco em vez de cair nos
+dados em memória; `DADOS_DRIVER=seed` liga o modo antigo explicitamente.
 
-`supabase/migrations/` guarda um schema PostgreSQL completo, com RLS e gatilhos, testado
-contra um banco real mas desligado da aplicação. O porquê está em `docs/decisoes.md`
-(ADR-011 e ADR-012); o como usar, em `docs/banco.md`. Não presuma que ele está no caminho de
-execução.
+O schema ligado é `db/migrations/`. Mudou o schema? Migração NOVA, com o número seguinte:
+migração aplicada não se edita. As invariantes que não podem depender da aplicação (trilha
+append-only, ciclo que só avança, janela de lançamento, regra imutável) são gatilho, e a
+trilha de auditoria é escrita pelo banco. Em produção, as credenciais vêm do AWS Secrets
+Manager (`DATABASE_SECRET_ID`), nunca do código. Escrever exige login (ADR-051): senha é hash
+scrypt, nunca cifra; a sessão é cookie AES-256-GCM. `supabase/migrations/` é o schema do domínio
+anterior, guardado como prova de RLS por perfil e desligado. Detalhes em `docs/banco.md`.
 
 ## Comandos
 
@@ -152,9 +166,12 @@ execução.
 | `npm run verificar-vazamento` | Prova que conteúdo futuro não vaza (exige `npm run build` antes) |
 | `npm run roteiro` | Regenera a seção slide a slide de `docs/pitch-kickoff.md`, `docs/ml-av1.md` e `docs/pitch-sr1.md` a partir do conteúdo dos decks |
 | `npm run pitch-pdf` | Gera `docs/pitch-kickoff.pdf` e as capturas de `docs/pitch/` a partir de `/pitch`; com `-- ml`, `docs/ml-av1.pdf` e `docs/ml-av1/` a partir de `/ml`; com `-- sr1`, `docs/sr1.pdf` e `docs/sr1/` a partir de `/sr1` (exige `npm run build` antes) |
-| `npm run e2e` | Playwright |
+| `npm run e2e` | Playwright (exige `DATABASE_URL_E2E`, um banco que a suíte apaga e recarrega) |
+| `npm run db:preparar` | Aplica as migrações de `db/migrations/` e carrega a base sintética se o banco estiver vazio (`db:migrar` e `db:semear` separados; `db:semear -- --limpar` recomeça do zero) |
+| `npm run usuarios -- demo` | Cria uma conta por perfil, com senha aleatória mostrada uma vez (também `criar`, `senha`, `listar`, `desativar`). No Docker: `docker compose exec app npx tsx scripts/usuarios.ts demo` |
+| `npm run testar-banco` | Driver PostgreSQL e as quatro travas contra um Postgres real (exige `DATABASE_URL_TESTE`, que é apagado) |
 | `npm run testar-rls` | Políticas do schema guardado contra um Postgres real (exige `DATABASE_URL_TESTE`) |
-| `npm run semear` | Semeia a base sintética num Postgres com o schema aplicado (exige `DATABASE_URL`) |
+| `npm run semear` | Semeia a fotografia V1 no schema guardado de `supabase/migrations/` (exige `DATABASE_URL`) |
 | `npm run verificar` | typecheck + testes + build + verificação de vazamento |
 
 ## Antes de abrir PR

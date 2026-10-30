@@ -16,12 +16,11 @@ export interface ContextoTela {
   readonly admin: boolean
   /** Telas liberadas E do perfil, para que uma tela possa apontar para a outra. */
   readonly disponiveis: readonly FeatureId[]
+  /** Há conta conectada (ADR-051). Só assim as telas oferecem escrever. */
+  readonly autenticada: boolean
   /**
-   * Gerente da sessão. Hoje sempre `null`, e é de propósito.
-   *
-   * É a costura por onde o login de verdade entra: quando existir sessão, "meu
-   * resultado" abre no próprio avaliado em vez de no primeiro da lista, sem que
-   * a tela precise mudar.
+   * Gerente da conta conectada. `null` para visitante, SEAB e administrador.
+   * Com login de gerente, "meu resultado" e contestação abrem no próprio.
    */
   readonly gerenteId: string | null
 }

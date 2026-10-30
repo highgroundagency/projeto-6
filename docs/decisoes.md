@@ -1493,3 +1493,90 @@ Entram na ordem das sprints junto com o resto, quando a Semana 7 reordenar o bac
 **Consequência.** O avanço do backlog continua 17 de 26, o número do SR1, e o deck e o PDF não
 mudaram. A data "16/08" que aparece em várias linhas é a do commit mais antigo que o Git guarda:
 a função pode ser mais velha, nunca mais nova.
+
+## ADR-050 · O sistema passa a ler e gravar num PostgreSQL, com o schema remodelado para o domínio atual
+
+**Contexto.** Desde a ADR-011 o app rodava sem banco, com a base sintética em memória e, desde a
+ADR-048, a escrita de cada visitante num diário no cookie. O schema de `supabase/migrations/`
+existia, testado, mas modelava o domínio anterior à reunião de 22/08 (ADR-034), e a ligação de
+uma persistência real ficou como pendência declarada em `docs/banco.md`. Em 25/10 a equipe
+decidiu tirar o sistema dos dados em memória: o que se lança tem de ficar, para todos.
+
+**Decisão.**
+
+1. **Schema novo em `db/migrations/`**, no domínio atual: distritos, tipos de unidade,
+   unidades, gerentes, indicadores, subindicadores, regras versionadas com a aplicabilidade em
+   tabela própria, ciclos, lançamentos por subindicador e unidade, notas das unidades e dos
+   distritos, contestações e a trilha. O schema antigo fica onde está, desligado, como prova de
+   RLS por perfil.
+2. **As quatro travas viram gatilho** (trilha append-only, ciclo que só avança, janela de
+   lançamento, regra imutável, esta estendida à aplicabilidade), e a **trilha passa a ser escrita
+   pelo banco**. A aplicação só informa autor, perfil e hora com `set_config` dentro da transação:
+   o relógio continua injetado.
+3. **Driver `driver-postgres.ts`** implementando o mesmo `RepositorioDados`. Nenhuma tela mudou.
+   A conta continua no motor puro: ao homologar, o driver calcula e grava as notas na mesma
+   transação.
+4. **Sem banco configurado, o sistema avisa**, em vez de cair calado na memória. O seed continua
+   como fonte da carga inicial e dos testes de unidade; `DADOS_DRIVER=seed` liga o modo antigo
+   só quando pedido.
+5. **PostgreSQL 16 em Docker** para desenvolvimento (`docker-compose.yml`), `pg` sem ORM, e um
+   migrador de cinquenta linhas que anota cada arquivo aplicado. O próprio site também tem
+   imagem (`Dockerfile`): `docker compose up -d --build` sobe tudo sem Node na máquina, e a
+   subida do container migra e semeia sozinha.
+
+**Como se prova.** `driver-postgres.test.ts`, contra um Postgres real: a base sintética entra e
+volta igual, campo a campo; as escritas dão as mesmas mensagens da camada em memória; a nota de
+julho homologada no banco é idêntica à que o motor dá em memória; e SQL direto que fere uma trava
+é recusado. A suíte de ponta a ponta roda contra o banco, e a jornada que dizia "o que um
+visitante lança, o outro não vê" passou a provar o contrário.
+
+**Consequência.** A escrita volta a ser uma só para todo mundo, agora de propósito: o avanço de
+etapa da SEAB fecha o mês para todos, como no processo real, e por isso continua exigindo a
+credencial do painel. O `git clone && npm run dev` sem credencial deixou de valer: o caminho mais curto agora é
+`git clone && docker compose up -d --build`, que pede só o Docker.
+
+**Um defeito antigo que o Docker revelou.** O leitor de Markdown de `src/lib/markdown.ts`
+quebrava linhas só em `\n`. Numa cópia do Windows (CRLF), um item de lista terminado em `\r`
+não virava lista nem parágrafo, o laço não andava e o `next build` morria sem memória. Na
+Vercel nunca apareceu, porque o build parte do Git, com LF. O build da imagem parte da pasta de
+quem roda, e no Windows ela é CRLF. Passou a quebrar em `\r?\n`, com teste.
+
+**O que ficou para depois.** Login e RLS por perfil no schema novo: sem autenticação, o banco não
+sabe quem é quem, que é o custo descrito na ADR-011. Lançar e contestar continuam sem senha, e no
+site publicado isso passa a gravar para todos. Produção precisa de um Postgres hospedado com a
+`DATABASE_URL` na Vercel. O diário no cookie (ADR-048) fica só no driver do seed.
+
+## ADR-051 · Quem escreve entra com conta; senha com scrypt, sessão com AES-256-GCM, credenciais do banco no Secrets Manager
+
+**Contexto.** Com o banco ligado (ADR-050), o que se lança vale para todos, mas qualquer
+visitante podia lançar e contestar escolhendo um papel no seletor, e avançar etapa dependia
+da senha do painel, que é pública no briefing. Pediu-se login com AES e uma forma segura de
+guardar as credenciais do banco que vai para a AWS.
+
+**Decisão.**
+
+1. **Escrever exige conta; ler, não.** Sem login, o visitante navega todas as visões pelo
+   seletor, só leitura, como a banca precisa. Com login, o perfil e o vínculo vêm do banco e o
+   seletor some. Gerente lança e contesta só pela própria unidade (ou distrito); avançar etapa
+   é só da conta da SEAB. A sessão do painel administrativo deixou de bastar para isso.
+2. **AES onde AES serve.** A senha NÃO é cifrada: é guardada como hash scrypt com sal,
+   porque cifra é reversível e hash não. O AES-256-GCM cifra e autentica o cookie de sessão.
+3. **Revogação de verdade.** A sessão carrega uma versão; trocar a senha ou desativar a conta
+   a invalida na hora. Bloqueio da conta no banco após 5 erros seguidos.
+4. **Credenciais do banco fora do código.** Em produção, o app recebe só o nome do segredo no
+   AWS Secrets Manager e lê usuário e senha com o papel IAM de quem roda, com cache curto e
+   nova tentativa quando a senha muda (rotação). Desenvolvimento segue com `DATABASE_URL`.
+5. **Contas sem dado pessoal.** Login técnico (`seab`, `ger-usf-canario`), criado por script,
+   com a senha pedida sem eco ou gerada; nunca como argumento.
+
+**Como se prova.** Testes de unidade da criptografia (adulteração, chave errada, falha fechada
+em produção); testes contra Postgres real do login, bloqueio, revogação e vínculo da conta; um
+teste de rotação que troca a senha de um papel no meio do caminho e mostra que a aplicação se
+recupera, e que falha quando a recuperação é desligada; e jornadas de ponta a ponta: visitante
+recusado, senha errada, gerente barrada na unidade alheia, SEAB homologando com a própria conta.
+
+**Consequência.** A demonstração ao vivo precisa de contas (`scripts/usuarios.ts demo`), e o
+e2e cria as suas num banco descartável. Produção passa a exigir `SESSAO_CHAVE`.
+
+**O que ficou para depois.** RLS por perfil no schema ligado, MFA, e trocar a senha pública do
+painel administrativo.

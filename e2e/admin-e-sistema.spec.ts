@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test'
+import { CONTA_CANARIO, CONTA_SEAB, SENHA_E2E } from './contas'
 import {
   CICLO_OCULTO,
   ROTAS_ABERTAS,
@@ -26,6 +27,15 @@ async function entrarNoPainel(page: import('@playwright/test').Page) {
   await page.getByLabel('Senha').fill(SENHA)
   await page.getByRole('button', { name: 'Entrar' }).click()
   await expect(page).toHaveURL(/\/admin$/)
+}
+
+/** Login do /sistema com uma conta de verdade (ADR-051). */
+async function entrarComConta(page: import('@playwright/test').Page, login: string) {
+  await page.goto('/sistema/entrar')
+  await page.getByLabel('Login').fill(login)
+  await page.getByLabel('Senha').fill(SENHA_E2E)
+  await page.getByRole('button', { name: 'Entrar' }).click()
+  await expect(page.getByText('Conectado como')).toBeVisible()
 }
 
 test.describe('acesso ao painel', () => {
@@ -196,25 +206,28 @@ test.describe('avanço de ciclo', () => {
     expect(resposta.status()).toBe(404)
   })
 
-  test('a prévia de visitante esconde o controle que o admin tem', async ({ page }) => {
+  test('a senha do painel não basta: avançar etapa é da conta da SEAB', async ({ page }) => {
+    // A sessão do painel administrativo, cuja senha é pública no briefing,
+    // não mostra o controle nem passa pela rota.
     await entrarNoPainel(page)
+    await page.goto('/sistema?abrir=painel-seab')
+    await expect(page.getByRole('button', { name: CONTROLE })).toHaveCount(0)
+    const soAdmin = await page.request.post('/api/sistema/ciclo', {
+      headers: await comSessao(page),
+      form: { cicloId: 'ciclo-2026-07', confirmo: 'on' },
+      maxRedirects: 0,
+    })
+    expect(soAdmin.status()).toBe(404)
 
-    await page.goto('/sistema/cam')
-    await expect(page).toHaveURL(/\/sistema\?abrir=painel-seab#tela-painel-seab$/)
+    // Com a conta da SEAB, o controle aparece.
+    await entrarComConta(page, CONTA_SEAB)
+    await page.goto('/sistema?abrir=painel-seab')
     await expect(page.getByRole('button', { name: CONTROLE })).toBeVisible()
 
-    await page.goto('/admin')
-    await page.getByLabel('Ver como visitante').check()
-    // 19/09 é a data da s5: o painel da SEAB já está liberado para o público.
-    await page.getByLabel('Data simulada').fill('2026-09-19')
-    await page.getByRole('button', { name: 'Aplicar', exact: true }).click()
-
-    await page.goto('/sistema/cam')
-    await expect(
-      page.getByRole('heading', { name: 'Funil de lançamento por unidade' }),
-    ).toBeVisible()
+    // Saiu, sumiu.
+    await page.getByRole('button', { name: 'Sair' }).click()
+    await page.goto('/sistema?abrir=painel-seab')
     await expect(page.getByRole('button', { name: CONTROLE })).toHaveCount(0)
-    // E nem a dica de que existe transição: o visitante não sabe que dá para agir.
     expect(await page.content()).not.toContain('Próxima etapa')
   })
 })
@@ -412,24 +425,72 @@ async function lancarFamilias(page: import('@playwright/test').Page, numerador: 
     .locator('form', { has: page.locator('#numerador-acompanhamento-familias') })
     .getByRole('button', { name: 'Salvar' })
     .click()
-  await expect(page.getByText('Lançamento registrado.')).toBeVisible()
+  await expect(page.getByText(/^Lançamento (registrado|corrigido)/)).toBeVisible()
 }
 
 /**
- * A escrita é de quem escreve (auditoria do SR1, lacuna 10).
+ * A escrita é gravada no banco, vale para todos e exige login (ADR-050 e 051).
  *
- * Dois navegadores, duas cópias: o lançamento de um não aparece para o outro,
- * e o avanço de etapa que o admin faz na demonstração não muda a tela de
- * nenhum avaliador que esteja navegando ao mesmo tempo.
+ * Dois navegadores, um banco: o lançamento de um aparece para o outro, e o
+ * avanço de etapa que a SEAB faz muda o mês para todo mundo, como no processo
+ * real. Sem conta, quem chega navega tudo e não grava nada.
  */
-test.describe('cada visitante escreve na própria cópia', () => {
+test.describe('a escrita persiste e é compartilhada', () => {
+  // O banco é um só para a execução inteira, e homologar julho não tem volta:
+  // rodando de novo no projeto mobile, o botão de avançar já não existiria.
+  // A jornada de escrita roda uma vez, no desktop.
+  test.beforeEach(({}, info) => {
+    test.skip(info.project.name !== 'chromium', 'escrita roda só no desktop')
+  })
+
   const TELA_DE_LANCAMENTO = '/sistema?abrir=lancamento&lanc_unidade=usf-canario'
 
-  test('o que um visitante lança, o outro não vê', async ({ page, browser, baseURL }) => {
+  test('o visitante não grava, mesmo escolhendo o papel de gerente', async ({ page }) => {
     await page.goto('/sistema')
     await page.getByLabel('Estou usando como').selectOption('gerente_unidade')
     await expect(page.getByText('Tutorial guiado para Gerente de unidade')).toBeVisible()
+    await expect(page.getByText(/Você está como visitante, só leitura/)).toBeVisible()
 
+    await page.goto(TELA_DE_LANCAMENTO)
+    await page.locator('#numerador-acompanhamento-familias').fill('150')
+    await page.locator('#denominador-acompanhamento-familias').fill('200')
+    await page.locator('#evidencia-acompanhamento-familias').fill('tentativa sem conta')
+    await page
+      .locator('form', { has: page.locator('#numerador-acompanhamento-familias') })
+      .getByRole('button', { name: 'Salvar' })
+      .click()
+    await expect(page.getByText(/Sem login, o sistema é só leitura/)).toBeVisible()
+    await expect(page.locator('#numerador-acompanhamento-familias')).not.toHaveValue('150')
+  })
+
+  test('senha errada não entra, e a mensagem não diz o que errou', async ({ page }) => {
+    await page.goto('/sistema/entrar')
+    await page.getByLabel('Login').fill(CONTA_CANARIO)
+    await page.getByLabel('Senha').fill('senha-errada-de-proposito')
+    await page.getByRole('button', { name: 'Entrar' }).click()
+    await expect(page.getByText(/Não foi possível entrar/)).toBeVisible()
+  })
+
+  test('a gerente só lança pela própria unidade', async ({ page }) => {
+    await entrarComConta(page, CONTA_CANARIO)
+    const outra = await page.request.post('/api/sistema/lancamento', {
+      headers: await comSessao(page),
+      form: {
+        subindicadorId: 'acompanhamento-familias',
+        unidadeId: 'usf-sabia',
+        cicloId: 'ciclo-2026-07',
+        numerador: '10',
+        denominador: '20',
+        evidencia: 'pela unidade dos outros',
+      },
+      maxRedirects: 0,
+    })
+    const destino = new URL(outra.headers()['location'] ?? '/', 'http://x')
+    expect(destino.searchParams.get('erro')).toBe('Esta conta só lança pela própria unidade.')
+  })
+
+  test('o que a gerente lança, o visitante vê', async ({ page, browser, baseURL }) => {
+    await entrarComConta(page, CONTA_CANARIO)
     await page.goto(TELA_DE_LANCAMENTO)
     await lancarFamilias(page, '170')
     await expect(page.locator('#numerador-acompanhamento-familias')).toHaveValue('170')
@@ -438,7 +499,7 @@ test.describe('cada visitante escreve na própria cópia', () => {
     try {
       const outraPagina = await outro.newPage()
       await outraPagina.goto(TELA_DE_LANCAMENTO)
-      await expect(outraPagina.locator('#numerador-acompanhamento-familias')).toHaveValue('')
+      await expect(outraPagina.locator('#numerador-acompanhamento-familias')).toHaveValue('170')
     } finally {
       await outro.close()
     }
@@ -449,11 +510,11 @@ test.describe('cada visitante escreve na própria cópia', () => {
     browser,
     baseURL,
   }) => {
-    await entrarNoPainel(page)
+    await entrarComConta(page, CONTA_SEAB)
 
     // 1. A unidade (aqui a SEAB, lançando por ela) informa um número de julho.
     await page.goto(TELA_DE_LANCAMENTO)
-    await lancarFamilias(page, '170')
+    await lancarFamilias(page, '175')
 
     // 2. A SEAB fecha o prazo e homologa: dois avanços, cada um confirmado.
     await page.goto('/sistema?abrir=painel-seab')
@@ -495,20 +556,15 @@ test.describe('cada visitante escreve na própria cópia', () => {
     await page.goto('/sistema?abrir=auditoria&aud_tipo=lancamento_recusado')
     await expect(page.getByText(/Tentativa de lançamento de vacinacao-polio/)).toBeVisible()
 
-    // 5. E ninguém mais viu nada disso: para outro navegador, julho segue aberto.
+    // 5. E vale para todos: outro navegador, sem sessão nenhuma, já vê a
+    //    nota de julho, porque ela está no banco.
     const outro = await browser.newContext({ baseURL })
     try {
       const outraPagina = await outro.newPage()
-      await outraPagina.goto('/sistema?abrir=painel-seab')
-      await expect(outraPagina.getByText('mês em andamento: 2026-07')).toBeVisible()
-      await expect(
-        outraPagina.locator('#tela-painel-seab').getByText('Lançamento aberto').first(),
-      ).toBeVisible()
       await outraPagina.goto(
         '/sistema?abrir=meu-resultado&res_gerente=ger-usf-canario&res_ciclo=ciclo-2026-07',
       )
-      // Sem nota de julho: o seletor cai no último mês fechado, junho.
-      await expect(outraPagina.locator('#res_ciclo')).toHaveValue('ciclo-2026-06')
+      await expect(outraPagina.locator('#res_ciclo')).toHaveValue('ciclo-2026-07')
     } finally {
       await outro.close()
     }

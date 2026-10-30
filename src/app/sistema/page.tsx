@@ -21,7 +21,12 @@ import { Tutorial } from '@/components/sistema/tutorial'
 import { cicloPorId } from '@/lib/cronograma'
 import { formatarBR } from '@/lib/datas'
 import { PERFIS, type Feature, type FeatureId } from '@/lib/features'
-import { featuresDoPerfilAtual, featuresLiberadas, identidadeAtual } from '@/lib/sistema'
+import {
+  featuresDoPerfilAtual,
+  featuresLiberadas,
+  identidadeAtual,
+  type Identidade,
+} from '@/lib/sistema'
 import { lerParametros, linkDaTela, type ParametrosSistema } from '@/lib/sistema/parametros'
 import { obterVisao } from '@/lib/visao'
 
@@ -31,6 +36,24 @@ export const metadata: Metadata = {
 }
 
 export const dynamic = 'force-dynamic'
+
+/**
+ * Com login de gerente, as telas abrem na PRÓPRIA unidade e no PRÓPRIO
+ * gerente, seja qual for a URL. Trocar `lanc_unidade` ou `res_gerente` à mão
+ * não mostra a nota de outro gerente, e as rotas de escrita recusam do mesmo
+ * jeito (ADR-051). Visitante, SEAB e administrador seguem livres.
+ */
+function travarNaPropriaConta(params: ParametrosSistema, identidade: Identidade): ParametrosSistema {
+  if (!identidade.autenticada || !identidade.gerenteId) return params
+  return {
+    ...params,
+    res_gerente: identidade.gerenteId,
+    cont_gerente: identidade.gerenteId,
+    ...(identidade.perfil === 'gerente_unidade' && identidade.unidadeId
+      ? { lanc_unidade: identidade.unidadeId }
+      : {}),
+  }
+}
 
 /** Primeiro ciclo que libera alguma funcionalidade — usado na mensagem de espera. */
 const PRIMEIRO_CICLO_COM_FUNCIONALIDADE = 's5'
@@ -115,7 +138,7 @@ export default async function SistemaCompleto({
 }) {
   const visao = await obterVisao()
   const identidade = await identidadeAtual()
-  const params = lerParametros(await searchParams)
+  const params = travarNaPropriaConta(lerParametros(await searchParams), identidade)
 
   const liberadas = featuresLiberadas(visao)
   const doPerfil = featuresDoPerfilAtual(visao, identidade.perfil)
@@ -126,6 +149,7 @@ export default async function SistemaCompleto({
     perfil: identidade.perfil,
     admin: visao.admin && !visao.verComoVisitante,
     disponiveis: doPerfil.map((f) => f.id as FeatureId),
+    autenticada: identidade.autenticada,
     gerenteId: identidade.gerenteId,
   }
 
@@ -223,7 +247,8 @@ export default async function SistemaCompleto({
         <>
           <section className="mt-7" aria-labelledby="titulo-perfil">
             <h2 id="titulo-perfil" className="rotulo">
-              Você está usando como {PERFIS[identidade.perfil].rotulo}
+              {identidade.autenticada ? 'Você entrou como' : 'Você está usando como'}{' '}
+              {PERFIS[identidade.perfil].rotulo}
             </h2>
             <p className="mt-1 max-w-prose text-sm text-apagado">
               {PERFIS[identidade.perfil].quemE}
@@ -237,15 +262,26 @@ export default async function SistemaCompleto({
               />
             </div>
 
-            {/* A escolha da escrita isolada (ver `sistema/estado.ts`), dita em
-                uma frase para quem navega sozinho: o que ele faz aqui não
-                aparece para o próximo avaliador, e dura só até fechar o
-                navegador (o diário vive num cookie de sessão, ADR-048). */}
+            {/* A escrita é persistente e compartilhada (driver PostgreSQL) e só
+                acontece com login (ADR-051). Dito em uma frase para quem navega. */}
             <div className="mt-4">
               <Aviso>
-                Protótipo com dados de teste. O que você lança ou pede aqui fica só na sua
-                sessão de teste, guardada neste navegador: ninguém mais vê, e some quando
-                você fecha o navegador.
+                {identidade.autenticada ? (
+                  <>
+                    Protótipo com dados de teste, gravados num banco de dados. O que você lança
+                    ou pede aqui fica salvo: aparece para todo mundo e continua lá depois que
+                    você fecha o navegador.
+                  </>
+                ) : (
+                  <>
+                    Você está como visitante, só leitura: troque o papel no seletor para ver o
+                    sistema pelos olhos de cada um. Para lançar, contestar ou avançar a etapa,{' '}
+                    <Link href="/sistema/entrar" className="underline underline-offset-4">
+                      entre com a sua conta
+                    </Link>
+                    .
+                  </>
+                )}
               </Aviso>
             </div>
           </section>
