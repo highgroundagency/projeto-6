@@ -1,0 +1,26 @@
+# O que NÃO entra na imagem. Menos arquivo = build mais rápido e nenhum
+# segredo local copiado para dentro do container.
+
+# Instalados e gerados dentro do próprio container
+node_modules
+.next
+*.tsbuildinfo
+next-env.d.ts
+
+# Variáveis locais: quem configura o container é o docker-compose.yml
+.env*
+!.env.example
+
+# Não fazem parte do site: cadernos e dados de ML (o app lê só o JSON que
+# eles geram, em src/content/ml/), testes de ponta a ponta e histórico do Git
+ml
+e2e
+playwright.config.ts
+test-results
+playwright-report
+coverage
+.git
+.github
+.claude
+.dados
+.vercel

@@ -129,8 +129,8 @@ export async function TelaLancamento({ ctx }: PropsTela) {
       <div className="mt-6">
         <Aviso>
           Os {dados.indicadores.length} indicadores daqui são de teste. Os 5 da portaria
-          ainda vão entrar. O que você lança fica só na sua sessão de teste, guardada neste
-          navegador: ninguém mais vê, e some quando você fecha o navegador.
+          ainda vão entrar. O que você lança fica gravado no banco de dados: aparece para
+          todo mundo e continua lá depois que você fecha o navegador.
         </Aviso>
       </div>
 

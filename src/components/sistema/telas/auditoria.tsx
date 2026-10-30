@@ -32,10 +32,10 @@ const ROTULO_TIPO: Record<TipoEvento, string> = {
 const LIMITE = 120
 
 /**
- * Quantos registros a tela LÊ para contar. Bem acima do histórico inteiro (a
- * base de teste tem pouco mais de 560, e cada sessão de teste soma no máximo
- * 200, bem menos na prática, porque o diário cabe num cookie): contar só os 500
- * primeiros fazia o total mentir quando julho entrou.
+ * Quantos registros a tela LÊ para contar. Bem acima do histórico atual (a
+ * base de teste tem pouco mais de 560, e o banco soma o que as telas gravam):
+ * contar só os 500 primeiros fazia o total mentir quando julho entrou. Com o
+ * banco crescendo, a contagem deveria virar um `count(*)` no driver.
  */
 const LIMITE_DE_LEITURA = 5000
 
@@ -99,7 +99,7 @@ export async function TelaAuditoria({ ctx }: PropsTela) {
           Este histórico só recebe registros novos: ninguém edita nem apaga o que já aconteceu,
           nem mesmo a SEAB. Correção entra como registro novo, com o valor antigo guardado
           ao lado. É isso que faz o histórico servir de prova. O que aparece aqui é o histórico
-          do protótipo: o da base de teste, mais o que você fez nesta sessão de teste.
+          gravado no banco de dados: o da base de teste, mais tudo o que foi feito nas telas.
         </Aviso>
       </div>
 

@@ -40,21 +40,39 @@ frente. Ver `docs/releases.md`.
 
 ## Começando
 
+Só com o Docker Desktop, sem Node nem npm na máquina:
+
+```bash
+docker compose up -d --build  # sobe o banco e o site
+```
+
+Com Node, para desenvolver com recarga automática:
+
 ```bash
 npm install
+docker compose up -d postgres # só o banco
+cp .env.example .env.local    # já traz a DATABASE_URL do Docker
+npm run db:preparar           # cria as tabelas e carrega a base sintética
 npm run dev
 ```
 
-Abre em `http://localhost:3000`. O painel administrativo fica em `/admin/entrar` — nenhuma
+Para lançar pelo `/sistema`, crie as contas (a senha aparece uma vez só):
+`docker compose exec app npx tsx scripts/usuarios.ts demo`.
+
+Nos dois casos, abre em `http://localhost:3000`. O `/sistema` grava no banco: o que se lança
+fica salvo. Detalhes em [`docs/banco.md`](docs/banco.md). O painel administrativo fica em `/admin/entrar` — nenhuma
 página do site aponta para lá, ver ADR-015.
 
 ### Variáveis de ambiente
 
-Copie `.env.example` para `.env.local`. Nada é obrigatório para rodar localmente.
+Copie `.env.example` para `.env.local`. Só `DATABASE_URL` é necessária para o `/sistema`.
 
 | Variável | Para quê |
 | --- | --- |
 | `NEXT_PUBLIC_DRIVE_URL` | Link da pasta do projeto no Drive. Sem valor, o link não aparece |
+| `DATABASE_URL` | PostgreSQL do `/sistema`. O `.env.example` traz a do Docker local |
+| `DATABASE_SECRET_ID` | Em produção na AWS, o nome do segredo no Secrets Manager, no lugar da `DATABASE_URL` |
+| `SESSAO_CHAVE` | Chave AES-256 do login do `/sistema` (`openssl rand -base64 32`). **Obrigatória em produção** |
 | `ADMIN_SENHA` | Senha do painel (padrão `0321`) |
 | `ADMIN_COOKIE_SECRET` | Assinatura do cookie de sessão. **Obrigatória em produção** |
 | `RELEASE_ADIANTAMENTO_DIAS` | Quantos dias à frente o site mostra (padrão `7`) |
@@ -88,7 +106,7 @@ O que está coberto, contado em 28/09:
 ## Stack
 
 Next.js 15 (App Router) · TypeScript · Tailwind v4 · zod · Vitest · Playwright · Deploy na
-Vercel. **Sem banco**: os dados do app são sintéticos e vivem em memória.
+Vercel · **PostgreSQL 16** (`pg`, sem ORM). Os dados são sintéticos e vivem no banco.
 
 Quase nenhum JavaScript de aplicação chega ao navegador: as telas são Server Components e
 os formulários são HTML puro.
@@ -103,7 +121,7 @@ os formulários são HTML puro.
 | [`docs/nuvem.md`](docs/nuvem.md) | Onde cada componente executa, pipeline, doze fatores e limites de escala |
 | [`docs/privacidade.md`](docs/privacidade.md) | LGPD, base legal, Privacy by Design, direitos dos titulares e identificação indireta na base da SESAU |
 | [`docs/decisoes.md`](docs/decisoes.md) | ADRs — os porquês, em cinco linhas cada |
-| [`docs/banco.md`](docs/banco.md) | O schema PostgreSQL que existe mas não está ligado: por quê, o que contém e como usá-lo |
+| [`docs/banco.md`](docs/banco.md) | O banco PostgreSQL: como subir, o que contém, as quatro travas e o schema antigo guardado |
 | [`docs/validacao.md`](docs/validacao.md) | O que é testado e os instrumentos de validação com o cliente |
 | [`docs/uso-de-ia.md`](docs/uso-de-ia.md) | Registro semanal de uso de IA, com quem validou |
 | [`CLAUDE.md`](CLAUDE.md) | Regras da casa para quem for mexer no código |

@@ -3519,6 +3519,10 @@ Os porquês completos estão em `docs/decisoes.md`. Os títulos, aqui:
   - ADR-048 · A escrita do protótipo vai num diário assinado no cookie, porque na Vercel a
     rota e a página são funções diferentes
   - ADR-049 · O que o sistema fazia sem história virou história, fora da conta das 26
+  - ADR-050 · O sistema passa a ler e gravar num PostgreSQL, com o schema remodelado para o
+    domínio atual
+  - ADR-051 · Quem escreve entra com conta; senha com scrypt, sessão com AES-256-GCM,
+    credenciais do banco no Secrets Manager
 
 ============================================================================================
 13.  COMO RODAR E COMO CONFERIR
@@ -3533,6 +3537,10 @@ Os porquês completos estão em `docs/decisoes.md`. Os títulos, aqui:
   npm run test:watch             vitest
   npm run e2e                    playwright test
   npm run semear                 tsx scripts/semear.ts
+  npm run db:migrar              tsx scripts/db.ts migrar
+  npm run db:semear              tsx scripts/db.ts semear
+  npm run db:preparar            tsx scripts/db.ts preparar
+  npm run usuarios               tsx scripts/usuarios.ts
   npm run testar-rls             vitest run src/lib/supabase/rls.test.ts src/lib/dados/semeadura.test.ts
   npm run verificar-vazamento    tsx scripts/verificar-vazamento.ts
   npm run roteiro                tsx scripts/roteiro.ts
@@ -3540,6 +3548,7 @@ Os porquês completos estão em `docs/decisoes.md`. Os títulos, aqui:
   npm run dossie                 tsx --tsconfig scripts/tsconfig.dossie.json scripts/dossie.ts
   npm run conferir-dossie        tsx --tsconfig scripts/tsconfig.dossie.json scripts/dossie.ts --conferir
   npm run verificar              npm run typecheck && npm run test && npm run build && npm run verificar-vazamento && npm run conferir-dossie
+  npm run testar-banco           vitest run src/lib/dados/driver-postgres.test.ts src/lib/dados/postgres src/lib/auth
 
 
 --- Estado da vitrine no momento em que este dossiê foi gerado -----------------------------
