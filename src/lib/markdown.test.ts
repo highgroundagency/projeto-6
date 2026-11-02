@@ -54,6 +54,13 @@ describe('analisarMarkdown', () => {
     expect(nos[0].tipo).toBe('paragrafo')
   })
 
+  it('lê arquivo com quebra de linha do Windows (CRLF) igual ao LF', () => {
+    // Numa cópia do Windows os docs chegam com `\r\n`. Antes, o `\r` no fim
+    // de um item de lista prendia o laço e o `next build` morria sem memória.
+    const lf = '# Título\n\n- um\n- dois\n\n1. primeiro\n\n| a | b |\n| - | - |\n| 1 | 2 |\n\ntexto'
+    expect(analisarMarkdown(lf.replace(/\n/g, '\r\n'))).toEqual(analisarMarkdown(lf))
+  })
+
   it('lê o documento real de uso de IA sem perder a tabela', async () => {
     const { lerDoc } = await import('./markdown')
     const nos = analisarMarkdown(await lerDoc('uso-de-ia.md'))

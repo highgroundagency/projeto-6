@@ -96,3 +96,19 @@ export async function exigirPerfil(id: FeatureId): Promise<ContextoSistema> {
   if (!contexto.feature.perfis.includes(contexto.perfil)) notFound()
   return contexto
 }
+
+/**
+ * Mensagem de quem tentou escrever sem login. Vale para lançar, contestar e
+ * avançar etapa: o visitante navega todas as visões, mas não grava nada.
+ */
+export const SO_LEITURA =
+  'Entre com a sua conta para fazer isso. Sem login, o sistema é só leitura.'
+
+/**
+ * Quem pode escrever: só identidade AUTENTICADA (ADR-051). O perfil do seletor
+ * é preferência de navegação e nunca autoriza gravação no banco.
+ */
+export async function identidadeQueEscreve(): Promise<Identidade | null> {
+  const identidade = await identidadeAtual()
+  return identidade.autenticada ? identidade : null
+}

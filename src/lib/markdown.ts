@@ -31,7 +31,11 @@ function celulas(linha: string): string[] {
 const ehSeparadorDeTabela = (linha: string) => /^\s*\|?[\s:|-]+\|[\s:|-]*$/.test(linha)
 
 export function analisarMarkdown(bruto: string): NoMarkdown[] {
-  const linhas = bruto.split('\n')
+  // `\r?\n`, não `\n`: numa cópia do Windows (CRLF) cada linha terminaria em
+  // `\r`, que o `.` das expressões abaixo não casa. Um item de lista deixava de
+  // ser lista sem virar parágrafo, `i` não andava e o laço comia a memória até
+  // o `next build` morrer.
+  const linhas = bruto.split(/\r?\n/)
   const nos: NoMarkdown[] = []
   let i = 0
 

@@ -1,0 +1,64 @@
+# Prumo: banco e aplicação no Docker. Só o Docker Desktop precisa estar
+# instalado: nada de Node ou npm na máquina.
+#
+#   docker compose up -d --build   sobe o banco e o site (http://localhost:3000)
+#   docker compose logs -f app     acompanha o que o site está fazendo
+#   docker compose down            para tudo (os dados ficam no volume)
+#   docker compose down -v         para tudo E APAGA os dados
+#
+# Mudou o código? Rode `docker compose up -d --build` de novo: a imagem é
+# refeita e o banco continua com o que já foi lançado.
+#
+# Contas para entrar no /sistema (a senha aparece uma vez só):
+#   docker compose exec app npx tsx scripts/usuarios.ts demo
+#
+# Quem tem Node instalado pode subir só o banco (`docker compose up -d postgres`)
+# e rodar `npm run dev` na máquina, como antes.
+#
+# Credenciais só de desenvolvimento local. Não use estas em produção.
+
+services:
+  postgres:
+    image: postgres:16
+    container_name: prumo-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: prumo
+      POSTGRES_PASSWORD: prumo
+      POSTGRES_DB: prumo
+      TZ: UTC
+    ports:
+      - '5432:5432'
+    volumes:
+      - prumo-dados:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U prumo -d prumo']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  app:
+    build: .
+    image: prumo-app
+    container_name: prumo-app
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      # Dentro da rede do Docker, o banco atende pelo nome do serviço.
+      DATABASE_URL: postgresql://prumo:prumo@postgres:5432/prumo
+      # O painel administrativo exige um segredo em produção. Este é só local;
+      # para trocar, crie um arquivo .env ao lado deste com ADMIN_COOKIE_SECRET=...
+      ADMIN_COOKIE_SECRET: ${ADMIN_COOKIE_SECRET:-segredo-local-so-para-desenvolvimento}
+      ADMIN_SENHA: ${ADMIN_SENHA:-}
+      # Chave AES-256 do cookie de login (32 bytes em base64). Este valor é só
+      # local e está no repositório: para a sua, crie um .env com
+      # SESSAO_CHAVE=$(openssl rand -base64 32). Em produção ela é obrigatória
+      # e vem do cofre, nunca daqui.
+      SESSAO_CHAVE: ${SESSAO_CHAVE:-cHJ1bW8tY2hhdmUtbG9jYWwtc28tcGFyYS1kb2NrZXI=}
+    ports:
+      - '3000:3000'
+
+volumes:
+  prumo-dados:

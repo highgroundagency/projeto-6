@@ -45,8 +45,9 @@ jobs:
       - name: Checagem de tipos
         run: npm run typecheck
 
-      # Inclui as 23 verificações de RLS e a semeadura completa contra o schema
-      # real, porque DATABASE_URL_TESTE está definida acima.
+      # Inclui as 23 verificações de RLS do schema guardado, a semeadura dele e
+      # o driver PostgreSQL contra o schema ligado (db/migrations), porque
+      # DATABASE_URL_TESTE está definida acima.
       - name: Testes de unidade
         run: npm test
 
@@ -61,6 +62,25 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 25
     needs: verificar
+
+    # O /sistema lê e grava no PostgreSQL. A suíte prepara o banco sozinha
+    # (migrações + base sintética) antes de subir o servidor.
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: prumo_e2e
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      DATABASE_URL_E2E: postgresql://postgres:postgres@localhost:5432/prumo_e2e
 
     steps:
       - uses: actions/checkout@v4

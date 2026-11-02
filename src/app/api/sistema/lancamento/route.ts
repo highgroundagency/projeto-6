@@ -3,7 +3,7 @@ import { z } from 'zod'
 import { repositorio } from '@/lib/dados'
 import { carregarDados } from '@/lib/dados/consultas'
 import { comParametros, redirecionar } from '@/lib/http'
-import { exigirPerfil, identidadeAtual } from '@/lib/sistema'
+import { exigirPerfil, identidadeQueEscreve, SO_LEITURA } from '@/lib/sistema'
 import { ancoraDaTela } from '@/lib/sistema/parametros'
 
 /** Volta para a sanfona de lançamento, já aberta e com a unidade preservada. */
@@ -23,8 +23,9 @@ function deVolta(unidade: string, resultado: { ok?: string; erro?: string }): st
  * existentes. Subindicador 'indice' exige `valor`; 'razao' exige `numerador` e
  * `denominador`. A janela de prazo é garantida pela camada de dados.
  *
- * A escrita cai na cópia de QUEM LANÇOU (ver `sistema/estado.ts`): o driver
- * grava o diário dele no cookie, e ninguém mais vê o número.
+ * A escrita vai para o banco (`driver-postgres.ts`) e vale para todos. O
+ * gatilho `lancamento_dentro_da_janela` recusa o que chegar fora do prazo
+ * mesmo que esta rota esqueça de checar.
  */
 const corpoSchema = z.object({
   subindicadorId: z.string().min(1).max(80),
@@ -66,7 +67,8 @@ export async function POST(requisicao: NextRequest) {
   }
 
   const dados = analisado.data
-  const identidade = await identidadeAtual()
+  const identidade = await identidadeQueEscreve()
+  if (!identidade) return redirecionar(deVolta(dados.unidadeId, { erro: SO_LEITURA }))
 
   if (identidade.perfil === 'administrador') {
     return redirecionar(deVolta(dados.unidadeId, { erro: 'Este perfil não lança números.' }))
@@ -74,9 +76,26 @@ export async function POST(requisicao: NextRequest) {
 
   const panorama = await carregarDados()
   const subindicador = panorama.subindicadorPorId(dados.subindicadorId)
-  if (!subindicador || !panorama.unidadePorId(dados.unidadeId)) {
+  const unidade = panorama.unidadePorId(dados.unidadeId)
+  if (!subindicador || !unidade) {
     return redirecionar(
       deVolta(dados.unidadeId, { erro: 'Subindicador ou unidade desconhecidos.' }),
+    )
+  }
+
+  // A conta manda, não o formulário: o id da unidade vem do navegador e pode
+  // ter sido trocado à mão. Gerente de unidade lança pela dele; o distrital,
+  // pelas do distrito dele; a SEAB, por qualquer uma (a unidade atrasada).
+  if (identidade.perfil === 'gerente_unidade' && unidade.id !== identidade.unidadeId) {
+    return redirecionar(
+      deVolta(dados.unidadeId, { erro: 'Esta conta só lança pela própria unidade.' }),
+    )
+  }
+  if (identidade.perfil === 'gerente_distrital' && unidade.distritoId !== identidade.distritoId) {
+    return redirecionar(
+      deVolta(dados.unidadeId, {
+        erro: 'Esta conta só lança pelas unidades do próprio distrito.',
+      }),
     )
   }
 
@@ -96,10 +115,9 @@ export async function POST(requisicao: NextRequest) {
   }
 
   const agora = new Date().toISOString()
-  // O autor da trilha diz quem de fato lançou: o gerente da unidade quando é
-  // ele; o próprio papel quando a SEAB ou a gerência distrital lança por ela.
-  const autor =
-    identidade.perfil === 'gerente_unidade' ? `ger-${dados.unidadeId}` : identidade.perfil
+  // O autor da trilha é a CONTA que lançou: com login, a trilha diz quem foi,
+  // não só o papel.
+  const autor = identidade.login ?? identidade.perfil
   const resultado = await repositorio().registrarLancamento(
     {
       subindicadorId: dados.subindicadorId,

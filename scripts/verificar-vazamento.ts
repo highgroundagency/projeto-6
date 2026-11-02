@@ -129,6 +129,10 @@ async function main() {
       // herdasse a vitrine, passaria a medir a exceção e a garantia do §6.3
       // ficaria sem prova justamente nos dias em que ela mais importa.
       RELEASE_ABERTO_ATE: '2020-01-01T00:00:00Z',
+      // Este script mede vazamento de CONTEÚDO de release, não dado. Sem um
+      // banco configurado, o /sistema lê o seed em memória só aqui, para que a
+      // verificação rode em qualquer máquina e no CI sem Postgres.
+      ...(process.env.DATABASE_URL ? {} : { DADOS_DRIVER: 'seed' }),
     },
     // 'ignore' e não 'pipe': ninguém lê essa saída, e um pipe cheio trava o
     // servidor no meio da verificação.
