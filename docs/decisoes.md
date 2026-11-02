@@ -1580,3 +1580,34 @@ e2e cria as suas num banco descartável. Produção passa a exigir `SESSAO_CHAVE
 
 **O que ficou para depois.** RLS por perfil no schema ligado, MFA, e trocar a senha pública do
 painel administrativo.
+
+## ADR-052 · A sessão vira JWE (JWT cifrado com AES-256-GCM) e o cookie passa a SameSite=Strict
+
+**Contexto.** A ADR-051 guardou a sessão num cookie `httpOnly` cifrado com AES-256-GCM, num
+formato próprio, com `SameSite=Lax`. Na revisão da equipe veio a sugestão de usar JWT em
+cookie com `SameSite=Strict`, já que site e API moram no mesmo domínio.
+
+**Decisão.**
+
+1. **O token passa a ser um JWE** (RFC 7516), com `alg: dir` e `enc: A256GCM`: a mesma
+   cifra de antes, agora num formato padrão, com os campos de JWT (`sub`, `iss`, `aud`,
+   `iat`, `exp`, `jti`). Biblioteca `jose`. JWE e não JWT comum: o JWT comum é só assinado,
+   e quem pega o cookie lê o conteúdo; o JWE é cifrado.
+2. **A abertura aceita um algoritmo e uma cifra só**, e confere emissor, audiência e
+   validade. JWT só assinado, `alg: none` e cifra diferente são recusados, que são as
+   falhas clássicas de biblioteca de JWT.
+3. **O JWE não substitui a conferência no banco.** A cada requisição, a conta precisa estar
+   ativa e com a mesma versão de sessão: trocar a senha ou desativar continua derrubando a
+   sessão na hora, o que um JWT puro, sem estado, não faria.
+4. **`SameSite=Strict`.** O navegador só manda o cookie em requisição nascida no próprio
+   site. O custo aceito: quem abre um link do `/sistema` vindo de fora chega deslogado até
+   navegar dentro do site.
+
+**Como se prova.** Testes de unidade do formato (cinco partes, cabeçalho), da cifra, da
+validade ao segundo e dos ataques (JWT assinado, `alg: none`, A128GCM, emissor e audiência
+alheios); os testes de login e revogação contra Postgres real seguem valendo; e um teste de
+ponta a ponta confere no navegador que o cookie é `httpOnly`, `Strict` e um JWE ilegível.
+
+**Consequência.** Outro serviço que tenha a chave pode abrir a sessão com qualquer biblioteca
+de JWT, o que serve à ida para a AWS. Sessões emitidas no formato antigo deixam de valer: quem
+estava logado entra de novo.

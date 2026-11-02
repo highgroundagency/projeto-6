@@ -463,6 +463,22 @@ test.describe('a escrita persiste e é compartilhada', () => {
     await expect(page.locator('#numerador-acompanhamento-familias')).not.toHaveValue('150')
   })
 
+  test('a sessão é um JWE em cookie httpOnly e SameSite=Strict', async ({ page }) => {
+    await entrarComConta(page, CONTA_CANARIO)
+    const cookie = (await page.context().cookies()).find((c) => c.name === 'prumo_sessao')
+    expect(cookie).toBeDefined()
+    expect(cookie!.httpOnly).toBe(true)
+    expect(cookie!.sameSite).toBe('Strict')
+    // JWE compacto: cinco partes, cabeçalho dir + A256GCM, conteúdo ilegível.
+    const partes = cookie!.value.split('.')
+    expect(partes).toHaveLength(5)
+    const cabecalho = JSON.parse(Buffer.from(partes[0], 'base64url').toString('utf8'))
+    expect(cabecalho).toMatchObject({ alg: 'dir', enc: 'A256GCM' })
+    expect(Buffer.from(partes[3], 'base64url').toString('latin1')).not.toContain('usr-')
+    // E o JavaScript da página não enxerga o cookie.
+    expect(await page.evaluate(() => document.cookie)).not.toContain('prumo_sessao')
+  })
+
   test('senha errada não entra, e a mensagem não diz o que errou', async ({ page }) => {
     await page.goto('/sistema/entrar')
     await page.getByLabel('Login').fill(CONTA_CANARIO)

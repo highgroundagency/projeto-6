@@ -71,7 +71,7 @@ export async function POST(requisicao: NextRequest) {
   const resposta = redirecionar('/sistema')
   resposta.cookies.set(
     NOME_COOKIE_SESSAO_SISTEMA,
-    emitirSessao(resultado.usuario, chave, Math.floor(Date.now() / 1000)),
+    await emitirSessao(resultado.usuario, chave, Math.floor(Date.now() / 1000)),
     opcoesCookieSessaoSistema(),
   )
   return resposta

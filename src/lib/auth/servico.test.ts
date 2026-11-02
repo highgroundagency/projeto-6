@@ -5,7 +5,7 @@ import { BASE } from '@/lib/seed'
 import { carregarBase } from '@/lib/dados/postgres/carga'
 import { bancoDoPool, type Banco } from '@/lib/dados/postgres/conexao'
 import { aplicarMigracoes } from '@/lib/dados/postgres/migrar'
-import { cifrarSessao, type CustoScrypt } from './cripto'
+import { emitirJwe, type CustoScrypt } from './cripto'
 import {
   autenticar,
   criarConta,
@@ -128,7 +128,7 @@ describe.skipIf(!URL_TESTE)('sessão', () => {
     )
     const login = await autenticar(banco, 'ger-usf-canario', 'senha da canario')
     if (!login.ok) throw new Error('login devia passar')
-    const token = emitirSessao(login.usuario, chave, agora())
+    const token = await emitirSessao(login.usuario, chave, agora())
 
     expect(await usuarioDaSessao(banco, token, chave, agora())).toEqual({
       id: login.usuario.id,
@@ -144,7 +144,7 @@ describe.skipIf(!URL_TESTE)('sessão', () => {
   it('trocar a senha derruba as sessões abertas antes', async () => {
     const login = await autenticar(banco, 'ger-usf-canario', 'senha da canario')
     if (!login.ok) throw new Error('login devia passar')
-    const token = emitirSessao(login.usuario, chave, agora())
+    const token = await emitirSessao(login.usuario, chave, agora())
 
     await trocarSenha(banco, 'ger-usf-canario', 'senha nova da canario', BARATO)
     expect(await usuarioDaSessao(banco, token, chave, agora())).toBeNull()
@@ -155,7 +155,7 @@ describe.skipIf(!URL_TESTE)('sessão', () => {
   it('desativar derruba a sessão na hora', async () => {
     const login = await autenticar(banco, 'seab', 'uma senha bem longa')
     if (!login.ok) throw new Error('login devia passar')
-    const token = emitirSessao(login.usuario, chave, agora())
+    const token = await emitirSessao(login.usuario, chave, agora())
     await definirAtiva(banco, 'seab', false)
     expect(await usuarioDaSessao(banco, token, chave, agora())).toBeNull()
     await definirAtiva(banco, 'seab', true)
@@ -164,7 +164,7 @@ describe.skipIf(!URL_TESTE)('sessão', () => {
   it('sessão vencida, adulterada ou de outra chave não vale', async () => {
     const login = await autenticar(banco, 'seab', 'uma senha bem longa')
     if (!login.ok) throw new Error('login devia passar')
-    const token = emitirSessao(login.usuario, chave, agora())
+    const token = await emitirSessao(login.usuario, chave, agora())
 
     expect(await usuarioDaSessao(banco, token, chave, agora() + 9 * 3600)).toBeNull()
     expect(await usuarioDaSessao(banco, token, randomBytes(32), agora())).toBeNull()
@@ -173,7 +173,7 @@ describe.skipIf(!URL_TESTE)('sessão', () => {
 
   it('não dá para forjar uma sessão de outra conta sem a chave', async () => {
     // Mesmo sabendo o formato, sem a chave o cifrado não abre.
-    const forjado = cifrarSessao({ u: 'usr-0001', s: 2, exp: agora() + 60 }, randomBytes(32))
+    const forjado = await emitirJwe({ usuarioId: 'usr-0001', versao: 2 }, randomBytes(32), agora(), 60)
     expect(await usuarioDaSessao(banco, forjado, chave, agora())).toBeNull()
   })
 })

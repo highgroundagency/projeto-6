@@ -3523,6 +3523,8 @@ Os porquês completos estão em `docs/decisoes.md`. Os títulos, aqui:
     domínio atual
   - ADR-051 · Quem escreve entra com conta; senha com scrypt, sessão com AES-256-GCM,
     credenciais do banco no Secrets Manager
+  - ADR-052 · A sessão vira JWE (JWT cifrado com AES-256-GCM) e o cookie passa a
+    SameSite=Strict
 
 ============================================================================================
 13.  COMO RODAR E COMO CONFERIR

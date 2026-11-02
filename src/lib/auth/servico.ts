@@ -1,8 +1,8 @@
 import type { PerfilId } from '@/lib/features'
 import type { Banco } from '@/lib/dados/postgres/conexao'
 import {
-  cifrarSessao,
-  decifrarSessao,
+  abrirJwe,
+  emitirJwe,
   gerarHashDeSenha,
   hashParaUsuarioInexistente,
   problemaNaSenha,
@@ -32,15 +32,6 @@ export interface Usuario {
   unidadeId: string | null
   distritoId: string | null
   versaoSessao: number
-}
-
-interface ConteudoDaSessao {
-  /** id do usuário */
-  u: string
-  /** versão da sessão no momento do login */
-  s: number
-  /** expira em (epoch, segundos) */
-  exp: number
 }
 
 /* eslint-disable @typescript-eslint/no-explicit-any -- linha crua do `pg` */
@@ -128,14 +119,18 @@ export async function autenticar(
   }
 }
 
-/** O cookie de sessão: AES-256-GCM sobre id, versão e validade. */
-export function emitirSessao(usuario: Usuario, chave: Buffer, agoraSegundos: number): string {
-  const conteudo: ConteudoDaSessao = {
-    u: usuario.id,
-    s: usuario.versaoSessao,
-    exp: agoraSegundos + DURACAO_SESSAO_SEGUNDOS,
-  }
-  return cifrarSessao(conteudo, chave)
+/** O cookie de sessão: um JWE (JWT cifrado com AES-256-GCM) com id, versão e validade. */
+export function emitirSessao(
+  usuario: Usuario,
+  chave: Uint8Array,
+  agoraSegundos: number,
+): Promise<string> {
+  return emitirJwe(
+    { usuarioId: usuario.id, versao: usuario.versaoSessao },
+    chave,
+    agoraSegundos,
+    DURACAO_SESSAO_SEGUNDOS,
+  )
 }
 
 /**
@@ -148,16 +143,16 @@ export function emitirSessao(usuario: Usuario, chave: Buffer, agoraSegundos: num
 export async function usuarioDaSessao(
   banco: Banco,
   token: string | null | undefined,
-  chave: Buffer,
+  chave: Uint8Array,
   agoraSegundos: number,
 ): Promise<Usuario | null> {
-  const conteudo = decifrarSessao<ConteudoDaSessao>(token, chave)
-  if (!conteudo || typeof conteudo.u !== 'string' || typeof conteudo.exp !== 'number') return null
-  if (conteudo.exp <= agoraSegundos) return null
+  // A validade, o emissor e a audiência são conferidos na abertura do JWE.
+  const conteudo = await abrirJwe(token, chave, agoraSegundos)
+  if (!conteudo) return null
 
-  const { rows } = await banco.query(`${SELECIONAR_USUARIO} where u.id = $1`, [conteudo.u])
+  const { rows } = await banco.query(`${SELECIONAR_USUARIO} where u.id = $1`, [conteudo.usuarioId])
   const linha = rows[0]
-  if (!linha || !linha.ativo || linha.versao_sessao !== conteudo.s) return null
+  if (!linha || !linha.ativo || linha.versao_sessao !== conteudo.versao) return null
   return deLinha(linha)
 }
 

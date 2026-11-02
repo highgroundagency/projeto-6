@@ -1,11 +1,11 @@
 import {
-  createCipheriv,
-  createDecipheriv,
   randomBytes,
+  randomUUID,
   scrypt as scryptComCallback,
   timingSafeEqual,
   type ScryptOptions,
 } from 'node:crypto'
+import { EncryptJWT, jwtDecrypt } from 'jose'
 import type { Ambiente } from '@/lib/ambiente'
 
 /**
@@ -17,10 +17,9 @@ import type { Ambiente } from '@/lib/ambiente'
  *    GPU. O sal é aleatório por senha, então duas pessoas com a mesma senha
  *    ficam com hashes diferentes.
  *
- * 2. SESSÃO: AES-256-GCM. O cookie de quem entrou vai CIFRADO (ninguém lê o
- *    conteúdo) e AUTENTICADO (qualquer bit alterado faz a abertura falhar). O
- *    vetor de inicialização é aleatório a cada token: repetir IV com a mesma
- *    chave quebra o GCM, então nunca é reaproveitado.
+ * 2. SESSÃO: JWE, um JWT cifrado com AES-256-GCM (ADR-052). O cookie de quem
+ *    entrou vai CIFRADO (ninguém lê o conteúdo) e AUTENTICADO (qualquer bit
+ *    alterado faz a abertura falhar), no formato padrão da RFC 7516.
  *
  * Tudo aqui roda no servidor (runtime Node). Nada disso vai para o navegador.
  */
@@ -106,13 +105,29 @@ export function problemaNaSenha(senha: string): string | null {
   return null
 }
 
-// --- Sessão: AES-256-GCM ----------------------------------------------------
+// --- Sessão: JWE (JWT cifrado com AES-256-GCM) ----------------------------
 
-const VERSAO_TOKEN = 'v1'
-const TAMANHO_IV = 12
-const TAMANHO_TAG = 16
-/** Dado associado: amarra o token a este uso. Um cifrado de outro lugar não abre aqui. */
-const DADO_ASSOCIADO = Buffer.from('prumo-sessao-sistema:v1')
+/**
+ * O token de sessão é um JWE: um JWT CIFRADO, no formato padrão da RFC 7516.
+ *
+ * - `alg: dir`: a chave de 32 bytes cifra direto, sem embrulhar outra chave.
+ * - `enc: A256GCM`: AES-256 em modo GCM. Cifra (ninguém lê o conteúdo) e
+ *   autentica (um bit alterado e o token não abre). O IV é aleatório a cada
+ *   token, gerado pela biblioteca.
+ *
+ * Por ser padrão, qualquer serviço com a chave abre o token com uma
+ * biblioteca de JWT comum. Por ser CIFRADO, e não só assinado como um JWT
+ * comum, quem pega o cookie não lê nem o id da conta.
+ *
+ * A abertura aceita UM algoritmo e UMA cifra, escritos aqui, e recusa
+ * qualquer outro que o token diga usar: é o que fecha a porta clássica das
+ * bibliotecas de JWT (token com `alg: none`, ou JWT só assinado no lugar do
+ * cifrado). Emissor, audiência e validade também são conferidos.
+ */
+const ALGORITMO = 'dir'
+const CIFRA = 'A256GCM'
+const EMISSOR = 'prumo'
+const AUDIENCIA = 'prumo-sistema'
 
 /**
  * Chave da sessão, 32 bytes.
@@ -158,39 +173,56 @@ export function obterChaveDeSessao(env: Ambiente = process.env): Buffer {
   return CHAVE_DEV
 }
 
-function paraBase64Url(bytes: Buffer): string {
-  return bytes.toString('base64url')
+/** O que vai dentro do token. */
+export interface ConteudoDaSessao {
+  /** id da conta (`sub` no JWT) */
+  usuarioId: string
+  /** versão da sessão no momento do login (`sv`): sobe ao trocar a senha */
+  versao: number
 }
 
-/** Cifra um objeto em `v1.<base64url(iv | cifrado | tag)>`. */
-export function cifrarSessao(conteudo: unknown, chave: Buffer): string {
-  const iv = randomBytes(TAMANHO_IV)
-  const cifra = createCipheriv('aes-256-gcm', chave, iv, { authTagLength: TAMANHO_TAG })
-  cifra.setAAD(DADO_ASSOCIADO)
-  const cifrado = Buffer.concat([cifra.update(JSON.stringify(conteudo), 'utf8'), cifra.final()])
-  const tag = cifra.getAuthTag()
-  return `${VERSAO_TOKEN}.${paraBase64Url(Buffer.concat([iv, cifrado, tag]))}`
+/** Emite o JWE. O tempo vem de fora, em segundos (o relógio é injetado). */
+export async function emitirJwe(
+  conteudo: ConteudoDaSessao,
+  chave: Uint8Array,
+  agoraSegundos: number,
+  duracaoSegundos: number,
+): Promise<string> {
+  return new EncryptJWT({ sv: conteudo.versao })
+    .setProtectedHeader({ alg: ALGORITMO, enc: CIFRA, typ: 'JWT' })
+    .setSubject(conteudo.usuarioId)
+    .setIssuer(EMISSOR)
+    .setAudience(AUDIENCIA)
+    .setIssuedAt(agoraSegundos)
+    .setExpirationTime(agoraSegundos + duracaoSegundos)
+    .setJti(randomUUID())
+    .encrypt(chave)
 }
 
 /**
- * Abre o token, ou devolve `null` se QUALQUER coisa estiver errada: versão,
- * tamanho, chave, um bit alterado. Nunca lança: entrada hostil é esperada.
+ * Abre o JWE, ou devolve `null` se QUALQUER coisa estiver errada: formato,
+ * algoritmo, chave, um bit alterado, emissor, audiência, validade. Nunca
+ * lança: entrada hostil é esperada aqui.
  */
-export function decifrarSessao<T>(token: string | null | undefined, chave: Buffer): T | null {
+export async function abrirJwe(
+  token: string | null | undefined,
+  chave: Uint8Array,
+  agoraSegundos: number,
+): Promise<ConteudoDaSessao | null> {
   if (!token) return null
-  const [versao, corpo, ...resto] = token.split('.')
-  if (versao !== VERSAO_TOKEN || !corpo || resto.length > 0) return null
   try {
-    const bytes = Buffer.from(corpo, 'base64url')
-    if (bytes.length < TAMANHO_IV + TAMANHO_TAG + 1) return null
-    const iv = bytes.subarray(0, TAMANHO_IV)
-    const tag = bytes.subarray(bytes.length - TAMANHO_TAG)
-    const cifrado = bytes.subarray(TAMANHO_IV, bytes.length - TAMANHO_TAG)
-    const decifra = createDecipheriv('aes-256-gcm', chave, iv, { authTagLength: TAMANHO_TAG })
-    decifra.setAAD(DADO_ASSOCIADO)
-    decifra.setAuthTag(tag)
-    const claro = Buffer.concat([decifra.update(cifrado), decifra.final()])
-    return JSON.parse(claro.toString('utf8')) as T
+    const { payload } = await jwtDecrypt(token, chave, {
+      keyManagementAlgorithms: [ALGORITMO],
+      contentEncryptionAlgorithms: [CIFRA],
+      issuer: EMISSOR,
+      audience: AUDIENCIA,
+      requiredClaims: ['sub', 'iat', 'exp'],
+      // A biblioteca só aceita o "agora" como Date; é o único lugar.
+      currentDate: new Date(agoraSegundos * 1000),
+      clockTolerance: 0,
+    })
+    if (typeof payload.sub !== 'string' || typeof payload.sv !== 'number') return null
+    return { usuarioId: payload.sub, versao: payload.sv }
   } catch {
     return null
   }

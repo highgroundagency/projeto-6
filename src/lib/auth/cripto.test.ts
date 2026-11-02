@@ -1,8 +1,9 @@
 import { randomBytes } from 'node:crypto'
 import { describe, expect, it } from 'vitest'
+import { decodeProtectedHeader, EncryptJWT, SignJWT } from 'jose'
 import {
-  cifrarSessao,
-  decifrarSessao,
+  abrirJwe,
+  emitirJwe,
   gerarHashDeSenha,
   obterChaveDeSessao,
   problemaNaSenha,
@@ -49,44 +50,115 @@ describe('senha com scrypt', () => {
   })
 })
 
-describe('sessão com AES-256-GCM', () => {
+describe('sessão: JWE com AES-256-GCM', () => {
   const chave = randomBytes(32)
-  const conteudo = { u: 'usr-1', s: 3, exp: 2_000_000_000 }
+  const conteudo = { usuarioId: 'usr-0001', versao: 3 }
+  const AGORA = 2_000_000_000
+  const HORA = 3600
 
-  it('cifra e abre de volta', () => {
-    const token = cifrarSessao(conteudo, chave)
-    expect(token.startsWith('v1.')).toBe(true)
-    expect(decifrarSessao(token, chave)).toEqual(conteudo)
+  it('é um JWE compacto: cinco partes, cabeçalho dir + A256GCM', async () => {
+    const token = await emitirJwe(conteudo, chave, AGORA, HORA)
+    const partes = token.split('.')
+    expect(partes).toHaveLength(5)
+    // No modo `dir` não há chave embrulhada: a segunda parte é vazia.
+    expect(partes[1]).toBe('')
+    expect(decodeProtectedHeader(token)).toEqual({ alg: 'dir', enc: 'A256GCM', typ: 'JWT' })
   })
 
-  it('o conteúdo não é legível no cookie', () => {
-    const token = cifrarSessao(conteudo, chave)
-    const bruto = Buffer.from(token.slice(3), 'base64url').toString('latin1')
-    expect(bruto).not.toContain('usr-1')
+  it('abre de volta com a chave certa', async () => {
+    const token = await emitirJwe(conteudo, chave, AGORA, HORA)
+    expect(await abrirJwe(token, chave, AGORA + 10)).toEqual(conteudo)
   })
 
-  it('o mesmo conteúdo cifra diferente a cada vez (IV novo)', () => {
-    expect(cifrarSessao(conteudo, chave)).not.toBe(cifrarSessao(conteudo, chave))
+  it('o conteúdo não é legível no cookie (é cifrado, não só assinado)', async () => {
+    const token = await emitirJwe(conteudo, chave, AGORA, HORA)
+    const cifrado = Buffer.from(token.split('.')[3], 'base64url').toString('latin1')
+    expect(cifrado).not.toContain('usr-0001')
+    expect(cifrado).not.toContain('prumo')
   })
 
-  it('qualquer bit alterado faz a abertura falhar', () => {
-    const token = cifrarSessao(conteudo, chave)
-    const bytes = Buffer.from(token.slice(3), 'base64url')
-    for (const posicao of [0, 13, bytes.length - 1]) {
-      const adulterado = Buffer.from(bytes)
-      adulterado[posicao] ^= 1
-      expect(decifrarSessao(`v1.${adulterado.toString('base64url')}`, chave)).toBeNull()
+  it('o mesmo conteúdo cifra diferente a cada vez (IV novo)', async () => {
+    const a = await emitirJwe(conteudo, chave, AGORA, HORA)
+    const b = await emitirJwe(conteudo, chave, AGORA, HORA)
+    expect(a.split('.')[2]).not.toBe(b.split('.')[2])
+    expect(a).not.toBe(b)
+  })
+
+  it('qualquer pedaço alterado faz a abertura falhar', async () => {
+    const token = await emitirJwe(conteudo, chave, AGORA, HORA)
+    const partes = token.split('.')
+    for (const indice of [0, 2, 3, 4]) {
+      const bytes = Buffer.from(partes[indice], 'base64url')
+      bytes[bytes.length - 1] ^= 1
+      const adulterado = [...partes]
+      adulterado[indice] = bytes.toString('base64url')
+      expect(await abrirJwe(adulterado.join('.'), chave, AGORA)).toBeNull()
     }
   })
 
-  it('outra chave não abre', () => {
-    const token = cifrarSessao(conteudo, chave)
-    expect(decifrarSessao(token, randomBytes(32))).toBeNull()
+  it('outra chave não abre', async () => {
+    const token = await emitirJwe(conteudo, chave, AGORA, HORA)
+    expect(await abrirJwe(token, randomBytes(32), AGORA)).toBeNull()
   })
 
-  it('lixo, versão errada e vazio dão null', () => {
-    for (const lixo of [null, undefined, '', 'v1.', 'v2.abc', 'v1.abc.def', 'v1.' + 'A'.repeat(10)]) {
-      expect(decifrarSessao(lixo, chave)).toBeNull()
+  it('vencido não abre, nem por um segundo', async () => {
+    const token = await emitirJwe(conteudo, chave, AGORA, HORA)
+    expect(await abrirJwe(token, chave, AGORA + HORA - 1)).toEqual(conteudo)
+    expect(await abrirJwe(token, chave, AGORA + HORA)).toBeNull()
+  })
+
+  it('recusa JWT só ASSINADO, mesmo com a mesma chave (só cifrado é aceito)', async () => {
+    const assinado = await new SignJWT({ sv: 3 })
+      .setProtectedHeader({ alg: 'HS256' })
+      .setSubject('usr-0001')
+      .setIssuer('prumo')
+      .setAudience('prumo-sistema')
+      .setIssuedAt(AGORA)
+      .setExpirationTime(AGORA + HORA)
+      .sign(chave)
+    expect(await abrirJwe(assinado, chave, AGORA)).toBeNull()
+  })
+
+  it('recusa o truque do alg "none"', async () => {
+    const cabecalho = Buffer.from(JSON.stringify({ alg: 'none', typ: 'JWT' })).toString('base64url')
+    const corpo = Buffer.from(
+      JSON.stringify({ sub: 'usr-0001', sv: 3, iss: 'prumo', aud: 'prumo-sistema', iat: AGORA, exp: AGORA + HORA }),
+    ).toString('base64url')
+    expect(await abrirJwe(`${cabecalho}.${corpo}.`, chave, AGORA)).toBeNull()
+  })
+
+  it('recusa outra cifra, mesmo válida (A128GCM no lugar de A256GCM)', async () => {
+    const outra = await new EncryptJWT({ sv: 3 })
+      .setProtectedHeader({ alg: 'dir', enc: 'A128GCM' })
+      .setSubject('usr-0001')
+      .setIssuer('prumo')
+      .setAudience('prumo-sistema')
+      .setIssuedAt(AGORA)
+      .setExpirationTime(AGORA + HORA)
+      .encrypt(randomBytes(16))
+    expect(await abrirJwe(outra, chave, AGORA)).toBeNull()
+  })
+
+  it('recusa emissor ou audiência de outro sistema', async () => {
+    for (const [emissor, audiencia] of [
+      ['outro', 'prumo-sistema'],
+      ['prumo', 'painel-admin'],
+    ]) {
+      const token = await new EncryptJWT({ sv: 3 })
+        .setProtectedHeader({ alg: 'dir', enc: 'A256GCM' })
+        .setSubject('usr-0001')
+        .setIssuer(emissor)
+        .setAudience(audiencia)
+        .setIssuedAt(AGORA)
+        .setExpirationTime(AGORA + HORA)
+        .encrypt(chave)
+      expect(await abrirJwe(token, chave, AGORA)).toBeNull()
+    }
+  })
+
+  it('lixo, vazio e formato antigo dão null, nunca exceção', async () => {
+    for (const lixo of [null, undefined, '', 'v1.abc', 'a.b.c.d.e', '....', 'x'.repeat(500)]) {
+      expect(await abrirJwe(lixo, chave, AGORA)).toBeNull()
     }
   })
 })

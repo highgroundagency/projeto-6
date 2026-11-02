@@ -38,12 +38,21 @@ export const usuarioAtual = cache(async (): Promise<Usuario | null> => {
   }
 })
 
-/** Atributos do cookie: httpOnly (o JavaScript da página não lê), lax, seguro em produção. */
+/**
+ * Atributos do cookie de sessão:
+ *
+ * - `httpOnly`: o JavaScript da página não lê o token, nem um script injetado.
+ * - `sameSite: 'strict'`: o navegador só manda o cookie em requisição que
+ *   nasceu no próprio site. Formulário, imagem ou link vindos de outro site
+ *   chegam sem sessão (ADR-052). Site e API moram no mesmo domínio, então
+ *   nada do sistema depende de chegar logado vindo de fora.
+ * - `secure` em produção: só viaja por HTTPS.
+ */
 export function opcoesCookieSessaoSistema(producao = process.env.NODE_ENV === 'production') {
   return {
     httpOnly: true,
     secure: producao,
-    sameSite: 'lax' as const,
+    sameSite: 'strict' as const,
     path: '/',
     maxAge: DURACAO_SESSAO_SEGUNDOS,
   }

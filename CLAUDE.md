@@ -113,7 +113,7 @@ src/
     ├── features.ts      tela → ciclo que a libera, e quais perfis a enxergam
     ├── decks.ts         que apresentação o topo do site oferece hoje, e onde ela mora
     ├── admin/           sessão, senha, rate limit, guard (do painel)
-    ├── auth/            login do /sistema: scrypt, sessão AES-256-GCM, contas (ADR-051)
+    ├── auth/            login do /sistema: scrypt, sessão JWE (AES-256-GCM), contas (ADR-051/052)
     ├── calculo/         motor da gratificação (puro) e tipos
     ├── config/          config store com drivers
     ├── dados/           repositório: driver PostgreSQL (o ligado) e seed; postgres/ tem
@@ -153,7 +153,8 @@ migração aplicada não se edita. As invariantes que não podem depender da apl
 append-only, ciclo que só avança, janela de lançamento, regra imutável) são gatilho, e a
 trilha de auditoria é escrita pelo banco. Em produção, as credenciais vêm do AWS Secrets
 Manager (`DATABASE_SECRET_ID`), nunca do código. Escrever exige login (ADR-051): senha é hash
-scrypt, nunca cifra; a sessão é cookie AES-256-GCM. `supabase/migrations/` é o schema do domínio
+scrypt, nunca cifra; a sessão é um JWE (JWT cifrado com AES-256-GCM) em cookie `httpOnly` e
+`SameSite=Strict` (ADR-052). `supabase/migrations/` é o schema do domínio
 anterior, guardado como prova de RLS por perfil e desligado. Detalhes em `docs/banco.md`.
 
 ## Comandos

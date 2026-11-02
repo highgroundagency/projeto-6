@@ -9,7 +9,7 @@ usada para o resto — esconder isso seria pior do que ter o risco.
 | Ameaça | Onde se aplica | Mitigação atual | Estado |
 | --- | --- | --- | --- |
 | **S**poofing — fingir ser quem opera o painel | Painel `/admin` | Senha única conferida só no servidor, em tempo constante; cookie httpOnly assinado com HMAC-SHA256; 30 dias de validade | Implementado |
-| **S**poofing — fingir ser outro perfil no sistema | Seletor de perfil, login | Escrever exige login (ADR-051): senha com hash scrypt, sessão em cookie AES-256-GCM `httpOnly`, conferida no banco a cada requisição e revogada ao trocar a senha. O seletor ficou só para o visitante, que navega e não grava | Implementado |
+| **S**poofing — fingir ser outro perfil no sistema | Seletor de perfil, login | Escrever exige login (ADR-051): senha com hash scrypt, sessão em JWE (AES-256-GCM) num cookie `httpOnly` e `SameSite=Strict` (ADR-052), conferida no banco a cada requisição e revogada ao trocar a senha. O seletor ficou só para o visitante, que navega e não grava | Implementado |
 | **T**ampering — adulterar o cookie de sessão | `/admin/*` | Payload assinado; qualquer alteração invalida a assinatura; comparação em tempo constante | Implementado |
 | **T**ampering — adulterar o overlay de visão | Cookie `prumo_visao` | Mesmo esquema de assinatura; conteúdo revalidado com zod após verificar a assinatura | Implementado |
 | **T**ampering — alterar resultado já homologado | Motor de cálculo | Regra versionada: alterar cria nova versão e não toca na vigente; recálculo do ciclo antigo reproduz o mesmo número | Implementado |
@@ -184,13 +184,13 @@ Quem escreve no banco entra com conta; quem não entra navega e não grava.
 | Peça | Como é feita | Por quê |
 | --- | --- | --- |
 | Senha | Hash **scrypt** (N=2^15, r=8, p=1, 32 MiB) com sal aleatório de 16 bytes, em `src/lib/auth/cripto.ts` | Senha não se cifra: cifra é reversível. Hash lento com sal torna força bruta cara, até em GPU, e duas senhas iguais viram hashes diferentes |
-| Sessão | Cookie `prumo_sessao` cifrado com **AES-256-GCM**, IV aleatório por token, dado associado fixo, `httpOnly`, `SameSite=Lax`, `Secure` em produção, 8 horas | Ninguém lê nem altera o conteúdo: um bit trocado e o cookie não abre |
+| Sessão | **JWE** (JWT cifrado, RFC 7516) com `alg: dir` e `enc: A256GCM` no cookie `prumo_sessao`: `httpOnly`, `SameSite=Strict`, `Secure` em produção, 8 horas. A abertura aceita só esse algoritmo e essa cifra e confere emissor, audiência e validade (ADR-052) | Ninguém lê nem altera o conteúdo; JWT só assinado, `alg: none` e outra cifra são recusados; outro site não consegue usar a sessão |
 | Chave da sessão | `SESSAO_CHAVE`, 32 bytes. Em produção, sem ela o login falha **fechado** | Melhor ninguém entrar do que todo mundo entrar com chave previsível |
 | Revogação | O cookie leva a versão da sessão; trocar a senha ou desativar a conta sobe a versão no banco | Sessão roubada para de valer na hora, sem esperar vencer |
 | Adivinhação | Limite por IP (memória) e bloqueio da **conta** no banco: 5 erros seguidos, 15 minutos | O do banco vale entre instâncias e sobrevive a reinício |
 | Enumeração | Login inexistente, conta bloqueada e senha errada dão a mesma mensagem e passam pelo mesmo scrypt | Nem o texto nem o relógio contam quais logins existem |
 | Autorização | Lançar, contestar e avançar etapa conferem a conta no servidor. Gerente só pela própria unidade (ou distrito); avançar etapa só a SEAB | O id da unidade vem do formulário e pode ser trocado à mão |
-| CSRF | Formulários `POST` com cookie `SameSite=Lax`, e sair também é `POST` | Outro site não consegue postar com a sessão de quem está logado |
+| CSRF | Cookie `SameSite=Strict`: o navegador só manda a sessão em requisição nascida no próprio site. Sair também é `POST` | Formulário, imagem ou link de outro site chegam sem sessão |
 | Dado pessoal | Login técnico (`seab`, `ger-usf-canario`), sem nome, e-mail ou CPF | Regra 1 da casa (LGPD) |
 
 As credenciais do **banco** não ficam no código nem em variável com a senha: em produção, a
