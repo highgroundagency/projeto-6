@@ -147,6 +147,32 @@ export default async function Pagina() {
           </p>
         </section>
 
+        {/* O vídeo do antes e depois da Sprint 2 (ADR-050), com a voz da equipe.
+            Segue o portão da semana que o produziu: enquanto a s8 não está
+            liberada, o bloco não sai no HTML. Fica em /public, servido pelo
+            próprio site (a CSP é default-src 'self'), e preload="none" para
+            não baixar 15 MB de quem só passa pela página. */}
+        {podeVer(visao, 's8') ? (
+          <section className="bloco revelar" aria-labelledby="titulo-video">
+            <h2 id="titulo-video" className="rotulo">
+              antes e depois da sprint 2
+            </h2>
+            <p className="prosa mt-5 max-w-[46rem] text-sm lowercase">
+              cinco mudanças no sistema, mostradas tela a tela e contadas por quem as fez. todas
+              já estão implementadas.
+            </p>
+            <video
+              controls
+              preload="none"
+              playsInline
+              poster="/video/sprint-2-antes-e-depois.jpg"
+              className="mt-6 aspect-video w-full border border-linha"
+            >
+              <source src="/video/sprint-2-antes-e-depois.mp4" type="video/mp4" />
+            </video>
+          </section>
+        ) : null}
+
         {/* A entrega da vez vem ANTES do índice: a primeira pergunta de quem
             abre o site no dia é "o que é hoje", não "o que tem aqui". */}
         {marco ? (
