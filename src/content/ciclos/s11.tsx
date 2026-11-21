@@ -23,10 +23,10 @@ export const registro = {
     selo: 'rascunho',
     validadoPor: null,
     conteudo: [
-      'Entrevistamos pelo menos um integrante da CAM sobre como o processo acontece na prática. A conversa segue um roteiro, mas deixa a pessoa falar livremente.',
-      'Fizemos um teste de usabilidade com tempo marcado. A pessoa tenta lançar um indicador e explicar a própria nota (o score).',
-      'Depois do teste, a pessoa responde a um questionário. Ele pergunta se a memória de cálculo, o passo a passo da conta, ficou clara. E se ela confia no resultado.',
-      'Anotamos os ajustes que saíram daí. Cada ajuste leva anotado de onde veio e a prioridade.',
+      'Escrevemos o roteiro da entrevista: as perguntas abertas, na ordem, e o que cada uma quer descobrir.',
+      'Escrevemos as tarefas do teste de usabilidade: o que a pessoa tenta fazer sozinha e o que conta como sucesso em cada uma.',
+      'Montamos o questionário que segue o teste. Ele pergunta se a memória de cálculo, o passo a passo da conta, ficou clara, e se a pessoa confia no resultado.',
+      'A entrevista, o teste e o questionário ainda não foram aplicados. Por isso não há feedback do cliente nesta semana.',
     ],
   },
 
@@ -51,7 +51,7 @@ export const registro = {
     selo: 'rascunho',
     validadoPor: null,
     conteudo: [
-      'A validação depende da agenda da CAM, e essa agenda não é nossa. A única defesa é marcar com antecedência.',
+      'A entrevista depende da agenda da Comissão de Avaliação de Metas (CAM), que é quem consolida o resultado de cada mês. Essa agenda não é nossa. A única defesa é marcar com antecedência.',
     ],
   },
 
@@ -61,7 +61,9 @@ export const registro = {
     selo: 'rascunho',
     validadoPor: null,
     conteudo: [
-      'Escrever o retorno da CAM neste bloco de feedback, dizendo de onde veio.',
+      'Marcar com a CAM a data da entrevista e do teste, e confirmar a agenda antes de qualquer outro passo.',
+      'Aplicar a entrevista, o teste e o questionário, com um integrante conduzindo e outro anotando.',
+      'Registrar o retorno da CAM neste bloco de feedback, dizendo de onde veio.',
       'Fazer os ajustes de prioridade alta antes do Pré-SR2.',
       'Anotar o que foi apontado e decidimos não fazer, com o motivo.',
     ],
