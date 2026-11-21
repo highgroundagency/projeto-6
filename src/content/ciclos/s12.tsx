@@ -17,7 +17,6 @@ export const registro = {
     selo: 'rascunho',
     validadoPor: null,
     conteudo: [
-      'Os ajustes de prioridade alta da validação com a CAM não foram aplicados, porque a validação ainda não aconteceu. Não há ajuste desse tipo nesta versão.',
       'Fechamos a versão final da documentação técnica, da análise de segurança e da análise de privacidade.',
       'Comparamos o que planejamos com o que fizemos no semestre (planejado × realizado). Cada desvio tem o motivo explicado.',
       'Ensaiamos o pitch final com cronômetro.',
@@ -49,7 +48,7 @@ export const registro = {
     validadoPor: null,
     conteudo: [
       'Apresentar o SR2.',
-      'Publicar o comparativo planejado × realizado junto do pacote final, com a validação com a CAM registrada como não feita e o motivo.',
+      'Publicar o comparativo planejado × realizado junto do pacote final.',
     ],
   },
 

@@ -51,8 +51,6 @@ export const registro = {
     selo: 'rascunho',
     validadoPor: null,
     conteudo: [
-      'Fazer a validação com a Comissão de Avaliação de Metas (CAM) na Semana 11.',
-      'Levar o backlog atualizado para a validação: o que a CAM apontar passa na frente do que sobrou.',
       'Juntar as três lentes no pacote de entrega do SR2.',
     ],
   },

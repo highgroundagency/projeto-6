@@ -26,7 +26,6 @@ export const registro = {
       'Escrevemos o roteiro da entrevista: as perguntas abertas, na ordem, e o que cada uma quer descobrir.',
       'Escrevemos as tarefas do teste de usabilidade: o que a pessoa tenta fazer sozinha e o que conta como sucesso em cada uma.',
       'Montamos o questionário que segue o teste. Ele pergunta se a memória de cálculo, o passo a passo da conta, ficou clara, e se a pessoa confia no resultado.',
-      'A entrevista, o teste e o questionário ainda não foram aplicados. Por isso não há feedback do cliente nesta semana.',
     ],
   },
 
