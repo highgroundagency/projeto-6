@@ -28,6 +28,14 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
 
   /**
+   * Saída autocontida só quando a imagem de contêiner pede (o Dockerfile
+   * exporta NEXT_OUTPUT=standalone). Fora dele nada muda: `next start`, o
+   * `verificar-vazamento` e a Vercel continuam com o build de sempre.
+   * Ver docs/pipeline.md.
+   */
+  output: process.env.NEXT_OUTPUT === 'standalone' ? 'standalone' : undefined,
+
+  /**
    * Arquivos de `docs/` que o servidor lê em tempo de execução.
    *
    * O rastreador do Next segue `import`, não `readFile(join(process.cwd(),

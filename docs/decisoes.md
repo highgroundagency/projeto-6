@@ -1493,3 +1493,47 @@ Entram na ordem das sprints junto com o resto, quando a Semana 7 reordenar o bac
 **Consequência.** O avanço do backlog continua 17 de 26, o número do SR1, e o deck e o PDF não
 mudaram. A data "16/08" que aparece em várias linhas é a do commit mais antigo que o Git guarda:
 a função pode ser mais velha, nunca mais nova.
+
+## ADR-051 · Um segundo caminho até a produção: CodePipeline, Terraform e uma EC2 com duas portas
+
+**Contexto.** O deploy na Vercel é um push, e a infraestrutura não aparece em lugar nenhum: não
+se lê, não se revisa e não se reproduz. A lente de nuvem pede pipeline de CI/CD com
+verificações automáticas e infraestrutura que se possa auditar.
+
+**Decisão.** Um pipeline no AWS CodePipeline, com toda a infraestrutura em Terraform, separada
+em oito módulos: criptografia, rede, registro, segredos, servidor, dns, entrega e pipeline. O passo a
+passo e a operação estão em `docs/pipeline.md`. Cinco regras:
+
+1. **Fitness functions antes de qualquer imagem.** Gitleaks no histórico inteiro do Git; Trivy
+   nas dependências, nos segredos, nas licenças e no Terraform; Hadolint no Dockerfile;
+   `terraform validate`; e a suíte que o projeto já tinha. Três estágios em paralelo, e qualquer
+   um reprova.
+2. **A imagem só chega ao ECR depois do Trivy**, e o deploy referencia o digest, não a tag: o que
+   foi varrido é o que roda.
+3. **Duas portas.** NACL e security group só abrem TCP 80 e 443. Não existe 22: sem chave SSH,
+   `sshd` desligado, acesso pelo SSM Session Manager. O app não publica porta no host; só o
+   Caddy, que termina o TLS.
+4. **Segredo fora do state.** `ADMIN_SENHA` e `ADMIN_COOKIE_SECRET` nascem de recurso efêmero
+   e vão para o SSM por atributo write-only.
+5. **Produção conferida de fora.** Depois do deploy, o estágio Fumaca mede pela internet a versão
+   no ar, o certificado, os cabeçalhos de segurança e as portas.
+
+**O que a construção achou.** As verificações reprovaram o próprio `main` antes de existir
+pipeline, e cada achado foi corrigido em vez de suprimido:
+
+- O Trivy achou três CVEs críticas no Next 15.5.23, e altas no postcss, no sharp e no
+  source-map-js. O Next foi para 15.5.29, na mesma linha, e os três transitivos para versões
+  fixas em `overrides`, todas publicadas havia mais de duas semanas.
+- O Trivy na imagem reprovou a distroless em Debian 12: libssl3 com uma CVE crítica e seis
+  altas. A base passou para Debian 13, sem nenhuma.
+- O leitor de Markdown entrava em laço infinito com fim de linha CRLF, o de um checkout Windows,
+  e estourava a memória do build e da suíte. Corrigido em `src/lib/markdown.ts`, com teste.
+- O Gitleaks achou um único segredo no histórico: o segredo de cookie fixo da suíte e2e. Entrou
+  na allowlist pelo arquivo e pelo valor, nunca pela regra inteira.
+- Das supressões do Trivy no Terraform, duas disparavam de verdade e ficaram, com a
+  justificativa ao lado do recurso. As que não disparavam saíram: supressão morta engana quem lê.
+
+**Consequência.** A Vercel e o GitHub Actions continuam como estavam. A frase de `docs/nuvem.md`
+"nada aqui é servidor que a equipe administre" passa a ter exceção: uma EC2, descrita inteira no
+código, com as limitações declaradas em `docs/pipeline.md`, a começar por ser uma instância
+numa zona só.

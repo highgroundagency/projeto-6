@@ -1,0 +1,38 @@
+# Caddy: a única coisa que escuta na internet.
+#
+# - Certificado do Let's Encrypt automático para {$DOMINIO}, renovado sozinho;
+#   fica no volume caddy-dados e sobrevive aos deploys.
+# - O 80 só responde ao desafio ACME e redireciona para o 443.
+# - HTTP/3 desligado: ele usa UDP 443, e o security group só abre TCP.
+# - API administrativa desligada: nenhuma porta além de 80 e 443, nem local.
+# - O X-Forwarded-For que chega de fora é descartado e reescrito com o IP
+#   real; é ele que o rate limit do painel lê (src/lib/admin/rate-limit.ts).
+{
+	admin off
+	{$LINHA_EMAIL_ACME}
+	servers {
+		protocols h1 h2
+	}
+}
+
+{$DOMINIO} {
+	encode zstd gzip
+	# Nada anuncia o que roda aqui: o Caddy põe Server e Via, e a remoção
+	# no nível do site acontece depois de ele acrescentar os dois.
+	header {
+		-Server
+		-Via
+	}
+
+	reverse_proxy app:3000 {
+		# Durante a troca do contêiner do app, segura a requisição em vez de
+		# devolver 502: o deploy não derruba quem está navegando.
+		lb_try_duration 30s
+		lb_try_interval 250ms
+	}
+
+	log {
+		output stdout
+		format json
+	}
+}

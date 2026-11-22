@@ -3519,6 +3519,8 @@ Os porquês completos estão em `docs/decisoes.md`. Os títulos, aqui:
   - ADR-048 · A escrita do protótipo vai num diário assinado no cookie, porque na Vercel a
     rota e a página são funções diferentes
   - ADR-049 · O que o sistema fazia sem história virou história, fora da conta das 26
+  - ADR-051 · Um segundo caminho até a produção: CodePipeline, Terraform e uma EC2 com duas
+    portas
 
 ============================================================================================
 13.  COMO RODAR E COMO CONFERIR

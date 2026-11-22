@@ -1,0 +1,7 @@
+# Scripts que rodam em Linux (CodeBuild e EC2) precisam de LF mesmo quando o
+# checkout é feito no Windows: com CRLF, o bash lê `set -e\r` e falha.
+*.sh      text eol=lf
+*.tftpl   text eol=lf
+*.yml     text eol=lf
+Dockerfile text eol=lf
+Caddyfile text eol=lf

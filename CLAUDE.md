@@ -129,7 +129,16 @@ ml/                      lente de machine learning — treina offline, o app lê
 └── notebooks/           os cadernos, com todo o código; o 06 escreve
                          src/content/ml/resultados.json e o 07, os números
                          dos slides da AV1 (src/content/ml/apresentacao.json)
+
+infra/                   CI/CD na AWS (ADR-051): CodePipeline → EC2 com só 80 e 443
+├── terraform/           bootstrap do state, ambientes/producao e os oito módulos
+├── codebuild/           buildspecs e scripts das fitness functions; versões das ferramentas
+│                        fixadas com SHA-256 em ferramentas.sh
+└── codedeploy/          appspec, Caddyfile e os ganchos que rodam na EC2
 ```
+
+Os scripts de `infra/codebuild/` e `infra/codedeploy/` rodam em Linux: o `.gitattributes`
+força LF neles, e um `.sh` com CRLF quebra o deploy.
 
 ## Onde os dados vivem
 
@@ -156,6 +165,7 @@ execução.
 | `npm run testar-rls` | Políticas do schema guardado contra um Postgres real (exige `DATABASE_URL_TESTE`) |
 | `npm run semear` | Semeia a base sintética num Postgres com o schema aplicado (exige `DATABASE_URL`) |
 | `npm run verificar` | typecheck + testes + build + verificação de vazamento |
+| `bash infra/codebuild/seguranca.sh` | As fitness functions de segurança do pipeline (Gitleaks, Trivy, Hadolint, Terraform), iguais às do CodeBuild; exige as ferramentas de `ferramentas.sh` |
 
 ## Antes de abrir PR
 
@@ -168,6 +178,7 @@ execução.
 ## Onde ler mais
 
 `docs/releases.md` explica como operar o que o professor vê. `docs/decisoes.md` guarda os
-porquês. `docs/seguranca.md`, `docs/nuvem.md` e `docs/privacidade.md` cobrem as três lentes técnicas
+porquês. `docs/pipeline.md` cobre o pipeline da AWS: fitness functions, módulos, portas e
+operação. `docs/seguranca.md`, `docs/nuvem.md` e `docs/privacidade.md` cobrem as três lentes técnicas
 exigidas pela matriz (Segurança da Informação, Arquitetura Nativa na Nuvem e Aprendizado de
 Máquina, esta última em `ml/`), mais a de Direito que a equipe acrescentou.

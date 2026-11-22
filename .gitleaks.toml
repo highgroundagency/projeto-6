@@ -1,0 +1,25 @@
+# Configuração do Gitleaks: as regras padrão, mais exceções estreitas e
+# justificadas. Exceção sobre arquivo versionado nomeia o arquivo E o valor;
+# nunca um arquivo inteiro nem uma regra inteira. Ver docs/pipeline.md.
+
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "Segredo de cookie da suíte e2e: valor fixo e público, só vale no servidor que o Playwright sobe em 127.0.0.1"
+condition = "AND"
+paths = ['''^playwright\.config\.ts$''']
+regexes = ['''^segredo-de-teste-e2e-com-tamanho-suficiente$''']
+
+# Saídas geradas que o .gitignore já exclui e que nunca chegam ao Git: só
+# aparecem quando alguém roda o modo `dir` numa máquina que fez build (o
+# .next guarda as chaves de preview que o próprio Next sorteia a cada build).
+# O modo `git` do pipeline nem as vê.
+[[allowlists]]
+description = "Saídas de build e dependências instaladas, fora do Git"
+paths = [
+  '''(^|/)\.next/''',
+  '''(^|/)node_modules/''',
+  '''(^|/)\.terraform/''',
+  '''^(relatorios|pacote|playwright-report|test-results)/''',
+]

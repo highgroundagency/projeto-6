@@ -21,6 +21,13 @@ declarada de produto.
 | Dados do protótipo | Memória do processo, semente fixa | `git clone && npm run dev` sobe sem nenhuma credencial |
 | Persistência prevista | Postgres gerenciado, com RLS | Autorização no banco vale para qualquer caminho de escrita |
 
+### O segundo alvo: uma EC2 descrita em Terraform
+
+Além da Vercel, o mesmo app sobe num contêiner numa EC2 pública, por um pipeline no AWS
+CodePipeline (ADR-051). É o lugar onde a infraestrutura deixa de ser da plataforma e passa a
+estar no repositório: oito módulos Terraform, fitness functions antes de qualquer imagem, e
+uma máquina que só abre TCP 80 e 443. Os detalhes estão em `docs/pipeline.md`.
+
 ## O pipeline de dados, ponta a ponta
 
 1. A unidade envia o valor de cada subindicador e a evidência num POST de formulário. `zod`

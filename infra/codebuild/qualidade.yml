@@ -1,0 +1,52 @@
+# CI · Qualidade: as fitness functions que o próprio projeto já tinha, as
+# mesmas do `npm run verificar`, mais lint e assinatura das dependências.
+#
+#   - tipos: ciclo publicado incompleto não compila
+#   - testes: inclui a fronteira da LGPL (varre o seed e ml/data atrás de CPF,
+#     e-mail e telefone), pureza do motor, contraste dos dois temas, os 8×4
+#     portões do /sistema e as 23 políticas de RLS contra um Postgres de verdade
+#   - vazamento: conteúdo de release futuro não chega ao visitante (§6.3)
+#   - dossiê: o DOSSIE.txt confere com o repositório
+version: 0.2
+
+env:
+  shell: bash
+  variables:
+    CI: "true"
+    NEXT_TELEMETRY_DISABLED: "1"
+    # Banco descartável, só para os testes de RLS; nasce e morre neste build.
+    DATABASE_URL_TESTE: postgresql://postgres:postgres@127.0.0.1:5432/prumo_teste
+
+phases:
+  install:
+    runtime-versions:
+      nodejs: 22
+    commands:
+      - >-
+        docker run -d --name postgres -p 5432:5432
+        -e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=prumo_teste
+        public.ecr.aws/docker/library/postgres:16
+      - npm ci --no-audit --no-fund
+  pre_build:
+    commands:
+      # Cadeia de suprimentos: todo pacote instalado tem assinatura válida do registro.
+      - npm audit signatures
+      - timeout 60 bash -c 'until docker exec postgres pg_isready -U postgres -q; do sleep 1; done'
+  build:
+    commands:
+      - npm run lint
+      - npm run typecheck
+      - npx vitest run --reporter=default --reporter=junit --outputFile.junit=relatorios/vitest.xml
+      - npm run build
+      - npm run verificar-vazamento
+      - npm run conferir-dossie
+
+reports:
+  testes:
+    files:
+      - relatorios/vitest.xml
+    file-format: JUNITXML
+
+cache:
+  paths:
+    - /root/.npm/**/*

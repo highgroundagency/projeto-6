@@ -1,0 +1,32 @@
+# CI · Jornadas: o Playwright contra o build de produção, em desktop e em
+# 360 px. As garantias que mais importam (404 em rota não liberada, conteúdo
+# futuro fora do bundle) só valem no build real, e é ele que a suíte sobe.
+version: 0.2
+
+env:
+  shell: bash
+  variables:
+    CI: "true"
+    NEXT_TELEMETRY_DISABLED: "1"
+    PLAYWRIGHT_JUNIT_OUTPUT_NAME: relatorios/playwright.xml
+
+phases:
+  install:
+    runtime-versions:
+      nodejs: 22
+    commands:
+      - npm ci --no-audit --no-fund
+      - npx playwright install --with-deps chromium
+  build:
+    commands:
+      - npx playwright test --reporter=list,junit
+
+reports:
+  jornadas:
+    files:
+      - relatorios/playwright.xml
+    file-format: JUNITXML
+
+cache:
+  paths:
+    - /root/.npm/**/*

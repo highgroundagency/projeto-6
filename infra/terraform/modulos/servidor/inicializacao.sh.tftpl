@@ -1,0 +1,46 @@
+#!/bin/bash
+# Primeiro boot da instância (Amazon Linux 2023). Prepara o host para o
+# CodeDeploy e nada mais: o app chega pelo pipeline, nunca por aqui.
+set -euo pipefail
+exec > >(tee -a /var/log/prumo-inicializacao.log) 2>&1
+
+# O Elastic IP é associado logo depois do boot; até lá a rede pode piscar.
+INSTALADOR=https://aws-codedeploy-${regiao}.s3.${regiao}.amazonaws.com/latest/install
+for tentativa in $(seq 1 30); do
+  curl -fsS -m 10 -o /tmp/codedeploy-install "$INSTALADOR" && break
+  echo "rede ainda indisponivel (tentativa $tentativa)"; sleep 10
+done
+
+dnf install -y docker ruby
+
+# Docker: sem novos privilégios por padrão, contêineres sobrevivem a um
+# restart do daemon, e log local com rotação para o que não vai ao CloudWatch.
+mkdir -p /etc/docker
+cat > /etc/docker/daemon.json <<'JSON'
+{
+  "live-restore": true,
+  "no-new-privileges": true,
+  "log-driver": "json-file",
+  "log-opts": { "max-size": "10m", "max-file": "3" }
+}
+JSON
+systemctl enable --now docker
+
+# Onde os scripts do CodeDeploy encontram a configuração do ambiente.
+install -d -m 0750 /etc/prumo /opt/prumo
+cat > /etc/prumo/implantacao.env <<ENV
+REGIAO=${regiao}
+PARAMETROS_APP=${caminho_app}
+PARAMETROS_IMPLANTACAO=${caminho_implantacao}
+GRUPO_LOGS=${grupo_logs}
+ENV
+chmod 0600 /etc/prumo/implantacao.env
+
+chmod +x /tmp/codedeploy-install
+/tmp/codedeploy-install auto
+systemctl enable --now codedeploy-agent
+
+# Sem SSH: o security group já fecha o 22, e aqui o serviço some também.
+systemctl disable --now sshd || true
+
+echo "inicializacao concluida"

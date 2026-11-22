@@ -54,7 +54,9 @@ export async function coletarStatus(): Promise<Status> {
     produto: 'Prumo',
     versao: process.env.npm_package_version ?? '0.1.0',
     ambiente: process.env.NODE_ENV ?? 'desconhecido',
-    commit: process.env.VERCEL_GIT_COMMIT_SHA?.slice(0, 7) ?? 'local',
+    // Na Vercel, a plataforma injeta o SHA; na EC2, a imagem traz COMMIT_SHA
+    // gravado no build, e o teste de fumaça do pipeline confere este campo.
+    commit: (process.env.VERCEL_GIT_COMMIT_SHA || process.env.COMMIT_SHA)?.slice(0, 7) || 'local',
     modoDeDados: dados.nome,
     dadosPersistentes: dados.persistente,
     driverConfiguracao: store.nome,

@@ -11,6 +11,15 @@ describe('analisarMarkdown', () => {
     ])
   })
 
+  it('lê arquivo com fim de linha CRLF, como num checkout Windows', () => {
+    const nos = analisarMarkdown('# Um\r\n\r\ntexto\r\n- item\r\n')
+    expect(nos).toEqual([
+      { tipo: 'titulo', nivel: 1, texto: 'Um' },
+      { tipo: 'paragrafo', texto: 'texto' },
+      { tipo: 'lista', ordenada: false, itens: ['item'] },
+    ])
+  })
+
   it('junta linhas seguidas num único parágrafo', () => {
     const nos = analisarMarkdown('primeira linha\nsegunda linha\n\noutro parágrafo')
     expect(nos).toEqual([

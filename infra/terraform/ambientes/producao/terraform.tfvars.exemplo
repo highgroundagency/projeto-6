@@ -1,0 +1,22 @@
+# Copie para terraform.tfvars e ajuste. Nada aqui é segredo: os segredos do
+# app são gerados pelo módulo `segredos` e nunca passam por este arquivo.
+
+regiao             = "sa-east-1"
+repositorio_github = "highgroundagency/projeto-6"
+branch             = "main"
+tipo_instancia     = "t3.small"
+
+# Domínio próprio. Vazio = <ip-com-hifens>.sslip.io.
+# Se a zona estiver no Route 53 desta conta, preencha zona_route53 e o
+# Terraform cria o registro A; senão, crie o A à mão com o output ip_publico.
+dominio      = ""
+zona_route53 = ""
+email_acme   = ""
+
+# Aprovação manual entre a imagem pronta e o deploy.
+exigir_aprovacao = false
+
+# Variáveis do app que não são segredo (ver .env.example).
+variaveis_app = {
+  # RELEASE_ADIANTAMENTO_DIAS = "7"
+}

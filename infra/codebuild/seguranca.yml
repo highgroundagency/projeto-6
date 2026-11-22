@@ -1,0 +1,36 @@
+# CI · Segurança: as fitness functions de segredo, dependência, licença e IaC.
+# O que cada uma mede está comentado em seguranca.sh.
+version: 0.2
+
+env:
+  shell: bash
+  variables:
+    # Espelhos do ECR Public: o CodeBuild compartilha IP com muita gente e o
+    # ghcr.io devolve TOOMANYREQUESTS para download anônimo do banco do Trivy.
+    TRIVY_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-db
+    TRIVY_JAVA_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-java-db
+    TRIVY_CHECKS_BUNDLE_REPOSITORY: public.ecr.aws/aquasecurity/trivy-checks
+    TRIVY_CACHE_DIR: /root/.cache/trivy
+    TRIVY_NO_PROGRESS: "true"
+    TF_PLUGIN_CACHE_DIR: /root/.terraform.d/plugin-cache
+    TF_IN_AUTOMATION: "true"
+
+phases:
+  install:
+    commands:
+      - mkdir -p "$TF_PLUGIN_CACHE_DIR"
+      - bash infra/codebuild/ferramentas.sh trivy gitleaks hadolint terraform
+  build:
+    commands:
+      - bash infra/codebuild/seguranca.sh
+
+reports:
+  seguranca:
+    files:
+      - relatorios/*.xml
+    file-format: JUNITXML
+
+cache:
+  paths:
+    - /root/.cache/trivy/**/*
+    - /root/.terraform.d/plugin-cache/**/*

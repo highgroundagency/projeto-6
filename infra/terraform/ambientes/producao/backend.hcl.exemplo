@@ -1,0 +1,6 @@
+# Copie para backend.hcl e preencha com a saída do bootstrap:
+#   terraform -chdir=infra/terraform/bootstrap output -raw backend_hcl > infra/terraform/ambientes/producao/backend.hcl
+# Depois: terraform init -backend-config=backend.hcl
+
+bucket = "prumo-tfstate-123456789012"
+region = "sa-east-1"

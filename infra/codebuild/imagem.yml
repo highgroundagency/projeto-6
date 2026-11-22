@@ -1,0 +1,34 @@
+# Imagem: build → Trivy → SBOM → ECR → pacote do CodeDeploy. Ver imagem.sh.
+version: 0.2
+
+env:
+  shell: bash
+  variables:
+    TRIVY_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-db
+    TRIVY_JAVA_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-java-db
+    TRIVY_CACHE_DIR: /root/.cache/trivy
+    TRIVY_NO_PROGRESS: "true"
+    DOCKER_BUILDKIT: "1"
+
+phases:
+  install:
+    commands:
+      - bash infra/codebuild/ferramentas.sh trivy
+  build:
+    commands:
+      - bash infra/codebuild/imagem.sh
+
+reports:
+  imagem:
+    files:
+      - relatorios/trivy-imagem.xml
+    file-format: JUNITXML
+
+artifacts:
+  base-directory: pacote
+  files:
+    - "**/*"
+
+cache:
+  paths:
+    - /root/.cache/trivy/**/*

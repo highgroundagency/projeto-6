@@ -31,7 +31,10 @@ function celulas(linha: string): string[] {
 const ehSeparadorDeTabela = (linha: string) => /^\s*\|?[\s:|-]+\|[\s:|-]*$/.test(linha)
 
 export function analisarMarkdown(bruto: string): NoMarkdown[] {
-  const linhas = bruto.split('\n')
+  // CRLF também: num checkout Windows (core.autocrlf), o `\r` que sobrava no
+  // fim da linha impedia o título de casar, nenhum ramo consumia a linha e o
+  // laço empurrava parágrafos vazios até estourar a memória do build.
+  const linhas = bruto.split(/\r?\n/)
   const nos: NoMarkdown[] = []
   let i = 0
 

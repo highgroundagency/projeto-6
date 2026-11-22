@@ -88,7 +88,8 @@ O que está coberto, contado em 28/09:
 ## Stack
 
 Next.js 15 (App Router) · TypeScript · Tailwind v4 · zod · Vitest · Playwright · Deploy na
-Vercel. **Sem banco**: os dados do app são sintéticos e vivem em memória.
+Vercel e, pelo AWS CodePipeline, numa EC2 descrita em Terraform ([`docs/pipeline.md`](docs/pipeline.md)).
+**Sem banco**: os dados do app são sintéticos e vivem em memória.
 
 Quase nenhum JavaScript de aplicação chega ao navegador: as telas são Server Components e
 os formulários são HTML puro.
@@ -101,6 +102,7 @@ os formulários são HTML puro.
 | [`docs/releases.md`](docs/releases.md) | Como operar o que o professor vê — manual da equipe |
 | [`docs/seguranca.md`](docs/seguranca.md) | STRIDE, OWASP Top 10 e análise do próprio painel admin |
 | [`docs/nuvem.md`](docs/nuvem.md) | Onde cada componente executa, pipeline, doze fatores e limites de escala |
+| [`docs/pipeline.md`](docs/pipeline.md) | CI/CD na AWS: fitness functions, Terraform em módulos, EC2 com duas portas e operação |
 | [`docs/privacidade.md`](docs/privacidade.md) | LGPD, base legal, Privacy by Design, direitos dos titulares e identificação indireta na base da SESAU |
 | [`docs/decisoes.md`](docs/decisoes.md) | ADRs — os porquês, em cinco linhas cada |
 | [`docs/banco.md`](docs/banco.md) | O schema PostgreSQL que existe mas não está ligado: por quê, o que contém e como usá-lo |

@@ -59,3 +59,13 @@ __pycache__/
 
 # Worktrees dos agentes do Claude Code: cópias locais, nunca versionadas.
 /.claude/worktrees/
+
+# Terraform: plugins baixados, state local e arquivos com dados da conta.
+# O .terraform.lock.hcl é versionado: ele fixa as versões dos providers.
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfplan
+crash.log
+infra/terraform/**/backend.hcl
+infra/terraform/**/terraform.tfvars
