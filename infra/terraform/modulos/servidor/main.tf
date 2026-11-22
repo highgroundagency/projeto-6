@@ -50,7 +50,7 @@ resource "aws_vpc_security_group_ingress_rule" "publica" {
 # trivy:ignore:AWS-0104
 resource "aws_vpc_security_group_egress_rule" "https" {
   security_group_id = aws_security_group.servidor.id
-  description       = "HTTPS para servicos da AWS e Let's Encrypt"
+  description       = "HTTPS para servicos da AWS e Lets Encrypt"
   ip_protocol       = "tcp"
   from_port         = 443
   to_port           = 443
