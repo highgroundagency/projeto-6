@@ -148,6 +148,13 @@ de administrador, e acesso de administração ao repositório no GitHub.
    autorizar o app da AWS no repositório. O output `conexao_github_status` deve virar
    `AVAILABLE` no próximo `terraform apply` (ou `terraform refresh`).
 
+   **Depois de aprovar, salve o pipeline uma vez sem mudar nada** (*Edit* → *Save*, ou
+   `get-pipeline` seguido de `update-pipeline` no CLI). O CodePipeline registra a escuta de
+   push da conexão quando o pipeline é criado ou atualizado; criado com a conexão ainda
+   pendente, ele não dispara com push até ser salvo de novo. O *Release change* funciona
+   mesmo assim, o que esconde o problema. O `terraform apply` não resolve, porque não vê
+   diferença e não toca no pipeline.
+
 5. **Primeiro deploy:** um push em `main`, ou *Release change* no pipeline `prumo-producao`.
    O primeiro build leva mais tempo (sem cache), e o Let's Encrypt emite o certificado no
    primeiro acesso; o estágio Fumaca espera até 5 minutos por isso.
