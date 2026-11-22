@@ -135,9 +135,28 @@ resource "aws_codepipeline" "principal" {
       configuration = {
         ConnectionArn        = local.conexao_arn
         FullRepositoryId     = var.repositorio_github
-        BranchName           = var.branch
+        BranchName           = var.branch # usado no início manual (Release change)
         OutputArtifactFormat = "CODEBUILD_CLONE_REF"
-        DetectChanges        = "true"
+        # Quem dispara é o bloco `trigger` abaixo, não a detecção implícita:
+        # é o par que a documentação da AWS prevê para gatilho com filtro.
+        DetectChanges = "false"
+      }
+    }
+  }
+
+  # A regra, declarada: push na branch configurada inicia o pipeline. Nenhum
+  # outro evento (pull request, outra branch) inicia. Para conferir o que está
+  # valendo na AWS: `aws codepipeline get-pipeline --query pipeline.triggers`.
+  trigger {
+    provider_type = "CodeStarSourceConnection"
+
+    git_configuration {
+      source_action_name = "GitHub"
+
+      push {
+        branches {
+          includes = [var.branch]
+        }
       }
     }
   }
